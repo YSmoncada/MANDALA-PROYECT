@@ -72,6 +72,7 @@ function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
           ) : (
             productos.map((prod) => {
               const stockBajo = prod.stock <= (prod.stock_minimo || 5);
+              const stockAlto = prod.stock >= (prod.stock_maximo || 5);
               return (
                 <tr
                   key={prod.id}
@@ -102,9 +103,15 @@ function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
                         ⚠️ Stock Bajo
                       </span>
                     ) : (
-                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-green-700 text-green-200">
-                        Disponible
+                      stockAlto ? (
+                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-yellow-700 text-green-200">
+                        ⚠️ Stock Alto
                       </span>
+                      ) : (
+                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-green-700 text-green-200">
+                        Disponible
+                        </span>
+                      )
                     )}
                   </td>
 
