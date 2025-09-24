@@ -40,7 +40,7 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId }) {
               name="categoria"
               value={form.categoria || ""}
               onChange={onChange}
-              className="w-full bg-transparent border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full bg-gray-600 border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
               required
             >
               <option value="">Seleccionar categoría</option>
