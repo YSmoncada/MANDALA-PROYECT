@@ -67,6 +67,7 @@ const MovimientoModal = ({
 
   const handleSubmit = () => {
     onSubmit({ tipo, cantidad, motivo, usuario, producto });
+    console.log({ tipo, cantidad, motivo, usuario, producto });
   };
 
   return (

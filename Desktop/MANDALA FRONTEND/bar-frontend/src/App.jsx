@@ -7,6 +7,7 @@ import ProductModal from "./components/ProductModal";
 import FiltersSummary from "./components/FiltersSummary"; 
 
 const API_URL = "http://127.0.0.1:8000/api/productos/";
+const API_URL_MOVIMIENTOS = "http://127.0.0.1:8000/api/movimientos_productos/";
 const initialForm = { nombre: "", precio: "", stock: "" };
 
 function App() {
@@ -21,8 +22,16 @@ function App() {
 
   useEffect(() => {
     fetchProductos();
+    
   }, []);
-
+  
+  const entradaAux = () => {
+    axios.post(`${API_URL_MOVIMIENTOS}`, { producto: 7, tipo_movimiento: 'entrada', cantidad: 10, motivo: 'Stock inicial', usuario: 'Admin' })
+      .then(() => {
+        fetchProductos();
+        alert("Entrada registrada");
+      }).catch((e) => alert(e));
+  }
   const fetchProductos = () => {
     axios
       .get(API_URL)
@@ -37,7 +46,7 @@ function App() {
   };
 
   const handleEdit = (prod) => {
-    setForm({ nombre: prod.nombre, precio: prod.precio, stock: prod.stock });
+    setForm({ nombre: prod.nombre, precio: prod.precio, stock: prod.stock, categoria: prod.categoria  });
     setEditId(prod.id);
     setModalOpen(true);
   };
@@ -49,10 +58,16 @@ function App() {
   };
   const handleEntrada = (prod) => {
     const cantidad = parseInt(prompt("Cantidad de entrada:"));
+    const motivo = prompt("Motivo de la entrada:");
+    const usuario = prompt("Usuario:");
+
     if (cantidad > 0) {
       axios
-        .patch(`${API_URL}${prod.id}/`, { stock: prod.stock + cantidad })
-        .then(() => fetchProductos());
+        .post(`${API_URL_MOVIMIENTOS}`, { producto: prod.id, tipo_movimiento: 'entrada', cantidad: cantidad, motivo: motivo, usuario: usuario })
+        .then(() => {
+          fetchProductos();
+          alert("Entrada registrada");
+        }).catch((e) => alert(e));
     }
   };
 
@@ -139,7 +154,9 @@ function App() {
         onChange={handleChange}
         editId={editId}
       />
+      <button className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600" onClick={entradaAux}>Agregar Movimiento</button>
     </div>
+    
   );
 }
 
