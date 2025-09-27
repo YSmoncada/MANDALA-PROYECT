@@ -46,18 +46,21 @@ function App() {
     setForm(initialForm);
     setEditId(null);
     setModalOpen(true);
+    fetchProductos();
   };
 
   const handleEdit = (prod) => {
     setForm(prod);
     setEditId(prod.id);
     setModalOpen(true);
+    fetchProductos();
   };
 
   const handleDelete = (id) => {
     if (window.confirm("¿Eliminar producto?")) {
       axios.delete(`${API_URL}${id}/`).then(() => fetchProductos());
     }
+    fetchProductos();
   };
 
   const handleSubmit = (e) => {
@@ -73,10 +76,12 @@ function App() {
         fetchProductos();
       });
     }
+    fetchProductos();
   };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    fetchProductos();
   };
 
   // Categorías dinámicas
@@ -124,6 +129,7 @@ function App() {
             setProductos((prev) =>
               prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
             );
+            fetchProductos();
           }}
         />
       </div>
