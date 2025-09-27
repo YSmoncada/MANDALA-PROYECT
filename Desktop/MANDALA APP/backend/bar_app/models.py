@@ -14,7 +14,14 @@ class Producto(models.Model):
     def __str__(self):
         return self.nombre
 
-
+class MovimientoProducto(models.Model):
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    tipo_movimiento = models.CharField(max_length=10, choices=[('entrada', 'Entrada'), ('salida', 'Salida')])
+    cantidad = models.IntegerField()
+    motivo_movimiento = models.CharField(max_length=255, blank=True, null=True)  # ✅ NUEVO
+    usuario_responsable = models.CharField(max_length=100, blank=True, null=True)  # ✅ NUEVO
+    fecha = models.DateTimeField(auto_now_add=True)
+    
 
 
 class Pedido(models.Model):

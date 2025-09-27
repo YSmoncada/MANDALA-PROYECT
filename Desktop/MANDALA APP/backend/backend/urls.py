@@ -17,14 +17,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from bar_app.views import ProductoViewSet
+from bar_app.views import *
 from bar_app import views
 
 router = DefaultRouter()
 router.register(r'productos', ProductoViewSet)
+router.register(r'movimientos_productos', MovimientoProductoViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('productos/', views.productos_list),
+    path('movimientos/productos/', views.movimientos_productos_list)
 ]
