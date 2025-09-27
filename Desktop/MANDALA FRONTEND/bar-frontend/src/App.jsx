@@ -1,13 +1,25 @@
+// src/App.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Header from "./components/Header";
 import InventoryCard from "./components/InventoryCard";
-import ProductTable from "./components/ProductTable";
+import ProductTableWithModal from "./components/ProductTable";
 import ProductModal from "./components/ProductModal";
-import FiltersSummary from "./components/FiltersSummary"; 
+import FiltersSummary from "./components/FiltersSummary";
 
 const API_URL = "http://127.0.0.1:8000/api/productos/";
-const initialForm = { nombre: "", precio: "", stock: "" };
+
+const initialForm = {
+  nombre: "",
+  categoria: "",
+  precio: "",
+  stock: "",
+  stock_minimo: "",
+  stock_maximo: "",
+  unidad: "",
+  proveedor: "",
+  ubicacion: "",
+};
 
 function App() {
   const [productos, setProductos] = useState([]);
@@ -15,7 +27,7 @@ function App() {
   const [form, setForm] = useState(initialForm);
   const [editId, setEditId] = useState(null);
 
-  // Estados para filtros
+  // Filtros
   const [query, setQuery] = useState("");
   const [categoria, setCategoria] = useState("");
 
@@ -37,7 +49,7 @@ function App() {
   };
 
   const handleEdit = (prod) => {
-    setForm({ nombre: prod.nombre, precio: prod.precio, stock: prod.stock });
+    setForm(prod);
     setEditId(prod.id);
     setModalOpen(true);
   };
@@ -45,25 +57,6 @@ function App() {
   const handleDelete = (id) => {
     if (window.confirm("¿Eliminar producto?")) {
       axios.delete(`${API_URL}${id}/`).then(() => fetchProductos());
-    }
-  };
-  const handleEntrada = (prod) => {
-    const cantidad = parseInt(prompt("Cantidad de entrada:"));
-    if (cantidad > 0) {
-      axios
-        .patch(`${API_URL}${prod.id}/`, { stock: prod.stock + cantidad })
-        .then(() => fetchProductos());
-    }
-  };
-
-  const handleSalida = (prod) => {
-    const cantidad = parseInt(prompt("Cantidad de salida:"));
-    if (cantidad > 0 && prod.stock - cantidad >= 0) {
-      axios
-        .patch(`${API_URL}${prod.id}/`, { stock: prod.stock - cantidad })
-        .then(() => fetchProductos());
-    } else {
-      alert("Stock insuficiente");
     }
   };
 
@@ -86,20 +79,20 @@ function App() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // ✅ Categorías dinámicas
+  // Categorías dinámicas
   const categorias = {
     lista: [...new Set(productos.map((p) => p.categoria || "Sin categoría"))],
     selected: categoria,
   };
 
-  // ✅ Filtrado
+  // Filtrado
   const filtered = productos.filter((p) => {
     const matchNombre = p.nombre.toLowerCase().includes(query.toLowerCase());
     const matchCategoria = categoria ? p.categoria === categoria : true;
     return matchNombre && matchCategoria;
   });
 
-  // ✅ Resumen
+  // Resumen
   const totalProductos = filtered.length;
   const totalUnidades = filtered.reduce(
     (acc, p) => acc + (parseInt(p.stock) || 0),
@@ -112,7 +105,7 @@ function App() {
       <div className="max-w-5xl mx-auto bg-gradient-to-br from-purple-800 via-indigo-900 to-blue-900 rounded-2xl shadow-lg p-8">
         <InventoryCard onAdd={handleAdd} />
 
-        {/* ✅ Nuevo componente de filtros y resumen */}
+        {/* Filtros + Resumen */}
         <FiltersSummary
           query={query}
           onQueryChange={setQuery}
@@ -122,15 +115,20 @@ function App() {
           totalUnidades={totalUnidades}
         />
 
-        <ProductTable
+        {/* Tabla de Productos con Modal para Movimientos */}
+        <ProductTableWithModal
           productos={filtered}
           onEdit={handleEdit}
           onDelete={handleDelete}
-          onEntrada={handleEntrada}
-          onSalida={handleSalida}
+          onMovimiento={(updatedProduct) => {
+            setProductos((prev) =>
+              prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
+            );
+          }}
         />
       </div>
 
+      {/* Modal de Productos */}
       <ProductModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}

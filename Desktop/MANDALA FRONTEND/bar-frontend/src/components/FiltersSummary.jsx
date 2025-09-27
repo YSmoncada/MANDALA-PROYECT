@@ -18,7 +18,7 @@ function FiltersSummary({
         </div>
         <input
           type="text"
-          placeholder="Buscar por nombre o proveedor..."
+          placeholder="Buscar por nombre del producto..."
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           className="w-full pl-12 pr-4 py-3 rounded-lg bg-gray-600 bg-opacity-80 text-white placeholder-gray-300 focus:outline-none focus:ring-0 border-0"

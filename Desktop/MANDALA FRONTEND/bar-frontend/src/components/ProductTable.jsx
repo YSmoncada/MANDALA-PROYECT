@@ -1,15 +1,14 @@
 // src/components/ProductTableWithModal.jsx
 import React, { useState } from "react";
+import axios from "axios";
 import { ArrowDownCircle, ArrowUpCircle, Edit, Trash2 } from "lucide-react";
 import MovimientoModal from "./MovimientoModal";
 
 function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
-  // Estado para el modal
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [modalMode, setModalMode] = useState(null); // 'entrada' | 'salida'
+  const [modalMode, setModalMode] = useState(null);
 
-  // Abrir modal con producto y modo
   const openModal = (prod, mode) => {
     setSelectedProduct(prod);
     setModalMode(mode);
@@ -22,23 +21,25 @@ function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
     setModalMode(null);
   };
 
-  // Maneja el envío del movimiento desde MovimientoModal
-  const handleSubmitMovimiento = (payload) => {
-    // payload contiene: { tipo, cantidad, motivo, usuario, producto }
-    // Aquí delegas al callback de alto nivel (por ejemplo, API call) pasando producto y datos
-    // Puedes adaptar según tu lógica:
-    // onMovimiento(payload);
-    // Por claridad, mapeo a la forma esperada por tu lógica:
-    const data = {
-      productoId: payload.producto?.id,
-      nombreProducto: payload.producto?.nombre,
-      tipo: payload.tipo,
-      cantidad: payload.cantidad,
-      motivo: payload.motivo,
-      usuario: payload.usuario,
-    };
-    if (typeof onMovimiento === "function") onMovimiento(data);
-    closeModal();
+  const handleSubmitMovimiento = async (payload) => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/api/movimientos/", {
+        tipo: payload.tipo,
+        cantidad: payload.cantidad,
+        motivo: payload.motivo,
+        usuario: payload.usuario,
+        producto: payload.producto?.id,
+      });
+
+      const updatedProduct = response.data.producto;
+      if (typeof onMovimiento === "function") {
+        onMovimiento(updatedProduct);
+      }
+
+      closeModal();
+    } catch (error) {
+      console.error("Error al registrar movimiento ❌", error.response?.data || error.message);
+    }
   };
 
   return (
@@ -72,85 +73,42 @@ function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
           ) : (
             productos.map((prod) => {
               const stockBajo = prod.stock <= (prod.stock_minimo || 5);
-              const stockAlto = prod.stock >= (prod.stock_maximo || 5);
+              const stockAlto = prod.stock >= (prod.stock_maximo || 50);
               return (
-                <tr
-                  key={prod.id}
-                  className="border-b border-purple-800 hover:bg-purple-950 transition"
-                >
-                  {/* Producto */}
-                  <td className="py-4 px-2 text-white font-semibold">
-                    {prod.nombre}
-                  </td>
-
-                  {/* Categoría */}
+                <tr key={prod.id} className="border-b border-purple-800 hover:bg-purple-950 transition">
+                  <td className="py-4 px-2 text-white font-semibold">{prod.nombre}</td>
                   <td className="py-4 px-2 text-gray-300">{prod.categoria}</td>
-
-                  {/* Stock */}
-                  <td className="py-4 px-2 text-center text-blue-300 font-bold">
-                    {prod.stock}
-                  </td>
-
-                  {/* Precio */}
+                  <td className="py-4 px-2 text-center text-blue-300 font-bold">{prod.stock}</td>
                   <td className="py-4 px-2 text-center text-green-400 font-bold">
                     ${parseFloat(prod.precio).toFixed(2)}
                   </td>
-
-                  {/* Estado */}
                   <td className="py-4 px-2 text-center">
                     {stockBajo ? (
-                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-red-700 text-red-200 flex items-center justify-center gap-1">
+                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-red-700 text-red-200">
                         ⚠️ Stock Bajo
                       </span>
-                    ) : (
-                      stockAlto ? (
-                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-yellow-700 text-green-200">
+                    ) : stockAlto ? (
+                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-yellow-700 text-green-200">
                         ⚠️ Stock Alto
                       </span>
-                      ) : (
-                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-green-700 text-green-200">
+                    ) : (
+                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-green-700 text-green-200">
                         Disponible
-                        </span>
-                      )
+                      </span>
                     )}
                   </td>
-
-                  {/* Acciones */}
                   <td className="py-4 px-2 text-center">
                     <div className="flex justify-center gap-3">
-                      {/* Entrada */}
-                      <button
-                        onClick={() => openModal(prod, "entrada")}
-                        className="text-green-400 hover:text-green-600 transition"
-                        title="Entrada"
-                      >
+                      <button onClick={() => openModal(prod, "entrada")} className="text-green-400 hover:text-green-600 transition">
                         <ArrowDownCircle size={22} />
                       </button>
-
-                      {/* Salida */}
-                      <button
-                        onClick={() => openModal(prod, "salida")}
-                        className="text-pink-400 hover:text-pink-600 transition"
-                        title="Salida"
-                      >
+                      <button onClick={() => openModal(prod, "salida")} className="text-pink-400 hover:text-pink-600 transition">
                         <ArrowUpCircle size={22} />
                       </button>
-
-                      {/* Editar */}
-                      <button
-                        onClick={() => onEdit && onEdit(prod)}
-                        className="text-blue-400 hover:text-blue-600 transition"
-                        title="Editar"
-                      >
+                      <button onClick={() => onEdit && onEdit(prod)} className="text-blue-400 hover:text-blue-600 transition">
                         <Edit size={22} />
                       </button>
-
-                      {/* Eliminar */}
-                      <button
-                        onClick={() => onDelete && onDelete(prod.id)}
-                        className="text-red-400 hover:text-red-600 transition"
-                        title="Eliminar"
-                      >
+                      <button onClick={() => onDelete && onDelete(prod.id)} className="text-red-400 hover:text-red-600 transition">
                         <Trash2 size={22} />
                       </button>
                     </div>
@@ -162,15 +120,14 @@ function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
         </tbody>
       </table>
 
-      {/* Modal Movimiento (Entrada / Salida) */}
       <MovimientoModal
         open={modalOpen}
         onClose={closeModal}
         onSubmit={handleSubmitMovimiento}
-        // Valores por defecto/opcionales; puedes pasarlos dinámicamente si lo prefieres
-        stockActual={selectedProduct?.stock ?? 200000}
+        stockActual={selectedProduct?.stock ?? 0}
         categoria={selectedProduct?.categoria ?? "Categoría"}
         producto={selectedProduct ?? { id: null, nombre: "" }}
+        tipo={modalMode} // 👈 para diferenciar entrada/salida
       />
     </div>
   );

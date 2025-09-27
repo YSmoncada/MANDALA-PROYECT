@@ -69,9 +69,13 @@ const MovimientoModal = ({
     onSubmit({ tipo, cantidad, motivo, usuario, producto });
   };
 
+  const handleContentClick = (e) => {
+    e.stopPropagation();
+  };
+    
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="bg-slate-900/95 rounded-lg shadow-xl w-full max-w-lg mx-4 p-6 border border-slate-700">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={onClose}>
+      <div className="bg-slate-900/95 rounded-lg shadow-xl w-full max-w-lg mx-4 p-6 border border-slate-700" onClick={handleContentClick}>
 
         {/* Encabezado del Modal */}
         <div className="flex justify-between items-center pb-4 border-b border-slate-700">
