@@ -33,3 +33,39 @@ class PedidoProducto(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField()
 
+class Movimiento(models.Model):
+    TIPOS_MOVIMIENTO = [
+        ("entrada", "Entrada"),
+        ("salida", "Salida"),
+    ]
+
+    MOTIVOS = [
+        ("Compra", "Compra"),
+        ("Consumo", "Consumo"),
+        ("Devolución", "Devolución"),
+        ("Ajuste", "Ajuste"),
+        ("Venta", "Venta"),
+    ]
+
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name="movimientos")
+    tipo = models.CharField(max_length=10, choices=TIPOS_MOVIMIENTO)
+    cantidad = models.PositiveIntegerField()
+    motivo = models.CharField(max_length=20, choices=MOTIVOS)
+    usuario = models.CharField(max_length=100)
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        # Si es nuevo movimiento (no update)
+        if not self.pk:
+            if self.tipo == "entrada":
+                self.producto.stock += self.cantidad
+            elif self.tipo == "salida":
+                if self.producto.stock < self.cantidad:
+                    raise ValueError("❌ Stock insuficiente para realizar la salida.")
+                self.producto.stock -= self.cantidad
+            self.producto.save()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.tipo} - {self.producto.nombre} ({self.cantidad})"
+
