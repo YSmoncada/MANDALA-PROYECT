@@ -25,13 +25,6 @@ function App() {
     
   }, []);
   
-  const entradaAux = () => {
-    axios.post(`${API_URL_MOVIMIENTOS}`, { producto: 7, tipo_movimiento: 'entrada', cantidad: 10, motivo: 'Stock inicial', usuario: 'Admin' })
-      .then(() => {
-        fetchProductos();
-        alert("Entrada registrada");
-      }).catch((e) => alert(e));
-  }
   const fetchProductos = () => {
     axios
       .get(API_URL)
@@ -56,30 +49,47 @@ function App() {
       axios.delete(`${API_URL}${id}/`).then(() => fetchProductos());
     }
   };
-  const handleEntrada = (prod) => {
-    const cantidad = parseInt(prompt("Cantidad de entrada:"));
-    const motivo = prompt("Motivo de la entrada:");
-    const usuario = prompt("Usuario:");
-
-    if (cantidad > 0) {
-      axios
-        .post(`${API_URL_MOVIMIENTOS}`, { producto: prod.id, tipo_movimiento: 'entrada', cantidad: cantidad, motivo: motivo, usuario: usuario })
-        .then(() => {
-          fetchProductos();
-          alert("Entrada registrada");
-        }).catch((e) => alert(e));
+  const handleMovimientoFromTable = (movimientoData) => {
+    console.log('handleMovimientoFromTable llamado con:', movimientoData);
+    const { productoId, tipo, cantidad, motivo, usuario } = movimientoData;
+    
+    const dataToSend = { 
+      producto: productoId, 
+      tipo_movimiento: tipo, 
+      cantidad: cantidad, 
+      motivo: motivo, 
+      usuario: usuario 
+    };
+    
+    console.log('Enviando a API:', dataToSend);
+    if (!productoId || !tipo || !cantidad || !motivo || !usuario) {
+      alert("Faltan datos para registrar el movimiento");
+      return;
     }
-  };
 
-  const handleSalida = (prod) => {
-    const cantidad = parseInt(prompt("Cantidad de salida:"));
-    if (cantidad > 0 && prod.stock - cantidad >= 0) {
-      axios
-        .patch(`${API_URL}${prod.id}/`, { stock: prod.stock - cantidad })
-        .then(() => fetchProductos());
-    } else {
-      alert("Stock insuficiente");
+    if (tipo === 'salida') {
+      const producto = productos.find(p => p.id === productoId);
+      if (!producto) {
+        alert("Producto no encontrado");
+        return;
+      }
+      if (cantidad > producto.stock) {
+        alert("No hay suficiente stock para esta salida");
+        return;
+      }
     }
+    axios
+      .post(`${API_URL_MOVIMIENTOS}`, dataToSend)
+      .then((response) => {
+        console.log('Respuesta exitosa:', response.data);
+        fetchProductos();
+        alert(`${tipo === 'entrada' ? 'Entrada' : 'Salida'} registrada correctamente`);
+      })
+      .catch((error) => {
+        console.error('Error al registrar movimiento:', error);
+        console.error('Detalles del error:', error.response?.data);
+        alert('Error al registrar el movimiento: ' + (error.response?.data?.message || error.message));
+      });
   };
 
   const handleSubmit = (e) => {
@@ -141,8 +151,7 @@ function App() {
           productos={filtered}
           onEdit={handleEdit}
           onDelete={handleDelete}
-          onEntrada={handleEntrada}
-          onSalida={handleSalida}
+          onMovimiento={handleMovimientoFromTable}
         />
       </div>
 
@@ -154,7 +163,7 @@ function App() {
         onChange={handleChange}
         editId={editId}
       />
-      <button className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600" onClick={entradaAux}>Agregar Movimiento</button>
+      
     </div>
     
   );

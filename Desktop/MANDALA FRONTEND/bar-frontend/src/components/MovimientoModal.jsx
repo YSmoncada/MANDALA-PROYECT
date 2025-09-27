@@ -43,6 +43,7 @@ const MovimientoModal = ({
   stockActual = 200750,
   categoria = 'Bebidas Alcohólicas',
   producto = { id: null, nombre: 'whisky' },
+  tipoInicial = 'entrada',
 }) => {
   const [tipo, setTipo] = useState('entrada'); // 'entrada' o 'salida'
   const [cantidad, setCantidad] = useState(1);
@@ -52,12 +53,12 @@ const MovimientoModal = ({
   // Resetea campos al abrir/cerrar
   React.useEffect(() => {
     if (open) {
-      setTipo('entrada');
+      setTipo(tipoInicial || 'entrada');
       setCantidad(1);
       setMotivo('');
       setUsuario('Administrador');
     }
-  }, [open]);
+  }, [open, tipoInicial]);
 
   const isValid = useMemo(() => {
     return cantidad > 0 && motivo.trim().length > 0 && usuario.trim().length > 0;

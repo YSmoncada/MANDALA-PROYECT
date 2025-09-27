@@ -167,10 +167,10 @@ function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
         open={modalOpen}
         onClose={closeModal}
         onSubmit={handleSubmitMovimiento}
-        // Valores por defecto/opcionales; puedes pasarlos dinámicamente si lo prefieres
         stockActual={selectedProduct?.stock ?? 200000}
         categoria={selectedProduct?.categoria ?? "Categoría"}
         producto={selectedProduct ?? { id: null, nombre: "" }}
+        tipoInicial={modalMode}
       />
     </div>
   );
