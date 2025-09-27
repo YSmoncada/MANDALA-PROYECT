@@ -57,8 +57,8 @@ function App() {
       producto: productoId, 
       tipo_movimiento: tipo, 
       cantidad: cantidad, 
-      motivo: motivo, 
-      usuario: usuario 
+      motivo_movimiento: motivo, 
+      usuario_responsable: usuario 
     };
     
     console.log('Enviando a API:', dataToSend);
