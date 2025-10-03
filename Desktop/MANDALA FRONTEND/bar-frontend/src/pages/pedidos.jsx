@@ -1,9 +1,21 @@
-import { useState } from "react";
+// src/pages/Pedidos.jsx
+import { useState, useEffect } from "react";
 import HeaderPedidos from "../components/HeaderPedidos";
 import CodeInput from "../components/CodeInput";
+import ProductGrid from "../components/ProductGrid";
 
 export default function Pedidos() {
   const [mesera, setMesera] = useState(null);
+  const [codigoConfirmado, setCodigoConfirmado] = useState(false);
+
+  // Cargar mesera guardada en localStorage
+  useEffect(() => {
+    const savedMesera = localStorage.getItem("mesera");
+    if (savedMesera) {
+      setMesera(savedMesera);
+      setCodigoConfirmado(true);
+    }
+  }, []);
 
   const meseras = [
     "María González",
@@ -13,62 +25,72 @@ export default function Pedidos() {
     "Valentina Torres",
   ];
 
+  const handleSelectMesera = (nombre) => {
+    setMesera(nombre);
+    setCodigoConfirmado(false);
+  };
+
+  const handleCodigoSubmit = (codigo) => {
+    if (codigo.length === 4) {
+      setCodigoConfirmado(true);
+      localStorage.setItem("mesera", mesera);
+    } else {
+      alert("El código debe tener 4 dígitos");
+    }
+  };
+
+  const handleCambiarMesera = () => {
+    setMesera(null);
+    setCodigoConfirmado(false);
+    localStorage.removeItem("mesera");
+  };
+
+  const handleBackToMeseras = () => {
+    handleCambiarMesera();
+  };
+
   return (
-<div className="min-h-screen flex flex-col bg-gradient-to-tl from-[#0E0D23] to-[#511F86]">
-      <HeaderPedidos />
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#0E0D23] to-[#511F86]">
+      {/* Header con mesera y botón de logout */}
+      <HeaderPedidos mesera={mesera} onLogout={handleCambiarMesera} />
 
       <div className="flex flex-1 items-center justify-center p-6">
-        {!mesera ? (
-          <div className="bg-purple-800/40 p-8 rounded-2xl shadow-xl w-full max-w-md text-center">
-            <div className="flex flex-col items-center mb-6">
-              <div className="bg-pink-500 p-4 rounded-full mb-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-10 w-10 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M5.121 17.804A9.969 9.969 0 0112 15c2.21 0 4.236.72 5.879 1.927M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-              </div>
-              <h2 className="text-white text-2xl font-bold">
-                Seleccionar Mesera
-              </h2>
-              <p className="text-gray-300 text-sm mt-2">
-                Elige tu nombre para comenzar
-              </p>
-            </div>
-
+        {/* Paso 1: Selección mesera */}
+        {!mesera && !codigoConfirmado && (
+          <div className="bg-[#441E73]/90 border border-[#6C3FA8] p-8 rounded-2xl shadow-lg w-full max-w-md text-center">
+            <h2 className="text-white text-2xl font-bold mb-2">Seleccionar Mesera</h2>
+            <p className="text-[#C2B6D9] text-sm mb-6">
+              Elige tu nombre para comenzar
+            </p>
             <div className="grid grid-cols-2 gap-3 mb-4">
               {meseras.map((nombre) => (
                 <button
                   key={nombre}
-                  onClick={() => setMesera(nombre)}
-                  className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition"
+                  onClick={() => handleSelectMesera(nombre)}
+                  className="bg-transparent border border-gray-500 hover:bg-purple-700 text-white py-3 px-4 rounded-lg transition"
                 >
                   {nombre}
                 </button>
               ))}
             </div>
-
-            <button className="bg-transparent border border-gray-500 hover:bg-purple-600 text-white py-2 px-4 rounded-lg w-full transition">
-              Agregar mesera
+            <button className="border border-gray-500 text-gray-300 hover:bg-gray-600/30 py-2 px-4 rounded-lg w-full transition">
+              + Otro nombre
             </button>
           </div>
-        ) : (
+        )}
+
+        {/* Paso 2: Código de acceso */}
+        {mesera && !codigoConfirmado && (
           <CodeInput
             mesera={mesera}
-            onBack={() => setMesera(null)}
-            onSubmit={(codigo) =>
-              alert(`Mesera: ${mesera}\nCódigo: ${codigo}`)
-            }
+            onBack={handleBackToMeseras}
+            onSubmit={handleCodigoSubmit}
           />
+        )}
+
+        {/* Paso 3: Interfaz de productos */}
+        {mesera && codigoConfirmado && (
+          <ProductGrid mesera={mesera} onCambiar={handleCambiarMesera} />
         )}
       </div>
     </div>

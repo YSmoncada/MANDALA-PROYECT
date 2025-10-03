@@ -21,7 +21,7 @@ function Home() {
             <span className="text-lg font-semibold">Inventario</span>
           </button>
           <button
-            onClick={() => navigate("/pedidos")}
+            onClick={() => navigate("/login")}
             className="flex flex-col items-center justify-center w-48 h-48 bg-white/10 hover:bg-white/20 rounded-2xl border border-purple-400/30 hover:border-purple-400/60 transition-all duration-300 shadow-lg"
           >
             <ClipboardList className="w-16 h-16 mb-4 text-purple-300" />

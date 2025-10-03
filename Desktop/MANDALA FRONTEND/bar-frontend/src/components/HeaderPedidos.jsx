@@ -1,9 +1,9 @@
 // src/components/HeaderPedidos.jsx
 import { Link } from "react-router-dom";
 
-export default function HeaderPedidos() {
+export default function HeaderPedidos({ mesera, onLogout }) {
   return (
-    <header className="bg-[rgb(37,17,66)] text-white shadow-md">
+    <header className="bg-[rgb(37,17,66)] text-white shadow-md relative">
       <div className="flex items-center justify-between px-6 h-16">
         {/* Logo + título */}
         <div className="flex items-center space-x-3">
@@ -29,10 +29,10 @@ export default function HeaderPedidos() {
           </div>
         </div>
 
-        {/* Botones */}
+        {/* Botones de navegación */}
         <nav className="flex items-center space-x-6">
           <Link
-            to="/menu"
+            to="/login"
             className="flex items-center space-x-1 bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded-lg transition"
           >
             <svg
@@ -73,6 +73,16 @@ export default function HeaderPedidos() {
             </svg>
             <span>Historial</span>
           </Link>
+
+          {/* NUEVO: Botón de cerrar sesión */}
+          {mesera && (
+            <button
+              onClick={onLogout}
+              className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg transition text-white"
+            >
+              Cerrar sesión
+            </button>
+          )}
         </nav>
       </div>
     </header>

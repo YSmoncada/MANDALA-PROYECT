@@ -4,6 +4,7 @@ import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
 import Inventario from "./pages/Inventario";
 import Home from "./pages/Home";
 import Pedidos from "./pages/pedidos";
+import PedidosPage from "./pages/PedidosPage";
 function App() {
 
   return (
@@ -11,7 +12,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/inventario" element={<Inventario />} />
-        <Route path="/pedidos" element={<Pedidos />} />
+        <Route path="/login" element={<Pedidos  />} />
+        <Route path="/Pedidos" element={<PedidosPage />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
