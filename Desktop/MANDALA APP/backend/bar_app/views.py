@@ -17,6 +17,12 @@ class MeseraViewSet(viewsets.ModelViewSet):
 class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all().order_by('-id')
     serializer_class = ProductoSerializer
+    
+    def perform_create(self, serializer):
+        serializer.save()
+
+    def perform_update(self, serializer):
+        serializer.save()
 
 class MovimientoViewSet(viewsets.ModelViewSet):
     queryset = Movimiento.objects.all().order_by("-fecha")

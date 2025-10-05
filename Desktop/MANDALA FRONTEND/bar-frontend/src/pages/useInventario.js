@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
+import { validateImageFile, createImagePreview } from "../utils/imageUtils";
 
 const API_URL = "http://127.0.0.1:8000/api/productos/";
 
@@ -20,6 +21,8 @@ export function useInventario() {
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState(initialForm);
   const [editId, setEditId] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
 
   // Filtros
   const [query, setQuery] = useState("");
@@ -39,12 +42,26 @@ export function useInventario() {
   const handleAdd = () => {
     setForm(initialForm);
     setEditId(null);
+    setSelectedImage(null);
+    setImagePreview("");
     setModalOpen(true);
   };
 
   const handleEdit = (prod) => {
-    setForm(prod);
+    setForm({
+      nombre: prod.nombre || "",
+      categoria: prod.categoria || "",
+      stock: prod.stock?.toString() || "",
+      stock_minimo: prod.stock_minimo?.toString() || "",
+      stock_maximo: prod.stock_maximo?.toString() || "",
+      precio: prod.precio?.toString() || "",
+      unidad: prod.unidad || "",
+      proveedor: prod.proveedor || "",
+      ubicacion: prod.ubicacion || "",
+    });
     setEditId(prod.id);
+    setSelectedImage(null); // No hay nueva imagen seleccionada
+    setImagePreview(prod.imagen || ""); // Mostrar imagen existente
     setModalOpen(true);
   };
 
@@ -56,18 +73,86 @@ export function useInventario() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Si estamos editando y no hay nueva imagen, usar JSON
+    if (editId && !selectedImage) {
+      const request = axios.put(`${API_URL}${editId}/`, form);
+      
+      request.then(() => {
+        setModalOpen(false);
+        setSelectedImage(null);
+        setImagePreview("");
+        setEditId(null);
+        setForm(initialForm);
+        fetchProductos();
+      }).catch((error) => {
+        console.error("Error al actualizar producto:", error);
+      });
+      return;
+    }
+    
+    // Si hay nueva imagen o es un producto nuevo, usar FormData
+    const formData = new FormData();
+    
+    // Agregar todos los campos del formulario
+    Object.keys(form).forEach(key => {
+      formData.append(key, form[key]);
+    });
+    
+    // Agregar imagen si existe
+    if (selectedImage) {
+      formData.append('imagen', selectedImage);
+    }
+
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    };
+
     const request = editId
-      ? axios.put(`${API_URL}${editId}/`, form)
-      : axios.post(API_URL, form);
+      ? axios.put(`${API_URL}${editId}/`, formData, config)
+      : axios.post(API_URL, formData, config);
 
     request.then(() => {
       setModalOpen(false);
+      setSelectedImage(null);
+      setImagePreview("");
+      setEditId(null);
+      setForm(initialForm);
       fetchProductos();
+    }).catch((error) => {
+      console.error("Error al guardar producto:", error);
     });
   };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    
+    // Si no hay archivo, limpiar imagen
+    if (!file) {
+      setSelectedImage(null);
+      setImagePreview("");
+      return;
+    }
+    
+    try {
+      // Validar el archivo de imagen
+      validateImageFile(file);
+      
+      setSelectedImage(file);
+      
+      // Crear preview de la imagen
+      const preview = await createImagePreview(file);
+      setImagePreview(preview);
+    } catch (error) {
+      alert(error.message);
+      e.target.value = ''; // Limpiar el input
+    }
   };
 
   const handleMovimiento = (updatedProduct) => {
@@ -104,6 +189,7 @@ export function useInventario() {
     categorias,
     totalProductos,
     totalUnidades,
+    imagePreview,
     // Funciones
     setModalOpen,
     setQuery,
@@ -113,6 +199,8 @@ export function useInventario() {
     handleDelete,
     handleSubmit,
     handleChange,
+    handleImageChange,
     handleMovimiento,
+    fetchProductos,
   };
 }
