@@ -1,9 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
-
+import axios from "axios";
 export default function ProductGrid({ mesera, onCambiar }) {
   const [filtro, setFiltro] = useState("licores");
+  const [productosData, setProductosData] = useState([]);
 
+  useEffect(() => {
+    fetchProductos();
+  }, []);
+
+  const productosAPIUrl = "http://localhost:8000/api/productos/";
+  const fetchProductos = () => {
+    axios.get(productosAPIUrl)
+      .then((response) => {
+        setProductosData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching productos:", error);
+      });
+  }
   // Lista de productos con ruta de imagen en /public/productos/
   const productos = [
     { nombre: "Aguardiente Antioqueño", detalle: "Botella 750ml", precio: 45000, categoria: "licores", imagen: "/antioqueño.png" },
@@ -60,6 +75,12 @@ export default function ProductGrid({ mesera, onCambiar }) {
       {/* Productos */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {productosFiltrados.map((producto, i) => (
+          <ProductCard key={i} producto={producto} />
+        ))}
+      </div>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {productosData.map((producto, i) => (
           <ProductCard key={i} producto={producto} />
         ))}
       </div>

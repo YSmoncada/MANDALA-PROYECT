@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { ArrowDownCircle, ArrowUpCircle, Edit, Trash2 } from "lucide-react";
 import MovimientoModal from "./MovimientoModal";
+import { getImageUrl } from "../utils/imageUtils";
 
 function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -47,6 +48,7 @@ function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
       <table className="w-full">
         <thead>
           <tr className="text-gray-300 text-sm border-b border-purple-700">
+            <th className="py-4 px-2 text-left">Imagen</th>
             <th className="py-4 px-2 text-left">Producto</th>
             <th className="py-4 px-2 text-left">Categoría</th>
             <th className="py-4 px-2 text-center">Stock Actual</th>
@@ -58,7 +60,7 @@ function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
         <tbody>
           {productos.length === 0 ? (
             <tr>
-              <td colSpan={6} className="py-16 text-center text-gray-300">
+              <td colSpan={7} className="py-16 text-center text-gray-300">
                 <div className="flex flex-col items-center gap-2">
                   <span className="text-5xl">📦</span>
                   <span className="text-lg font-bold text-white">
@@ -76,6 +78,24 @@ function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
               const stockAlto = prod.stock >= (prod.stock_maximo || 50);
               return (
                 <tr key={prod.id} className="border-b border-purple-800 hover:bg-purple-950 transition">
+                  <td className="py-4 px-2">
+                    {prod.imagen ? (
+                      <img 
+                        src={getImageUrl(prod.imagen)} 
+                        alt={prod.nombre}
+                        className="w-12 h-12 object-cover rounded-lg border border-gray-600"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    {!prod.imagen && (
+                      <div className="w-12 h-12 bg-gray-600 rounded-lg flex items-center justify-center text-gray-400 text-xs">
+                        Sin img
+                      </div>
+                    )}
+                  </td>
                   <td className="py-4 px-2 text-white font-semibold">{prod.nombre}</td>
                   <td className="py-4 px-2 text-gray-300">{prod.categoria}</td>
                   <td className="py-4 px-2 text-center text-blue-300 font-bold">{prod.stock}</td>
