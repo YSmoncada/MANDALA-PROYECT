@@ -18,6 +18,7 @@ function Inventario() {
     totalProductos,
     totalUnidades,
     imagePreview,
+    originalImageUrl,
     setModalOpen,
     setQuery,
     setCategoria,
@@ -30,9 +31,6 @@ function Inventario() {
     handleMovimiento,
     fetchProductos,
   } = useInventario();
-  useEffect(() => {
-    fetchProductos();
-  }, []); // Cargar productos al montar el componente
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 p-8">
@@ -68,6 +66,7 @@ function Inventario() {
         onChange={handleChange}
         onImageChange={handleImageChange}
         imagePreview={imagePreview}
+        originalImageUrl={originalImageUrl}
         editId={editId}
       />
     </div>

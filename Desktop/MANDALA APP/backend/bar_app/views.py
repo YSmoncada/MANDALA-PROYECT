@@ -17,32 +17,12 @@ class MeseraViewSet(viewsets.ModelViewSet):
 class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all().order_by('-id')
     serializer_class = ProductoSerializer
-    
-    def perform_create(self, serializer):
-        serializer.save()
-
-    def perform_update(self, serializer):
-        serializer.save()
 
 class MovimientoViewSet(viewsets.ModelViewSet):
     queryset = Movimiento.objects.all().order_by("-fecha")
     serializer_class = MovimientoSerializer
 
-def perform_create(self, serializer):
-        movimiento = serializer.save()
-        producto = movimiento.producto
-
-        if movimiento.tipo == "entrada":
-            producto.stock += movimiento.cantidad
-        elif movimiento.tipo == "salida":
-            producto.stock -= movimiento.cantidad
-
-        producto.save()
-
-        return Response({
-            "movimiento": MovimientoSerializer(movimiento).data,
-            "producto": ProductoSerializer(producto).data
-        }, status=status.HTTP_201_CREATED)
+    
 
 
 class PedidoViewSet(viewsets.ModelViewSet):
