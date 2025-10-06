@@ -1,7 +1,6 @@
 import React, {useEffect} from "react";
 import { getImageUrl } from "../utils/imageUtils";
-import { fetchProductos } from "../pages/useInventario";
-function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImageChange, imagePreview }) {
+function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImageChange, imagePreview, originalImageUrl }) {
   if (!open) return null;
 
   const handleContentClick = (e) => {
@@ -26,7 +25,7 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
           {/* Imagen del Producto */}
           <div className="col-span-2">
             <label className="text-sm block mb-1">
-              Imagen del Producto {!editId && <span className="text-red-400">*</span>}
+              Imagen del Producto <span className="text-gray-500">(Opcional)</span>
             </label>
             <div className="flex items-center gap-4">
               <input
@@ -48,8 +47,12 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
                       // Crear evento personalizado para limpiar imagen
                       const clearEvent = { target: { files: [] } };
                       onImageChange(clearEvent);
+                      // Limpiar el input file
+                      const fileInput = document.querySelector('input[type="file"]');
+                      if (fileInput) fileInput.value = '';
                     }}
                     className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition"
+                    title={editId ? "Restaurar imagen original" : "Quitar imagen"}
                   >
                     ×
                   </button>
@@ -58,8 +61,8 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
             </div>
             <p className="text-xs text-gray-400 mt-1">
               {editId 
-                ? "Opcional: selecciona una nueva imagen solo si quieres cambiarla"
-                : "Selecciona una imagen (JPEG, PNG, GIF, WebP - máx 5MB)"
+                ? "Selecciona una nueva imagen solo si quieres cambiarla"
+                : "Opcional: selecciona una imagen (JPEG, PNG, GIF, WebP - máx 5MB)"
               }
             </p>
           </div>

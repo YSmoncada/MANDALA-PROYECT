@@ -23,6 +23,7 @@ export function useInventario() {
   const [editId, setEditId] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
+  const [originalImageUrl, setOriginalImageUrl] = useState(""); // Para rastrear la imagen original
 
   // Filtros
   const [query, setQuery] = useState("");
@@ -44,6 +45,7 @@ export function useInventario() {
     setEditId(null);
     setSelectedImage(null);
     setImagePreview("");
+    setOriginalImageUrl("");
     setModalOpen(true);
   };
 
@@ -60,8 +62,13 @@ export function useInventario() {
       ubicacion: prod.ubicacion || "",
     });
     setEditId(prod.id);
-    setSelectedImage(null); // No hay nueva imagen seleccionada
-    setImagePreview(prod.imagen || ""); // Mostrar imagen existente
+    setSelectedImage(null); // No hay nueva imagen seleccionada inicialmente
+    
+    // Configurar imagen existente
+    const existingImageUrl = prod.imagen || "";
+    setOriginalImageUrl(existingImageUrl);
+    setImagePreview(existingImageUrl);
+    
     setModalOpen(true);
   };
 
@@ -74,56 +81,62 @@ export function useInventario() {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Si estamos editando y no hay nueva imagen, usar JSON
-    if (editId && !selectedImage) {
-      const request = axios.put(`${API_URL}${editId}/`, form);
+    // Determinar si necesitamos enviar FormData o JSON
+    const needsFormData = selectedImage || (!editId && selectedImage);
+    
+    if (needsFormData) {
+      // Usar FormData cuando hay nueva imagen
+      const formData = new FormData();
       
+      // Agregar todos los campos del formulario
+      Object.keys(form).forEach(key => {
+        formData.append(key, form[key]);
+      });
+      
+      // Agregar imagen solo si hay una nueva seleccionada
+      if (selectedImage) {
+        formData.append('imagen', selectedImage);
+      }
+
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+
+      const request = editId
+        ? axios.put(`${API_URL}${editId}/`, formData, config)
+        : axios.post(API_URL, formData, config);
+
       request.then(() => {
-        setModalOpen(false);
-        setSelectedImage(null);
-        setImagePreview("");
-        setEditId(null);
-        setForm(initialForm);
+        resetModalState();
         fetchProductos();
       }).catch((error) => {
-        console.error("Error al actualizar producto:", error);
+        console.error("Error al guardar producto:", error);
       });
-      return;
+    } else {
+      // Usar JSON cuando no hay cambios en la imagen
+      const request = editId
+        ? axios.put(`${API_URL}${editId}/`, form)
+        : axios.post(API_URL, form);
+      
+      request.then(() => {
+        resetModalState();
+        fetchProductos();
+      }).catch((error) => {
+        console.error("Error al guardar producto:", error);
+      });
     }
-    
-    // Si hay nueva imagen o es un producto nuevo, usar FormData
-    const formData = new FormData();
-    
-    // Agregar todos los campos del formulario
-    Object.keys(form).forEach(key => {
-      formData.append(key, form[key]);
-    });
-    
-    // Agregar imagen si existe
-    if (selectedImage) {
-      formData.append('imagen', selectedImage);
-    }
+  };
 
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    };
-
-    const request = editId
-      ? axios.put(`${API_URL}${editId}/`, formData, config)
-      : axios.post(API_URL, formData, config);
-
-    request.then(() => {
-      setModalOpen(false);
-      setSelectedImage(null);
-      setImagePreview("");
-      setEditId(null);
-      setForm(initialForm);
-      fetchProductos();
-    }).catch((error) => {
-      console.error("Error al guardar producto:", error);
-    });
+  // Función helper para resetear el estado del modal
+  const resetModalState = () => {
+    setModalOpen(false);
+    setSelectedImage(null);
+    setImagePreview("");
+    setOriginalImageUrl("");
+    setEditId(null);
+    setForm(initialForm);
   };
 
   const handleChange = (e) => {
@@ -133,10 +146,16 @@ export function useInventario() {
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     
-    // Si no hay archivo, limpiar imagen
-    if (!file) {
+    // Si no hay archivo, restaurar imagen original o limpiar
+    if (!file || file.length === 0) {
       setSelectedImage(null);
-      setImagePreview("");
+      if (editId && originalImageUrl) {
+        // Restaurar imagen original si estamos editando
+        setImagePreview(originalImageUrl);
+      } else {
+        // Limpiar completamente si es nuevo producto
+        setImagePreview("");
+      }
       return;
     }
     
@@ -190,6 +209,7 @@ export function useInventario() {
     totalProductos,
     totalUnidades,
     imagePreview,
+    originalImageUrl,
     // Funciones
     setModalOpen,
     setQuery,
