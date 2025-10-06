@@ -17,7 +17,7 @@ export default function ProductCard({ producto }) {
 
       {/* Nombre */}
       <h3 className="font-bold text-lg">{producto.nombre}</h3>
-      <p className="text-sm text-gray-400">{producto.detalle}</p>
+      <p className="text-sm text-gray-400">{producto.unidad}</p>
 
       {/* Precio */}
       <p className="text-green-400 font-semibold mt-2">

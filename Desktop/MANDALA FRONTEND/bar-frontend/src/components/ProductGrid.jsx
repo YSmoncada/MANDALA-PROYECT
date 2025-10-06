@@ -2,39 +2,31 @@ import { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
 import axios from "axios";
 export default function ProductGrid({ mesera, onCambiar }) {
-  const [filtro, setFiltro] = useState("licores");
+  const [filtro, setFiltro] = useState("cerveza");
   const [productosData, setProductosData] = useState([]);
-
+  
   useEffect(() => {
-    fetchProductos();
-  }, []);
+    fetchProductos(filtro);
+  }, [filtro]);
 
   const productosAPIUrl = "http://localhost:8000/api/productos/";
-  const fetchProductos = () => {
+  const fetchProductos = (filtro) => {
     axios.get(productosAPIUrl)
       .then((response) => {
-        setProductosData(response.data);
+        console.log("Productos fetched:", response.data);
+        console.log("Current filtro:", response.data.filter(p => p.categoria === filtro));
+        if (filtro === "") {
+          setProductosData(response.data);
+          return;
+        }
+        setProductosData(response.data.filter(p => p.categoria === filtro));
       })
       .catch((error) => {
         console.error("Error fetching productos:", error);
       });
   }
   // Lista de productos con ruta de imagen en /public/productos/
-  const productos = [
-    { nombre: "Aguardiente Antioqueño", detalle: "Botella 750ml", precio: 45000, categoria: "licores", imagen: "/antioqueño.png" },
-    { nombre: "Ron Medellín Añejo", detalle: "Botella 750ml", precio: 85000, categoria: "licores", imagen: "/ron-medellin.png" },
-    { nombre: "Whisky Old Parr", detalle: "Botella 750ml", precio: 120000, categoria: "licores", imagen: "/old-parr.png" },
-    { nombre: "Vodka Absolut", detalle: "Botella 750ml", precio: 95000, categoria: "licores", imagen: "/absolut.png" },
-
-    { nombre: "Aguila", detalle: "Cerveza Nacional - Botella 330ml", precio: 4500, categoria: "cervezas", imagen: "/aguila.png" },
-    { nombre: "Club Colombia", detalle: "Cerveza Premium - Botella 330ml", precio: 5000, categoria: "cervezas", imagen: "/club-colombia.png" },
-    { nombre: "Poker", detalle: "Cerveza Nacional - Botella 330ml", precio: 4200, categoria: "cervezas", imagen: "/poker.png" },
-    { nombre: "Costeña", detalle: "Cerveza Nacional - Botella 330ml", precio: 4000, categoria: "cervezas", imagen: "/costena.png" },
-    { nombre: "Pilsen", detalle: "Cerveza Nacional - Botella 330ml", precio: 4300, categoria: "cervezas", imagen: "/pilsen.png" },
-    { nombre: "Andina", detalle: "Cerveza Nacional - Botella 330ml", precio: 4800, categoria: "cervezas", imagen: "/andina.png" },
-  ];
-
-  const productosFiltrados = productos.filter((p) => p.categoria === filtro);
+  
 
   return (
     <div className="w-full max-w-6xl">
@@ -51,33 +43,46 @@ export default function ProductGrid({ mesera, onCambiar }) {
       </div>
 
       {/* Filtros */}
-      <div className="flex justify-center mb-6">
+      <div className="flex justify-center mb-9 gap-2">
+          <button
+            onClick={() => setFiltro("")}
+            className={`py-2 px-6 rounded transition ${filtro === "" 
+              ? "bg-purple-700 text-white" 
+              : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+            }`}
+          >
+            Todos
+          </button>
         <button
-          onClick={() => setFiltro("licores")}
-          className={`py-2 px-6 rounded-l-lg transition ${filtro === "licores"
+          onClick={() => setFiltro("vinos")}
+          className={`py-2 px-6 rounded transition ${filtro === "vinos"
               ? "bg-purple-700 text-white"
               : "bg-gray-700 text-gray-300 hover:bg-gray-600"
             }`}
         >
-          Licores
+          Vinos
         </button>
         <button
-          onClick={() => setFiltro("cervezas")}
-          className={`py-2 px-6 rounded-r-lg transition ${filtro === "cervezas"
+          onClick={() => setFiltro("cerveza")}
+          className={`py-2 px-6 rounded transition ${filtro === "cerveza"
               ? "bg-purple-700 text-white"
               : "bg-gray-700 text-gray-300 hover:bg-gray-600"
             }`}
         >
           Cervezas
         </button>
+        <button
+          onClick={() => setFiltro("destilados")}
+          className={`py-2 px-6 rounded transition ${filtro === "destilados"
+              ? "bg-purple-700 text-white"
+              : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+            }`}
+        >
+          Destilados
+        </button>
       </div>
 
       {/* Productos */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {productosFiltrados.map((producto, i) => (
-          <ProductCard key={i} producto={producto} />
-        ))}
-      </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {productosData.map((producto, i) => (
