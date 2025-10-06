@@ -31,48 +31,58 @@ export default function HeaderPedidos({ mesera, onLogout }) {
 
         {/* Botones de navegación */}
         <nav className="flex items-center space-x-6">
-          <Link
-            to="/login"
-            className="flex items-center space-x-1 bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded-lg transition"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+          {mesera ? (
+            <Link
+              to="/login"
+              className="flex items-center space-x-1 bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded-lg transition"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-            <span>Menú</span>
-          </Link>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              <span>Menú</span>
+            </Link>
+          ) : (
+            <span className="flex items-center space-x-1 bg-purple-800/50 text-gray-400 px-3 py-1 rounded-lg cursor-not-allowed">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              <span>Menú</span>
+            </span>
+          )}
 
-          <Link to="/pedidos" className="flex items-center space-x-1 hover:text-pink-400">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h18l-1 9H4L3 3z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 16a2 2 0 11-4 0m8 0a2 2 0 11-4 0" />
-            </svg>
-            <span>Pedido</span>
-          </Link>
+          {mesera ? (
+            <Link to="/pedidos" className="flex items-center space-x-1 hover:text-pink-400">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h18l-1 9H4L3 3z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 16a2 2 0 11-4 0m8 0a2 2 0 11-4 0" />
+              </svg>
+              <span>Pedido</span>
+            </Link>
+          ) : (
+            <span className="flex items-center space-x-1 text-gray-500 cursor-not-allowed">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h18l-1 9H4L3 3z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 16a2 2 0 11-4 0m8 0a2 2 0 11-4 0" />
+              </svg>
+              <span>Pedido</span>
+            </span>
+          )}
 
-          <Link to="/historial" className="flex items-center space-x-1 hover:text-pink-400">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span>Historial</span>
-          </Link>
+          {mesera ? (
+            <Link to="/historial" className="flex items-center space-x-1 hover:text-pink-400">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Historial</span>
+            </Link>
+          ) : (
+            <span className="flex items-center space-x-1 text-gray-500 cursor-not-allowed">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Historial</span>
+            </span>
+          )}
 
           {/* NUEVO: Botón de cerrar sesión */}
           {mesera && (

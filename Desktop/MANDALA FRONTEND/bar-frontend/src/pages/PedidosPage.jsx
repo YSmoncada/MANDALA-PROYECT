@@ -1,21 +1,38 @@
 // src/pages/PedidosPage.jsx
-import HeaderPedidos from "../components/HeaderPedidos";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import HeaderPedidos from "../components/HeaderPedidos";  
 
-export default function PedidosPage({ mesera = "María González", onCambiar }) {
+export default function PedidosPage() {
+  const [mesera, setMesera] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const savedMesera = localStorage.getItem("mesera");
+    if (savedMesera) {
+      setMesera(savedMesera);
+    } else {
+      // Si no hay mesera, redirigir al login
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("mesera");
+    navigate("/login");
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#0E0D23] to-[#511F86]">
       {/* Header */}
-      <HeaderPedidos />
+      <HeaderPedidos mesera={mesera} onLogout={handleLogout} />
 
       {/* Contenido principal */}
       <div className="flex flex-col items-center justify-center flex-1 p-6">
         {/* Nombre mesera y botón cambiar */}
         <div className="mb-6 text-white">
           <span className="mr-2">Mesera: <span className="font-bold">{mesera}</span></span>
-          <button
-            onClick={onCambiar}
-            className="text-pink-400 hover:underline ml-2"
-          >
+          <button onClick={handleLogout} className="text-pink-400 hover:underline ml-2">
             Cambiar
           </button>
         </div>
