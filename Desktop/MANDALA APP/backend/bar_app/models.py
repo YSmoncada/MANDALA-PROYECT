@@ -1,7 +1,10 @@
 from django.db import models
 
+
+
 class Producto(models.Model):
     nombre = models.CharField(max_length=100)
+    imagen = models.ImageField(upload_to='productos/', blank=True, null=True)
     categoria = models.CharField(max_length=50, blank=True, null=True)  # ✅ NUEVO
     stock = models.IntegerField(default=0)
     stock_minimo = models.IntegerField(default=0)
@@ -16,16 +19,39 @@ class Producto(models.Model):
 
 
 
+class Mesera(models.Model):
+    nombre = models.CharField(max_length=100)
+    codigo = models.CharField(max_length=10, unique=True)
+
+class Mesa(models.Model):
+    numero = models.CharField(max_length=10)
+    capacidad = models.IntegerField(default=1)
+    estado = models.CharField(max_length=20, default="disponible", choices=[("disponible", "Disponible"), ("ocupada", "Ocupada")])  # disponible, ocupada
 
 class Pedido(models.Model):
-    fecha = models.DateTimeField(auto_now_add=True)
+    mesera = models.ForeignKey(Mesera, on_delete=models.CASCADE)
+    mesa = models.ForeignKey(Mesa, on_delete=models.CASCADE)
     productos = models.ManyToManyField(Producto, through='PedidoProducto')
+    fecha_hora = models.DateTimeField(auto_now_add=True)
+    estado = models.CharField(max_length=20, default="activa", choices=[("activa", "Activa"), ("cerrada", "Cerrada"), ("confirmada", "Confirmada")])  # activa, cerrada, en espera
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
-    def total(self):
-        return sum(item.cantidad * item.producto.precio for item in self.pedidoproducto_set.all())
+    """ # Ejemplo de JSON para crear un pedido
+ {
+   "mesa": 1,
+   "mesera": 1,
+   "productos": [
+     {"producto_id": 11, "cantidad": 3},
+     {"producto_id": 12, "cantidad": 1}
+   ],
+   "estado": "activa"
+ }
+    """
+    # def total(self):
+    #     return sum(item.cantidad * item.producto.precio for item in self.pedidoproducto_set.all())
 
     def __str__(self):
-        return f"Pedido #{self.id} - {self.fecha}"
+        return f"Pedido #{self.id} - {self.fecha_hora}"
 
 
 class PedidoProducto(models.Model):

@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../components/Header";
 import InventoryCard from "../components/InventoryCard";
 import ProductTableWithModal from "../components/ProductTable";
 import ProductModal from "../components/ProductModal";
 import FiltersSummary from "../components/FiltersSummary";
 import { useInventario } from "./useInventario";
+
 
 function Inventario() {
   const {
@@ -16,6 +17,8 @@ function Inventario() {
     categorias,
     totalProductos,
     totalUnidades,
+    imagePreview,
+    originalImageUrl,
     setModalOpen,
     setQuery,
     setCategoria,
@@ -24,7 +27,9 @@ function Inventario() {
     handleDelete,
     handleSubmit,
     handleChange,
+    handleImageChange,
     handleMovimiento,
+    fetchProductos,
   } = useInventario();
 
   return (
@@ -59,6 +64,9 @@ function Inventario() {
         onSubmit={handleSubmit}
         form={form}
         onChange={handleChange}
+        onImageChange={handleImageChange}
+        imagePreview={imagePreview}
+        originalImageUrl={originalImageUrl}
         editId={editId}
       />
     </div>

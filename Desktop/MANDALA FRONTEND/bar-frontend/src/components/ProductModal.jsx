@@ -1,12 +1,11 @@
-import React from "react";
-
-function ProductModal({ open, onClose, onSubmit, form, onChange, editId }) {
+import React, {useEffect} from "react";
+import { getImageUrl } from "../utils/imageUtils";
+function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImageChange, imagePreview, originalImageUrl }) {
   if (!open) return null;
 
   const handleContentClick = (e) => {
     e.stopPropagation();
   };
-
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50" onClick={onClose}>
       <div className="bg-[#1A1B2F] w-full max-w-2xl rounded-xl shadow-lg p-8 relative text-white" onClick={handleContentClick}>
@@ -23,6 +22,51 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId }) {
         </h2>
 
         <form onSubmit={onSubmit} className="grid grid-cols-2 gap-4">
+          {/* Imagen del Producto */}
+          <div className="col-span-2">
+            <label className="text-sm block mb-1">
+              Imagen del Producto <span className="text-gray-500">(Opcional)</span>
+            </label>
+            <div className="flex items-center gap-4">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={onImageChange}
+                className="w-full bg-transparent border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-pink-600 file:text-white file:cursor-pointer hover:file:bg-pink-700"
+              />
+              {imagePreview && (
+                <div className="flex-shrink-0 relative">
+                  <img 
+                    src={imagePreview.startsWith('data:') ? imagePreview : getImageUrl(imagePreview)}
+                    alt="Preview" 
+                    className="w-16 h-16 object-cover rounded-lg border border-gray-600"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      // Crear evento personalizado para limpiar imagen
+                      const clearEvent = { target: { files: [] } };
+                      onImageChange(clearEvent);
+                      // Limpiar el input file
+                      const fileInput = document.querySelector('input[type="file"]');
+                      if (fileInput) fileInput.value = '';
+                    }}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition"
+                    title={editId ? "Restaurar imagen original" : "Quitar imagen"}
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+            </div>
+            <p className="text-xs text-gray-400 mt-1">
+              {editId 
+                ? "Selecciona una nueva imagen solo si quieres cambiarla"
+                : "Opcional: selecciona una imagen (JPEG, PNG, GIF, WebP - máx 5MB)"
+              }
+            </p>
+          </div>
+
           {/* Nombre */}
           <div className="col-span-1">
             <label className="text-sm block mb-1">Nombre del Producto *</label>
