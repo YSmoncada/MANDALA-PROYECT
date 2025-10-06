@@ -4,7 +4,8 @@ import axios from "axios";
 export default function ProductGrid({ mesera, onCambiar }) {
   const [filtro, setFiltro] = useState("cerveza");
   const [productosData, setProductosData] = useState([]);
-  
+  const [productosSeleccionados, setProductosSeleccionados] = useState([]);
+  // [{producto: {}, cantidad: 2}, ...]
   useEffect(() => {
     fetchProductos(filtro);
   }, [filtro]);
