@@ -1,8 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
-import axios from "axios";
 import { validateImageFile, createImagePreview } from "../utils/imageUtils";
-
-const API_URL = "http://127.0.0.1:8000/api/productos/";
+import * as inventarioService from "../inventarioService";
 
 const initialForm = {
   nombre: "",
@@ -33,11 +31,13 @@ export function useInventario() {
     fetchProductos();
   }, []);
 
-  const fetchProductos = () => {
-    axios
-      .get(API_URL)
-      .then((res) => setProductos(res.data))
-      .catch((err) => console.error("Error al obtener productos:", err));
+  const fetchProductos = async () => {
+    try {
+      const data = await inventarioService.getProductos();
+      setProductos(data);
+    } catch (err) {
+      console.error("Error al obtener productos:", err);
+    }
   };
 
   const handleAdd = () => {
@@ -63,12 +63,12 @@ export function useInventario() {
     });
     setEditId(prod.id);
     setSelectedImage(null); // No hay nueva imagen seleccionada inicialmente
-    
+
     // Configurar imagen existente
     const existingImageUrl = prod.imagen || "";
     setOriginalImageUrl(existingImageUrl);
     setImagePreview(existingImageUrl);
-    
+
     setModalOpen(true);
   };
 
@@ -80,19 +80,19 @@ export function useInventario() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Determinar si necesitamos enviar FormData o JSON
     const needsFormData = selectedImage || (!editId && selectedImage);
-    
+
     if (needsFormData) {
       // Usar FormData cuando hay nueva imagen
       const formData = new FormData();
-      
+
       // Agregar todos los campos del formulario
       Object.keys(form).forEach(key => {
         formData.append(key, form[key]);
       });
-      
+
       // Agregar imagen solo si hay una nueva seleccionada
       if (selectedImage) {
         formData.append('imagen', selectedImage);
@@ -119,7 +119,7 @@ export function useInventario() {
       const request = editId
         ? axios.put(`${API_URL}${editId}/`, form)
         : axios.post(API_URL, form);
-      
+
       request.then(() => {
         resetModalState();
         fetchProductos();
@@ -145,7 +145,7 @@ export function useInventario() {
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    
+
     // Si no hay archivo, restaurar imagen original o limpiar
     if (!file || file.length === 0) {
       setSelectedImage(null);
@@ -158,13 +158,13 @@ export function useInventario() {
       }
       return;
     }
-    
+
     try {
       // Validar el archivo de imagen
       validateImageFile(file);
-      
+
       setSelectedImage(file);
-      
+
       // Crear preview de la imagen
       const preview = await createImagePreview(file);
       setImagePreview(preview);

@@ -1,6 +1,6 @@
 // src/App.jsx
 import React from "react";
-import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Inventario from "./pages/Inventario";
 import Home from "./pages/Home";
 import Pedidos from "./pages/pedidos";
@@ -12,7 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/inventario" element={<Inventario />} />
-        <Route path="/login" element={<Pedidos  />} />
+        <Route path="/login" element={<Pedidos />} />
         <Route path="/Pedidos" element={<PedidosPage />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
