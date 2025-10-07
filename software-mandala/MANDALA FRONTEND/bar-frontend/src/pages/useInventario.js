@@ -72,60 +72,47 @@ export function useInventario() {
     setModalOpen(true);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm("¿Estás seguro de que quieres eliminar este producto?")) {
-      axios.delete(`${API_URL}${id}/`).then(() => fetchProductos());
+      try {
+        await inventarioService.deleteProducto(id);
+        fetchProductos();
+      } catch (error) {
+        console.error("Error al eliminar el producto:", error);
+      }
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Determinar si necesitamos enviar FormData o JSON
-    const needsFormData = selectedImage || (!editId && selectedImage);
+    const needsFormData = !!selectedImage;
+    let dataToSend;
 
     if (needsFormData) {
       // Usar FormData cuando hay nueva imagen
       const formData = new FormData();
 
       // Agregar todos los campos del formulario
-      Object.keys(form).forEach(key => {
+      Object.keys(form).forEach((key) => {
         formData.append(key, form[key]);
       });
 
       // Agregar imagen solo si hay una nueva seleccionada
-      if (selectedImage) {
-        formData.append('imagen', selectedImage);
-      }
-
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      };
-
-      const request = editId
-        ? axios.put(`${API_URL}${editId}/`, formData, config)
-        : axios.post(API_URL, formData, config);
-
-      request.then(() => {
-        resetModalState();
-        fetchProductos();
-      }).catch((error) => {
-        console.error("Error al guardar producto:", error);
-      });
+      formData.append("imagen", selectedImage);
+      dataToSend = formData;
     } else {
       // Usar JSON cuando no hay cambios en la imagen
-      const request = editId
-        ? axios.put(`${API_URL}${editId}/`, form)
-        : axios.post(API_URL, form);
+      dataToSend = form;
+    }
 
-      request.then(() => {
-        resetModalState();
-        fetchProductos();
-      }).catch((error) => {
-        console.error("Error al guardar producto:", error);
-      });
+    try {
+      await inventarioService.saveProducto(editId, dataToSend);
+      resetModalState();
+      fetchProductos();
+    } catch (error) {
+      console.error("Error al guardar producto:", error);
     }
   };
 

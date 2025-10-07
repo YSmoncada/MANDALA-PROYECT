@@ -1,58 +1,23 @@
 // src/pages/Pedidos.jsx
-import { useState, useEffect } from "react";
 import HeaderPedidos from "../components/HeaderPedidos";
 import CodeInput from "../components/CodeInput";
 import ProductGrid from "../components/ProductGrid";
+import { usePedidosAuth } from "../hooks/usePedidosAuth";
 
 export default function Pedidos() {
-  const [mesera, setMesera] = useState(null);
-  const [codigoConfirmado, setCodigoConfirmado] = useState(false);
-
-  // Cargar mesera guardada en localStorage
-  useEffect(() => {
-    const savedMesera = localStorage.getItem("mesera");
-    if (savedMesera) {
-      setMesera(savedMesera);
-      setCodigoConfirmado(true);
-    }
-  }, []);
-
-  const meseras = [
-    "María González",
-    "Ana Rodríguez",
-    "Carmen López",
-    "Sofía Martínez",
-    "Valentina Torres",
-  ];
-
-  const handleSelectMesera = (nombre) => {
-    setMesera(nombre);
-    setCodigoConfirmado(false);
-  };
-
-  const handleCodigoSubmit = (codigo) => {
-    if (codigo.length === 4) {
-      setCodigoConfirmado(true);
-      localStorage.setItem("mesera", mesera);
-    } else {
-      alert("El código debe tener 4 dígitos");
-    }
-  };
-
-  const handleCambiarMesera = () => {
-    setMesera(null);
-    setCodigoConfirmado(false);
-    localStorage.removeItem("mesera");
-  };
-
-  const handleBackToMeseras = () => {
-    handleCambiarMesera();
-  };
+  const {
+    mesera,
+    codigoConfirmado,
+    meseras,
+    handleSelectMesera,
+    handleCodigoSubmit,
+    handleLogout,
+  } = usePedidosAuth();
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#0E0D23] to-[#511F86]">
       {/* Header con mesera y botón de logout */}
-      <HeaderPedidos mesera={mesera} onLogout={handleCambiarMesera} />
+      <HeaderPedidos mesera={mesera} onLogout={handleLogout} />
 
       <div className="flex flex-1 items-center justify-center p-6">
         {/* Paso 1: Selección mesera */}
@@ -83,15 +48,13 @@ export default function Pedidos() {
         {mesera && !codigoConfirmado && (
           <CodeInput
             mesera={mesera}
-            onBack={handleBackToMeseras}
+            onBack={handleLogout}
             onSubmit={handleCodigoSubmit}
           />
         )}
 
         {/* Paso 3: Interfaz de productos */}
-        {mesera && codigoConfirmado && (
-          <ProductGrid mesera={mesera} onCambiar={handleCambiarMesera} />
-        )}
+        {mesera && codigoConfirmado && <ProductGrid mesera={mesera} onCambiar={handleLogout} />}
       </div>
     </div>
   );
