@@ -19,7 +19,6 @@ router.register(r'meseras', MeseraViewSet, basename='mesera')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('productos/', views.productos_list),
 ]
 
 # Servir archivos media en desarrollo
