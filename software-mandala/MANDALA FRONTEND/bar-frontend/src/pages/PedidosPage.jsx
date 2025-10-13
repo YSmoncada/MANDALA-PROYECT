@@ -2,8 +2,56 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import HeaderPedidos from "../components/HeaderPedidos";  
+import { usePedidosAuth } from "./usePedidosAuth";
 
-export default function PedidosPage({ mesera = "María González", onCambiar }) {
+export default function PedidosPage() {
+  const {
+    mesera,
+    codigoConfirmado,
+    isInitialized,
+    meseras,
+    handleSelectMesera,
+    handleCodigoSubmit,
+    handleLogout,
+  } = usePedidosAuth();
+  
+  const navigate = useNavigate();
+  const [tienePedido] = useState(false); // Estado temporal para controlar si hay pedido
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // Verificar autenticación solo después de la inicialización
+  useEffect(() => {
+    if (!isInitialized) return; // Esperar a que se inicialice
+
+    if (!mesera || !codigoConfirmado) {
+      navigate('/login', { replace: true });
+    } else {
+      setIsLoading(false);
+    }
+  }, [isInitialized, mesera, codigoConfirmado, navigate]);
+
+  const handleCambiar = () => {
+    handleLogout();
+    navigate('/login');
+  };
+
+  // Mostrar loading mientras se verifica la autenticación
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0E0D23] to-[#511F86]">
+        <div className="text-white text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+          <p>Verificando autenticación...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Si no hay mesera autenticada, no mostrar nada (se está redirigiendo)
+  if (!mesera || !codigoConfirmado) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#0E0D23] to-[#511F86]">
       {/* Header */}
@@ -15,7 +63,7 @@ export default function PedidosPage({ mesera = "María González", onCambiar }) 
         <div className="mb-6 text-white">
           <span className="mr-2">Mesera: <span className="font-bold">{mesera}</span></span>
           <button
-            onClick={onCambiar}
+            onClick={handleCambiar}
             className="text-pink-400 hover:underline ml-2"
           >
             Cambiar

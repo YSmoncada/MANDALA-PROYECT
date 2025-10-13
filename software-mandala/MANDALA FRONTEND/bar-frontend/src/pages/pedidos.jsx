@@ -1,18 +1,32 @@
 // src/pages/Pedidos.jsx
+import React, {useEffect} from "react";
 import HeaderPedidos from "../components/HeaderPedidos";
 import CodeInput from "../components/CodeInput";
 import ProductGrid from "../components/ProductGrid";
-import { usePedidosAuth } from "../hooks/usePedidosAuth";
+import { usePedidosAuth } from "./usePedidosAuth";
 
 export default function Pedidos() {
   const {
     mesera,
     codigoConfirmado,
+    isInitialized,
     meseras,
     handleSelectMesera,
     handleCodigoSubmit,
     handleLogout,
   } = usePedidosAuth();
+
+  // Mostrar loading mientras se inicializa
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0E0D23] to-[#511F86]">
+        <div className="text-white text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+          <p>Cargando...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#0E0D23] to-[#511F86]">
