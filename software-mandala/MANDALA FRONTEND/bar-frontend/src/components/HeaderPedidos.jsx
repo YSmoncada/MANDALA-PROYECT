@@ -42,12 +42,15 @@ export default function HeaderPedidos({ mesera, onLogout }) {
               <span>Menú</span>
             </Link>
           ) : (
-            <span className="flex items-center space-x-1 bg-purple-800/50 text-gray-400 px-3 py-1 rounded-lg cursor-not-allowed">
+            <Link
+              to="/login"
+              className="flex items-center space-x-1 bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded-lg transition"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
-              <span>Menú</span>
-            </span>
+              <span>Iniciar</span>
+            </Link>
           )}
 
           {mesera ? (
