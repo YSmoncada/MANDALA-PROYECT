@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import HeaderPedidos from "../components/HeaderPedidos";
 import CodeInput from "../components/CodeInput";
 import ProductGrid from "../components/ProductGrid";
-import { usePedidosAuth } from "./usePedidosAuth";
+import { usePedidosAuth } from "../hooks/usePedidosAuth";
 
 export default function Pedidos({ onProductAdd }) {
   const {

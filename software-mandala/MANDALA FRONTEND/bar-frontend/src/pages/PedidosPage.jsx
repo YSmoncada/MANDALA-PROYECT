@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import HeaderPedidos from "../components/HeaderPedidos";
-import { usePedidosAuth } from "./usePedidosAuth";
+import { usePedidosAuth } from "../hooks/usePedidosAuth";
 
 
 

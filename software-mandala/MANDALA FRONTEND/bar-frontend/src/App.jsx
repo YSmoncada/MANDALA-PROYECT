@@ -5,7 +5,7 @@ import Inventario from "./pages/Inventario";
 import Home from "./pages/Home";
 import Pedidos from "./pages/pedidos";
 import PedidosPage from "./pages/PedidosPage";
-import { useOrder } from "./utils/useOrder";
+import { useOrder } from "./hooks/useOrder";
 
 function App() {
   const {

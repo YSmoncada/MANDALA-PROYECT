@@ -4,7 +4,7 @@ import InventoryCard from "../components/InventoryCard";
 import ProductTableWithModal from "../components/ProductTable";
 import ProductModal from "../components/ProductModal";
 import FiltersSummary from "../components/FiltersSummary";
-import { useInventario } from "./useInventario";
+import { useInventario } from "../hooks/useInventario";
 
 
 function Inventario() {

@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { validateImageFile, createImagePreview } from "../utils/imageUtils";
-import * as inventarioService from "../inventarioService";
+import * as inventarioService from "../services/inventarioService";
 
 const initialForm = {
     nombre: "",
