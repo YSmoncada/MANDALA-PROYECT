@@ -1,31 +1,52 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-export function useOrder() {
+export const useOrder = () => {
     const [orderItems, setOrderItems] = useState([]);
 
+    // Función para agregar o actualizar un producto en el pedido
     const addProductToOrder = (producto, cantidad) => {
         setOrderItems((prevItems) => {
-            const existingItem = prevItems.find(
+            const itemExistente = prevItems.find(
                 (item) => item.producto.id === producto.id
             );
 
-            if (existingItem) {
-                // Si el producto ya está en el pedido, actualiza la cantidad
+            if (itemExistente) {
                 return prevItems.map((item) =>
                     item.producto.id === producto.id
                         ? { ...item, cantidad: item.cantidad + cantidad }
                         : item
                 );
             } else {
-                // Si es un producto nuevo, lo agrega a la lista
                 return [...prevItems, { producto, cantidad }];
             }
         });
     };
 
-    const clearOrder = () => {
-        setOrderItems([]);
+    // Función para actualizar la cantidad de un producto existente
+    const updateProductQuantity = (productId, newQuantity) => {
+        setOrderItems(currentItems =>
+            currentItems.map(item =>
+                item.producto.id === productId
+                    ? { ...item, cantidad: newQuantity }
+                    : item
+            )
+        );
     };
 
-    return { orderItems, addProductToOrder, clearOrder };
-}
+    // Función para eliminar un producto del pedido
+    const removeProductFromOrder = (productId) => {
+        setOrderItems(currentItems =>
+            currentItems.filter(item => item.producto.id !== productId)
+        );
+    };
+
+    const clearOrder = () => setOrderItems([]);
+
+    return {
+        orderItems,
+        addProductToOrder,
+        updateProductQuantity,
+        removeProductFromOrder,
+        clearOrder,
+    };
+};

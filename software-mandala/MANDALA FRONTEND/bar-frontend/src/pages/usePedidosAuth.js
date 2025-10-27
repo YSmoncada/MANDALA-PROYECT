@@ -18,7 +18,7 @@ export function usePedidosAuth() {
         try {
             const savedMesera = localStorage.getItem("mesera");
             console.log("Loaded mesera from localStorage:", savedMesera);
-            
+
             if (savedMesera && savedMesera !== "null") {
                 setMesera(savedMesera);
                 setCodigoConfirmado(true);
@@ -51,13 +51,13 @@ export function usePedidosAuth() {
         localStorage.removeItem("mesera");
     };
 
-    return { 
-        mesera, 
-        codigoConfirmado, 
+    return {
+        mesera,
+        codigoConfirmado,
         isInitialized,
-        meseras: MESERAS, 
-        handleSelectMesera, 
-        handleCodigoSubmit, 
-        handleLogout 
+        meseras: MESERAS,
+        handleSelectMesera,
+        handleCodigoSubmit,
+        handleLogout
     };
 }

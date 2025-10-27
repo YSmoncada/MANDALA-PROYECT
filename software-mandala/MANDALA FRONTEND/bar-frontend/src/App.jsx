@@ -8,7 +8,13 @@ import PedidosPage from "./pages/PedidosPage";
 import { useOrder } from "./utils/useOrder";
 
 function App() {
-  const { orderItems, addProductToOrder, clearOrder } = useOrder();
+  const {
+    orderItems,
+    addProductToOrder,
+    clearOrder,
+    updateProductQuantity,
+    removeProductFromOrder
+  } = useOrder();
 
   return (
     <BrowserRouter>
@@ -16,7 +22,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/inventario" element={<Inventario />} />
         <Route path="/login" element={<Pedidos onProductAdd={addProductToOrder} />} />
-        <Route path="/pedidos" element={<PedidosPage orderItems={orderItems} onClearOrder={clearOrder} />} />
+        <Route
+          path="/pedidos"
+          element={<PedidosPage orderItems={orderItems} onClearOrder={clearOrder} onUpdateCantidad={updateProductQuantity} onRemoveItem={removeProductFromOrder} />}
+        />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>

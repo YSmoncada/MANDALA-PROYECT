@@ -1,14 +1,16 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .models import Producto, Pedido
-from .serializers import ProductoSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import MovimientoSerializer
-from .serializers import PedidoSerializer, MesaSerializer, MeseraSerializer
-from .models import Movimiento
-from .models import PedidoProducto, Mesa, Mesera
+from django_filters.rest_framework import DjangoFilterBackend # Importar para filtrar
+
+from .models import Producto, Pedido, Movimiento, Mesa, Mesera
+from .serializers import ProductoSerializer, MovimientoSerializer, PedidoSerializer, MesaSerializer, MeseraSerializer
+from .serializers import ProductoSerializer
 from rest_framework import status
+import logging
+
+logger = logging.getLogger(__name__)
 
 class MeseraViewSet(viewsets.ModelViewSet):
     queryset = Mesera.objects.all().order_by('-id')
@@ -28,17 +30,8 @@ class MovimientoViewSet(viewsets.ModelViewSet):
 class PedidoViewSet(viewsets.ModelViewSet):
     queryset = Pedido.objects.all().order_by('-fecha_hora')
     serializer_class = PedidoSerializer
-
-    def perform_create(self, serializer):
-        pedido = serializer.save()
-        print("Pedido creado:", pedido)
-        for item in PedidoProducto.objects.filter(pedido=pedido):
-            producto = item.producto
-            print(producto)
-            if producto.stock < item.cantidad:
-                raise ValueError(f"❌ Stock insuficiente para el producto {producto.nombre}.")
-            producto.stock -= item.cantidad
-            producto.save()
+    filter_backends = [DjangoFilterBackend] # Habilitar filtrado
+    filterset_fields = ['mesera'] # Permitir filtrar por el ID de la mesera
 
 class MesaViewSet(viewsets.ModelViewSet):
     queryset = Mesa.objects.all().order_by('numero')
@@ -52,4 +45,3 @@ def productos_list(request):
     productos = Producto.objects.all()
     serializer = ProductoSerializer(productos, many=True)
     return Response(serializer.data)
-
