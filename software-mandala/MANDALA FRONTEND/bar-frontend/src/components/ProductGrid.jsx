@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
 import axios from "axios";
-export default function ProductGrid({ mesera, onCambiar }) {
+export default function ProductGrid({ mesera, onCambiar, onProductAdd }) {
   const [filtro, setFiltro] = useState("cerveza");
   const [productosData, setProductosData] = useState([]);
   const [productosSeleccionados, setProductosSeleccionados] = useState([]);
@@ -27,7 +27,7 @@ export default function ProductGrid({ mesera, onCambiar }) {
       });
   }
   // Lista de productos con ruta de imagen en /public/productos/
-  
+
 
   return (
     <div className="w-full max-w-6xl">
@@ -45,20 +45,20 @@ export default function ProductGrid({ mesera, onCambiar }) {
 
       {/* Filtros */}
       <div className="flex justify-center mb-9 gap-2">
-          <button
-            onClick={() => setFiltro("")}
-            className={`py-2 px-6 rounded transition ${filtro === "" 
-              ? "bg-purple-700 text-white" 
-              : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+        <button
+          onClick={() => setFiltro("")}
+          className={`py-2 px-6 rounded transition ${filtro === ""
+            ? "bg-purple-700 text-white"
+            : "bg-gray-700 text-gray-300 hover:bg-gray-600"
             }`}
-          >
-            Todos
-          </button>
+        >
+          Todos
+        </button>
         <button
           onClick={() => setFiltro("vinos")}
           className={`py-2 px-6 rounded transition ${filtro === "vinos"
-              ? "bg-purple-700 text-white"
-              : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+            ? "bg-purple-700 text-white"
+            : "bg-gray-700 text-gray-300 hover:bg-gray-600"
             }`}
         >
           Vinos
@@ -66,8 +66,8 @@ export default function ProductGrid({ mesera, onCambiar }) {
         <button
           onClick={() => setFiltro("cerveza")}
           className={`py-2 px-6 rounded transition ${filtro === "cerveza"
-              ? "bg-purple-700 text-white"
-              : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+            ? "bg-purple-700 text-white"
+            : "bg-gray-700 text-gray-300 hover:bg-gray-600"
             }`}
         >
           Cervezas
@@ -75,8 +75,8 @@ export default function ProductGrid({ mesera, onCambiar }) {
         <button
           onClick={() => setFiltro("destilados")}
           className={`py-2 px-6 rounded transition ${filtro === "destilados"
-              ? "bg-purple-700 text-white"
-              : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+            ? "bg-purple-700 text-white"
+            : "bg-gray-700 text-gray-300 hover:bg-gray-600"
             }`}
         >
           Destilados
@@ -84,10 +84,10 @@ export default function ProductGrid({ mesera, onCambiar }) {
       </div>
 
       {/* Productos */}
-      
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {productosData.map((producto, i) => (
-          <ProductCard key={i} producto={producto} />
+          <ProductCard key={i} producto={producto} onAgregarPedido={onProductAdd} />
         ))}
       </div>
     </div>

@@ -1,11 +1,11 @@
 // src/pages/Pedidos.jsx
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import HeaderPedidos from "../components/HeaderPedidos";
 import CodeInput from "../components/CodeInput";
 import ProductGrid from "../components/ProductGrid";
 import { usePedidosAuth } from "./usePedidosAuth";
 
-export default function Pedidos() {
+export default function Pedidos({ onProductAdd }) {
   const {
     mesera,
     codigoConfirmado,
@@ -68,7 +68,7 @@ export default function Pedidos() {
         )}
 
         {/* Paso 3: Interfaz de productos */}
-        {mesera && codigoConfirmado && <ProductGrid mesera={mesera} onCambiar={handleLogout} />}
+        {mesera && codigoConfirmado && <ProductGrid mesera={mesera} onCambiar={handleLogout} onProductAdd={onProductAdd} />}
       </div>
     </div>
   );

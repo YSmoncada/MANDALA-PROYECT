@@ -5,15 +5,18 @@ import Inventario from "./pages/Inventario";
 import Home from "./pages/Home";
 import Pedidos from "./pages/pedidos";
 import PedidosPage from "./pages/PedidosPage";
+import { useOrder } from "./utils/useOrder";
+
 function App() {
+  const { orderItems, addProductToOrder, clearOrder } = useOrder();
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/inventario" element={<Inventario />} />
-        <Route path="/login" element={<Pedidos />} />
-        <Route path="/pedidos" element={<PedidosPage />} />
+        <Route path="/login" element={<Pedidos onProductAdd={addProductToOrder} />} />
+        <Route path="/pedidos" element={<PedidosPage orderItems={orderItems} onClearOrder={clearOrder} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>

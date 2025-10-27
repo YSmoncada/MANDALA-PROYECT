@@ -1,10 +1,17 @@
 import { useState } from "react";
 
-export default function ProductCard({ producto }) {
+
+export default function ProductCard({ producto, onAgregarPedido }) {
   const [cantidad, setCantidad] = useState(1);
 
   const aumentar = () => setCantidad(cantidad + 1);
   const disminuir = () => setCantidad(cantidad > 1 ? cantidad - 1 : 1);
+  const agregarPedido = () => {
+    onAgregarPedido(producto, cantidad);
+    alert(`Agregado: ${cantidad} x ${producto.nombre}`);
+    setCantidad(1); // Resetear cantidad después de agregar
+
+  }
 
   return (
     <div className="bg-[#2B0D49] border border-[#6C3FA8] rounded-xl p-4 shadow-lg text-center text-white hover:scale-105 transition-transform duration-300">
@@ -42,7 +49,7 @@ export default function ProductCard({ producto }) {
       </div>
 
       {/* Botón agregar */}
-      <button className="mt-4 bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] text-white py-2 px-4 w-full rounded-lg hover:opacity-90">
+      <button onClick={agregarPedido} className="mt-4 bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] text-white py-2 px-4 w-full rounded-lg hover:opacity-90">
         + Agregar al Pedido
       </button>
     </div>
