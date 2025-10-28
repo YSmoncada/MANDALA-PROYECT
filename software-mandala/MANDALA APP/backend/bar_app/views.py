@@ -15,6 +15,11 @@ logger = logging.getLogger(__name__)
 class MeseraViewSet(viewsets.ModelViewSet):
     queryset = Mesera.objects.all().order_by('-id')
     serializer_class = MeseraSerializer
+    
+    # La validación de código único se ha movido al MeseraSerializer.
+    # El método perform_create ya no es necesario aquí para esa validación.
+    # def perform_create(self, serializer):
+    #     ...
 
 class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all().order_by('-id')
@@ -36,10 +41,8 @@ class PedidoViewSet(viewsets.ModelViewSet):
 class MesaViewSet(viewsets.ModelViewSet):
     queryset = Mesa.objects.all().order_by('numero')
     serializer_class = MesaSerializer
-    def perform_create(self, serializer):
-        if Mesa.objects.filter(numero=serializer.validated_data['numero']).exists():
-            raise ValueError("❌ Ya existe una mesa con ese número.")
-        serializer.save()
+    # La validación de número único se ha movido al MesaSerializer.
+
 @api_view(['GET'])
 def productos_list(request):
     productos = Producto.objects.all()

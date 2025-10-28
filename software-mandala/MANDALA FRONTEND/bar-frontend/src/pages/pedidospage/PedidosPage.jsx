@@ -1,18 +1,19 @@
 // src/pages/PedidosPage.jsx
 import { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import HeaderPedidos from "./HeaderPedidos";
-import { usePedidosAuth } from "../../hooks/usePedidosAuth";
-
+import { createPedido } from "../../services/pedidoService.js";
 
 
 export default function PedidosPage({
+  auth, // Recibimos la prop 'auth'
   orderItems,
   onClearOrder,
   onUpdateCantidad,
   onRemoveItem,
 }) {
-  const {
+  const { // Desestructuramos desde la prop 'auth'
     mesera,
     meseraId,
     codigoConfirmado,
@@ -21,10 +22,13 @@ export default function PedidosPage({
     handleSelectMesera,
     handleCodigoSubmit,
     handleLogout,
-  } = usePedidosAuth();
+  } = auth;
 
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const [mesas, setMesas] = useState([]);
+  const [selectedMesaId, setSelectedMesaId] = useState(''); // Guardará el ID de la mesa seleccionada
+
 
   const totalPedido = orderItems.reduce(
     (total, item) => total + item.producto.precio * item.cantidad,
@@ -38,7 +42,22 @@ export default function PedidosPage({
     if (!mesera || !codigoConfirmado) {
       navigate('/login', { replace: true });
     } else {
-      setIsLoading(false);
+      const fetchMesas = async () => {
+        try {
+          const response = await axios.get('http://127.0.0.1:8000/api/mesas/');
+          setMesas(response.data);
+          // Seleccionar la primera mesa por defecto si la lista no está vacía
+          if (response.data.length > 0) {
+            setSelectedMesaId(response.data[0].id);
+          }
+        } catch (error) {
+          console.error("Error al cargar las mesas:", error);
+          alert("No se pudieron cargar las mesas. Asegúrate de que el servidor backend esté funcionando.");
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchMesas();
     }
   }, [isInitialized, mesera, codigoConfirmado, navigate]);
 
@@ -58,22 +77,23 @@ export default function PedidosPage({
       return;
     }
 
-    // TODO: Implementar una selección de mesa en la UI.
-    // Por ahora, se usará un ID de mesa por defecto (ej. 1).
-    // Asegúrate de que este ID de mesa exista en tu base de datos de Django.
-    const mesaId = 1;
+    // Validar que una mesa esté seleccionada
+    if (!selectedMesaId) {
+      alert("Por favor, seleccione una mesa.");
+      return;
+    }
 
     // Formatear los productos para el backend
     const productosParaBackend = orderItems.map(item => ({
-      producto: item.producto.id, // El backend espera el ID del producto
+      producto_id: item.producto.id,
       cantidad: item.cantidad,
     }));
 
     const pedidoData = {
       mesera: meseraId,
-      mesa: mesaId,
+      mesa: selectedMesaId,
       estado: "activa", // Estado inicial del pedido
-      productos: productosParaBackend,
+      productos: productosParaBackend, // Ahora contiene 'producto_id'
       // El campo 'total' se calculará en el backend, no lo enviamos desde aquí.
     };
 
@@ -84,7 +104,18 @@ export default function PedidosPage({
       navigate('/login'); // Redirigir a la página de inicio de sesión o donde sea apropiado
     } catch (error) {
       console.error("Error al finalizar el pedido:", error.response?.data || error.message);
-      alert("Hubo un error al guardar el pedido. Por favor, inténtalo de nuevo.");
+      let errorMessage = "Hubo un error al guardar el pedido. Por favor, inténtalo de nuevo.";
+      if (error.response && error.response.data) {
+        // Intenta parsear errores específicos de Django REST Framework
+        if (typeof error.response.data === 'object') {
+          errorMessage = Object.entries(error.response.data)
+            .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`)
+            .join('\n');
+        } else {
+          errorMessage = error.response.data; // Fallback para errores de texto plano
+        }
+      }
+      alert(`Error al guardar pedido:\n${errorMessage}`);
     }
   };
 
@@ -149,79 +180,97 @@ export default function PedidosPage({
             <div className="h-1 w-16 bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] rounded-full mx-auto mt-4"></div>
           </div>
         ) : (
-          <div className="bg-[#2B0D49]/80 border border-[#6C3FA8] rounded-xl p-6 w-full max-w-2xl">
-            <h2 className="text-white text-2xl font-bold mb-4 border-b border-purple-700 pb-2">
-              Tu Pedido Actual
-            </h2>
-            <div className="flex flex-col gap-4 max-h-96 overflow-y-auto pr-2 mb-4">
-              {orderItems.map((item, index) => (
-                <div
-                  key={item.producto.id || index}
-                  className="flex justify-between items-center text-white bg-black/20 p-2 rounded-lg"
-                >
-                  <div className="flex items-center gap-4">
-                    <img
-                      src={item.producto.imagen}
-                      alt={item.producto.nombre}
-                      className="w-16 h-16 object-contain rounded-md bg-white p-1"
-                    />
-                    <div>
-                      <p className="font-semibold">{item.producto.nombre}</p>
-                      <p className="text-sm text-gray-400">
-                        ${item.producto.precio.toLocaleString("es-CO")} c/u
+          <>
+            {/* Selector de Mesa */}
+            <div className="mb-4 w-full max-w-2xl">
+              <label htmlFor="mesa-select" className="block mb-2 text-sm font-medium text-white">Seleccionar Mesa:</label>
+              <select
+                id="mesa-select"
+                value={selectedMesaId}
+                onChange={(e) => setSelectedMesaId(e.target.value)}
+                className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
+                disabled={mesas.length === 0}
+              >
+                {mesas.length > 0 ? (
+                  mesas.map((mesa) => (
+                    <option key={mesa.id} value={mesa.id}>Mesa #{mesa.numero} (Capacidad: {mesa.capacidad})</option>
+                  ))
+                ) : <option>No hay mesas disponibles</option>}
+              </select>
+            </div>
+            <div className="bg-[#2B0D49]/80 border border-[#6C3FA8] rounded-xl p-6 w-full max-w-2xl">
+              <h2 className="text-white text-2xl font-bold mb-4 border-b border-purple-700 pb-2">
+                Tu Pedido Actual
+              </h2>
+              <div className="flex flex-col gap-4 max-h-96 overflow-y-auto pr-2 mb-4">
+                {orderItems.map((item, index) => (
+                  <div
+                    key={item.producto.id || index}
+                    className="flex justify-between items-center text-white bg-black/20 p-2 rounded-lg"
+                  >
+                    <div className="flex items-center gap-4">
+                      <img
+                        src={item.producto.imagen}
+                        alt={item.producto.nombre}
+                        className="w-16 h-16 object-contain rounded-md bg-white p-1"
+                      />
+                      <div>
+                        <p className="font-semibold">{item.producto.nombre}</p>
+                        <p className="text-sm text-gray-400">
+                          ${item.producto.precio.toLocaleString("es-CO")} c/u
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      {/* Controles de cantidad */}
+                      <div className="flex items-center gap-2 bg-purple-900/50 rounded-full p-1">
+                        <button
+                          onClick={() => {
+                            if (item.cantidad > 1) {
+                              onUpdateCantidad(item.producto.id, item.cantidad - 1);
+                            } else {
+                              onRemoveItem(item.producto.id); // Elimina si la cantidad es 1
+                            }
+                          }}
+                          className="w-8 h-8 flex items-center justify-center text-lg rounded-full hover:bg-purple-700 transition-colors"
+                        >
+                          -
+                        </button>
+                        <span className="px-2 font-bold text-md w-6 text-center">{item.cantidad}</span>
+                        <button
+                          onClick={() => onUpdateCantidad(item.producto.id, item.cantidad + 1)}
+                          className="w-8 h-8 flex items-center justify-center text-lg rounded-full hover:bg-purple-700 transition-colors"
+                        >
+                          +
+                        </button>
+                      </div>
+                      {/* Precio total por item */}
+                      <p className="font-bold text-lg w-28 text-right">
+                        ${(item.producto.precio * item.cantidad).toLocaleString("es-CO")}
                       </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    {/* Controles de cantidad */}
-                    <div className="flex items-center gap-2 bg-purple-900/50 rounded-full p-1">
-                      <button
-                        onClick={() => {
-                          if (item.cantidad > 1) {
-                            onUpdateCantidad(item.producto.id, item.cantidad - 1);
-                          } else {
-                            onRemoveItem(item.producto.id); // Elimina si la cantidad es 1
-                          }
-                        }}
-                        className="w-8 h-8 flex items-center justify-center text-lg rounded-full hover:bg-purple-700 transition-colors"
-                      >
-                        -
-                      </button>
-                      <span className="px-2 font-bold text-md w-6 text-center">{item.cantidad}</span>
-                      <button
-                        onClick={() => onUpdateCantidad(item.producto.id, item.cantidad + 1)}
-                        className="w-8 h-8 flex items-center justify-center text-lg rounded-full hover:bg-purple-700 transition-colors"
-                      >
-                        +
+                      {/* Botón de eliminar */}
+                      <button onClick={() => onRemoveItem(item.producto.id)} className="text-red-500 hover:text-red-400 p-2 rounded-full hover:bg-red-500/20 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clipRule="evenodd" />
+                        </svg>
                       </button>
                     </div>
-                    {/* Precio total por item */}
-                    <p className="font-bold text-lg w-28 text-right">
-                      ${(item.producto.precio * item.cantidad).toLocaleString("es-CO")}
-                    </p>
-                    {/* Botón de eliminar */}
-                    <button onClick={() => onRemoveItem(item.producto.id)} className="text-red-500 hover:text-red-400 p-2 rounded-full hover:bg-red-500/20 transition-colors">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clipRule="evenodd" />
-                      </svg>
-                    </button>
                   </div>
+                ))}
+              </div>
+              <div className="border-t border-purple-700 mt-4 pt-4">
+                <div className="flex justify-between text-white text-xl font-bold mb-4">
+                  <span>Total:</span>
+                  <span>${totalPedido.toLocaleString("es-CO")}</span>
                 </div>
-              ))}
-            </div>
-            <div className="border-t border-purple-700 mt-4 pt-4">
-              <div className="flex justify-between text-white text-xl font-bold mb-4">
-                <span>Total:</span>
-                <span>${totalPedido.toLocaleString("es-CO")}</span>
+                <div className="flex gap-4">
+                  <button onClick={handleFinalizarPedido} className="w-full bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] text-white py-3 rounded-lg font-bold hover:opacity-90 transition disabled:opacity-50" disabled={orderItems.length === 0}>
+                    Finalizar Pedido
+                  </button>
+                  <button onClick={onClearOrder} className="w-full bg-gray-700 text-gray-300 hover:bg-gray-600 py-3 rounded-lg font-bold transition">Limpiar</button>
+                </div>
               </div>
-              <div className="flex gap-4">
-                <button onClick={handleFinalizarPedido} className="w-full bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] text-white py-3 rounded-lg font-bold hover:opacity-90 transition disabled:opacity-50" disabled={orderItems.length === 0}>
-                  Finalizar Pedido
-                </button>
-                <button onClick={onClearOrder} className="w-full bg-gray-700 text-gray-300 hover:bg-gray-600 py-3 rounded-lg font-bold transition">Limpiar</button>
-              </div>
-            </div>
-          </div>
+            </div></>
         )}
       </div>
     </div>

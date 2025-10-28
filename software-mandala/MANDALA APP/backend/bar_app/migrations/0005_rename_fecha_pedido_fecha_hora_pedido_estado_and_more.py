@@ -24,13 +24,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='pedido',
             name='mesa',
-            field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, to='bar_app.mesa'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='bar_app.mesa'),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='pedido',
             name='mesera',
-            field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, to='bar_app.mesera'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='bar_app.mesera'),
             preserve_default=False,
         ),
         migrations.AddField(

@@ -16,27 +16,34 @@ class MeseraSerializer(serializers.ModelSerializer):
         model = Mesera
         fields = '__all__'
 
-        
-class PedidoProductoSerializer(serializers.ModelSerializer):
-    # Para lectura, muestra el detalle del producto
-    producto = ProductoSerializer(read_only=True) 
-    # Para escritura, recibe solo el ID del producto
+    def validate_codigo(self, value):
+        """
+        Verifica que el código de la mesera sea único.
+        """
+        if Mesera.objects.filter(codigo=value).exists():
+            raise serializers.ValidationError("Ya existe una mesera con este código.")
+        return value
+
+# Serializer para CREAR un pedido (recibe IDs)
+class PedidoProductoWriteSerializer(serializers.Serializer):
     producto_id = serializers.PrimaryKeyRelatedField(
-        queryset=Producto.objects.all(), 
-        write_only=True, 
+        queryset=Producto.objects.all(),
         source='producto'
     )
-    # Campos adicionales para mostrar en el historial de pedidos
+    cantidad = serializers.IntegerField(min_value=1)
+
+# Serializer para LEER un pedido (muestra detalles)
+class PedidoProductoReadSerializer(serializers.ModelSerializer):
     producto_nombre = serializers.CharField(source='producto.nombre', read_only=True)
     producto_precio = serializers.DecimalField(source='producto.precio', max_digits=10, decimal_places=2, read_only=True)
 
     class Meta:
         model = PedidoProducto
-        fields = ['producto', 'producto_id', 'cantidad', 'producto_nombre', 'producto_precio']
+        fields = ['cantidad', 'producto_nombre', 'producto_precio']
 
 class PedidoSerializer(serializers.ModelSerializer):
-    productos = PedidoProductoSerializer(many=True, write_only=True)
-    productos_detalle = PedidoProductoSerializer(source='pedidoproducto_set', many=True, read_only=True)
+    productos = PedidoProductoWriteSerializer(many=True, write_only=True)
+    productos_detalle = PedidoProductoReadSerializer(source='pedidoproducto_set', many=True, read_only=True)
     
     # Campos de solo lectura para mostrar el nombre de la mesera y el número de mesa
     mesera_nombre = serializers.CharField(source='mesera.nombre', read_only=True)
@@ -44,12 +51,27 @@ class PedidoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pedido
-        fields = '__all__'
-        read_only_fields = ['total', 'fecha_hora'] # total y fecha_hora se calculan en el backend
+        # Definimos explícitamente los campos para evitar conflictos.
+        fields = [
+            'id', 
+            'mesera', # Campo de escritura para el ID de la mesera
+            'mesa',   # Campo de escritura para el ID de la mesa
+            'estado', 
+            'productos', # Campo de escritura para la lista de productos
+            'productos_detalle', # Campo de lectura
+            'mesera_nombre',     # Campo de lectura
+            'mesa_numero',       # Campo de lectura
+            'total', 'fecha_hora'
+        ]
+        read_only_fields = ['total', 'fecha_hora', 'productos_detalle', 'mesera_nombre', 'mesa_numero']
 
     def create(self, validated_data):
         productos_data = validated_data.pop('productos', [])
-        pedido = Pedido.objects.create(**validated_data)
+        # Extraemos mesera y mesa explícitamente
+        mesera = validated_data.pop('mesera')
+        mesa = validated_data.pop('mesa')
+        
+        pedido = Pedido.objects.create(mesera=mesera, mesa=mesa, **validated_data)
         total = 0
         for item in productos_data:
             producto = item['producto'] # 'producto' ya es la instancia de Producto gracias a source='producto' en PedidoProductoSerializer
@@ -81,3 +103,12 @@ class MesaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Mesa
         fields = '__all__'
+
+    def validate_numero(self, value):
+        """
+        Verifica que el número de la mesa sea único.
+        """
+        # self.instance es el objeto que se está actualizando, si aplica.
+        if Mesa.objects.filter(numero=value).exclude(pk=getattr(self.instance, 'pk', None)).exists():
+            raise serializers.ValidationError("Ya existe una mesa con este número.")
+        return value
