@@ -1,8 +1,8 @@
 // src/pages/PedidosPage.jsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import HeaderPedidos from "../components/HeaderPedidos";
-import { usePedidosAuth } from "../hooks/usePedidosAuth";
+import HeaderPedidos from "./HeaderPedidos";
+import { usePedidosAuth } from "../../hooks/usePedidosAuth";
 
 
 

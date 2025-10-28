@@ -1,9 +1,9 @@
 // src/pages/Pedidos.jsx
 import React, { useEffect } from "react";
-import HeaderPedidos from "../components/HeaderPedidos";
-import CodeInput from "../components/CodeInput";
-import ProductGrid from "../components/ProductGrid";
-import { usePedidosAuth } from "./usePedidosAuth";
+import HeaderPedidos from "../pedidospage/HeaderPedidos";
+import CodeInput from "../pedidosAuth/CodeInput";
+import ProductGrid from "../pedidosAuth/ProductGrid";
+import { usePedidosAuth } from "../../hooks/usePedidosAuth";
 
 export default function Pedidos({ onProductAdd }) {
     const {

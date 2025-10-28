@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { ArrowDownCircle, ArrowUpCircle, Edit, Trash2 } from "lucide-react";
-import MovimientoModal from "./MovimientoModal";
-import { getImageUrl } from "../utils/imageUtils";
+import MovimientoModal from "../../components/MovimientoModal";
+import { getImageUrl } from "../../utils/imageUtils";
 
 function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -80,8 +80,8 @@ function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
                 <tr key={prod.id} className="border-b border-purple-800 hover:bg-purple-950 transition">
                   <td className="py-4 px-2">
                     {prod.imagen ? (
-                      <img 
-                        src={getImageUrl(prod.imagen)} 
+                      <img
+                        src={getImageUrl(prod.imagen)}
                         alt={prod.nombre}
                         className="w-12 h-12 object-cover rounded-lg border border-gray-600"
                         onError={(e) => {

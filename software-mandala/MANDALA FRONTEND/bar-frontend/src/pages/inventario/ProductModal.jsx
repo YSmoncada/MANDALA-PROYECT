@@ -1,5 +1,5 @@
-import React, {useEffect} from "react";
-import { getImageUrl } from "../utils/imageUtils";
+import React, { useEffect } from "react";
+import { getImageUrl } from "../../utils/imageUtils";
 function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImageChange, imagePreview, originalImageUrl }) {
   if (!open) return null;
 
@@ -14,9 +14,9 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
           className="absolute top-4 right-4 text-gray-400 hover:text-white"
           onClick={onClose}
         >
-          
+
         </button>
- 
+
         <h2 className="text-2xl font-bold mb-6">
           {editId ? "Editar Producto" : "Nuevo Producto"}
         </h2>
@@ -36,9 +36,9 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
               />
               {imagePreview && (
                 <div className="flex-shrink-0 relative">
-                  <img 
+                  <img
                     src={imagePreview.startsWith('data:') ? imagePreview : getImageUrl(imagePreview)}
-                    alt="Preview" 
+                    alt="Preview"
                     className="w-16 h-16 object-cover rounded-lg border border-gray-600"
                   />
                   <button
@@ -60,7 +60,7 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
               )}
             </div>
             <p className="text-xs text-gray-400 mt-1">
-              {editId 
+              {editId
                 ? "Selecciona una nueva imagen solo si quieres cambiarla"
                 : "Opcional: selecciona una imagen (JPEG, PNG, GIF, WebP - máx 5MB)"
               }

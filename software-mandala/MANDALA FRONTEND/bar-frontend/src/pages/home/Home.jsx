@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../components/Header";
+import Header from "../../components/Header";
 import { Package, ClipboardList } from "lucide-react";
 
 function Home() {
@@ -10,7 +10,7 @@ function Home() {
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 text-white">
       <Header />
       <main className="flex flex-col items-center justify-center pt-20">
-        <h1 className="text-5xl font-bold mb-4">Bienvenida</h1>
+        <h1 className="text-5xl font-bold mb-4">Bienvenidos</h1>
         <p className="text-xl text-purple-300 mb-12">Selecciona a dónde quieres ir</p>
         <div className="flex gap-8">
           <button

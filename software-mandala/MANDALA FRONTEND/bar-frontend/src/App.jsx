@@ -1,11 +1,11 @@
 // src/App.jsx
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import Inventario from "./pages/Inventario";
-import Home from "./pages/Home";
-import Pedidos from "./pages/pedidos";
-import PedidosPage from "./pages/PedidosPage";
-import { useOrder } from "./hooks/useOrder";
+import Inventario from "./pages/inventario/Inventario";
+import Home from "./pages/home/Home";
+import Pedidos from "./pages/pedidosAuth/pedidos";
+import PedidosPage from "./pages/pedidospage/PedidosPage";
+import { useOrder } from "./hooks/useOrder"
 
 function App() {
   const {

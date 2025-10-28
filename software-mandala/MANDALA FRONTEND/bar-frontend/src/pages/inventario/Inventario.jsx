@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import Header from "../components/Header";
-import InventoryCard from "../components/InventoryCard";
-import ProductTableWithModal from "../components/ProductTable";
-import ProductModal from "../components/ProductModal";
-import FiltersSummary from "../components/FiltersSummary";
-import { useInventario } from "../hooks/useInventario";
+import Header from "../../components/Header";
+import InventoryCard from "./InventoryCard";
+import ProductTableWithModal from "./ProductTable";
+import ProductModal from "./ProductModal";
+import FiltersSummary from "./FiltersSummary";
+import { useInventario } from "../../hooks/useInventario";
 
 
 function Inventario() {
