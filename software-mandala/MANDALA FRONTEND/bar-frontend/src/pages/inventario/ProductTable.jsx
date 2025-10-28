@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { ArrowDownCircle, ArrowUpCircle, Edit, Trash2 } from "lucide-react";
-import MovimientoModal from "../../components/MovimientoModal";
+import MovimientoModal from "./MovimientoModal";
 import { getImageUrl } from "../../utils/imageUtils";
 
 function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {

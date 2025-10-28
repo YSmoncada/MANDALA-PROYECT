@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import ProductCard from "../../components/ProductCard";
+import ProductCard from "../pedidospage/ProductCard";
 import axios from "axios";
 export default function ProductGrid({ mesera, onCambiar, onProductAdd }) {
   const [filtro, setFiltro] = useState("cerveza");

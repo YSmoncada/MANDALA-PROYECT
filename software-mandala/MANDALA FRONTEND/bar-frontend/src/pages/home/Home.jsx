@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../../components/Header";
+import Header from "./Header";
 import { Package, ClipboardList } from "lucide-react";
 
 function Home() {

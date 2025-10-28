@@ -22,10 +22,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/inventario" element={<Inventario />} />
         <Route path="/login" element={<Pedidos onProductAdd={addProductToOrder} />} />
-        <Route
-          path="/pedidos"
-          element={<PedidosPage orderItems={orderItems} onClearOrder={clearOrder} onUpdateCantidad={updateProductQuantity} onRemoveItem={removeProductFromOrder} />}
-        />
+        <Route path="/pedidos" element={<PedidosPage orderItems={orderItems} onClearOrder={clearOrder} onUpdateCantidad={updateProductQuantity} onRemoveItem={removeProductFromOrder} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
