@@ -1,17 +1,21 @@
-function InventoryCard({ onAdd }) {
+import { Plus } from "lucide-react";
+
+export default function InventoryCard({ onAdd }) {
   return (
     <div className="flex justify-between items-center mb-6">
       <div>
-        <h2 className="text-2xl font-bold"> <span className="text-white">Gestión de Inventario</span></h2>
-        <p className="text-gray-300">Administra, edita y elimina productos.</p>
+        <h1 className="text-3xl font-bold text-white">Inventario de Productos</h1>
+        <p className="text-gray-400">
+          Gestiona las entradas, salidas y stock de tus productos.
+        </p>
       </div>
       <button
         onClick={onAdd}
-        className="bg-gradient-to-r from-purple-900 to-purple-900 text-white px-6 py-2 rounded-lg font-semibold shadow hover:from-pink-600 hover:to-purple-600 transition"
+        className="flex items-center gap-2 bg-purple-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-purple-700 transition-colors shadow-lg shadow-purple-500/20"
       >
-        + Agregar Producto
+        <Plus size={20} />
+        <span>Agregar Producto</span>
       </button>
     </div>
   );
 }
-export default InventoryCard;

@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../home/Header";
 import InventoryCard from "./InventoryCard";
 import ProductTableWithModal from "./ProductTable";
 import ProductModal from "./ProductModal";
 import FiltersSummary from "./FiltersSummary";
 import { useInventario } from "../../hooks/useInventario";
+
 
 
 function Inventario() {
@@ -31,12 +33,30 @@ function Inventario() {
     handleMovimiento,
     fetchProductos,
   } = useInventario();
+  const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#0E0D23] to-[#511F86] p-8 relative">
       <Header />
-      <div className="max-w-5xl mx-auto bg-gradient-to-br from-purple-800 via-indigo-900 to-blue-900 rounded-2xl shadow-lg p-8">
+      <button
+        onClick={() => navigate("/")}
+        className="absolute top-30 left-8 flex items-center gap-2 text-white bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition-colors shadow-lg"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        <span>Volver al Inicio</span>
+      </button>
+
+      <div className="max-w-5xl mx-auto border border-[#6C3FA8] rounded-2xl shadow-lg p-8">
         <InventoryCard onAdd={handleAdd} />
+
 
         {/* Filtros + Resumen */}
         <FiltersSummary

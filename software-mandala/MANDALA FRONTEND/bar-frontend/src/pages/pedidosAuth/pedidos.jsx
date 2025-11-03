@@ -1,5 +1,6 @@
 // src/pages/Pedidos.jsx
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import HeaderPedidos from "../pedidospage/HeaderPedidos";
 import CodeInput from "./CodeInput";
 import ProductGrid from "./ProductGrid";
@@ -19,6 +20,7 @@ export default function Pedidos({ auth, onProductAdd }) {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newMeseraName, setNewMeseraName] = useState("");
   const [newMeseraCode, setNewMeseraCode] = useState("");
+  const navigate = useNavigate();
 
   // Mostrar loading mientras se inicializa
   if (!isInitialized) {
@@ -50,9 +52,11 @@ export default function Pedidos({ auth, onProductAdd }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#0E0D23] to-[#511F86]">
-      {/* Header con mesera y botón de logout */}
-      <HeaderPedidos mesera={mesera} onLogout={handleLogout} />
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#0E0D23] to-[#511F86] relative">
+      {/* El Header se muestra solo si no estamos en la pantalla de ingreso de código */}
+      {!(mesera && !codigoConfirmado) && (
+        <HeaderPedidos mesera={mesera} onLogout={handleLogout} codigoConfirmado={codigoConfirmado} />
+      )}
 
       <div className="flex flex-1 items-center justify-center p-6">
         {/* Formulario para agregar nueva mesera */}
@@ -72,30 +76,47 @@ export default function Pedidos({ auth, onProductAdd }) {
 
         {/* Paso 1: Selección de mesera (si no se está agregando una nueva) */}
         {!mesera && !codigoConfirmado && !showAddForm && (
-          <div className="bg-[#441E73]/90 border border-[#6C3FA8] p-8 rounded-2xl shadow-lg w-full max-w-md text-center">
-            <h2 className="text-white text-2xl font-bold mb-2">Seleccionar Mesera</h2>
-            <p className="text-[#C2B6D9] text-sm mb-6">
-              Elige tu nombre para comenzar
-            </p>
-            <div className="grid grid-cols-2 gap-3 mb-4">
-              {/* Ahora 'meseras' es una lista de objetos */}
-              {meseras.map((meseraObj) => (
-                <button
-                  key={meseraObj.id}
-                  onClick={() => handleSelectMesera(meseraObj)} // Pasamos el objeto completo
-                  className="bg-transparent border border-gray-500 hover:bg-purple-700 text-white py-3 px-4 rounded-lg transition"
-                >
-                  {meseraObj.nombre}
-                </button>
-              ))}
-            </div>
+          <>
             <button
-              onClick={() => setShowAddForm(true)}
-              className="border border-gray-500 text-gray-300 hover:bg-gray-600/30 py-2 px-4 rounded-lg w-full transition"
+              onClick={() => navigate("/")}
+              className="absolute top-20 left-6 flex items-center gap-2 text-white bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors"
             >
-              + Otro nombre
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+              </svg>
+              <span>Volver al Inicio</span>
             </button>
-          </div>
+            <div className="bg-[#441E73]/90 border border-[#6C3FA8] p-8 rounded-2xl shadow-lg w-full max-w-md text-center">
+              <h2 className="text-white text-2xl font-bold mb-2">Seleccionar Mesera</h2>
+              <p className="text-[#C2B6D9] text-sm mb-6">
+                Elige tu nombre para comenzar
+              </p>
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                {/* Ahora 'meseras' es una lista de objetos */}
+                {meseras.map((meseraObj) => (
+                  <button
+                    key={meseraObj.id}
+                    onClick={() => handleSelectMesera(meseraObj)} // Pasamos el objeto completo
+                    className="bg-transparent border border-gray-500 hover:bg-purple-700 text-white py-3 px-4 rounded-lg transition"
+                  >
+                    {meseraObj.nombre}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => setShowAddForm(true)}
+                className="border border-gray-500 text-gray-300 hover:bg-gray-600/30 py-2 px-4 rounded-lg w-full transition"
+              >
+                + Otro nombre
+              </button>
+            </div>
+          </>
         )}
 
         {/* Paso 2: Código de acceso */}

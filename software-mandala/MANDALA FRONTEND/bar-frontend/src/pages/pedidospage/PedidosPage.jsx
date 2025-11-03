@@ -139,7 +139,7 @@ export default function PedidosPage({
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#0E0D23] to-[#511F86]">
       {/* Header */}
-      <HeaderPedidos mesera={mesera} onLogout={handleLogout} />
+      <HeaderPedidos mesera={mesera} onLogout={handleLogout} codigoConfirmado={codigoConfirmado} />
 
       {/* Contenido principal */}
       <div className="flex flex-col items-center justify-center flex-1 p-6">

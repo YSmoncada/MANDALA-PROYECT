@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import toast from 'react-hot-toast';
 
 export default function ProductCard({ producto, onAgregarPedido }) {
   const [cantidad, setCantidad] = useState(1);
@@ -8,7 +8,8 @@ export default function ProductCard({ producto, onAgregarPedido }) {
   const disminuir = () => setCantidad(cantidad > 1 ? cantidad - 1 : 1);
   const agregarPedido = () => {
     onAgregarPedido(producto, cantidad);
-    alert(`Agregado: ${cantidad} x ${producto.nombre}`);
+    const nombreProducto = cantidad > 1 ? `${producto.nombre}s` : producto.nombre;
+    toast.success(`Agregado: ${cantidad}  ${nombreProducto}`);
     setCantidad(1); // Resetear cantidad después de agregar
 
   }
