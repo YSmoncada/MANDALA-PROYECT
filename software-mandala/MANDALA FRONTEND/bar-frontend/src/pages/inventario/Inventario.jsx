@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../home/Header";
 import InventoryCard from "./InventoryCard";
 import ProductTableWithModal from "./ProductTable";
 import ProductModal from "./ProductModal";
