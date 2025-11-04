@@ -1,16 +1,26 @@
-from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
+from rest_framework import generics
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend # Importar para filtrar
-
-from .models import Producto, Pedido, Movimiento, Mesa, Mesera
-from .serializers import ProductoSerializer, MovimientoSerializer, PedidoSerializer, MesaSerializer, MeseraSerializer
-from .serializers import ProductoSerializer
-from rest_framework import status
+from django.db.models import Sum, Value
+from django.db.models import DecimalField, F # Importamos F
+from django.db.models.functions import Coalesce
 import logging
 
+from .models import Producto, Pedido, Movimiento, Mesa, Mesera
+from .serializers import (
+    ProductoSerializer, 
+    MovimientoSerializer, 
+    PedidoSerializer, 
+    MesaSerializer, 
+    MeseraSerializer,
+    MeseraTotalPedidosSerializer # Asegúrate que este serializer existe
+)
+
 logger = logging.getLogger(__name__)
+
+# --- VISTAS EXISTENTES ---
 
 class MeseraViewSet(viewsets.ModelViewSet):
     queryset = Mesera.objects.all().order_by('-id')
@@ -43,8 +53,34 @@ class MesaViewSet(viewsets.ModelViewSet):
     serializer_class = MesaSerializer
     # La validación de número único se ha movido al MesaSerializer.
 
+# --- VISTAS DECORADOR EXISTENTES ---
+
 @api_view(['GET'])
 def productos_list(request):
     productos = Producto.objects.all()
     serializer = ProductoSerializer(productos, many=True)
     return Response(serializer.data)
+
+# --- NUEVA VISTA PARA EL REPORTE ---
+
+class MeseraTotalPedidosView(generics.ListAPIView):
+    """
+    Vista para obtener el total de pedidos por cada mesera.
+    """
+    serializer_class = MeseraTotalPedidosSerializer
+
+    def get_queryset(self):
+        # Partimos de TODAS las meseras y calculamos sus ventas.
+        # Usamos Coalesce para asegurarnos de que si no hay ventas, el total sea 0.
+        queryset = Mesera.objects.annotate(
+            total_vendido=Coalesce(
+                Sum('pedido__total'),  # CORRECCIÓN FINAL: Usar la relación 'pedido' que indica el error.
+                Value(0),
+                output_field=DecimalField()
+            )
+        ).values(
+            'total_vendido',
+            mesera_id=F('id'), # Mapear el 'id' del modelo Mesera al campo 'mesera_id' del serializer
+            mesera_nombre=F('nombre') # Mapear el 'nombre' del modelo Mesera al campo 'mesera_nombre' del serializer
+        )
+        return queryset

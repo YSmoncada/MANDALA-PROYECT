@@ -6,7 +6,13 @@ import ProductModal from "./ProductModal";
 import FiltersSummary from "./FiltersSummary";
 import { useInventario } from "../../hooks/useInventario";
 
-
+// Componente Header que faltaba
+const Header = () => (
+  <header className="text-center mb-8">
+    <h1 className="text-5xl font-extrabold text-white tracking-wider">Gestión de Inventario</h1>
+    <div className="h-1.5 w-32 bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] rounded-full mx-auto mt-4"></div>
+  </header>
+);
 
 function Inventario() {
   const {

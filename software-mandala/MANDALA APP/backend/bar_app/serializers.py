@@ -63,7 +63,7 @@ class PedidoSerializer(serializers.ModelSerializer):
             'mesa_numero',       # Campo de lectura
             'total', 'fecha_hora'
         ]
-        read_only_fields = ['total', 'fecha_hora', 'productos_detalle', 'mesera_nombre', 'mesa_numero']
+        read_only_fields = ['fecha_hora', 'productos_detalle', 'mesera_nombre', 'mesa_numero']
 
     def create(self, validated_data):
         productos_data = validated_data.pop('productos', [])
@@ -71,12 +71,10 @@ class PedidoSerializer(serializers.ModelSerializer):
         mesera = validated_data.pop('mesera')
         mesa = validated_data.pop('mesa')
         
-        pedido = Pedido.objects.create(mesera=mesera, mesa=mesa, **validated_data)
         total = 0
         for item in productos_data:
             producto = item['producto'] # 'producto' ya es la instancia de Producto gracias a source='producto' en PedidoProductoSerializer
             cantidad = item['cantidad']
-            PedidoProducto.objects.create(pedido=pedido, producto=producto, cantidad=cantidad)
             total += producto.precio * cantidad
             
             # Descontar stock
@@ -84,19 +82,14 @@ class PedidoSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(f"❌ Stock insuficiente para el producto {producto.nombre}.")
             producto.stock -= cantidad
             producto.save()
-
-            # Aquí podrías crear un Movimiento de tipo 'salida' si lo deseas
-            # from .models import Movimiento
-            # Movimiento.objects.create(
-            #     producto=producto,
-            #     tipo='salida',
-            #     cantidad=cantidad,
-            #     motivo='Venta',
-            #     usuario=pedido.mesera.nombre # O el usuario autenticado
-            # )
-
-        pedido.total = total
-        pedido.save()
+        
+        # CORRECCIÓN: Asignar el total ANTES de crear el pedido.
+        pedido = Pedido.objects.create(mesera=mesera, mesa=mesa, total=total, **validated_data) # Se crea el pedido con el total ya calculado
+        
+        # Crear los registros de PedidoProducto después de que el pedido ya tiene un ID.
+        for item in productos_data:
+            PedidoProducto.objects.create(pedido=pedido, producto=item['producto'], cantidad=item['cantidad'])
+            
         return pedido
 
 class MesaSerializer(serializers.ModelSerializer):
@@ -112,3 +105,11 @@ class MesaSerializer(serializers.ModelSerializer):
         if Mesa.objects.filter(numero=value).exclude(pk=getattr(self.instance, 'pk', None)).exists():
             raise serializers.ValidationError("Ya existe una mesa con este número.")
         return value
+
+
+# --- Serializer para el Reporte de Ventas por Mesera ---
+
+class MeseraTotalPedidosSerializer(serializers.Serializer):
+    mesera_id = serializers.IntegerField(read_only=True)
+    mesera_nombre = serializers.CharField(read_only=True)
+    total_vendido = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)

@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import HeaderPedidos from "./HeaderPedidos";
-import { createPedido } from "../../services/pedidoService.js";
+import HeaderPedidos from "./HeaderPedidos"; // Asumo que este componente existe
+import { usePedido } from "../../hooks/usePedido"; // Importamos el nuevo hook
 
 
 export default function PedidosPage({
@@ -25,9 +25,7 @@ export default function PedidosPage({
   } = auth;
 
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
-  const [mesas, setMesas] = useState([]);
-  const [selectedMesaId, setSelectedMesaId] = useState(''); // Guardará el ID de la mesa seleccionada
+  const { mesas, selectedMesaId, setSelectedMesaId, isLoading, finalizarPedido } = usePedido();
 
 
   const totalPedido = orderItems.reduce(
@@ -41,23 +39,6 @@ export default function PedidosPage({
 
     if (!mesera || !codigoConfirmado) {
       navigate('/login', { replace: true });
-    } else {
-      const fetchMesas = async () => {
-        try {
-          const response = await axios.get('http://127.0.0.1:8000/api/mesas/');
-          setMesas(response.data);
-          // Seleccionar la primera mesa por defecto si la lista no está vacía
-          if (response.data.length > 0) {
-            setSelectedMesaId(response.data[0].id);
-          }
-        } catch (error) {
-          console.error("Error al cargar las mesas:", error);
-          alert("No se pudieron cargar las mesas. Asegúrate de que el servidor backend esté funcionando.");
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      fetchMesas();
     }
   }, [isInitialized, mesera, codigoConfirmado, navigate]);
 
@@ -97,25 +78,12 @@ export default function PedidosPage({
       // El campo 'total' se calculará en el backend, no lo enviamos desde aquí.
     };
 
-    try {
-      await createPedido(pedidoData);
-      alert("¡Pedido finalizado y guardado con éxito!");
+    const result = await finalizarPedido(pedidoData);
+    alert(result.message);
+
+    if (result.success) {
       onClearOrder(); // Limpiar el pedido del estado del frontend
       navigate('/login'); // Redirigir a la página de inicio de sesión o donde sea apropiado
-    } catch (error) {
-      console.error("Error al finalizar el pedido:", error.response?.data || error.message);
-      let errorMessage = "Hubo un error al guardar el pedido. Por favor, inténtalo de nuevo.";
-      if (error.response && error.response.data) {
-        // Intenta parsear errores específicos de Django REST Framework
-        if (typeof error.response.data === 'object') {
-          errorMessage = Object.entries(error.response.data)
-            .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`)
-            .join('\n');
-        } else {
-          errorMessage = error.response.data; // Fallback para errores de texto plano
-        }
-      }
-      alert(`Error al guardar pedido:\n${errorMessage}`);
     }
   };
 

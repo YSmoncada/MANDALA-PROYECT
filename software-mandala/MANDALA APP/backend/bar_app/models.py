@@ -31,7 +31,6 @@ class Mesa(models.Model):
 class Pedido(models.Model):
     mesera = models.ForeignKey(Mesera, on_delete=models.CASCADE)
     mesa = models.ForeignKey(Mesa, on_delete=models.CASCADE)
-    productos = models.ManyToManyField(Producto, through='PedidoProducto')
     fecha_hora = models.DateTimeField(auto_now_add=True)
     estado = models.CharField(max_length=20, default="activa", choices=[("activa", "Activa"), ("cerrada", "Cerrada"), ("confirmada", "Confirmada")])  # activa, cerrada, en espera
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -94,4 +93,3 @@ class Movimiento(models.Model):
 
     def __str__(self):
         return f"{self.tipo} - {self.producto.nombre} ({self.cantidad})"
-

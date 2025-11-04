@@ -8,6 +8,8 @@ const HistorialPedidosPage = () => {
     const [pedidos, setPedidos] = useState([]);
     const [meseras, setMeseras] = useState([]);
     const [meseraSeleccionada, setMeseraSeleccionada] = useState('');
+    const [meseraTotals, setMeseraTotals] = useState([]); // Almacena los totales de TODAS las meseras
+    const [totalMostrado, setTotalMostrado] = useState(0); // El total que se mostrará en la UI (global o individual)
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
@@ -22,6 +24,22 @@ const HistorialPedidosPage = () => {
             }
         };
         fetchMeseras();
+
+        // Cargar el total global de ventas
+        const fetchTotalGlobal = async () => {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/meseras/total-pedidos/');
+                const totalsData = response.data;
+                setMeseraTotals(totalsData); // Guardamos la lista completa de totales
+                // Calculamos el total global inicial
+                const totalGlobal = totalsData.reduce((acc, item) => acc + parseFloat(item.total_vendido), 0);
+                setTotalMostrado(totalGlobal);
+            } catch (error) {
+                console.error("Error al cargar el total global de ventas:", error);
+            }
+        };
+        fetchTotalGlobal();
+
     }, []);
 
     // Cargar los pedidos cuando se selecciona una mesera
@@ -47,6 +65,23 @@ const HistorialPedidosPage = () => {
 
         fetchPedidos();
     }, [meseraSeleccionada]);
+
+    // Efecto para actualizar el total mostrado cuando cambia la selección de mesera
+    useEffect(() => {
+        if (!meseraSeleccionada) {
+            // Si no hay mesera seleccionada, mostramos el total global
+            const totalGlobal = meseraTotals.reduce((acc, item) => acc + parseFloat(item.total_vendido), 0);
+            setTotalMostrado(totalGlobal);
+        } else {
+            // Si se selecciona una mesera, buscamos su total específico
+            const meseraIdNum = parseInt(meseraSeleccionada, 10);
+            const totalMesera = meseraTotals.find(t => t.mesera_id === meseraIdNum);
+            setTotalMostrado(totalMesera ? parseFloat(totalMesera.total_vendido) : 0);
+        }
+    }, [meseraSeleccionada, meseraTotals]);
+
+    // Determina el título a mostrar basado en si hay una mesera seleccionada
+    const tituloTotal = meseraSeleccionada ? `Total de Ventas de ${meseras.find(m => m.id == meseraSeleccionada)?.nombre || ''}` : 'Total Global de Ventas';
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#0E0D23] to-[#511F86] p-8 text-white">
@@ -103,6 +138,12 @@ const HistorialPedidosPage = () => {
                         )}
                     </div>
                 )}
+
+                {/* Total Global */}
+                <div className="mt-8 pt-4 border-t-2 border-purple-500 text-center">
+                    <h2 className="text-2xl font-bold text-white">{tituloTotal}</h2>
+                    <p className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] mt-2">${totalMostrado.toLocaleString('es-CO')}</p>
+                </div>
             </div>
         </div>
     );
