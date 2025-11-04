@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => {
     const [numero, setNumero] = useState(initialData.numero || '');
@@ -23,7 +24,7 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!numero || !capacidad) {
-            alert('Por favor, complete todos los campos.');
+            toast.error('Por favor, complete todos los campos.');
             return;
         }
         onSubmit({ numero, capacidad: parseInt(capacidad, 10) });

@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import HeaderPedidos from "./HeaderPedidos"; // Asumo que este componente existe
 import { usePedido } from "../../hooks/usePedido"; // Importamos el nuevo hook
+import toast from 'react-hot-toast'; // Importamos la librería de notificaciones
 
 
 export default function PedidosPage({
@@ -42,11 +43,6 @@ export default function PedidosPage({
     }
   }, [isInitialized, mesera, codigoConfirmado, navigate]);
 
-  const handleCambiar = () => {
-    handleLogout();
-    navigate('/login');
-  };
-
   const handleFinalizarPedido = async () => {
     if (orderItems.length === 0) {
       alert("No hay productos en el pedido para finalizar.");
@@ -79,7 +75,12 @@ export default function PedidosPage({
     };
 
     const result = await finalizarPedido(pedidoData);
-    alert(result.message);
+
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      toast.error(result.message);
+    }
 
     if (result.success) {
       onClearOrder(); // Limpiar el pedido del estado del frontend
@@ -111,16 +112,6 @@ export default function PedidosPage({
 
       {/* Contenido principal */}
       <div className="flex flex-col items-center justify-center flex-1 p-6">
-        {/* Nombre mesera y botón cambiar */}
-        <div className="mb-6 text-white">
-          <span className="mr-2">Mesera: <span className="font-bold">{mesera}</span></span>
-          <button
-            onClick={handleCambiar}
-            className="text-pink-400 hover:underline ml-2"
-          >
-            Cambiar
-          </button>
-        </div>
         {/* Contenido condicional: Pedido vacío o lista de productos */}
         {orderItems.length === 0 ? (
           <div className="bg-[#441E73]/50 border border-[#6C3FA8] rounded-2xl p-10 text-center shadow-lg max-w-md w-full">
@@ -185,7 +176,7 @@ export default function PedidosPage({
                       <div>
                         <p className="font-semibold">{item.producto.nombre}</p>
                         <p className="text-sm text-gray-400">
-                          ${item.producto.precio.toLocaleString("es-CO")} c/u
+                          ${parseFloat(item.producto.precio).toLocaleString("es-CO")}
                         </p>
                       </div>
                     </div>
@@ -214,7 +205,7 @@ export default function PedidosPage({
                       </div>
                       {/* Precio total por item */}
                       <p className="font-bold text-lg w-28 text-right">
-                        ${(item.producto.precio * item.cantidad).toLocaleString("es-CO")}
+                        ${(parseFloat(item.producto.precio) * item.cantidad).toLocaleString("es-CO")}
                       </p>
                       {/* Botón de eliminar */}
                       <button onClick={() => onRemoveItem(item.producto.id)} className="text-red-500 hover:text-red-400 p-2 rounded-full hover:bg-red-500/20 transition-colors">

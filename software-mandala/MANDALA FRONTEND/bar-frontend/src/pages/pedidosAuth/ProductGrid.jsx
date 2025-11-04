@@ -30,19 +30,7 @@ export default function ProductGrid({ mesera, onCambiar, onProductAdd }) {
 
 
   return (
-    <div className="w-full max-w-6xl">
-      {/* Mesera */}
-      <div className="flex justify-center mb-4 text-white items-center gap-2">
-        <span>Mesera:</span>
-        <span className="font-bold">{mesera}</span>
-        <span
-          onClick={onCambiar}
-          className="ml-2 px-3 py-1 rounded-full text-xs font-semibold bg-pink-500 text-white shadow-md cursor-pointer hover:bg-purple-700 transition-all duration-300"
-        >
-          Cambiar
-        </span>
-      </div>
-
+    <div className="w-full max-w-6xl mx-auto">
       {/* Filtros */}
       <div className="flex justify-center mb-9 gap-2">
         <button

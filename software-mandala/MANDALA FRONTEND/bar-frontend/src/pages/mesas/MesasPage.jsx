@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Trash2 } from 'lucide-react';
-import MesaForm from './MesaForm';
+import MesaForm from './MesaForm'; import toast from 'react-hot-toast';
 
 const API_URL = 'http://127.0.0.1:8000/api/mesas/';
 
@@ -29,10 +29,11 @@ const MesasPage = () => {
     const handleAddMesa = async (mesaData) => {
         try {
             await axios.post(API_URL, mesaData);
+            toast.success('¡Mesa guardada con éxito!');
             fetchMesas(); // Recargar la lista
         } catch (error) {
             console.error("Error al agregar la mesa:", error.response?.data || error.message);
-            alert(`Error: ${error.response?.data?.numero?.[0] || 'No se pudo guardar la mesa.'}`);
+            toast.error(`Error: ${error.response?.data?.numero?.[0] || 'No se pudo guardar la mesa.'}`);
         }
     };
 
@@ -51,8 +52,8 @@ const MesasPage = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#0E0D23] to-[#511F86] p-8 text-white">
             <button
-                onClick={() => navigate("/")}
-                className="absolute top-6 left-6 flex items-center gap-2 text-white bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors"
+                onClick={() => navigate(-1)} // Usamos navigate(-1) para volver a la página anterior
+                className="absolute top-6 left-6 flex items-center gap-2 text-white bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition-colors shadow-lg"
             >
                 <ArrowLeft size={18} /> Volver al Inicio
             </button>

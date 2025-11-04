@@ -86,8 +86,8 @@ const HistorialPedidosPage = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#0E0D23] to-[#511F86] p-8 text-white">
             <button
-                onClick={() => navigate("/")}
-                className="absolute top-6 left-6 flex items-center gap-2 text-white bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors"
+                onClick={() => navigate(-1)} // Usamos navigate(-1) para volver a la página anterior
+                className="absolute top-6 left-6 flex items-center gap-2 text-white bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition-colors shadow-lg"
             >
                 <ArrowLeft size={18} />
                 Volver al Inicio
@@ -126,7 +126,7 @@ const HistorialPedidosPage = () => {
                                 <p className="text-sm mb-2">Mesa: <span className="font-semibold">{pedido.mesa_numero}</span></p>
                                 <ul className="list-disc list-inside pl-2 text-gray-300">
                                     {pedido.productos_detalle.map((item, index) => (
-                                        <li key={index}>
+                                        <li key={index} className="text-sm">
                                             {item.cantidad} x {item.producto_nombre} - ${(parseFloat(item.producto_precio) * item.cantidad).toLocaleString('es-CO')}
                                         </li>
                                     ))}

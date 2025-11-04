@@ -1,6 +1,6 @@
 // src/pages/Pedidos.jsx
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import HeaderPedidos from "../pedidospage/HeaderPedidos";
 import CodeInput from "./CodeInput";
 import ProductGrid from "./ProductGrid";
@@ -78,8 +78,8 @@ export default function Pedidos({ auth, onProductAdd }) {
         {!mesera && !codigoConfirmado && !showAddForm && (
           <>
             <button
-              onClick={() => navigate("/")}
-              className="absolute top-20 left-6 flex items-center gap-2 text-white bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors"
+              onClick={() => navigate("/")} // Cambiado para que siempre dirija a la página principal
+              className="absolute top-20 left-6 flex items-center gap-2 text-white bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition-colors shadow-lg"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -129,7 +129,21 @@ export default function Pedidos({ auth, onProductAdd }) {
         )}
 
         {/* Paso 3: Interfaz de productos */}
-        {mesera && codigoConfirmado && <ProductGrid mesera={mesera} onCambiar={handleLogout} onProductAdd={onProductAdd} />}
+        {mesera && codigoConfirmado && (
+          <div className="w-full max-w-7xl mx-auto">
+            {/* --- MEJORA DE DISEÑO: SALUDO A LA MESERA --- */}
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-light text-gray-300">
+                Hola, <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#A944FF] to-[#FF4BC1]">{mesera}</span>
+              </h2>
+              <p className="text-gray-400">Selecciona los productos para el pedido</p>
+            </div>
+            <ProductGrid
+              onProductAdd={onProductAdd}
+            />
+          </div>
+        )}
+
       </div>
     </div>
   );

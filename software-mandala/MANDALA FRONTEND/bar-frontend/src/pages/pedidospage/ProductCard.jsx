@@ -29,7 +29,7 @@ export default function ProductCard({ producto, onAgregarPedido }) {
 
       {/* Precio */}
       <p className="text-green-400 font-semibold mt-2">
-        ${producto.precio.toLocaleString("es-CO")}
+        ${parseFloat(producto.precio).toLocaleString("es-CO")}
       </p>
 
       {/* Controles */}

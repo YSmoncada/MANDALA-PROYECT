@@ -44,8 +44,8 @@ function Inventario() {
     <div className="min-h-screen bg-gradient-to-br from-[#0E0D23] to-[#511F86] p-8 relative">
       <Header />
       <button
-        onClick={() => navigate("/")}
-        className="absolute top-30 left-8 flex items-center gap-2 text-white bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition-colors shadow-lg"
+        onClick={() => navigate(-1)}
+        className="absolute top-6 left-6 flex items-center gap-2 text-white bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition-colors shadow-lg"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
