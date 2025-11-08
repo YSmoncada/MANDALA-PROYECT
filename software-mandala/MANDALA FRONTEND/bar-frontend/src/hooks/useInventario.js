@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { validateImageFile, createImagePreview } from "../utils/imageUtils";
+import toast from 'react-hot-toast';
 import * as inventarioService from "../services/inventarioService";
 
 const initialForm = {
@@ -84,6 +85,27 @@ export const useInventario = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // --- VALIDACIÓN DE NOMBRE ÚNICO ---
+        const nombreActual = form.nombre.trim().toLowerCase();
+        const productoExistente = productos.find(p => p.nombre.trim().toLowerCase() === nombreActual);
+
+        // Si el producto existe y (estamos creando uno nuevo O estamos editando y el ID es diferente)
+        if (productoExistente && (!editId || productoExistente.id !== editId)) {
+            toast.error("Ya existe un producto con este nombre.");
+            return; // Detiene el envío del formulario
+        }
+
+
+        // --- VALIDACIONES ---
+        const stockMinimo = parseInt(form.stock_minimo, 10);
+        const stockMaximo = parseInt(form.stock_maximo, 10);
+
+        if (stockMaximo <= stockMinimo) {
+            toast.error("El stock máximo debe ser mayor que el stock mínimo.");
+            return; // Detiene el envío del formulario
+        }
+
         const data = new FormData();
         Object.keys(form).forEach((key) => {
             if (form[key] !== null) data.append(key, form[key]);

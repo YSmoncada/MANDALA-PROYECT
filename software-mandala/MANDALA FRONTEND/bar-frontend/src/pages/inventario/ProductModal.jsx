@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { getImageUrl } from "../../utils/imageUtils";
+import { getImageUrl } from "../../utils/imageUtils"; // Asegúrate de que esta ruta sea correcta
 function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImageChange, imagePreview, originalImageUrl }) {
   if (!open) return null;
 
@@ -7,7 +7,7 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
     e.stopPropagation();
   };
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50" onClick={onClose}>
+    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
       <div className="bg-[#1A1B2F] w-full max-w-2xl rounded-xl shadow-lg p-8 relative text-white" onClick={handleContentClick}>
         {/* Cerrar */}
         <button
@@ -21,7 +21,7 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
           {editId ? "Editar Producto" : "Nuevo Producto"}
         </h2>
 
-        <form onSubmit={onSubmit} className="grid grid-cols-2 gap-4">
+        <form onSubmit={onSubmit} className="grid grid-cols-2 gap-x-6 gap-y-4">
           {/* Imagen del Producto */}
           <div className="col-span-2">
             <label className="text-sm block mb-1">
@@ -107,6 +107,7 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
               value={form.stock}
               onChange={onChange}
               className="w-full bg-transparent border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
+              min={form.stock_minimo || 0}
               required
             />
           </div>
@@ -120,6 +121,7 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
               value={form.stock_minimo || ""}
               onChange={onChange}
               className="w-full bg-transparent border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
+              min="0"
               required
             />
           </div>
@@ -133,6 +135,7 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
               value={form.stock_maximo || ""}
               onChange={onChange}
               className="w-full bg-transparent border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
+              min={parseInt(form.stock_minimo || 0, 10) + 1}
               required
             />
           </div>
