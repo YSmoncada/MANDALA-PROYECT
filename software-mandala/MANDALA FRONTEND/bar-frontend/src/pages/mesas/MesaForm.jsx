@@ -45,9 +45,12 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
                     type="text"
                     id="numero"
                     value={numero}
-                    onChange={(e) => setNumero(e.target.value)}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setNumero(value.replace(/[^0-9]/g, '')); // Solo permite números
+                    }}
                     className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
-                    placeholder="Ej: 1, 2, A1"
+                    placeholder="Ej: 1, 2, 10"
                     required
                 />
             </div>

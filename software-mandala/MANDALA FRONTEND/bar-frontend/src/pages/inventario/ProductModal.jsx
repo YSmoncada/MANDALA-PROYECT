@@ -75,7 +75,13 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
               name="nombre"
               placeholder="Ej: Whisky Jack Daniels"
               value={form.nombre}
-              onChange={onChange}
+              onChange={(e) => {
+                const { name, value } = e.target;
+                // Solo permite letras y espacios
+                const filteredValue = value.replace(/[^a-zA-Z\s]/g, '');
+                // Llama al onChange original con el valor filtrado
+                onChange({ target: { name, value: filteredValue } });
+              }}
               className="w-full bg-transparent border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
               required
             />
@@ -105,9 +111,13 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
               type="number"
               name="stock"
               value={form.stock}
-              onChange={onChange}
+              onChange={(e) => {
+                const { name, value } = e.target;
+                const filteredValue = value.replace(/[^0-9]/g, '');
+                onChange({ target: { name, value: filteredValue } });
+              }}
               className="w-full bg-transparent border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
-              min={form.stock_minimo || 0}
+              min={parseInt(form.stock_minimo, 10) || 0}
               required
             />
           </div>
@@ -119,7 +129,11 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
               type="number"
               name="stock_minimo"
               value={form.stock_minimo || ""}
-              onChange={onChange}
+              onChange={(e) => {
+                const { name, value } = e.target;
+                const filteredValue = value.replace(/[^0-9]/g, '');
+                onChange({ target: { name, value: filteredValue } });
+              }}
               className="w-full bg-transparent border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
               min="0"
               required
@@ -133,7 +147,11 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
               type="number"
               name="stock_maximo"
               value={form.stock_maximo || ""}
-              onChange={onChange}
+              onChange={(e) => {
+                const { name, value } = e.target;
+                const filteredValue = value.replace(/[^0-9]/g, '');
+                onChange({ target: { name, value: filteredValue } });
+              }}
               className="w-full bg-transparent border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
               min={parseInt(form.stock_minimo || 0, 10) + 1}
               required
@@ -147,7 +165,11 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
               type="number"
               name="precio"
               value={form.precio}
-              onChange={onChange}
+              onChange={(e) => {
+                const { name, value } = e.target;
+                const filteredValue = value.replace(/[^0-9]/g, '');
+                onChange({ target: { name, value: filteredValue } });
+              }}
               className="w-full bg-transparent border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
               required
             />

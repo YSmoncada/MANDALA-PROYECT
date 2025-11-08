@@ -1,13 +1,14 @@
 import React from "react";
 import { Search } from "lucide-react";
 
-function FiltersSummary({ 
-  query = '', 
-  onQueryChange = () => {}, 
-  categorias = { selected: '', lista: [] }, 
-  onCategoriaChange = () => {}, 
-  totalProductos = 0, 
-  totalUnidades = 0 
+function FiltersSummary({
+  query = '',
+  onQueryChange = () => { },
+  categoriaSeleccionada = '', // Renombrado para mayor claridad
+  categorias = [], // Ahora es un array simple
+  onCategoriaChange = () => { },
+  totalProductos = 0,
+  totalUnidades = 0
 }) {
   return (
     <div className="flex items-center justify-between gap-4 mb-6">
@@ -28,13 +29,13 @@ function FiltersSummary({
       {/* Selector de categoría */}
       <div>
         <select
-          value={categorias?.selected || ''}
+          value={categoriaSeleccionada}
           onChange={(e) => onCategoriaChange(e.target.value)}
           className="px-4 py-3 rounded-lg bg-gray-600 bg-opacity-80 text-white focus:outline-none focus:ring-0 border-0 cursor-pointer min-w-[200px]"
         >
-          <option value="">Todas las categorías</option>
-          {(categorias?.lista || []).map((cat, i) => (
-            <option key={i} value={cat} className="bg-gray-600">
+          <option value="all">Todas las categorías</option>
+          {categorias.filter(cat => cat && cat !== 'all').map((cat, i) => (
+            <option key={i} value={cat.toString()}>
               {cat}
             </option>
           ))}

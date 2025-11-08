@@ -22,6 +22,7 @@ function Inventario() {
     editId,
     query,
     categorias,
+    categoria, // Usamos directamente el estado del hook
     totalProductos,
     totalUnidades,
     imagePreview,
@@ -68,6 +69,7 @@ function Inventario() {
           query={query}
           onQueryChange={setQuery}
           categorias={categorias}
+          categoriaSeleccionada={categoria}
           onCategoriaChange={setCategoria}
           totalProductos={totalProductos}
           totalUnidades={totalUnidades}

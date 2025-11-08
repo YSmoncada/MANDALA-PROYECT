@@ -38,12 +38,15 @@ export const useInventario = () => {
     const filtered = useMemo(() => {
         return productos.filter((producto) => {
             const matchesQuery = producto.nombre.toLowerCase().includes(query.toLowerCase());
-            const matchesCategoria = categoria === "all" || producto.categoria === categoria;
+            const matchesCategoria = !categoria || categoria === "all" || producto.categoria === categoria;
             return matchesQuery && matchesCategoria;
         });
     }, [productos, query, categoria]);
 
-    const categorias = useMemo(() => ["all", ...new Set(productos.map((p) => p.categoria).filter(Boolean))], [productos]);
+    const categorias = useMemo(() => {
+        const categoriasUnicas = [...new Set(productos.map((p) => p.categoria).filter(Boolean))];
+        return ["all", ...categoriasUnicas];
+    }, [productos]);
     const totalProductos = filtered.length;
     const totalUnidades = filtered.reduce((sum, p) => sum + p.stock, 0);
 
@@ -98,10 +101,12 @@ export const useInventario = () => {
 
 
         // --- VALIDACIONES ---
-        const stockMinimo = parseInt(form.stock_minimo, 10);
-        const stockMaximo = parseInt(form.stock_maximo, 10);
+        const stockActual = parseInt(form.stock, 10);
+        const stockMinimo = parseInt(form.stock_minimo, 10) || 0;
+        const stockMaximo = parseInt(form.stock_maximo, 10) || 0;
 
-        if (stockMaximo <= stockMinimo) {
+        // Validar solo si ambos valores son números válidos y mayores que cero
+        if (stockMaximo > 0 && stockMinimo > 0 && stockMaximo <= stockMinimo) {
             toast.error("El stock máximo debe ser mayor que el stock mínimo.");
             return; // Detiene el envío del formulario
         }
@@ -132,6 +137,7 @@ export const useInventario = () => {
 
     return {
         filtered, modalOpen, form, editId, query, categorias, totalProductos, totalUnidades,
+        categoria, // Exportamos el estado de la categoría seleccionada
         imagePreview, originalImageUrl, setModalOpen, setQuery, setCategoria, handleAdd,
         handleEdit, handleDelete, handleSubmit, handleChange, handleImageChange, handleMovimiento,
         fetchProductos,
