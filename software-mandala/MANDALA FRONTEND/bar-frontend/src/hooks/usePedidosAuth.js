@@ -1,8 +1,7 @@
 // src/hooks/usePedidosAuth.js
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-
-const API_URL = 'http://127.0.0.1:8000/api/meseras/';
+import { API_URL } from '../apiConfig';
 
 export const usePedidosAuth = () => {
     const [meseras, setMeseras] = useState([]);
@@ -15,7 +14,7 @@ export const usePedidosAuth = () => {
     useEffect(() => {
         const fetchMeseras = async () => {
             try {
-                const response = await axios.get(API_URL);
+                const response = await axios.get(`${API_URL}/meseras/`); // Ya estaba bien, pero se confirma
                 setMeseras(response.data);
             } catch (error) {
                 setError("No se pudo conectar con el servidor para cargar las meseras.");
@@ -66,7 +65,7 @@ export const usePedidosAuth = () => {
 
     const addMesera = async (nombre, codigo) => {
         try {
-            const response = await axios.post(API_URL, { nombre, codigo });
+            const response = await axios.post(`${API_URL}/meseras/`, { nombre, codigo }); // Ya estaba bien, pero se confirma
             const nuevaMesera = response.data;
             // Actualizar la lista de meseras en el estado para que aparezca inmediatamente
             setMeseras(prevMeseras => [nuevaMesera, ...prevMeseras]);

@@ -46,20 +46,12 @@ class PedidoViewSet(viewsets.ModelViewSet):
     queryset = Pedido.objects.all().order_by('-fecha_hora')
     serializer_class = PedidoSerializer
     filter_backends = [DjangoFilterBackend] # Habilitar filtrado
-    filterset_fields = ['mesera'] # Permitir filtrar por el ID de la mesera
+    filterset_fields = ['mesera', 'estado'] # Permitir filtrar por el ID de la mesera y el estado
 
 class MesaViewSet(viewsets.ModelViewSet):
     queryset = Mesa.objects.all().order_by('numero')
     serializer_class = MesaSerializer
     # La validación de número único se ha movido al MesaSerializer.
-
-# --- VISTAS DECORADOR EXISTENTES ---
-
-@api_view(['GET'])
-def productos_list(request):
-    productos = Producto.objects.all()
-    serializer = ProductoSerializer(productos, many=True)
-    return Response(serializer.data)
 
 # --- NUEVA VISTA PARA EL REPORTE ---
 

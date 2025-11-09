@@ -69,7 +69,7 @@ export default function PedidosPage({
     const pedidoData = {
       mesera: meseraId,
       mesa: selectedMesaId,
-      estado: "activa", // Estado inicial del pedido
+      estado: "pendiente", // Estado inicial del pedido
       productos: productosParaBackend, // Ahora contiene 'producto_id'
       // El campo 'total' se calculará en el backend, no lo enviamos desde aquí.
     };

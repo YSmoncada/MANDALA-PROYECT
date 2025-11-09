@@ -8,6 +8,7 @@ import Pedidos from "./pages/pedidosAuth/pedidos";
 import PedidosPage from "./pages/pedidospage/PedidosPage";
 import MesasPage from "./pages/mesas/MesasPage";
 import HistorialPedidosPage from "./pages/historialpedidos/HistorialPedidosPage";
+import BartenderPage from "./pages/bartender/BartenderPage";
 import { useOrder } from "./hooks/useOrder";
 import { usePedidosAuth } from "./hooks/usePedidosAuth";
 
@@ -42,6 +43,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/inventario" element={<Inventario />} />
         <Route path="/mesas" element={<MesasPage />} />
+        <Route path="/bartender" element={<BartenderPage />} />
         <Route
           path="/login"
           element={

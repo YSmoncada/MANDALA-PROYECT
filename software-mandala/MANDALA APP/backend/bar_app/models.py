@@ -29,10 +29,16 @@ class Mesa(models.Model):
     estado = models.CharField(max_length=20, default="disponible", choices=[("disponible", "Disponible"), ("ocupada", "Ocupada")])  # disponible, ocupada
 
 class Pedido(models.Model):
+    ESTADO_CHOICES = [
+        ('pendiente', 'Pendiente'),     # El bartender aún no lo ha preparado
+        ('despachado', 'Despachado'),   # El bartender ya lo entregó
+        ('finalizada', 'Finalizada'),   # La cuenta ha sido cerrada
+        ('cancelado', 'Cancelado'),     # El pedido fue cancelado
+    ]
     mesera = models.ForeignKey(Mesera, on_delete=models.CASCADE)
     mesa = models.ForeignKey(Mesa, on_delete=models.CASCADE)
     fecha_hora = models.DateTimeField(auto_now_add=True)
-    estado = models.CharField(max_length=20, default="activa", choices=[("activa", "Activa"), ("cerrada", "Cerrada"), ("confirmada", "Confirmada")])  # activa, cerrada, en espera
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     """ # Ejemplo de JSON para crear un pedido

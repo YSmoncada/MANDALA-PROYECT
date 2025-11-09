@@ -27,7 +27,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 CORS_ALLOW_ALL_ORIGINS = True
-
+ALLOWED_HOSTS = [
+    '192.168.18.6', # La IP de tu computadora en la red
+    '127.0.0.1',
+    'localhost',
+]
 # Application definition
 
 INSTALLED_APPS = [

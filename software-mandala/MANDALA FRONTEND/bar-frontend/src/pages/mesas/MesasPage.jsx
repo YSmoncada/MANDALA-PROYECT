@@ -3,8 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Trash2 } from 'lucide-react';
 import MesaForm from './MesaForm'; import toast from 'react-hot-toast';
-
-const API_URL = 'http://127.0.0.1:8000/api/mesas/';
+import { API_URL } from '../../apiConfig'; // Importar la URL centralizada
+const MESAS_API_URL = `${API_URL}/mesas/`;
 
 const MesasPage = () => {
     const [mesas, setMesas] = useState([]);
@@ -13,7 +13,7 @@ const MesasPage = () => {
 
     const fetchMesas = async () => {
         try {
-            const response = await axios.get(API_URL);
+            const response = await axios.get(MESAS_API_URL);
             setMesas(response.data);
         } catch (error) {
             console.error("Error al cargar las mesas:", error);
@@ -28,7 +28,7 @@ const MesasPage = () => {
 
     const handleAddMesa = async (mesaData) => {
         try {
-            await axios.post(API_URL, mesaData);
+            await axios.post(MESAS_API_URL, mesaData);
             toast.success('¡Mesa guardada con éxito!');
             fetchMesas(); // Recargar la lista
         } catch (error) {
@@ -40,7 +40,7 @@ const MesasPage = () => {
     const handleDeleteMesa = async (id) => {
         if (window.confirm('¿Estás seguro de que quieres eliminar esta mesa?')) {
             try {
-                await axios.delete(`${API_URL}${id}/`);
+                await axios.delete(`${MESAS_API_URL}${id}/`);
                 fetchMesas(); // Recargar la lista
             } catch (error) {
                 console.error("Error al eliminar la mesa:", error);

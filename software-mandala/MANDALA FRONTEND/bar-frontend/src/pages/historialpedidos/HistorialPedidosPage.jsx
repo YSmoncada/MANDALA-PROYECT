@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { API_URL } from '../../apiConfig';
 
 const HistorialPedidosPage = () => {
     const [pedidos, setPedidos] = useState([]);
@@ -17,7 +18,7 @@ const HistorialPedidosPage = () => {
     useEffect(() => {
         const fetchMeseras = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/meseras/');
+                const response = await axios.get(`${API_URL}/meseras/`); // Ya estaba bien, pero se confirma
                 setMeseras(response.data);
             } catch (error) {
                 console.error("Error al cargar las meseras:", error);
@@ -28,7 +29,7 @@ const HistorialPedidosPage = () => {
         // Cargar el total global de ventas
         const fetchTotalGlobal = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/meseras/total-pedidos/');
+                const response = await axios.get(`${API_URL}/meseras/total-pedidos/`); // Ya estaba bien, pero se confirma
                 const totalsData = response.data;
                 setMeseraTotals(totalsData); // Guardamos la lista completa de totales
                 // Calculamos el total global inicial
@@ -54,7 +55,7 @@ const HistorialPedidosPage = () => {
             setLoading(true);
             try {
                 // Usamos el filtro que ya nos da la API
-                const response = await axios.get(`http://127.0.0.1:8000/api/pedidos/?mesera=${meseraSeleccionada}`);
+                const response = await axios.get(`${API_URL}/pedidos/?mesera=${meseraSeleccionada}`); // Ya estaba bien, pero se confirma
                 setPedidos(response.data);
             } catch (error) {
                 console.error(`Error al cargar los pedidos para la mesera ${meseraSeleccionada}:`, error);

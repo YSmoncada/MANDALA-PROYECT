@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import ProductCard from "../pedidospage/ProductCard";
 import axios from "axios";
+import { API_URL } from "../../apiConfig"; // Importar la URL centralizada
 export default function ProductGrid({ mesera, onCambiar, onProductAdd }) {
   const [filtro, setFiltro] = useState("cerveza");
   const [productosData, setProductosData] = useState([]);
@@ -10,9 +11,8 @@ export default function ProductGrid({ mesera, onCambiar, onProductAdd }) {
     fetchProductos(filtro);
   }, [filtro]);
 
-  const productosAPIUrl = "http://localhost:8000/api/productos/";
   const fetchProductos = (filtro) => {
-    axios.get(productosAPIUrl)
+    axios.get(`${API_URL}/productos/`) // Usar la URL centralizada
       .then((response) => {
         console.log("Productos fetched:", response.data);
         console.log("Current filtro:", response.data.filter(p => p.categoria === filtro));

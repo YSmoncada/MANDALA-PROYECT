@@ -1,19 +1,16 @@
 // src/hooks/usePedido.js
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { createPedido } from '../services/pedidoService';
-
-const API_MESAS_URL = 'http://127.0.0.1:8000/api/mesas/';
+import { API_URL } from '../apiConfig'; // Importar la URL centralizada
 
 export const usePedido = () => {
     const [mesas, setMesas] = useState([]);
     const [selectedMesaId, setSelectedMesaId] = useState('');
     const [isLoading, setIsLoading] = useState(true);
-
     useEffect(() => {
         const fetchMesas = async () => {
             try {
-                const response = await axios.get(API_MESAS_URL);
+                const response = await axios.get(`${API_URL}/mesas/`);
                 setMesas(response.data);
                 if (response.data.length > 0) {
                     setSelectedMesaId(response.data[0].id);
@@ -30,7 +27,7 @@ export const usePedido = () => {
 
     const finalizarPedido = async (pedidoData) => {
         try {
-            await createPedido(pedidoData);
+            await axios.post(`${API_URL}/pedidos/`, pedidoData);
             return { success: true, message: "¡Pedido finalizado y guardado con éxito!" };
         } catch (error) {
             console.error("Error al finalizar el pedido:", error.response?.data || error.message);

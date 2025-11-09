@@ -1,52 +1,62 @@
-import { useState } from 'react';
+// src/hooks/useOrder.js
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { API_URL } from '../apiConfig'; // Importar la URL centralizada
 
 export const useOrder = () => {
+    const [productos, setProductos] = useState([]);
     const [orderItems, setOrderItems] = useState([]);
 
-    // Función para agregar o actualizar un producto en el pedido
-    const addProductToOrder = (producto, cantidad) => {
-        setOrderItems((prevItems) => {
-            const itemExistente = prevItems.find(
-                (item) => item.producto.id === producto.id
-            );
-
-            if (itemExistente) {
-                return prevItems.map((item) =>
-                    item.producto.id === producto.id
-                        ? { ...item, cantidad: item.cantidad + cantidad }
-                        : item
-                );
-            } else {
-                return [...prevItems, { producto, cantidad }];
+    useEffect(() => {
+        const fetchProductos = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/productos/`);
+                setProductos(response.data);
+            } catch (error) {
+                console.error("Error al cargar los productos:", error);
             }
-        });
-    };
+        };
+        fetchProductos();
+    }, []);
 
-    // Función para actualizar la cantidad de un producto existente
-    const updateProductQuantity = (productId, newQuantity) => {
-        setOrderItems(currentItems =>
-            currentItems.map(item =>
-                item.producto.id === productId
-                    ? { ...item, cantidad: newQuantity }
+    const addProductToOrder = (producto, cantidad) => {
+        const existingItem = orderItems.find(item => item.producto.id === producto.id);
+        if (existingItem) {
+            const updatedItems = orderItems.map(item =>
+                item.producto.id === producto.id
+                    ? { ...item, cantidad: item.cantidad + cantidad }
                     : item
-            )
-        );
+            );
+            setOrderItems(updatedItems);
+        } else {
+            setOrderItems([...orderItems, { producto, cantidad }]);
+        }
     };
 
-    // Función para eliminar un producto del pedido
+    const clearOrder = () => {
+        setOrderItems([]);
+    };
+
+    const updateProductQuantity = (productId, newQuantity) => {
+        const updatedItems = orderItems.map(item =>
+            item.producto.id === productId
+                ? { ...item, cantidad: newQuantity }
+                : item
+        );
+        setOrderItems(updatedItems);
+    };
+
     const removeProductFromOrder = (productId) => {
-        setOrderItems(currentItems =>
-            currentItems.filter(item => item.producto.id !== productId)
-        );
+        const updatedItems = orderItems.filter(item => item.producto.id !== productId);
+        setOrderItems(updatedItems);
     };
-
-    const clearOrder = () => setOrderItems([]);
 
     return {
+        productos,
         orderItems,
         addProductToOrder,
-        updateProductQuantity,
-        removeProductFromOrder,
         clearOrder,
+        updateProductQuantity,
+        removeProductFromOrder
     };
 };
