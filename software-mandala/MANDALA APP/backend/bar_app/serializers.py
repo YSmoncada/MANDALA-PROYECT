@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Producto, Movimiento, Pedido, PedidoProducto, Mesa, Mesera
+from django.utils import timezone
 
 class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,33 +45,47 @@ class PedidoProductoReadSerializer(serializers.ModelSerializer):
 class PedidoSerializer(serializers.ModelSerializer):
     productos = PedidoProductoWriteSerializer(many=True, write_only=True)
     productos_detalle = PedidoProductoReadSerializer(source='pedidoproducto_set', many=True, read_only=True)
-    
-    # Campos de solo lectura para mostrar el nombre de la mesera y el número de mesa
     mesera_nombre = serializers.CharField(source='mesera.nombre', read_only=True)
     mesa_numero = serializers.CharField(source='mesa.numero', read_only=True)
+    
+    # Add custom method fields for date and time
+    fecha = serializers.SerializerMethodField()
+    hora = serializers.SerializerMethodField()
 
     class Meta:
         model = Pedido
-        # Definimos explícitamente los campos para evitar conflictos.
         fields = [
-            'id', 
-            'mesera', # Campo de escritura para el ID de la mesera
-            'mesa',   # Campo de escritura para el ID de la mesa
-            'estado', 
-            'productos', # Campo de escritura para la lista de productos
-            'productos_detalle', # Campo de lectura
-            'mesera_nombre',     # Campo de lectura
-            'mesa_numero',       # Campo de lectura
-            'total', 'fecha_hora'
+            'id', 'mesera', 'mesa', 'estado', 'productos',
+            'productos_detalle', 'mesera_nombre', 'mesa_numero',
+            'total', 'fecha_hora', 'fecha', 'hora'
         ]
-        read_only_fields = ['fecha_hora', 'productos_detalle', 'mesera_nombre', 'mesa_numero']
+        read_only_fields = [
+            'fecha_hora', 'productos_detalle', 
+            'mesera_nombre', 'mesa_numero',
+            'fecha', 'hora'
+        ]
+
+    def get_fecha(self, obj):
+        """Convert fecha_hora to local date"""
+        if obj.fecha_hora:
+            local_dt = timezone.localtime(obj.fecha_hora)
+            return local_dt.date()
+        return None
+
+    def get_hora(self, obj):
+        """Convert fecha_hora to local time"""
+        if obj.fecha_hora:
+            local_dt = timezone.localtime(obj.fecha_hora)
+            return local_dt.time()
+        return None
+
+    # Remove the previous fecha and hora fields
+    # fecha = serializers.DateField(source='fecha_hora', format='%Y-%m-%d', read_only=True)
+    # hora = serializers.TimeField(source='fecha_hora', format='%H:%M:%S', read_only=True)
 
     def create(self, validated_data):
         productos_data = validated_data.pop('productos', [])
-        # Extraemos mesera y mesa explícitamente
-        mesera = validated_data.pop('mesera')
-        mesa = validated_data.pop('mesa')
-        
+
         total = 0
         for item in productos_data:
             producto = item['producto'] # 'producto' ya es la instancia de Producto gracias a source='producto' en PedidoProductoSerializer
@@ -82,10 +97,11 @@ class PedidoSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(f"❌ Stock insuficiente para el producto {producto.nombre}.")
             producto.stock -= cantidad
             producto.save()
-        
-        # CORRECCIÓN: Asignar el total ANTES de crear el pedido.
-        pedido = Pedido.objects.create(mesera=mesera, mesa=mesa, total=total, **validated_data) # Se crea el pedido con el total ya calculado
-        
+
+        # Asignar el total y crear el pedido con los datos validados
+        validated_data['total'] = total
+        pedido = Pedido.objects.create(**validated_data)
+
         # Crear los registros de PedidoProducto después de que el pedido ya tiene un ID.
         for item in productos_data:
             PedidoProducto.objects.create(pedido=pedido, producto=item['producto'], cantidad=item['cantidad'])

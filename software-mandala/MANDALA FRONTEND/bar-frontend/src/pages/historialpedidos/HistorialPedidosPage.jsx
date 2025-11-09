@@ -9,7 +9,10 @@ const HistorialPedidosPage = () => {
     const [pedidos, setPedidos] = useState([]);
     const [meseras, setMeseras] = useState([]);
     const [meseraSeleccionada, setMeseraSeleccionada] = useState('');
-    const [meseraTotals, setMeseraTotals] = useState([]); // Almacena los totales de TODAS las meseras
+    const [fechaSeleccionada, setFechaSeleccionada] = useState(() => {
+        const today = new Date();
+        return today.toISOString().split('T')[0];
+    }); // Estado para la fecha
     const [totalMostrado, setTotalMostrado] = useState(0); // El total que se mostrará en la UI (global o individual)
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -26,63 +29,81 @@ const HistorialPedidosPage = () => {
         };
         fetchMeseras();
 
-        // Cargar el total global de ventas
-        const fetchTotalGlobal = async () => {
-            try {
-                const response = await axios.get(`${API_URL}/meseras/total-pedidos/`); // Ya estaba bien, pero se confirma
-                const totalsData = response.data;
-                setMeseraTotals(totalsData); // Guardamos la lista completa de totales
-                // Calculamos el total global inicial
-                const totalGlobal = totalsData.reduce((acc, item) => acc + parseFloat(item.total_vendido), 0);
-                setTotalMostrado(totalGlobal);
-            } catch (error) {
-                console.error("Error al cargar el total global de ventas:", error);
-            }
-        };
-        fetchTotalGlobal();
+    }, []); // El array vacío asegura que esto solo se ejecute una vez al montar el componente
 
-    }, []);
-
-    // Cargar los pedidos cuando se selecciona una mesera
+    // Efecto para buscar los pedidos cuando cambian los filtros
     useEffect(() => {
-        if (!meseraSeleccionada) {
-            setPedidos([]);
-            setLoading(false);
-            return;
-        }
-
         const fetchPedidos = async () => {
             setLoading(true);
             try {
-                // Usamos el filtro que ya nos da la API
-                const response = await axios.get(`${API_URL}/pedidos/?mesera=${meseraSeleccionada}`); // Ya estaba bien, pero se confirma
+                const params = new URLSearchParams();
+
+                if (meseraSeleccionada) {
+                    params.append('mesera', meseraSeleccionada);
+                }
+
+                if (fechaSeleccionada) {
+                    // Ensure date is in YYYY-MM-DD format
+                    const date = new Date(fechaSeleccionada);
+                    const formattedDate = date.toISOString().split('T')[0];
+                    params.append('fecha', formattedDate);
+                    console.log('Fecha enviada:', formattedDate);
+                }
+
+                const url = `${API_URL}/pedidos/?${params.toString()}`;
+                console.log('URL completa:', url);
+
+                const response = await axios.get(url);
+                console.log('Pedidos recibidos:', response.data);
                 setPedidos(response.data);
+
             } catch (error) {
-                console.error(`Error al cargar los pedidos para la mesera ${meseraSeleccionada}:`, error);
+                console.error("Error al cargar los pedidos:", error);
+                setPedidos([]);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchPedidos();
-    }, [meseraSeleccionada]);
+        // Buscar si se ha seleccionado una mesera O una fecha.
+        if (meseraSeleccionada || fechaSeleccionada) {
+            fetchPedidos();
+        } else {
+            setPedidos([]); // Limpia los pedidos si no hay filtros activos
+        }
+    }, [meseraSeleccionada, fechaSeleccionada]);
 
     // Efecto para actualizar el total mostrado cuando cambia la selección de mesera
     useEffect(() => {
-        if (!meseraSeleccionada) {
-            // Si no hay mesera seleccionada, mostramos el total global
-            const totalGlobal = meseraTotals.reduce((acc, item) => acc + parseFloat(item.total_vendido), 0);
-            setTotalMostrado(totalGlobal);
-        } else {
-            // Si se selecciona una mesera, buscamos su total específico
-            const meseraIdNum = parseInt(meseraSeleccionada, 10);
-            const totalMesera = meseraTotals.find(t => t.mesera_id === meseraIdNum);
-            setTotalMostrado(totalMesera ? parseFloat(totalMesera.total_vendido) : 0);
-        }
-    }, [meseraSeleccionada, meseraTotals]);
+        // El total mostrado ahora se calcula directamente de los pedidos filtrados en pantalla.
+        const totalCalculado = pedidos.reduce((acc, pedido) => acc + parseFloat(pedido.total), 0);
+        setTotalMostrado(totalCalculado);
+    }, [pedidos]); // Se recalcula cada vez que la lista de pedidos cambia.
 
-    // Determina el título a mostrar basado en si hay una mesera seleccionada
-    const tituloTotal = meseraSeleccionada ? `Total de Ventas de ${meseras.find(m => m.id == meseraSeleccionada)?.nombre || ''}` : 'Total Global de Ventas';
+    // Determina el título a mostrar basado en los filtros activos
+    const getTituloTotal = () => {
+        const nombreMesera = meseras.find(m => m.id == meseraSeleccionada)?.nombre;
+        const fechaFormateada = fechaSeleccionada ? new Date(fechaSeleccionada + 'T00:00:00').toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+
+        if (nombreMesera && fechaFormateada) {
+            return `Ventas de ${nombreMesera} el ${fechaFormateada}`;
+        }
+        if (nombreMesera) {
+            return `Total de Ventas de ${nombreMesera}`;
+        }
+        if (fechaFormateada) {
+            return `Total de Ventas para el ${fechaFormateada}`;
+        }
+        return 'Seleccione un filtro para ver el total';
+    };
+    const tituloTotal = getTituloTotal();
+
+    // Añade esta función después de las declaraciones de estado
+    const limpiarFiltros = () => {
+        setMeseraSeleccionada('');
+        setFechaSeleccionada('');
+        setPedidos([]);
+    };
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#0E0D23] to-[#511F86] p-8 text-white">
@@ -97,20 +118,56 @@ const HistorialPedidosPage = () => {
             <div className="max-w-4xl mx-auto">
                 <h1 className="text-4xl font-bold text-center mb-8">Historial de Pedidos</h1>
 
-                {/* Filtro por Mesera */}
-                <div className="mb-6">
-                    <label htmlFor="mesera-select" className="block mb-2 text-sm font-medium text-gray-300">Filtrar por Mesera:</label>
-                    <select
-                        id="mesera-select"
-                        value={meseraSeleccionada}
-                        onChange={(e) => setMeseraSeleccionada(e.target.value)}
-                        className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
-                    >
-                        <option value="">-- Seleccione una mesera --</option>
-                        {meseras.map((mesera) => (
-                            <option key={mesera.id} value={mesera.id}>{mesera.nombre}</option>
-                        ))}
-                    </select>
+                {/* Contenedor de Filtros */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    {/* Filtro por Mesera */}
+                    <div>
+                        <label htmlFor="mesera-select" className="block mb-2 text-sm font-medium text-gray-300">Filtrar por Mesera:</label>
+                        <select
+                            id="mesera-select"
+                            value={meseraSeleccionada}
+                            onChange={(e) => setMeseraSeleccionada(e.target.value)}
+                            className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
+                        >
+                            <option value="">-- Todas las meseras --</option>
+                            {meseras.map((mesera) => (
+                                <option key={mesera.id} value={mesera.id}>{mesera.nombre}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Filtro por Fecha */}
+                    <div>
+                        <label htmlFor="fecha-select" className="block mb-2 text-sm font-medium text-gray-300">Filtrar por Fecha:</label>
+                        <input
+                            type="date"
+                            id="fecha-select"
+                            value={fechaSeleccionada}
+                            onChange={(e) => {
+                                const selectedDate = e.target.value;
+                                console.log('Nueva fecha seleccionada:', selectedDate);
+                                setFechaSeleccionada(selectedDate);
+                            }}
+                            className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
+                        />
+                    </div>
+
+                    {/* Botón para limpiar fecha */}
+                    <div className="flex items-end">
+                        <button onClick={() => setFechaSeleccionada('')} className="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2.5 px-4 rounded-lg w-full">
+                            Limpiar Fecha
+                        </button>
+                    </div>
+
+                    {/* Añade este botón junto a los otros filtros */}
+                    <div className="flex items-end">
+                        <button
+                            onClick={limpiarFiltros}
+                            className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 px-4 rounded-lg w-full"
+                        >
+                            Limpiar Filtros
+                        </button>
+                    </div>
                 </div>
 
                 {/* Lista de Pedidos */}
@@ -135,16 +192,26 @@ const HistorialPedidosPage = () => {
                                 <p className="text-right font-bold text-xl mt-2">Total: ${parseFloat(pedido.total).toLocaleString('es-CO')}</p>
                             </div>
                         )) : (
-                            <p className="text-center text-gray-400">{meseraSeleccionada ? 'No hay pedidos para esta mesera.' : 'Seleccione una mesera para ver sus pedidos.'}</p>
+                            <p className="text-center text-gray-400">
+                                {(() => {
+                                    if (meseraSeleccionada && fechaSeleccionada) return 'No hay pedidos para esta mesera en la fecha seleccionada.';
+                                    if (meseraSeleccionada) return 'No hay pedidos para esta mesera.';
+                                    if (fechaSeleccionada) return 'No se encontraron pedidos para la fecha seleccionada.';
+                                    return 'Seleccione una mesera o una fecha para ver los pedidos.';
+                                })()}
+                            </p>
                         )}
                     </div>
                 )}
 
                 {/* Total Global */}
-                <div className="mt-8 pt-4 border-t-2 border-purple-500 text-center">
-                    <h2 className="text-2xl font-bold text-white">{tituloTotal}</h2>
-                    <p className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] mt-2">${totalMostrado.toLocaleString('es-CO')}</p>
-                </div>
+                {/* Solo mostrar el total si hay filtros aplicados */}
+                {(meseraSeleccionada || fechaSeleccionada) && (
+                    <div className="mt-8 pt-4 border-t-2 border-purple-500 text-center">
+                        <h2 className="text-xl font-bold text-white">{tituloTotal}</h2>
+                        <p className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] mt-2">${totalMostrado.toLocaleString('es-CO')}</p>
+                    </div>
+                )}
             </div>
         </div>
     );
