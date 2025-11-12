@@ -84,6 +84,23 @@ export const usePedidosAuth = () => {
         }
     };
 
+    const deleteMesera = async (meseraId) => {
+        try {
+            await axios.delete(`${API_URL}/meseras/${meseraId}/`);
+            // Actualiza el estado para remover la mesera de la lista en la UI
+            setMeseras(prevMeseras => prevMeseras.filter(m => m.id !== meseraId));
+            // Si la mesera eliminada era la que estaba seleccionada, se desloguea
+            if (selectedMesera?.id === meseraId) {
+                handleLogout();
+            }
+            return { success: true };
+        } catch (error) {
+            console.error("Error al eliminar la mesera:", error.response?.data || error.message);
+            const errorMessage = error.response?.data?.detail || "No se pudo eliminar la mesera. Es posible que tenga pedidos asociados.";
+            return { success: false, message: errorMessage };
+        }
+    };
+
     return {
         mesera: selectedMesera?.nombre, // Devuelve solo el nombre para la UI
         meseraId: selectedMesera?.id,   // Devuelve el ID para las llamadas a la API
@@ -93,7 +110,8 @@ export const usePedidosAuth = () => {
         handleSelectMesera,
         handleCodigoSubmit,
         handleLogout,
-        addMesera, // Exponemos la nueva función
+        addMesera, // Función para agregar
+        deleteMesera, // Exponemos la nueva función para eliminar
         error,
         selectedMeseraObject: selectedMesera
     };

@@ -1,29 +1,23 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
 
-const meseras = [
-  "María González",
-  "Ana Rodríguez",
-  "Carmen López",
-  "Sofía Martínez",
-  "Valentina Torres",
-];
-
-export default function WaitressSelector({ onSelect }) {
+export default function WaitressSelector({ meseras, onSelect, onAdd }) {
   return (
     <div className="grid grid-cols-2 gap-3">
-      {meseras.map((nombre, i) => (
-        <Button
-          key={i}
-          className="bg-purple-800 hover:bg-purple-600 text-white"
-          onClick={() => onSelect(nombre)}
+      {meseras.map((mesera) => (
+        <button
+          key={mesera.id}
+          className="w-full bg-purple-800 hover:bg-purple-600 text-white justify-center py-3 px-4 rounded-lg transition"
+          onClick={() => onSelect(mesera)}
         >
-          {nombre}
-        </Button>
+          {mesera.nombre}
+        </button>
       ))}
-      <Button className="col-span-2 bg-gray-700 hover:bg-gray-500 text-white">
+      <button
+        onClick={onAdd}
+        className="col-span-2 bg-gray-700 hover:bg-gray-500 text-white py-2 px-4 rounded-lg w-full transition"
+      >
         + Otro nombre
-      </Button>
+      </button>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 // src/pages/Pedidos.jsx
 import React, { useEffect, useState } from "react";
+import { Trash2 } from "lucide-react"; // Importamos un ícono para el botón
 import { useNavigate, Link } from "react-router-dom";
 import HeaderPedidos from "../pedidospage/HeaderPedidos";
 import CodeInput from "./CodeInput";
@@ -14,7 +15,8 @@ export default function Pedidos({ auth, onProductAdd }) {
     handleSelectMesera,
     handleCodigoSubmit,
     handleLogout,
-    addMesera, // Importamos la nueva función
+    addMesera,
+    deleteMesera, // Obtenemos la función para eliminar
   } = auth;
 
   const [showAddForm, setShowAddForm] = useState(false);
@@ -48,6 +50,17 @@ export default function Pedidos({ auth, onProductAdd }) {
       setShowAddForm(false);
       setNewMeseraName("");
       setNewMeseraCode("");
+    }
+  };
+
+  const handleDeleteClick = async (e, meseraObj) => {
+    e.stopPropagation(); // MUY IMPORTANTE: Evita que se seleccione la mesera al hacer clic en eliminar
+    if (window.confirm(`¿Estás seguro de que quieres eliminar a ${meseraObj.nombre}? Esta acción no se puede deshacer.`)) {
+      const result = await deleteMesera(meseraObj.id);
+      if (!result.success) {
+        // Si falla, mostramos una alerta con el error
+        alert(`Error: ${result.message}`);
+      }
     }
   };
 
@@ -100,13 +113,22 @@ export default function Pedidos({ auth, onProductAdd }) {
               <div className="grid grid-cols-2 gap-3 mb-4">
                 {/* Ahora 'meseras' es una lista de objetos */}
                 {meseras.map((meseraObj) => (
-                  <button
-                    key={meseraObj.id}
-                    onClick={() => handleSelectMesera(meseraObj)} // Pasamos el objeto completo
-                    className="bg-transparent border border-gray-500 hover:bg-purple-700 text-white py-3 px-4 rounded-lg transition"
-                  >
-                    {meseraObj.nombre}
-                  </button>
+                  // 1. Envolvemos el botón en un div con posición relativa
+                  <div key={meseraObj.id} className="relative group">
+                    <button
+                      onClick={() => handleSelectMesera(meseraObj)}
+                      className="w-full bg-transparent border border-gray-500 hover:bg-purple-700 text-white py-3 px-4 rounded-lg transition"
+                    >
+                      {meseraObj.nombre}
+                    </button>
+                    {/* 2. Añadimos el botón de eliminar con posición absoluta */}
+                    <button
+                      onClick={(e) => handleDeleteClick(e, meseraObj)}
+                      className="absolute top-0 right-0 -mt-2 -mr-2 p-1.5 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700"
+                      aria-label={`Eliminar a ${meseraObj.nombre}`}>
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
                 ))}
               </div>
               <button
