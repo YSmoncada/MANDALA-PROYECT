@@ -115,7 +115,7 @@ const HistorialPedidosPage = () => {
                 Volver al Inicio
             </button>
 
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-4xl mx-auto pt-12 sm:pt-0">
                 <h1 className="text-4xl font-bold text-center mb-8">Historial de Pedidos</h1>
 
                 {/* Contenedor de Filtros */}

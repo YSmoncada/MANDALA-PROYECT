@@ -32,48 +32,50 @@ export default function ProductGrid({ mesera, onCambiar, onProductAdd }) {
   return (
     <div className="w-full max-w-6xl mx-auto">
       {/* Filtros */}
-      <div className="flex justify-center mb-9 gap-2">
-        <button
-          onClick={() => setFiltro("")}
-          className={`py-2 px-6 rounded transition ${filtro === ""
-            ? "bg-purple-700 text-white"
-            : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-            }`}
-        >
-          Todos
-        </button>
-        <button
-          onClick={() => setFiltro("vinos")}
-          className={`py-2 px-6 rounded transition ${filtro === "vinos"
-            ? "bg-purple-700 text-white"
-            : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-            }`}
-        >
-          Vinos
-        </button>
-        <button
-          onClick={() => setFiltro("cerveza")}
-          className={`py-2 px-6 rounded transition ${filtro === "cerveza"
-            ? "bg-purple-700 text-white"
-            : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-            }`}
-        >
-          Cervezas
-        </button>
-        <button
-          onClick={() => setFiltro("destilados")}
-          className={`py-2 px-6 rounded transition ${filtro === "destilados"
-            ? "bg-purple-700 text-white"
-            : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-            }`}
-        >
-          Destilados
-        </button>
+      <div className="mb-9 flex justify-center">
+        <div className="flex sm:inline-flex overflow-x-auto pb-2 space-x-2 sm:overflow-x-visible">
+          <button
+            onClick={() => setFiltro("")}
+            className={`py-2 px-5 rounded-full transition text-sm font-semibold whitespace-nowrap ${filtro === ""
+              ? "bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] text-white shadow-lg"
+              : "bg-gray-800/60 text-gray-300 hover:bg-gray-700"
+              }`}
+          >
+            Todos
+          </button>
+          <button
+            onClick={() => setFiltro("vinos")}
+            className={`py-2 px-5 rounded-full transition text-sm font-semibold whitespace-nowrap ${filtro === "vinos"
+              ? "bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] text-white shadow-lg"
+              : "bg-gray-800/60 text-gray-300 hover:bg-gray-700"
+              }`}
+          >
+            Vinos
+          </button>
+          <button
+            onClick={() => setFiltro("cerveza")}
+            className={`py-2 px-5 rounded-full transition text-sm font-semibold whitespace-nowrap ${filtro === "cerveza"
+              ? "bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] text-white shadow-lg"
+              : "bg-gray-800/60 text-gray-300 hover:bg-gray-700"
+              }`}
+          >
+            Cervezas
+          </button>
+          <button
+            onClick={() => setFiltro("destilados")}
+            className={`py-2 px-5 rounded-full transition text-sm font-semibold whitespace-nowrap ${filtro === "destilados"
+              ? "bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] text-white shadow-lg"
+              : "bg-gray-800/60 text-gray-300 hover:bg-gray-700"
+              }`}
+          >
+            Destilados
+          </button>
+        </div>
       </div>
 
       {/* Productos */}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {productosData.map((producto, i) => (
           <ProductCard key={i} producto={producto} onAgregarPedido={onProductAdd} />
         ))}

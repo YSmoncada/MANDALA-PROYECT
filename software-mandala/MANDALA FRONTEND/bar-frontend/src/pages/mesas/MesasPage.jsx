@@ -50,15 +50,16 @@ const MesasPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#0E0D23] to-[#511F86] p-8 text-white">
+        <div className="relative min-h-screen bg-gradient-to-br from-[#0E0D23] to-[#511F86] p-4 sm:p-8 text-white">
             <button
                 onClick={() => navigate(-1)} // Usamos navigate(-1) para volver a la página anterior
-                className="absolute top-6 left-6 flex items-center gap-2 text-white bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition-colors shadow-lg"
+                className="absolute top-6 left-6 z-10 flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-white shadow-lg transition-colors hover:bg-purple-700"
             >
                 <ArrowLeft size={18} /> Volver al Inicio
             </button>
 
-            <div className="max-w-4xl mx-auto">
+            {/* Contenedor del contenido con padding-top solo en móviles */}
+            <div className="mx-auto max-w-4xl pt-20 sm:pt-0">
                 <h1 className="text-4xl font-bold text-center mb-8">Gestión de Mesas</h1>
 
                 {/* ✅ Clave fija para evitar reinicio del formulario */}
