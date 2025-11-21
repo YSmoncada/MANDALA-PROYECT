@@ -79,8 +79,8 @@ function Inventario() {
         <ProductTableWithModal
           productos={filtered}
           onEdit={handleEdit}
-          onDelete={handleDelete}
-          onMovimiento={handleMovimiento}
+          onDelete={handleDelete} // Se pasa la función de borrado
+          onMovimiento={handleMovimiento} // Se pasa la función de movimiento desde el hook
         />
       </div>
 

@@ -1,9 +1,7 @@
 // src/components/ProductTableWithModal.jsx
 import React, { useState } from "react";
-import axios from "axios";
-import { PlusCircle, Edit, Trash2 } from "lucide-react";
+import { PlusCircle, Edit, Trash2 } from "lucide-react"; // Íconos que faltaban
 import MovimientoModal from "./MovimientoModal";
-import { getImageUrl } from "../../utils/imageUtils";
 
 function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -19,24 +17,10 @@ function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
     setSelectedProduct(null);
   };
 
-  const handleSubmitMovimiento = async (payload) => {
-    try {
-      const response = await axios.post("http://127.0.0.1:8000/api/movimientos/", {
-        tipo: payload.tipo,
-        cantidad: payload.cantidad,
-        motivo: payload.motivo,
-        usuario: payload.usuario,
-        producto: payload.producto?.id,
-      });
-
-      const updatedProduct = response.data.producto;
-      if (typeof onMovimiento === "function") {
-        onMovimiento(updatedProduct);
-      }
-
+  const handleSubmitMovimiento = (payload) => {
+    if (typeof onMovimiento === "function") {
+      onMovimiento(payload);
       closeModal();
-    } catch (error) {
-      console.error("Error al registrar movimiento ❌", error.response?.data || error.message);
     }
   };
 
@@ -78,7 +62,7 @@ function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
                     <th scope="row" className="px-6 py-4 font-medium text-white whitespace-nowrap">
                       <div className="flex items-center gap-3">
                         <img
-                          src={getImageUrl(prod.imagen)}
+                          src={prod.imagen}
                           alt={prod.nombre}
                           className="w-10 h-10 object-contain rounded-md bg-white p-1"
                           onError={(e) => {

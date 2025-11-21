@@ -1,5 +1,7 @@
 // src/components/MovimientoModal.jsx
 import React, { useState, useMemo } from 'react';
+import axios from 'axios';
+import { API_URL } from '../../apiConfig'; // ajusta si tu config es distinta
 
 // Iconos SVG personalizados para el estilo del modal
 const ChartUpIcon = () => (
@@ -48,7 +50,23 @@ const MovimientoModal = ({
   const [cantidad, setCantidad] = useState(1);
   const [motivo, setMotivo] = useState('');
   const [usuario, setUsuario] = useState('Administrador');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
+  // Motivos racionales e independientes para cada tipo de movimiento
+  const motivosEntrada = [
+    "Compra a proveedor",
+    "Devolución de cliente",
+    "Ajuste de inventario (adición)",
+  ];
+
+  const motivosSalida = [
+    "Consumo", // Motivo que faltaba
+    "Consumo interno / Cortesía",
+    "Merma / Producto dañado",
+    "Ajuste de inventario (reducción)",
+    "Devolución a proveedor"
+  ];
   // Resetea campos al abrir/cerrar
   React.useEffect(() => {
     if (open) {
@@ -59,20 +77,62 @@ const MovimientoModal = ({
     }
   }, [open]);
 
+  // Resetea el motivo cuando cambia el tipo de movimiento
+  React.useEffect(() => {
+    setMotivo('');
+  }, [tipo]);
+
   const isValid = useMemo(() => {
     return cantidad > 0 && motivo.trim().length > 0 && usuario.trim().length > 0;
   }, [cantidad, motivo, usuario]);
 
   if (!open) return null;
 
-  const handleSubmit = () => {
-    onSubmit({ tipo, cantidad, motivo, usuario, producto });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    try {
+      // Normalizar y garantizar 'entrada' o 'salida'
+      const tipoRaw = (tipo || '').toString().trim().toLowerCase();
+      const entradaAliases = ['entrada', 'in', 'ingreso', 'e', 'add', 'agregar'];
+      const salidaAliases = ['salida', 'out', 'egreso', 's', 'retirar', 'remove', 'quitar'];
+      let tipoNorm = '';
+      if (entradaAliases.includes(tipoRaw)) tipoNorm = 'entrada';
+      else if (salidaAliases.includes(tipoRaw)) tipoNorm = 'salida';
+      else {
+        setError('Tipo inválido. Seleccione Entrada o Salida.');
+        setLoading(false);
+        return;
+      }
+
+      const payload = {
+        producto: producto.id,
+        tipo: tipoNorm, // enviar el tipo normalizado
+        cantidad,
+        descripcion: motivo,
+        usuario
+      };
+
+      // NO hacer axios.post aquí: delegar la petición al padre
+      if (typeof onSubmit === 'function') {
+        // si el handler del padre devuelve una promesa, esperarla
+        await onSubmit(payload);
+      }
+
+      onClose();
+    } catch (err) {
+      console.error('Movimiento error', err?.response?.data || err?.message || err);
+      setError(err?.response?.data?.detail || 'Error al registrar movimiento');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleContentClick = (e) => {
     e.stopPropagation();
   };
-    
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={onClose}>
       <div className="bg-slate-900/95 rounded-lg shadow-xl w-full max-w-lg mx-4 p-6 border border-slate-700" onClick={handleContentClick}>
@@ -104,8 +164,8 @@ const MovimientoModal = ({
               aria-label="Entrada"
               onClick={() => setTipo('entrada')}
               className={`flex flex-col items-center justify-center py-4 rounded-lg border-2 text-sm font-semibold transition-all duration-200 ${tipo === 'entrada'
-                  ? 'border-green-500 bg-green-600/30 text-white'
-                  : 'border-slate-700 text-slate-400 bg-slate-800 hover:bg-slate-700'
+                ? 'border-green-500 bg-green-600/30 text-white'
+                : 'border-slate-700 text-slate-400 bg-slate-800 hover:bg-slate-700'
                 }`}
             >
               <ChartUpIcon />
@@ -115,8 +175,8 @@ const MovimientoModal = ({
               aria-label="Salida"
               onClick={() => setTipo('salida')}
               className={`flex flex-col items-center justify-center py-4 rounded-lg border-2 text-sm font-semibold transition-all duration-200 ${tipo === 'salida'
-                  ? 'border-red-500 bg-red-600/30 text-white'
-                  : 'border-slate-700 text-slate-400 bg-slate-800 hover:bg-slate-700'
+                ? 'border-red-500 bg-red-600/30 text-white'
+                : 'border-slate-700 text-slate-400 bg-slate-800 hover:bg-slate-700'
                 }`}
             >
               <ChartDownIcon />
@@ -150,24 +210,39 @@ const MovimientoModal = ({
                 backgroundSize: '1rem',
               }}
             >
-              <option className="bg-slate-600 text-white" value="" disabled>Seleccionar motivo</option>
-              <option className="bg-slate-600 text-white" value="Compra">Compra</option>
-              <option className="bg-slate-600 text-white" value="Consumo">Consumo</option>
-              <option className="bg-slate-600 text-white" value="Devolución">Devolución</option>
-              <option className="bg-slate-600 text-white" value="Ajuste">Ajuste</option>
-              <option className="bg-slate-600 text-white" value="Venta">Venta</option>
+              <option value="" disabled>Seleccionar motivo</option>
+              {tipo === 'entrada'
+                ? motivosEntrada.map(m => <option key={m} value={m}>{m}</option>)
+                : motivosSalida.map(m => <option key={m} value={m}>{m}</option>)
+              }
+              {/* Estilo para las opciones del dropdown */}
+              <style>{`
+                select option { background: #1E293B; color: white; }
+              `}</style>
             </select>
           </div>
 
           {/* Usuario Responsable */}
           <div className="grid gap-2">
             <label className="text-sm text-slate-300">Usuario Responsable</label>
-            <input
+            <select
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
-              className="w-full py-2.5 px-4 rounded-lg bg-slate-850 text-white border border-slate-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-            />
+              className="w-full py-2.5 px-4 rounded-lg bg-slate-850 text-slate-200 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 appearance-none"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2394A3B8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e")`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'right 0.75rem center',
+                backgroundSize: '1rem',
+              }}
+            >
+              <option value="Administrador">Administrador</option>
+              <option value="Trabajador">Trabajador</option>
+            </select>
           </div>
+
+          {/* Error Message */}
+          {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
         </div>
 
         {/* Acciones */}
@@ -180,14 +255,13 @@ const MovimientoModal = ({
           </button>
           <button
             onClick={handleSubmit}
-            disabled={!isValid}
+            disabled={!isValid || loading}
             className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-white font-semibold transition-all duration-200 ${isValid
-                ? (tipo === 'entrada' ? 'bg-green-600 hover:bg-green-500' : 'bg-red-600 hover:bg-red-500')
-                : (tipo === 'entrada' ? 'bg-green-900/50 cursor-not-allowed' : 'bg-red-900/50 cursor-not-allowed')
+              ? (tipo === 'entrada' ? 'bg-green-600 hover:bg-green-500' : 'bg-red-600 hover:bg-red-500')
+              : (tipo === 'entrada' ? 'bg-green-900/50 cursor-not-allowed' : 'bg-red-900/50 cursor-not-allowed')
               }`}
           >
-            <RegisterIcon />
-            Registrar {tipo === 'entrada' ? 'Entrada' : 'Salida'}
+            {loading ? 'Guardando...' : <><RegisterIcon /> Registrar {tipo === 'entrada' ? 'Entrada' : 'Salida'}</>}
           </button>
         </div>
       </div>
@@ -196,3 +270,10 @@ const MovimientoModal = ({
 };
 
 export default MovimientoModal;
+
+// ejemplo de handler en el componente inventario
+const handleMovimientoResponse = (data) => {
+  // data = { movimiento: {...}, producto: {...} }
+  const updatedProduct = data.producto;
+  setProductos(prev => prev.map(p => p.id === updatedProduct.id ? updatedProduct : p));
+};

@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from "react";
 import { validateImageFile, createImagePreview } from "../utils/imageUtils";
 import toast from 'react-hot-toast';
 import * as inventarioService from "../services/inventarioService";
+import axios from 'axios';
+import { API_URL } from '../apiConfig';
 
 const initialForm = {
     nombre: "",
@@ -121,18 +123,90 @@ export const useInventario = () => {
         setModalOpen(false);
     };
 
-    const handleMovimiento = async (productoId, tipo, cantidad, motivo, usuario) => {
-        const movimientoData = {
-            producto: productoId,
-            tipo,
-            cantidad,
-            motivo,
-            usuario,
-        };
-        // Lógica para enviar el movimiento al backend
-        console.log("Creando movimiento:", movimientoData);
-        // await movimientoService.createMovimiento(movimientoData);
-        fetchProductos(); // Recargar productos para ver el stock actualizado
+    const handleMovimiento = async (payload) => {
+        try {
+            // Normalizar posibles nombres para el id del producto
+            const productoId =
+                payload.producto ??
+                payload.producto_id ??
+                payload.productoId ??
+                (payload.producto && payload.producto.id) ??
+                payload.id;
+
+            // Normalizar tipo recibido (acepta varios valores comunes)
+            const tipoRaw = (payload.tipo || payload.tipoMovimiento || '').toString().trim().toLowerCase();
+            let tipo;
+            const entradaAliases = ['entrada', 'in', 'ingreso', 'ingresar', 'add', 'agregar', 'entrada'];
+            const salidaAliases = ['salida', 'out', 'egreso', 'retirar', 'remove', 'quitar'];
+            if (entradaAliases.includes(tipoRaw)) tipo = 'entrada';
+            else if (salidaAliases.includes(tipoRaw)) tipo = 'salida';
+            else if (tipoRaw === 'e') tipo = 'entrada';
+            else if (tipoRaw === 's') tipo = 'salida';
+            else tipo = ''; // no reconocido
+            // opcional: log para debug en desarrollo
+            // console.debug('tipoRaw -> tipo normalizado', { tipoRaw, tipo });
+
+            // Normalizar cantidad
+            const cantidadRaw = payload.cantidad ?? payload.cantidad_raw ?? payload.qty ?? payload.amount;
+            const cantidad = cantidadRaw !== undefined && cantidadRaw !== null ? String(cantidadRaw) : '';
+
+            const descripcion = payload.motivo || payload.descripcion || payload.detalle || '';
+
+            // Validaciones antes de enviar
+            if (!productoId) {
+                toast.error('Producto no especificado.');
+                return;
+            }
+            if (!['entrada', 'salida'].includes(tipo)) {
+                toast.error('Tipo inválido. Debe ser "entrada" o "salida".');
+                return;
+            }
+            if (cantidad === '' || Number(cantidad) <= 0 || Number.isNaN(Number(cantidad))) {
+                toast.error('Cantidad inválida.');
+                return;
+            }
+
+            const body = {
+                producto: productoId,
+                tipo,
+                cantidad,
+                descripcion,
+                usuario: payload.usuario || null,
+            };
+
+            const response = await axios.post(`${API_URL}/movimientos/`, body, {
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+            if (response.status === 201) {
+                const updatedProduct = response.data.producto || response.data.product || (response.data.producto_id ? { id: response.data.producto_id, stock: response.data.producto?.stock } : null);
+                if (updatedProduct) {
+                    setProductos(prev => prev.map(p => (p.id === updatedProduct.id ? { ...p, ...updatedProduct } : p)));
+                } else {
+                    await fetchProductos();
+                }
+                if (response.data.warning) toast.success('Movimiento registrado (con advertencia).');
+                else toast.success('Movimiento registrado con éxito!');
+                return;
+            }
+
+            const detail = response.data?.detail || JSON.stringify(response.data);
+            toast.error(typeof detail === 'string' ? detail : 'Error al registrar el movimiento.');
+
+        } catch (error) {
+            console.error("Error al registrar movimiento ❌", error.response?.data || error.message);
+            const respData = error.response?.data;
+            // Si backend devolvió info útil a pesar del error, actualizar UI
+            if (respData && (respData.producto || respData.movimiento_id || respData.product)) {
+                const updatedProduct = respData.producto || respData.product || (respData.producto_id ? { id: respData.producto_id, stock: respData.producto?.stock } : null);
+                if (updatedProduct) setProductos(prev => prev.map(p => p.id === updatedProduct.id ? { ...p, ...updatedProduct } : p));
+                else await fetchProductos();
+                toast.success('Movimiento registrado (respuesta incompleta del servidor).');
+                return;
+            }
+            const detail = respData?.detail || respData || error.message;
+            toast.error(typeof detail === 'string' ? detail : 'Error al registrar el movimiento.');
+        }
     };
 
     return {
