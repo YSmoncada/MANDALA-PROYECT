@@ -6,7 +6,11 @@ import HeaderPedidos from "../pedidospage/HeaderPedidos";
 import CodeInput from "./CodeInput";
 import ProductGrid from "./ProductGrid";
 
-export default function Pedidos({ auth, onProductAdd }) {
+import { usePedidosContext } from "../../context/PedidosContext";
+
+export default function Pedidos() {
+  const { auth, addProductToOrder: onProductAdd } = usePedidosContext();
+
   const { // Desestructuramos desde la prop 'auth'
     mesera,
     codigoConfirmado,

@@ -7,13 +7,17 @@ import { usePedido } from "../../hooks/usePedido"; // Importamos el nuevo hook
 import toast from 'react-hot-toast'; // Importamos la librería de notificaciones
 
 
-export default function PedidosPage({
-  auth, // Recibimos la prop 'auth'
-  orderItems,
-  onClearOrder,
-  onUpdateCantidad,
-  onRemoveItem,
-}) {
+import { usePedidosContext } from "../../context/PedidosContext";
+
+export default function PedidosPage() {
+  const {
+    auth,
+    orderItems,
+    clearOrder: onClearOrder,
+    updateProductQuantity: onUpdateCantidad,
+    removeProductFromOrder: onRemoveItem,
+  } = usePedidosContext();
+
   const { // Desestructuramos desde la prop 'auth'
     mesera,
     meseraId,

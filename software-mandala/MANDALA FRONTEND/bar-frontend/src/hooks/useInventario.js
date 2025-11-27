@@ -2,8 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { validateImageFile, createImagePreview } from "../utils/imageUtils";
 import toast from 'react-hot-toast';
 import * as inventarioService from "../services/inventarioService";
-import axios from 'axios';
-import { API_URL } from '../apiConfig';
+import * as movimientoService from "../services/movimientoService";
 
 const initialForm = {
     nombre: "",
@@ -174,17 +173,17 @@ export const useInventario = () => {
                 usuario: payload.usuario || null,
             };
 
-            const response = await axios.post(`${API_URL}/movimientos/`, body, {
-                headers: { 'Content-Type': 'application/json' },
-            });
+
+            const response = await movimientoService.createMovimiento(body);
+
+            // DEBUG: Ver qué devuelve el backend
+            console.log('🔍 Respuesta del backend:', response.data);
+            console.log('🔍 Producto actualizado:', response.data.producto || response.data.product);
 
             if (response.status === 201) {
-                const updatedProduct = response.data.producto || response.data.product || (response.data.producto_id ? { id: response.data.producto_id, stock: response.data.producto?.stock } : null);
-                if (updatedProduct) {
-                    setProductos(prev => prev.map(p => (p.id === updatedProduct.id ? { ...p, ...updatedProduct } : p)));
-                } else {
-                    await fetchProductos();
-                }
+                // Simplemente refrescamos todos los productos para asegurar que la imagen se mantenga
+                await fetchProductos();
+
                 if (response.data.warning) toast.success('Movimiento registrado (con advertencia).');
                 else toast.success('Movimiento registrado con éxito!');
                 return;
@@ -199,7 +198,20 @@ export const useInventario = () => {
             // Si backend devolvió info útil a pesar del error, actualizar UI
             if (respData && (respData.producto || respData.movimiento_id || respData.product)) {
                 const updatedProduct = respData.producto || respData.product || (respData.producto_id ? { id: respData.producto_id, stock: respData.producto?.stock } : null);
-                if (updatedProduct) setProductos(prev => prev.map(p => p.id === updatedProduct.id ? { ...p, ...updatedProduct } : p));
+                // Preservar campos existentes (como imagen) y solo actualizar los que vienen del backend
+                if (updatedProduct) {
+                    setProductos(prev => prev.map(p => {
+                        if (p.id === updatedProduct.id) {
+                            // Si el backend envía imagen null/vacía, no la sobrescribimos
+                            const cleanedUpdate = { ...updatedProduct };
+                            if (!cleanedUpdate.imagen) {
+                                delete cleanedUpdate.imagen;
+                            }
+                            return { ...p, ...cleanedUpdate };
+                        }
+                        return p;
+                    }));
+                }
                 else await fetchProductos();
                 toast.success('Movimiento registrado (respuesta incompleta del servidor).');
                 return;
