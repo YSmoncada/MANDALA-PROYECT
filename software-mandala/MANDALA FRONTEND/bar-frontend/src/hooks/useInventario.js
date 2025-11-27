@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { validateImageFile, createImagePreview } from "../utils/imageUtils";
 import toast from 'react-hot-toast';
 import * as inventarioService from "../services/inventarioService";
-import * as movimientoService from "../services/movimientoService";
+import { useMovimientos } from "./useMovimientos";
 
 const initialForm = {
     nombre: "",
@@ -122,104 +122,8 @@ export const useInventario = () => {
         setModalOpen(false);
     };
 
-    const handleMovimiento = async (payload) => {
-        try {
-            // Normalizar posibles nombres para el id del producto
-            const productoId =
-                payload.producto ??
-                payload.producto_id ??
-                payload.productoId ??
-                (payload.producto && payload.producto.id) ??
-                payload.id;
-
-            // Normalizar tipo recibido (acepta varios valores comunes)
-            const tipoRaw = (payload.tipo || payload.tipoMovimiento || '').toString().trim().toLowerCase();
-            let tipo;
-            const entradaAliases = ['entrada', 'in', 'ingreso', 'ingresar', 'add', 'agregar', 'entrada'];
-            const salidaAliases = ['salida', 'out', 'egreso', 'retirar', 'remove', 'quitar'];
-            if (entradaAliases.includes(tipoRaw)) tipo = 'entrada';
-            else if (salidaAliases.includes(tipoRaw)) tipo = 'salida';
-            else if (tipoRaw === 'e') tipo = 'entrada';
-            else if (tipoRaw === 's') tipo = 'salida';
-            else tipo = ''; // no reconocido
-            // opcional: log para debug en desarrollo
-            // console.debug('tipoRaw -> tipo normalizado', { tipoRaw, tipo });
-
-            // Normalizar cantidad
-            const cantidadRaw = payload.cantidad ?? payload.cantidad_raw ?? payload.qty ?? payload.amount;
-            const cantidad = cantidadRaw !== undefined && cantidadRaw !== null ? String(cantidadRaw) : '';
-
-            const descripcion = payload.motivo || payload.descripcion || payload.detalle || '';
-
-            // Validaciones antes de enviar
-            if (!productoId) {
-                toast.error('Producto no especificado.');
-                return;
-            }
-            if (!['entrada', 'salida'].includes(tipo)) {
-                toast.error('Tipo inválido. Debe ser "entrada" o "salida".');
-                return;
-            }
-            if (cantidad === '' || Number(cantidad) <= 0 || Number.isNaN(Number(cantidad))) {
-                toast.error('Cantidad inválida.');
-                return;
-            }
-
-            const body = {
-                producto: productoId,
-                tipo,
-                cantidad,
-                descripcion,
-                usuario: payload.usuario || null,
-            };
-
-
-            const response = await movimientoService.createMovimiento(body);
-
-            // DEBUG: Ver qué devuelve el backend
-            console.log('🔍 Respuesta del backend:', response.data);
-            console.log('🔍 Producto actualizado:', response.data.producto || response.data.product);
-
-            if (response.status === 201) {
-                // Simplemente refrescamos todos los productos para asegurar que la imagen se mantenga
-                await fetchProductos();
-
-                if (response.data.warning) toast.success('Movimiento registrado (con advertencia).');
-                else toast.success('Movimiento registrado con éxito!');
-                return;
-            }
-
-            const detail = response.data?.detail || JSON.stringify(response.data);
-            toast.error(typeof detail === 'string' ? detail : 'Error al registrar el movimiento.');
-
-        } catch (error) {
-            console.error("Error al registrar movimiento ❌", error.response?.data || error.message);
-            const respData = error.response?.data;
-            // Si backend devolvió info útil a pesar del error, actualizar UI
-            if (respData && (respData.producto || respData.movimiento_id || respData.product)) {
-                const updatedProduct = respData.producto || respData.product || (respData.producto_id ? { id: respData.producto_id, stock: respData.producto?.stock } : null);
-                // Preservar campos existentes (como imagen) y solo actualizar los que vienen del backend
-                if (updatedProduct) {
-                    setProductos(prev => prev.map(p => {
-                        if (p.id === updatedProduct.id) {
-                            // Si el backend envía imagen null/vacía, no la sobrescribimos
-                            const cleanedUpdate = { ...updatedProduct };
-                            if (!cleanedUpdate.imagen) {
-                                delete cleanedUpdate.imagen;
-                            }
-                            return { ...p, ...cleanedUpdate };
-                        }
-                        return p;
-                    }));
-                }
-                else await fetchProductos();
-                toast.success('Movimiento registrado (respuesta incompleta del servidor).');
-                return;
-            }
-            const detail = respData?.detail || respData || error.message;
-            toast.error(typeof detail === 'string' ? detail : 'Error al registrar el movimiento.');
-        }
-    };
+    // Usar el hook de movimientos
+    const { handleMovimiento } = useMovimientos(fetchProductos);
 
     return {
         filtered, modalOpen, form, editId, query, categorias, totalProductos, totalUnidades,
