@@ -1,7 +1,7 @@
 // src/App.jsx
 import React, { useState } from "react";
-import { Toaster } from 'react-hot-toast';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import Notificaciones from "./components/Notificaciones";
 import Inventario from "./pages/inventario/Inventario";
 import Home from "./pages/home/Home";
 import Pedidos from "./pages/pedidosAuth/pedidos";
@@ -26,19 +26,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      {/* Contenedor para las notificaciones */}
-      <Toaster
-        position="bottom-right"
-        toastOptions={{
-          // Estilos para el toast
-          className: '',
-          style: {
-            background: '#2B0D49',
-            color: '#fff',
-            border: '1px solid #6C3FA8',
-          },
-        }}
-      />
+      <Notificaciones />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/inventario" element={<Inventario />} />
