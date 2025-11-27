@@ -122,7 +122,6 @@ class MesaSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Ya existe una mesa con este número.")
         return value
 
-
 # --- Serializer para el Reporte de Ventas por Mesera ---
 
 class MeseraTotalPedidosSerializer(serializers.Serializer):

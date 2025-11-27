@@ -1,7 +1,5 @@
 from django.db import models
 
-
-
 class Producto(models.Model):
     nombre = models.CharField(max_length=100)
     imagen = models.ImageField(upload_to='productos/', blank=True, null=True)
@@ -16,8 +14,6 @@ class Producto(models.Model):
 
     def __str__(self):
         return self.nombre
-
-
 
 class Mesera(models.Model):
     nombre = models.CharField(max_length=100)
@@ -41,23 +37,9 @@ class Pedido(models.Model):
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
-    """ # Ejemplo de JSON para crear un pedido
- {
-   "mesa": 1,
-   "mesera": 1,
-   "productos": [
-     {"producto_id": 11, "cantidad": 3},
-     {"producto_id": 12, "cantidad": 1}
-   ],
-   "estado": "activa"
- }
-    """
-    # def total(self):
-    #     return sum(item.cantidad * item.producto.precio for item in self.pedidoproducto_set.all())
-
+ 
     def __str__(self):
         return f"Pedido #{self.id} - {self.fecha_hora}"
-
 
 class PedidoProducto(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)

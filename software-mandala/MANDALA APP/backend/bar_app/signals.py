@@ -71,7 +71,6 @@ def delete_image_file(image_field):
     except Exception as e:
         logger.error(f"❌ Error al eliminar imagen automáticamente: {e}")
 
-
 # Signal adicional para manejar casos donde se actualiza solo el campo imagen a vacío
 @receiver(pre_save, sender=Producto)
 def handle_image_field_cleared(sender, instance, **kwargs):
