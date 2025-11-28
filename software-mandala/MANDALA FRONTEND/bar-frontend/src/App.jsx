@@ -10,6 +10,7 @@ import MesasPage from "./pages/mesas/MesasPage";
 import HistorialPedidosPage from "./pages/historialpedidos/HistorialPedidosPage";
 import BartenderPage from "./pages/bartender/BartenderPage";
 import PedidosLayout from "./layouts/PedidosLayout";
+import ProductModal from "./pages/inventario/ProductModal";
 
 function App() {
   return (
