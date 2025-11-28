@@ -59,6 +59,8 @@ export default function HeaderPedidos({ mesera, onLogout, codigoConfirmado }) {
             <button
               onClick={onLogout}
               className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg transition text-white"
+              aria-label="Cerrar sesión"
+              title="Cerrar sesión"
             >
               <LogOut size={18} />
             </button>
@@ -67,7 +69,11 @@ export default function HeaderPedidos({ mesera, onLogout, codigoConfirmado }) {
 
         {/* Botón de Menú para Móvil (se oculta en desktop/tablet) */}
         <div className="sm:hidden">
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
+            aria-expanded={isMenuOpen}
+          >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>

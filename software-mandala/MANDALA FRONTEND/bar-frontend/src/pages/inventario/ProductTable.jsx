@@ -98,13 +98,28 @@ function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
                     </td>
                     <td className="px-6 py-4 text-center">
                       <div className="flex justify-center gap-3">
-                        <button onClick={() => openModal(prod)} className="p-1.5 rounded-full text-green-400 hover:bg-green-500/20 hover:text-green-300 transition" title="Registrar Movimiento">
+                        <button
+                          onClick={() => openModal(prod)}
+                          className="p-1.5 rounded-full text-green-400 hover:bg-green-500/20 hover:text-green-300 transition"
+                          title="Registrar Movimiento"
+                          aria-label={`Registrar movimiento para ${prod.nombre}`}
+                        >
                           <PlusCircle size={20} />
                         </button>
-                        <button onClick={() => onEdit && onEdit(prod)} className="p-1.5 rounded-full text-blue-400 hover:bg-blue-500/20 hover:text-blue-300 transition" title="Editar Producto">
+                        <button
+                          onClick={() => onEdit && onEdit(prod)}
+                          className="p-1.5 rounded-full text-blue-400 hover:bg-blue-500/20 hover:text-blue-300 transition"
+                          title="Editar Producto"
+                          aria-label={`Editar ${prod.nombre}`}
+                        >
                           <Edit size={20} />
                         </button>
-                        <button onClick={() => onDelete && onDelete(prod.id)} className="p-1.5 rounded-full text-red-500 hover:bg-red-500/20 hover:text-red-400 transition" title="Eliminar Producto">
+                        <button
+                          onClick={() => onDelete && onDelete(prod.id)}
+                          className="p-1.5 rounded-full text-red-500 hover:bg-red-500/20 hover:text-red-400 transition"
+                          title="Eliminar Producto"
+                          aria-label={`Eliminar ${prod.nombre}`}
+                        >
                           <Trash2 size={20} />
                         </button>
                       </div>

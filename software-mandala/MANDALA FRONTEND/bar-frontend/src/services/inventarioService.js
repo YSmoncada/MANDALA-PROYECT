@@ -1,13 +1,11 @@
-import axios from "axios";
-import { API_URL } from "../apiConfig"; // Importar la URL centralizada
-const PRODUCTOS_API_URL = `${API_URL}/productos/`;
+import apiClient from "../utils/apiClient";
 
 /**
  * Obtiene todos los productos del backend.
  */
 export const getProductos = async () => {
     try {
-        const response = await axios.get(PRODUCTOS_API_URL);
+        const response = await apiClient.get('/productos/');
         return response.data;
     } catch (error) {
         console.error("Error en getProductos:", error);
@@ -24,8 +22,8 @@ export const saveProducto = async (id, data) => {
     const isFormData = data instanceof FormData;
     const config = isFormData ? { headers: { "Content-Type": "multipart/form-data" } } : {};
     const request = id
-        ? axios.put(`${PRODUCTOS_API_URL}${id}/`, data, config)
-        : axios.post(PRODUCTOS_API_URL, data, config);
+        ? apiClient.put(`/productos/${id}/`, data, config)
+        : apiClient.post('/productos/', data, config);
 
     try {
         const response = await request;
@@ -42,7 +40,7 @@ export const saveProducto = async (id, data) => {
  */
 export const deleteProducto = async (id) => {
     try {
-        await axios.delete(`${PRODUCTOS_API_URL}${id}/`);
+        await apiClient.delete(`/productos/${id}/`);
     } catch (error) {
         console.error("Error en deleteProducto:", error);
         throw error;
