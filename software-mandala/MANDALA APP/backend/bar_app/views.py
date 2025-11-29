@@ -104,6 +104,7 @@ class MovimientoViewSet(viewsets.ModelViewSet):
 class PedidoFilter(FilterSet):
     fecha = DateFilter(field_name='fecha_hora__date')
     mesera = filters.NumberFilter(field_name='mesera_id')
+    estado = filters.CharFilter(field_name='estado')
 
     class Meta:
         model = Pedido
