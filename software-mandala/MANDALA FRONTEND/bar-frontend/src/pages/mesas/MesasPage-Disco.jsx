@@ -60,16 +60,15 @@ const MesasPageDisco = () => {
             </div>
 
             <button
-                onClick={() => navigate("/")}
-                className="absolute top-6 left-6 z-50 flex items-center gap-2 rounded-lg bg-[#441E73]/50 border border-[#6C3FA8] px-4 py-2 text-white hover:bg-[#441E73] transition-all backdrop-blur-md shadow-lg hover:scale-105"
+                onClick={() => navigate(-1)}
+                className="absolute top-6 left-6 z-10 flex items-center gap-2 rounded-lg bg-purple-600/80 backdrop-blur-sm px-4 py-2 text-white shadow-lg transition-all hover:bg-purple-600 hover:scale-105"
             >
-                <ArrowLeft size={18} />
-                <span className="font-medium">Volver</span>
+                <ArrowLeft size={18} /> Volver
             </button>
 
             <div className="relative z-10 mx-auto max-w-6xl pt-20 sm:pt-0">
                 <div className="text-center mb-10">
-                    <h1 className="text-5xl md:text-6xl font-black mb-3 text-white">
+                    <h1 className="text-5xl md:text-6xl font-black mb-3 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
                         Gestión de Mesas
                     </h1>
                     <div className="h-1 w-24 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mx-auto"></div>

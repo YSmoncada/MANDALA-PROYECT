@@ -9,7 +9,7 @@ import { useInventario } from "../../hooks/useInventario";
 
 const Header = () => (
     <div className="text-center mb-10">
-        <h1 className="text-5xl md:text-6xl font-black mb-3 text-white">
+        <h1 className="text-5xl md:text-6xl font-black mb-3 bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
             Gestión de Inventario
         </h1>
         <div className="h-1 w-24 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full mx-auto"></div>
@@ -53,11 +53,11 @@ function InventarioDisco() {
 
             <Header />
             <button
-                onClick={() => navigate("/")}
-                className="absolute top-6 left-6 z-50 flex items-center gap-2 rounded-lg bg-[#441E73]/50 border border-[#6C3FA8] px-4 py-2 text-white hover:bg-[#441E73] transition-all backdrop-blur-md shadow-lg hover:scale-105"
+                onClick={() => navigate(-1)}
+                className="absolute top-6 left-6 z-10 flex items-center gap-2 text-white bg-purple-600/80 backdrop-blur-sm hover:bg-purple-600 px-4 py-2 rounded-lg transition-all shadow-lg hover:scale-105"
             >
                 <ArrowLeft size={18} />
-                <span className="font-medium">Volver</span>
+                <span>Volver</span>
             </button>
 
             <div className="relative z-10 max-w-5xl mx-auto bg-gray-900/50 backdrop-blur-sm border border-purple-500/30 rounded-2xl shadow-2xl p-8">

@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Package, ClipboardList, SquareKanban, History, GlassWater, DollarSign } from "lucide-react";
+import { Package, ClipboardList, SquareKanban, History, GlassWater } from "lucide-react";
 
 function HomeDisco() {
     const navigate = useNavigate();
@@ -11,7 +11,6 @@ function HomeDisco() {
         { icon: SquareKanban, label: "Mesas", path: "/mesas", color: "from-purple-400 to-fuchsia-500" },
         { icon: History, label: "Historial", path: "/historial-pedidos", color: "from-yellow-400 to-orange-500" },
         { icon: GlassWater, label: "Bartender", path: "/bartender", color: "from-green-400 to-emerald-500" },
-        { icon: DollarSign, label: "Contabilidad", path: "/contabilidad-disco", color: "from-indigo-400 to-violet-500" },
     ];
 
     return (

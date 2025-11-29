@@ -6,8 +6,12 @@ import Notificaciones from "./components/Notificaciones";
 // Lazy loading de componentes para mejorar el rendimiento
 const Inventario = lazy(() => import("./pages/inventario/Inventario"));
 const Home = lazy(() => import("./pages/home/Home"));
+const HistorialPedidosPageDisco = lazy(() => import("./pages/historialpedidos/HistorialPedidosPage-Disco"));
 const Pedidos = lazy(() => import("./pages/pedidosAuth/pedidos"));
 const PedidosPage = lazy(() => import("./pages/pedidospage/PedidosPage"));
+const PedidosDisco = lazy(() => import("./pages/pedidosAuth/Pedidos-Disco")); // 🎨 Disco Auth
+const PedidosPageDisco = lazy(() => import("./pages/pedidospage/PedidosPage-Disco")); // 🎨 Disco Page
+const ContabilidadDisco = lazy(() => import("./pages/contabilidad/Contabilidad-Disco")); // 🎨 Disco Contabilidad
 const MesasPage = lazy(() => import("./pages/mesas/MesasPage"));
 const HistorialPedidosPage = lazy(() => import("./pages/historialpedidos/HistorialPedidosPage"));
 const BartenderPage = lazy(() => import("./pages/bartender/BartenderPage"));
@@ -36,11 +40,17 @@ function App() {
 
           {/* Rutas que comparten el contexto de Pedidos */}
           <Route element={<PedidosLayout />}>
-            <Route path="/login" element={<Pedidos />} />
-            <Route path="/pedidos" element={<PedidosPage />} />
+            <Route path="/login" element={<PedidosDisco />} />
+            <Route path="/pedidos" element={<PedidosPageDisco />} />
+
+            {/* 🎨 Rutas Disco Pedidos */}
+            <Route path="/login-disco" element={<PedidosDisco />} />
+            <Route path="/pedidos-disco" element={<PedidosPageDisco />} />
+            <Route path="/contabilidad-disco" element={<ContabilidadDisco />} />
           </Route>
 
-          <Route path="/historial-pedidos" element={<HistorialPedidosPage />} />
+          <Route path="/historial-pedidos" element={<HistorialPedidosPageDisco />} /> {/* 🎨 Disco */}
+
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Suspense>
