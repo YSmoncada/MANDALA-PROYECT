@@ -33,12 +33,12 @@ const HistorialPedidosPageDisco = () => {
             setLoading(true);
             try {
                 const params = new URLSearchParams();
+
                 if (meseraSeleccionada) params.append('mesera', meseraSeleccionada);
-                if (fechaSeleccionada) {
-                    const date = new Date(fechaSeleccionada);
-                    const formattedDate = date.toISOString().split('T')[0];
-                    params.append('fecha', formattedDate);
-                }
+
+                // 🔥 FIX: No convertir la fecha a UTC, enviar la fecha tal cual
+                if (fechaSeleccionada) params.append('fecha', fechaSeleccionada);
+
                 const response = await axios.get(`${API_URL}/pedidos/?${params.toString()}`);
                 setPedidos(response.data);
             } catch (error) {
@@ -63,7 +63,13 @@ const HistorialPedidosPageDisco = () => {
 
     const getTituloTotal = () => {
         const nombreMesera = meseras.find(m => m.id == meseraSeleccionada)?.nombre;
-        const fechaFormateada = fechaSeleccionada ? new Date(fechaSeleccionada + 'T00:00:00').toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+        const fechaFormateada = fechaSeleccionada
+            ? new Date(fechaSeleccionada + 'T00:00:00').toLocaleDateString('es-CO', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            })
+            : '';
 
         if (nombreMesera && fechaFormateada) return `Ventas de ${nombreMesera} el ${fechaFormateada}`;
         if (nombreMesera) return `Total de Ventas de ${nombreMesera}`;
@@ -77,7 +83,6 @@ const HistorialPedidosPageDisco = () => {
         setPedidos([]);
     };
 
-    // Calcular estadísticas
     const cantidadPedidos = pedidos.length;
     const promedioVenta = cantidadPedidos > 0 ? totalMostrado / cantidadPedidos : 0;
 
