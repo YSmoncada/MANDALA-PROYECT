@@ -4,14 +4,34 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, User, DollarSign, ShoppingBag, TrendingUp } from 'lucide-react';
 import { API_URL } from '../../apiConfig';
 
+const capitalize = (str = '') => {
+  const s = String(str).trim();
+  if (!s) return '';
+  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+};
 const HistorialPedidosPageDisco = () => {
     const [pedidos, setPedidos] = useState([]);
     const [meseras, setMeseras] = useState([]);
+    const [estados, setEstados] = useState(["pendiente","despachado", "cancelado", "finalizado"]);
     const [meseraSeleccionada, setMeseraSeleccionada] = useState('');
+    const [estadoSeleccionado, setEstadoSeleccionado] = useState('');
     const [fechaSeleccionada, setFechaSeleccionada] = useState(() => {
         const today = new Date();
         return today.toISOString().split('T')[0];
     });
+    const manejoEstado = (estado) => {switch (estado) {
+        case 'pendiente' || "Pendiente":
+            return 'text-yellow-500';
+        case 'despachado' || "Despachado":
+            return 'text-green-500';
+        case 'finalizada' || "Finalizada":
+            return 'text-blue-500';
+        case "cancelado" || "Cancelado":
+            return 'text-red-500';
+        default:
+            return '';
+        }
+    };
     const [totalMostrado, setTotalMostrado] = useState(0);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -39,6 +59,7 @@ const HistorialPedidosPageDisco = () => {
                     const formattedDate = date.toISOString().split('T')[0];
                     params.append('fecha', formattedDate);
                 }
+                if (estadoSeleccionado) params.append('estado', estadoSeleccionado);
                 const response = await axios.get(`${API_URL}/pedidos/?${params.toString()}`);
                 setPedidos(response.data);
             } catch (error) {
@@ -49,12 +70,12 @@ const HistorialPedidosPageDisco = () => {
             }
         };
 
-        if (meseraSeleccionada || fechaSeleccionada) {
+        if (meseraSeleccionada || fechaSeleccionada || estadoSeleccionado) {
             fetchPedidos();
         } else {
             setPedidos([]);
         }
-    }, [meseraSeleccionada, fechaSeleccionada]);
+    }, [meseraSeleccionada, fechaSeleccionada, estadoSeleccionado]);
 
     useEffect(() => {
         const totalCalculado = pedidos.reduce((acc, pedido) => acc + parseFloat(pedido.total), 0);
@@ -74,6 +95,7 @@ const HistorialPedidosPageDisco = () => {
     const limpiarFiltros = () => {
         setMeseraSeleccionada('');
         setFechaSeleccionada('');
+        setEstadoSeleccionado('');
         setPedidos([]);
     };
 
@@ -135,6 +157,21 @@ const HistorialPedidosPageDisco = () => {
                                 onChange={(e) => setFechaSeleccionada(e.target.value)}
                                 className="bg-gray-900/80 backdrop-blur-sm border border-purple-500/30 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block w-full p-3"
                             />
+                        </div>
+                        <div>
+                            <label className="flex items-center gap-2 mb-2 text-sm font-semibold text-white">
+                                <User size={16} className="text-yellow-400" /> Estado
+                            </label>
+                            <select
+                                value={estadoSeleccionado}
+                                onChange={(e) => setEstadoSeleccionado(e.target.value)}
+                                className="bg-gray-900/80 backdrop-blur-sm border border-purple-500/30 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block w-full p-3"
+                            >
+                                <option value="">-- Todas --</option>
+                                {estados.map((estado) => (
+                                    <option value={estado}>{capitalize(estado)}</option>
+                                ))}
+                            </select>
                         </div>
 
                         <div className="flex items-end">
@@ -216,6 +253,7 @@ const HistorialPedidosPageDisco = () => {
                                             Pedido #{pedido.id}
                                         </h2>
                                         <p className="text-sm text-gray-400">Mesa: <span className="text-yellow-400 font-semibold">{pedido.mesa_numero}</span></p>
+                                        <p className="text-sm text-gray-400">Estado: <span className={manejoEstado(pedido.estado)}>{capitalize(pedido.estado)}</span></p>
                                     </div>
                                     <div className="text-right">
                                         <p className="text-xs text-gray-500">{new Date(pedido.fecha_hora).toLocaleDateString()}</p>

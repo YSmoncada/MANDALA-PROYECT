@@ -21,7 +21,7 @@ export default function HeaderPedidosDisco({ mesera, onLogout, codigoConfirmado 
     const navLinks = [
         { href: "/login-disco", label: "Menú", icon: <HomeIcon size={18} /> },
         { href: "/pedidos-disco", label: "Pedido", icon: <ShoppingCart size={18} /> },
-        { href: "/historial-pedidos-disco", label: "Historial", icon: <Clock size={18} /> },
+        { href: "/historial-pedidos", label: "Historial", icon: <Clock size={18} /> },
     ];
 
     return (
