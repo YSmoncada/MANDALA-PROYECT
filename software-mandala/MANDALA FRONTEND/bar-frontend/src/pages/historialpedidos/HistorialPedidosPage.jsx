@@ -5,18 +5,37 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { API_URL } from '../../apiConfig';
 
+const capitalize = (str = '') => {
+  const s = String(str).trim();
+  if (!s) return '';
+  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+};
 const HistorialPedidosPage = () => {
     const [pedidos, setPedidos] = useState([]);
     const [meseras, setMeseras] = useState([]);
+    const [estados, setEstados] = useState(["pendiente", "despachado", "finalizada", "cancelado"]);
     const [meseraSeleccionada, setMeseraSeleccionada] = useState('');
     const [fechaSeleccionada, setFechaSeleccionada] = useState(() => {
         const today = new Date();
         return today.toISOString().split('T')[0];
     }); // Estado para la fecha
+    const [estadoSeleccionado, setEstadoSeleccionado] = useState('');
     const [totalMostrado, setTotalMostrado] = useState(0); // El total que se mostrará en la UI (global o individual)
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-
+    const manejoEstado = (estado) => {switch (estado) {
+        case 'pendiente' || "Pendiente":
+            return 'text-yellow-500';
+        case 'despachado' || "Despachado":
+            return 'text-green-500';
+        case 'finalizada' || "Finalizada":
+            return 'text-blue-500';
+        case "cancelado" || "Cancelado":
+            return 'text-red-500';
+        default:
+            return '';
+        }
+    };
     // Cargar la lista de meseras al montar el componente
     useEffect(() => {
         const fetchMeseras = async () => {
@@ -49,6 +68,9 @@ const HistorialPedidosPage = () => {
                     params.append('fecha', formattedDate);
                     console.log('Fecha enviada:', formattedDate);
                 }
+                if (estadoSeleccionado) {
+                    params.append('estado', estadoSeleccionado);
+                }
 
                 const url = `${API_URL}/pedidos/?${params.toString()}`;
                 console.log('URL completa:', url);
@@ -66,12 +88,12 @@ const HistorialPedidosPage = () => {
         };
 
         // Buscar si se ha seleccionado una mesera O una fecha.
-        if (meseraSeleccionada || fechaSeleccionada) {
+        if (meseraSeleccionada || fechaSeleccionada || estadoSeleccionado) {
             fetchPedidos();
         } else {
             setPedidos([]); // Limpia los pedidos si no hay filtros activos
         }
-    }, [meseraSeleccionada, fechaSeleccionada]);
+    }, [meseraSeleccionada, fechaSeleccionada, estadoSeleccionado]);
 
     // Efecto para actualizar el total mostrado cuando cambia la selección de mesera
     useEffect(() => {
@@ -102,6 +124,7 @@ const HistorialPedidosPage = () => {
     const limpiarFiltros = () => {
         setMeseraSeleccionada('');
         setFechaSeleccionada('');
+        setEstadoSeleccionado('');
         setPedidos([]);
     };
 
@@ -151,7 +174,22 @@ const HistorialPedidosPage = () => {
                             className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
                         />
                     </div>
-
+                    
+                    {/* Filtro por Estado */}
+                    <div>
+                        <label htmlFor="estado-select" className="block mb-2 text-sm font-medium text-gray-300">Filtrar por Estado:</label>
+                        <select
+                            id="estado-select"
+                            value={estadoSeleccionado}
+                            onChange={(e) => setEstadoSeleccionado(e.target.value)}
+                            className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
+                        >
+                            <option value="">-- Todas los estados --</option>
+                            {estados.map((estado) => (
+                                <option key={estado} value={estado}>{capitalize(estado)}</option>
+                            ))}
+                        </select>
+                    </div>
                     {/* Botón para limpiar fecha */}
                     <div className="flex items-end">
                         <button onClick={() => setFechaSeleccionada('')} className="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2.5 px-4 rounded-lg w-full">
@@ -177,7 +215,11 @@ const HistorialPedidosPage = () => {
                     <div className="space-y-4">
                         {pedidos.length > 0 ? pedidos.map(pedido => (
                             <div key={pedido.id} className="bg-[#2B0D49]/80 border border-[#6C3FA8] rounded-xl p-4">
+                                <span className={manejoEstado(pedido.estado)}>
+                                        {capitalize(pedido.estado) || 'Sin estado'}
+                                    </span>
                                 <div className="flex justify-between items-center mb-2">
+                                    
                                     <h2 className="font-bold text-lg">Pedido #{pedido.id}</h2>
                                     <span className="text-sm text-gray-400">{new Date(pedido.fecha_hora).toLocaleString()}</span>
                                 </div>
