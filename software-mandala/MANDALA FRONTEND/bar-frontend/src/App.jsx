@@ -4,17 +4,14 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Notificaciones from "./components/Notificaciones";
 
 // Lazy loading de componentes para mejorar el rendimiento
-const Inventario = lazy(() => import("./pages/inventario/Inventario"));
-const Home = lazy(() => import("./pages/home/Home"));
+const Inventario = lazy(() => import("./pages/unused/Inventario"));
+const Home = lazy(() => import("./pages/unused/Home"));
 const HistorialPedidosPageDisco = lazy(() => import("./pages/historialpedidos/HistorialPedidosPage-Disco"));
-const Pedidos = lazy(() => import("./pages/pedidosAuth/pedidos"));
-const PedidosPage = lazy(() => import("./pages/pedidospage/PedidosPage"));
-const PedidosDisco = lazy(() => import("./pages/pedidosAuth/Pedidos-Disco")); // 🎨 Disco Auth
-const PedidosPageDisco = lazy(() => import("./pages/pedidospage/PedidosPage-Disco")); // 🎨 Disco Page
+const PedidosDisco = lazy(() => import("./pages/pedidosAuth/Pedidos-Disco"));
+const PedidosPageDisco = lazy(() => import("./pages/pedidospage/PedidosPage-Disco"));
 const MisPedidosPageDisco = lazy(() => import("./pages/pedidospage/MisPedidosPage-Disco")); // 🎨 Disco Mis Pedidos
 const ContabilidadDisco = lazy(() => import("./pages/contabilidad/Contabilidad-Disco")); // 🎨 Disco Contabilidad
 const MesasPage = lazy(() => import("./pages/mesas/MesasPage"));
-const HistorialPedidosPage = lazy(() => import("./pages/historialpedidos/HistorialPedidosPage"));
 const BartenderPageDisco = lazy(() => import("./pages/bartender/BartenderPage-Disco"));
 const PedidosLayout = lazy(() => import("./layouts/PedidosLayout"));
 

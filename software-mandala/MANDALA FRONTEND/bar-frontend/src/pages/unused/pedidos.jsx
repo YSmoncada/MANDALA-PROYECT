@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Trash2 } from "lucide-react"; // Importamos un ícono para el botón
 import { useNavigate, Link } from "react-router-dom";
-import HeaderPedidos from "../pedidospage/HeaderPedidos";
+import HeaderPedidos from "./HeaderPedidos";
 import CodeInput from "./CodeInput";
 import ProductGrid from "./ProductGrid";
 

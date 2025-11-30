@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import ProductCard from "../pedidospage/ProductCard";
+import ProductCard from "./ProductCard";
 import axios from "axios";
 import { API_URL } from "../../apiConfig"; // Importar la URL centralizada
 export default function ProductGrid({ mesera, onCambiar, onProductAdd }) {

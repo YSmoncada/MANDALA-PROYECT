@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Trash2 } from 'lucide-react';
-import MesaForm from './MesaForm';
+import MesaForm from '../unused/MesaForm';
 import toast from 'react-hot-toast';
 import { API_URL } from '../../apiConfig';
 

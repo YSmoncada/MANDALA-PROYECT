@@ -67,10 +67,10 @@ const BartenderPageDisco = () => {
 
             <button
                 onClick={() => navigate('/')}
-                className="absolute top-6 left-6 z-10 flex items-center gap-2 rounded-lg bg-purple-600/80 backdrop-blur-sm px-4 py-2 text-white shadow-lg transition-all hover:bg-purple-600 hover:scale-105"
+                className="absolute top-6 left-6 z-50 flex items-center gap-2 rounded-lg bg-[#441E73]/50 border border-[#6C3FA8] px-4 py-2 text-white hover:bg-[#441E73] transition-all backdrop-blur-md shadow-lg hover:scale-105"
             >
                 <ArrowLeft size={18} />
-                Volver
+                <span className="font-medium">Volver</span>
             </button>
 
             <div className="relative z-10 mx-auto max-w-7xl pt-20 sm:pt-0">
