@@ -11,10 +11,11 @@ const Pedidos = lazy(() => import("./pages/pedidosAuth/pedidos"));
 const PedidosPage = lazy(() => import("./pages/pedidospage/PedidosPage"));
 const PedidosDisco = lazy(() => import("./pages/pedidosAuth/Pedidos-Disco")); // 🎨 Disco Auth
 const PedidosPageDisco = lazy(() => import("./pages/pedidospage/PedidosPage-Disco")); // 🎨 Disco Page
+const MisPedidosPageDisco = lazy(() => import("./pages/pedidospage/MisPedidosPage-Disco")); // 🎨 Disco Mis Pedidos
 const ContabilidadDisco = lazy(() => import("./pages/contabilidad/Contabilidad-Disco")); // 🎨 Disco Contabilidad
 const MesasPage = lazy(() => import("./pages/mesas/MesasPage"));
 const HistorialPedidosPage = lazy(() => import("./pages/historialpedidos/HistorialPedidosPage"));
-const BartenderPage = lazy(() => import("./pages/bartender/BartenderPage"));
+const BartenderPageDisco = lazy(() => import("./pages/bartender/BartenderPage-Disco"));
 const PedidosLayout = lazy(() => import("./layouts/PedidosLayout"));
 
 // Componente de carga
@@ -36,7 +37,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/inventario" element={<Inventario />} />
           <Route path="/mesas" element={<MesasPage />} />
-          <Route path="/bartender" element={<BartenderPage />} />
+          <Route path="/bartender" element={<BartenderPageDisco />} />
 
           {/* Rutas que comparten el contexto de Pedidos */}
           <Route element={<PedidosLayout />}>
@@ -46,6 +47,7 @@ function App() {
             {/* 🎨 Rutas Disco Pedidos */}
             <Route path="/login-disco" element={<PedidosDisco />} />
             <Route path="/pedidos-disco" element={<PedidosPageDisco />} />
+            <Route path="/mis-pedidos-disco" element={<MisPedidosPageDisco />} />
             <Route path="/contabilidad-disco" element={<ContabilidadDisco />} />
           </Route>
 

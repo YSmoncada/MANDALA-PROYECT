@@ -37,9 +37,11 @@ export default function ProductFormFields({ form, onChange }) {
                     required
                 >
                     <option value="">Seleccionar categoría</option>
-                    <option>destilados</option>
-                    <option>cerveza</option>
-                    <option>vinos</option>
+                    <option value="cerveza">Cervezas</option>
+                    <option value="vinos">Vinos</option>
+                    <option value="destilados">Destilados</option>
+                    <option value="cocteles">Cocteles</option>
+                    <option value="bebidas">Bebidas</option>
                 </select>
             </div>
 

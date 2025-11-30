@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, Clock } from 'lucide-react';
+import { ArrowLeft, Check, Clock, X, Loader2 } from 'lucide-react';
 import { API_URL } from '../../apiConfig';
 
 const BartenderPageDisco = () => {
@@ -13,6 +13,10 @@ const BartenderPageDisco = () => {
     const fetchPedidosPendientes = useCallback(async () => {
         try {
             setLoading(true);
+            // Fetch both pending and in-process orders if possible. 
+            // If the backend doesn't support multiple values, we might need to make two requests or fetch all.
+            // For now, let's try to fetch 'pendiente' and if we want 'en_proceso' we might need to adjust.
+            // Assuming the user wants to see what is pending.
             const response = await axios.get(`${API_URL}/pedidos/?estado=pendiente`);
             setPedidos(response.data);
         } catch (error) {
@@ -29,14 +33,27 @@ const BartenderPageDisco = () => {
         return () => clearInterval(interval);
     }, [fetchPedidosPendientes]);
 
-    const handleDespacharPedido = async (pedidoId) => {
+    const handleUpdateEstado = async (pedidoId, nuevoEstado) => {
         try {
-            await axios.patch(`${API_URL}/pedidos/${pedidoId}/`, { estado: 'despachado' });
-            toast.success(`Pedido #${pedidoId} despachado.`);
+            await axios.patch(`${API_URL}/pedidos/${pedidoId}/`, { estado: nuevoEstado });
+
+            let mensaje = '';
+            switch (nuevoEstado) {
+                case 'despachado': mensaje = 'despachado'; break;
+                case 'cancelado': mensaje = 'cancelado'; break;
+                case 'en_proceso': mensaje = 'en preparación'; break;
+                default: mensaje = 'actualizado';
+            }
+
+            toast.success(`Pedido #${pedidoId} ${mensaje}.`);
+
+            // If we move to 'en_proceso' or 'despachado' or 'cancelado', it should be removed from 'pendiente' list
+            // unless we want to keep 'en_proceso' visible. 
+            // For now, removing it gives immediate feedback that it's "handled" from the pending queue.
             setPedidos(prevPedidos => prevPedidos.filter(p => p.id !== pedidoId));
         } catch (error) {
-            console.error(`Error al despachar el pedido ${pedidoId}:`, error);
-            toast.error('Error al despachar el pedido.');
+            console.error(`Error al actualizar el pedido ${pedidoId}:`, error);
+            toast.error('Error al actualizar el estado del pedido.');
         }
     };
 
@@ -65,7 +82,12 @@ const BartenderPageDisco = () => {
                 </div>
 
                 {loading && pedidos.length === 0 ? (
-                    <p className="text-center text-purple-300">Cargando pedidos...</p>
+                    <div className="text-center py-12">
+                        <div className="inline-block p-4 bg-white/5 rounded-full">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-400"></div>
+                        </div>
+                        <p className="text-green-300 mt-4">Cargando pedidos...</p>
+                    </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {pedidos.length > 0 ? pedidos.map(pedido => (
@@ -100,13 +122,36 @@ const BartenderPageDisco = () => {
                                         ))}
                                     </ul>
                                 </div>
-                                <button
-                                    onClick={() => handleDespacharPedido(pedido.id)}
-                                    className="w-full mt-5 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-105"
-                                >
-                                    <Check size={20} />
-                                    Marcar como Despachado
-                                </button>
+
+                                {/* Action Buttons Grid */}
+                                <div className="grid grid-cols-3 gap-2 mt-5">
+                                    <button
+                                        onClick={() => handleUpdateEstado(pedido.id, 'cancelado')}
+                                        className="bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-600/30 font-bold py-3 px-2 rounded-xl flex flex-col items-center justify-center gap-1 transition-all hover:scale-105"
+                                        title="Cancelar Pedido"
+                                    >
+                                        <X size={20} />
+                                        <span className="text-xs">Cancelar</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => handleUpdateEstado(pedido.id, 'en_proceso')}
+                                        className="bg-yellow-600/20 hover:bg-yellow-600/40 text-yellow-400 border border-yellow-600/30 font-bold py-3 px-2 rounded-xl flex flex-col items-center justify-center gap-1 transition-all hover:scale-105"
+                                        title="Marcar en Proceso"
+                                    >
+                                        <Loader2 size={20} className="animate-spin-slow" />
+                                        <span className="text-xs">Procesar</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => handleUpdateEstado(pedido.id, 'despachado')}
+                                        className="bg-green-600/20 hover:bg-green-600/40 text-green-400 border border-green-600/30 font-bold py-3 px-2 rounded-xl flex flex-col items-center justify-center gap-1 transition-all hover:scale-105"
+                                        title="Despachar Pedido"
+                                    >
+                                        <Check size={20} />
+                                        <span className="text-xs">Despachar</span>
+                                    </button>
+                                </div>
                             </div>
                         )) : (
                             <div className="col-span-full text-center py-16">
