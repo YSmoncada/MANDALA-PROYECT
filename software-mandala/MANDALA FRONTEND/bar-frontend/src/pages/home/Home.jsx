@@ -22,10 +22,10 @@ function HomeDisco() {
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl"></div>
             </div>
 
-            <main className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-12">
+            <main className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-16 sm:py-12">
                 {/* Title with subtle glow - comfortable for night work */}
-                <div className="text-center mb-16">
-                    <h1 className="text-8xl md:text-9xl font-black mb-4 relative inline-block">
+                <div className="text-center mb-12 sm:mb-16">
+                    <h1 className="text-6xl sm:text-8xl md:text-9xl font-black mb-3 sm:mb-4 relative inline-block">
                         {/* Subtle glow layer - reduced for night work */}
                         <span className="absolute inset-0 blur-xl bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 opacity-20"></span>
                         {/* Main text - white for maximum visibility */}
@@ -33,18 +33,18 @@ function HomeDisco() {
                             MANDALA
                         </span>
                     </h1>
-                    <p className="text-2xl md:text-3xl text-white font-light tracking-wide">
+                    <p className="text-lg sm:text-2xl md:text-3xl text-white/80 font-light tracking-wide">
                         Selecciona a dónde quieres ir
                     </p>
                 </div>
 
                 {/* Improved menu grid with glass effect */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 max-w-7xl">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 sm:gap-6 max-w-7xl">
                     {menuItems.map((item, index) => (
                         <button
                             key={item.path}
                             onClick={() => navigate(item.path)}
-                            className="group relative w-full sm:w-48 h-48"
+                            className="group relative w-full h-40 sm:w-48 sm:h-48"
                             style={{
                                 animation: `fadeIn 0.5s ease-out ${index * 0.08}s both`
                             }}
@@ -53,14 +53,14 @@ function HomeDisco() {
                             <div className={`absolute inset-0 bg-gradient-to-r ${item.color} opacity-0 group-hover:opacity-40 blur-2xl transition-all duration-300 rounded-2xl`}></div>
 
                             {/* Glass card */}
-                            <div className="relative h-full bg-white/5 backdrop-blur-md border border-white/10 group-hover:border-white/20 rounded-2xl transition-all duration-300 flex flex-col items-center justify-center gap-4 group-hover:scale-105 group-hover:bg-white/10">
+                            <div className="relative h-full bg-white/5 backdrop-blur-md border border-white/10 group-hover:border-white/20 rounded-2xl transition-all duration-300 flex flex-col items-center justify-center gap-3 sm:gap-4 group-hover:scale-105 group-hover:bg-white/10">
                                 {/* Icon with gradient background */}
-                                <div className={`p-4 rounded-xl bg-gradient-to-br ${item.color} shadow-lg`}>
-                                    <item.icon className="w-10 h-10 text-white" />
+                                <div className={`p-3 sm:p-4 rounded-xl bg-gradient-to-br ${item.color} shadow-lg`}>
+                                    <item.icon className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
                                 </div>
 
                                 {/* Label - white and bold for better visibility */}
-                                <span className="text-xl font-bold text-white">
+                                <span className="text-base sm:text-xl font-bold text-white">
                                     {item.label}
                                 </span>
                             </div>
