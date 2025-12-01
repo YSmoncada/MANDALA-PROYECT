@@ -142,13 +142,13 @@ export default function PedidosDisco() {
                             <p className="text-xl text-[#C2B6D9] font-light tracking-wide">Selecciona tu perfil para ingresar</p>
                         </div>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                        <div className="flex flex-wrap justify-center gap-6">
                             {meseras.map((meseraObj) => (
                                 <button
                                     key={meseraObj.id}
                                     onClick={() => handleSelectMesera(meseraObj)}
                                     // Reduced padding (p-8 -> p-6) and adjusted sizing
-                                    className="group relative flex flex-col items-center gap-4 bg-[#6C3FA8]/20 hover:bg-[#6C3FA8]/40 border border-[#6C3FA8] hover:border-[#A944FF] rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(169,68,255,0.2)] backdrop-blur-sm"
+                                    className="group relative flex flex-col items-center gap-4 bg-[#6C3FA8]/20 hover:bg-[#6C3FA8]/40 border border-[#6C3FA8] hover:border-[#A944FF] rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(169,68,255,0.2)] backdrop-blur-sm w-48"
                                 >
                                     <div className="relative">
                                         <div className="absolute inset-0 bg-[#A944FF] blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-full"></div>
@@ -175,7 +175,7 @@ export default function PedidosDisco() {
                             {/* Add New Button - Adjusted size */}
                             <button
                                 onClick={() => setShowAddForm(true)}
-                                className="flex flex-col items-center justify-center gap-3 min-h-[180px] border-2 border-dashed border-[#6C3FA8] hover:border-[#A944FF] hover:bg-[#441E73]/20 rounded-2xl text-[#8A7BAF] hover:text-white transition-all duration-300 group"
+                                className="flex flex-col items-center justify-center gap-3 min-h-[180px] border-2 border-dashed border-[#6C3FA8] hover:border-[#A944FF] hover:bg-[#441E73]/20 rounded-2xl text-[#8A7BAF] hover:text-white transition-all duration-300 group w-48"
                             >
                                 <div className="w-12 h-12 rounded-full bg-[#441E73]/30 flex items-center justify-center group-hover:bg-[#A944FF]/20 transition-all duration-300">
                                     <Plus size={20} className="group-hover:text-[#A944FF] transition-colors" />
