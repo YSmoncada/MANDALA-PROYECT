@@ -3,12 +3,15 @@ from .models import Producto, Movimiento, Pedido, PedidoProducto, Mesa, Mesera
 from django.utils import timezone
 
 class ProductoSerializer(serializers.ModelSerializer):
-    # Usamos la propiedad 'imagen_url' del modelo para asegurar la URL completa.
-    imagen = serializers.CharField(source='imagen_url', read_only=True)
+    # Campo para LEER la URL completa de la imagen (solo lectura)
+    imagen_url = serializers.URLField(source='imagen.url', read_only=True)
+    # Campo para ESCRIBIR (subir) una nueva imagen (solo escritura)
+    imagen = serializers.ImageField(write_only=True, required=False, allow_null=True)
 
     class Meta:
         model = Producto
-        fields = '__all__'
+        # Incluimos todos los campos del modelo y nuestro nuevo campo de URL
+        fields = [field.name for field in model._meta.fields] + ['imagen_url']
 
 class MovimientoSerializer(serializers.ModelSerializer):
     class Meta:
