@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import InventoryCard from "../inventario/InventoryCard";
-import ProductTableWithModal from "../inventario/ProductTable";
-import ProductModal from "../inventario/ProductModal";
-import FiltersSummary from "../inventario/FiltersSummary";
+import InventoryCard from "./InventoryCard";
+import ProductTableWithModal from "./ProductTable";
+import ProductModal from "./ProductModal";
+import FiltersSummary from "./FiltersSummary";
 import { useInventario } from "../../hooks/useInventario";
 
 const Header = () => (

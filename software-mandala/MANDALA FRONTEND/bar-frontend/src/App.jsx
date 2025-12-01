@@ -4,8 +4,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Notificaciones from "./components/Notificaciones";
 
 // Lazy loading de componentes para mejorar el rendimiento
-const Inventario = lazy(() => import("./pages/unused/Inventario"));
-const Home = lazy(() => import("./pages/unused/Home"));
+const Inventario = lazy(() => import("./pages/inventario/Inventario"));
+const Home = lazy(() => import("./pages/home/Home"));
 const HistorialPedidosPageDisco = lazy(() => import("./pages/historialpedidos/HistorialPedidosPage-Disco"));
 const PedidosDisco = lazy(() => import("./pages/pedidosAuth/Pedidos-Disco"));
 const PedidosPageDisco = lazy(() => import("./pages/pedidospage/PedidosPage-Disco"));
