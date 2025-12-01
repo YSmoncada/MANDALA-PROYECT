@@ -153,14 +153,14 @@ export default function PedidosPageDisco() {
                                     {orderItems.map((item, index) => (
                                         <div
                                             key={item.producto.id || index}
-                                            className="group flex flex-col sm:flex-row items-center gap-6 bg-[#2B0D49]/80 hover:bg-[#2B0D49] p-5 rounded-2xl border border-[#6C3FA8]/50 hover:border-[#A944FF] transition-all duration-300 shadow-md"
+                                            className="group flex flex-col sm:flex-row items-center gap-4 bg-[#2B0D49]/80 hover:bg-[#2B0D49] p-4 rounded-2xl border border-[#6C3FA8]/50 hover:border-[#A944FF] transition-all duration-300 shadow-md"
                                         >
                                             {/* Product Image */}
-                                            <div className="w-20 h-20 bg-[#0E0D23] rounded-xl p-2 flex-shrink-0 border border-[#6C3FA8]/30">
+                                            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[#0E0D23] rounded-xl p-2 flex-shrink-0 border border-[#6C3FA8]/30">
                                                 <img
                                                     src={item.producto.imagen}
                                                     alt={item.producto.nombre}
-                                                    className="w-full h-full object-contain"
+                                                    className="w-full h-full object-contain drop-shadow-lg"
                                                 />
                                             </div>
 
@@ -173,8 +173,8 @@ export default function PedidosPageDisco() {
                                             </div>
 
                                             {/* Controls */}
-                                            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 w-full sm:w-auto">
-                                                <div className="flex items-center bg-[#0E0D23] rounded-lg p-1 border border-[#6C3FA8]/50">
+                                            <div className="flex flex-wrap items-center justify-between gap-4 w-full sm:w-auto sm:flex-nowrap sm:flex-col sm:items-end">
+                                                <div className="flex items-center bg-[#0E0D23] rounded-lg p-1 border border-[#6C3FA8]/50 order-2 sm:order-1">
                                                     <button
                                                         onClick={() => {
                                                             if (item.cantidad > 1) {
@@ -196,15 +196,15 @@ export default function PedidosPageDisco() {
                                                     </button>
                                                 </div>
 
-                                                <div className="text-right min-w-[100px]">
-                                                    <p className="font-black text-xl text-white">
+                                                <div className="text-left sm:text-right order-1 sm:order-2">
+                                                    <p className="font-black text-lg sm:text-xl text-white">
                                                         ${(parseFloat(item.producto.precio) * item.cantidad).toLocaleString("es-CO")}
                                                     </p>
                                                 </div>
 
                                                 <button
                                                     onClick={() => onRemoveItem(item.producto.id)}
-                                                    className="p-3 text-[#8A7BAF] hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors sm:ml-auto"
+                                                    className="p-3 text-[#8A7BAF] hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors order-3 sm:hidden"
                                                 >
                                                     <Trash2 size={20} />
                                                 </button>
