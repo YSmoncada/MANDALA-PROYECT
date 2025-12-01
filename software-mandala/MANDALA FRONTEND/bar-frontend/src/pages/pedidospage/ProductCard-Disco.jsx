@@ -47,13 +47,13 @@ export default function ProductCardDisco({ producto, onAgregarPedido }) {
 
                 <h3 className="font-bold text-lg text-white leading-tight mb-4 line-clamp-2 group-hover:text-[#FF4BC1] transition-colors">{producto.nombre}</h3>
 
-                <div className="mt-auto pt-5 border-t border-[#6C3FA8]/30 flex items-center justify-between gap-3">
-                    <p className="text-xl font-bold text-green-400 tracking-wide">
+                <div className="mt-auto pt-4 border-t border-[#6C3FA8]/30 flex flex-wrap items-center justify-between gap-3">
+                    <p className="text-lg sm:text-xl font-bold text-green-400 tracking-wide">
                         ${parseFloat(producto.precio).toLocaleString("es-CO")}
                     </p>
 
                     {/* Compact Controls */}
-                    <div className="flex items-center bg-[#0E0D23] rounded-lg border border-[#6C3FA8]/50 p-1">
+                    <div className="flex items-center bg-[#0E0D23] rounded-lg border border-[#6C3FA8]/50 p-0.5">
                         <button
                             onClick={disminuir}
                             className="w-8 h-8 flex items-center justify-center text-[#8A7BAF] hover:text-white hover:bg-[#441E73] rounded-md transition-colors"
