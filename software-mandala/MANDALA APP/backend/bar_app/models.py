@@ -15,6 +15,16 @@ class Producto(models.Model):
     def __str__(self):
         return self.nombre
 
+    @property
+    def imagen_url(self):
+        """
+        Devuelve la URL completa de la imagen desde Cloudinary.
+        Si no hay imagen, devuelve una cadena vacía.
+        """
+        if self.imagen and hasattr(self.imagen, 'url'):
+            return self.imagen.url
+        return ""
+
 class Mesera(models.Model):
     nombre = models.CharField(max_length=100)
     codigo = models.CharField(max_length=10, unique=True)
