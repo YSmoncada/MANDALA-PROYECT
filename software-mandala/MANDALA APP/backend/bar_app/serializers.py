@@ -4,7 +4,8 @@ from django.utils import timezone
 
 class ProductoSerializer(serializers.ModelSerializer):
     # Campo para LEER la URL completa de la imagen (solo lectura)
-    imagen_url = serializers.URLField(source='imagen.url', read_only=True)
+    # Usamos la propiedad 'imagen_url' del modelo, que maneja de forma segura los casos sin imagen.
+    imagen_url = serializers.CharField(source='imagen_url', read_only=True)
     # Campo para ESCRIBIR (subir) una nueva imagen (solo escritura)
     imagen = serializers.ImageField(write_only=True, required=False, allow_null=True)
 
