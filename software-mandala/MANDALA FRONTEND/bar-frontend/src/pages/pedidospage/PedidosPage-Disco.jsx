@@ -149,7 +149,7 @@ export default function PedidosPageDisco() {
                                     <span className="text-xs font-bold text-[#A944FF] ml-auto bg-[#A944FF]/10 px-4 py-2 rounded-full border border-[#A944FF]/20 uppercase tracking-wider">{orderItems.length} items</span>
                                 </h2>
 
-                                <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                                <div className="space-y-4 max-h-[60vh] lg:max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
                                     {orderItems.map((item, index) => (
                                         <div
                                             key={item.producto.id || index}
@@ -173,8 +173,8 @@ export default function PedidosPageDisco() {
                                             </div>
 
                                             {/* Controls */}
-                                            <div className="flex items-center gap-8">
-                                                <div className="flex items-center bg-[#0E0D23] rounded-lg p-1.5 border border-[#6C3FA8]/50">
+                                            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 w-full sm:w-auto">
+                                                <div className="flex items-center bg-[#0E0D23] rounded-lg p-1 border border-[#6C3FA8]/50">
                                                     <button
                                                         onClick={() => {
                                                             if (item.cantidad > 1) {
@@ -183,14 +183,14 @@ export default function PedidosPageDisco() {
                                                                 onRemoveItem(item.producto.id);
                                                             }
                                                         }}
-                                                        className="w-8 h-8 flex items-center justify-center text-[#8A7BAF] hover:text-white hover:bg-[#441E73] rounded-md transition-colors"
+                                                        className="w-7 h-7 flex items-center justify-center text-[#8A7BAF] hover:text-white hover:bg-[#441E73] rounded-md transition-colors"
                                                     >
                                                         <Minus size={16} />
                                                     </button>
                                                     <span className="w-10 text-center font-bold text-white">{item.cantidad}</span>
                                                     <button
                                                         onClick={() => onUpdateCantidad(item.producto.id, item.cantidad + 1)}
-                                                        className="w-8 h-8 flex items-center justify-center text-[#8A7BAF] hover:text-white hover:bg-[#441E73] rounded-md transition-colors"
+                                                        className="w-7 h-7 flex items-center justify-center text-[#8A7BAF] hover:text-white hover:bg-[#441E73] rounded-md transition-colors"
                                                     >
                                                         <Plus size={16} />
                                                     </button>
@@ -204,7 +204,7 @@ export default function PedidosPageDisco() {
 
                                                 <button
                                                     onClick={() => onRemoveItem(item.producto.id)}
-                                                    className="p-3 text-[#8A7BAF] hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors"
+                                                    className="p-3 text-[#8A7BAF] hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors sm:ml-auto"
                                                 >
                                                     <Trash2 size={20} />
                                                 </button>
@@ -217,7 +217,7 @@ export default function PedidosPageDisco() {
 
                         {/* Right Column: Summary & Checkout */}
                         <div className="lg:col-span-1">
-                            <div className="bg-[#441E73]/80 backdrop-blur-xl border border-[#6C3FA8] rounded-2xl p-8 shadow-[0_0_40px_rgba(0,0,0,0.3)] sticky top-28 relative overflow-hidden">
+                            <div className="bg-[#441E73]/80 backdrop-blur-xl border border-[#6C3FA8] rounded-2xl p-8 shadow-[0_0_40px_rgba(0,0,0,0.3)] lg:sticky top-28 relative overflow-hidden">
                                 {/* Glow Effect */}
                                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#A944FF] to-transparent"></div>
 
@@ -265,8 +265,8 @@ export default function PedidosPageDisco() {
                                         <span className="text-white font-bold">$0</span>
                                     </div>
                                     <div className="flex justify-between items-end pt-6 border-t border-[#6C3FA8]/30">
-                                        <span className="text-lg font-bold text-white">Total a Pagar</span>
-                                        <span className="text-3xl font-black text-[#A944FF] drop-shadow-[0_0_10px_rgba(169,68,255,0.3)]">
+                                        <span className="text-base sm:text-lg font-bold text-white">Total a Pagar</span>
+                                        <span className="text-2xl sm:text-3xl font-black text-[#A944FF] drop-shadow-[0_0_10px_rgba(169,68,255,0.3)]">
                                             ${totalPedido.toLocaleString("es-CO")}
                                         </span>
                                     </div>
