@@ -32,6 +32,7 @@ ALLOWED_HOSTS = [
     '192.168.18.6',
     '127.0.0.1',
     'localhost',
+    'mandala-proyect.vercel.app' # Es mejor sin https:// y sin la barra al final
 ]
 
 # Añadimos la URL de Render de forma dinámica
@@ -82,6 +83,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     # Añade aquí la URL de tu frontend cuando lo despliegues en Vercel
     # "https://tu-frontend.vercel.app",
+    # URL del frontend desplegado en Vercel
+    "https://mandala-proyect.vercel.app",
 ]
 
 TEMPLATES = [
