@@ -84,7 +84,8 @@ ROOT_URLCONF = 'backend.urls'
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^http://localhost:5173$",
     r"^http://127\.0\.0\.1:5173$",
-    r"^https://mandala-proyect-.*\.vercel\.app$", # Permite cualquier subdominio de tu proyecto en Vercel
+    r"^https://mandala-proyect-.*\.vercel\.app$", # Permite cualquier URL de despliegue/preview
+    r"^https://mandala-proyect\.vercel\.app$",   # Permite la URL de producción principal
 ]
 
 TEMPLATES = [
