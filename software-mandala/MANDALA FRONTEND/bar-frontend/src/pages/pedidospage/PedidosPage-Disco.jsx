@@ -173,7 +173,7 @@ export default function PedidosPageDisco() {
                                             </div>
 
                                             {/* Controls */}
-                                            <div className="flex flex-wrap items-center justify-between gap-4 w-full sm:w-auto sm:flex-nowrap sm:flex-col sm:items-end">
+                                            <div className="flex flex-wrap items-center justify-end gap-x-6 gap-y-3 w-full sm:w-auto sm:flex-nowrap sm:flex-col sm:items-end">
                                                 <div className="flex items-center bg-[#0E0D23] rounded-lg p-1 border border-[#6C3FA8]/50 order-2 sm:order-1">
                                                     <button
                                                         onClick={() => {
