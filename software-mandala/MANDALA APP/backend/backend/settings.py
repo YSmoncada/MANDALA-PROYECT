@@ -78,12 +78,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'backend.urls'
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Frontend local con Vite
-    "http://127.0.0.1:5173",
-    # URLs del frontend desplegado en Vercel
-    "https://mandala-proyect.vercel.app",
-    "https://mandala-proyect-9a9g52cs5-ysmoncadas-projects.vercel.app", # URL específica del despliegue
+# Configuración de CORS más flexible para Vercel
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^http://localhost:5173$",
+    r"^http://127\.0\.0\.1:5173$",
+    r"^https://mandala-proyect-.*\.vercel\.app$", # Permite cualquier subdominio de tu proyecto en Vercel
 ]
 
 TEMPLATES = [
