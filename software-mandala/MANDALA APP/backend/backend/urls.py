@@ -18,8 +18,8 @@ router.register(r'meseras', MeseraViewSet, basename='mesera')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/meseras/total-pedidos/', MeseraTotalPedidosView.as_view(), name='mesera-total-pedidos'), # URL específica primero
-    path('api/', include(router.urls)),
+    path('meseras/total-pedidos/', MeseraTotalPedidosView.as_view(), name='mesera-total-pedidos'), # URL específica primero
+    path('', include(router.urls)), # Eliminamos el prefijo 'api/'
 ]
 
 # Servir archivos media en desarrollo
