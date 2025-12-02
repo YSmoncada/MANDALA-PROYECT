@@ -194,35 +194,37 @@ const HistorialPedidosPageDisco = () => {
 
                 {/* Filters */}
                 <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-6 mb-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <label className="flex items-center gap-2 mb-2 text-sm font-semibold text-white">
-                                <User size={16} className="text-yellow-400" /> Mesera
-                            </label>
-                            <select
-                                value={meseraSeleccionada}
-                                onChange={e => setMeseraSeleccionada(e.target.value)}
-                                className="bg-gray-900/80 backdrop-blur-sm border border-purple-500/30 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block w-full p-3 col-span-1 sm:col-span-2"
-                            >
-                                <option value="">-- Todas --</option>
-                                {meseras.map(m => (
-                                    <option key={m.id} value={m.id}>{m.nombre}</option>
-                                ))}
-                            </select>
-                            <label className="flex items-center gap-2 mb-2 text-sm font-semibold text-white">
-                                <Calendar size={16} className="text-yellow-400" /> Fecha
-                            </label>
-                            <input
-                                type="date"
-                                value={fechaSeleccionada}
-                                onChange={e => setFechaSeleccionada(e.target.value)}
-                                className="bg-gray-900/80 backdrop-blur-sm border border-purple-500/30 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block w-full p-3 col-span-1 sm:col-span-2"
-                            />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-4">
+                            <div>
+                                <label className="flex items-center gap-2 mb-2 text-sm font-semibold text-white">
+                                    <User size={16} className="text-yellow-400" /> Mesera
+                                </label>
+                                <select
+                                    value={meseraSeleccionada}
+                                    onChange={e => setMeseraSeleccionada(e.target.value)}
+                                    className="bg-gray-900/80 backdrop-blur-sm border border-purple-500/30 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block w-full p-3"
+                                >
+                                    <option value="">-- Todas --</option>
+                                    {meseras.map(m => (<option key={m.id} value={m.id}>{m.nombre}</option>))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="flex items-center gap-2 mb-2 text-sm font-semibold text-white">
+                                    <Calendar size={16} className="text-yellow-400" /> Fecha
+                                </label>
+                                <input
+                                    type="date"
+                                    value={fechaSeleccionada}
+                                    onChange={e => setFechaSeleccionada(e.target.value)}
+                                    className="bg-gray-900/80 backdrop-blur-sm border border-purple-500/30 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block w-full p-3"
+                                />
+                            </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-3 items-end">
+                        <div className="flex items-end">
                             <button
                                 onClick={limpiarFiltros}
-                                className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg w-full transition-all hover:scale-105 col-span-2"
+                                className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg w-full transition-all hover:scale-105"
                             >
                                 Limpiar Todo
                             </button>
