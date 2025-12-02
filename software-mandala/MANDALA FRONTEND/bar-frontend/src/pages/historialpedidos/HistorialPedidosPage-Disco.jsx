@@ -211,19 +211,27 @@ const HistorialPedidosPageDisco = () => {
                         </div>
 
                         {/* Date Filter */}
-                        <div className="w-full overflow-hidden">
+                        <div className="w-full">
                             <label className="flex items-center gap-2 mb-2 text-xs sm:text-sm font-semibold text-white">
                                 <Calendar size={16} className="text-yellow-400" /> Fecha
                             </label>
-                            <div className="overflow-hidden">
-                                <input
-                                    type="date"
-                                    value={fechaSeleccionada}
-                                    onChange={e => setFechaSeleccionada(e.target.value)}
-                                    className="bg-gray-900/80 backdrop-blur-sm border border-purple-500/30 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block w-full p-2.5 sm:p-3"
-                                    style={{ boxSizing: 'border-box', width: '100%' }}
-                                />
-                            </div>
+                            <input
+                                type="date"
+                                value={fechaSeleccionada}
+                                onChange={e => setFechaSeleccionada(e.target.value)}
+                                className="bg-gray-900/80 backdrop-blur-sm border border-purple-500/30 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block w-full p-2.5 sm:p-3"
+                                style={{
+                                    boxSizing: 'border-box',
+                                    WebkitAppearance: 'none',
+                                    MozAppearance: 'none',
+                                    appearance: 'none',
+                                    backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23FCD34D\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3crect x=\'3\' y=\'4\' width=\'18\' height=\'18\' rx=\'2\' ry=\'2\'%3e%3c/rect%3e%3cline x1=\'16\' y1=\'2\' x2=\'16\' y2=\'6\'%3e%3c/line%3e%3cline x1=\'8\' y1=\'2\' x2=\'8\' y2=\'6\'%3e%3c/line%3e%3cline x1=\'3\' y1=\'10\' x2=\'21\' y2=\'10\'%3e%3c/line%3e%3c/svg%3e")',
+                                    backgroundRepeat: 'no-repeat',
+                                    backgroundPosition: 'right 0.75rem center',
+                                    backgroundSize: '1.25rem',
+                                    paddingRight: '2.5rem'
+                                }}
+                            />
                         </div>
 
                         {/* Clear Button */}
