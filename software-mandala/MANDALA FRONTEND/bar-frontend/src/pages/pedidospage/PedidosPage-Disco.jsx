@@ -173,41 +173,40 @@ export default function PedidosPageDisco() {
                                             </div>
 
                                             {/* Controls */}
-                                            <div className="flex flex-wrap items-center justify-end gap-x-6 gap-y-3 w-full sm:w-auto sm:flex-nowrap sm:flex-col sm:items-end">
-                                                <div className="flex items-center bg-[#0E0D23] rounded-lg p-1 border border-[#6C3FA8]/50 order-2 sm:order-1">
+                                            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+                                                <div className="flex items-center justify-between w-full sm:w-auto">
+                                                    <div className="flex items-center bg-[#0E0D23] rounded-lg p-1 border border-[#6C3FA8]/50">
+                                                        <button
+                                                            onClick={() => {
+                                                                if (item.cantidad > 1) {
+                                                                    onUpdateCantidad(item.producto.id, item.cantidad - 1);
+                                                                } else {
+                                                                    onRemoveItem(item.producto.id);
+                                                                }
+                                                            }}
+                                                            className="w-7 h-7 flex items-center justify-center text-[#8A7BAF] hover:text-white hover:bg-[#441E73] rounded-md transition-colors"
+                                                        >
+                                                            <Minus size={16} />
+                                                        </button>
+                                                        <span className="w-10 text-center font-bold text-white">{item.cantidad}</span>
+                                                        <button
+                                                            onClick={() => onUpdateCantidad(item.producto.id, item.cantidad + 1)}
+                                                            className="w-7 h-7 flex items-center justify-center text-[#8A7BAF] hover:text-white hover:bg-[#441E73] rounded-md transition-colors"
+                                                        >
+                                                            <Plus size={16} />
+                                                        </button>
+                                                    </div>
                                                     <button
-                                                        onClick={() => {
-                                                            if (item.cantidad > 1) {
-                                                                onUpdateCantidad(item.producto.id, item.cantidad - 1);
-                                                            } else {
-                                                                onRemoveItem(item.producto.id);
-                                                            }
-                                                        }}
-                                                        className="w-7 h-7 flex items-center justify-center text-[#8A7BAF] hover:text-white hover:bg-[#441E73] rounded-md transition-colors"
+                                                        onClick={() => onRemoveItem(item.producto.id)}
+                                                        className="p-3 text-[#8A7BAF] hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors sm:hidden"
                                                     >
-                                                        <Minus size={16} />
-                                                    </button>
-                                                    <span className="w-10 text-center font-bold text-white">{item.cantidad}</span>
-                                                    <button
-                                                        onClick={() => onUpdateCantidad(item.producto.id, item.cantidad + 1)}
-                                                        className="w-7 h-7 flex items-center justify-center text-[#8A7BAF] hover:text-white hover:bg-[#441E73] rounded-md transition-colors"
-                                                    >
-                                                        <Plus size={16} />
+                                                        <Trash2 size={20} />
                                                     </button>
                                                 </div>
 
-                                                <div className="text-left sm:text-right order-1 sm:order-2">
-                                                    <p className="font-black text-lg sm:text-xl text-white">
-                                                        ${(parseFloat(item.producto.precio) * item.cantidad).toLocaleString("es-CO")}
-                                                    </p>
-                                                </div>
-
-                                                <button
-                                                    onClick={() => onRemoveItem(item.producto.id)}
-                                                    className="p-3 text-[#8A7BAF] hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors order-3 sm:hidden"
-                                                >
-                                                    <Trash2 size={20} />
-                                                </button>
+                                                <p className="font-black text-lg sm:text-xl text-white text-center sm:text-right w-full sm:w-auto sm:min-w-[100px]">
+                                                    ${(parseFloat(item.producto.precio) * item.cantidad).toLocaleString("es-CO")}
+                                                </p>
                                             </div>
                                         </div>
                                     ))}
