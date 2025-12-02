@@ -114,7 +114,7 @@ export default function PedidosPageDisco() {
 
             <HeaderPedidosDisco mesera={mesera} onLogout={handleLogout} codigoConfirmado={codigoConfirmado} />
 
-            <main className="flex-1 p-4 sm:p-8 relative z-10">
+            <main className="flex-1 p-3 sm:p-8 relative z-10 overflow-x-hidden">
 
                 {orderItems.length === 0 ? (
                     <div className="bg-[#441E73]/80 backdrop-blur-xl border border-[#6C3FA8] rounded-2xl p-12 text-center shadow-[0_0_40px_rgba(0,0,0,0.3)] max-w-md w-full animate-fadeIn relative overflow-hidden">
@@ -136,24 +136,24 @@ export default function PedidosPageDisco() {
                         </button>
                     </div>
                 ) : (
-                    <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
 
                         {/* Left Column: Order Items */}
-                        <div className="lg:col-span-2 space-y-6">
-                            <div className="bg-[#441E73]/60 backdrop-blur-xl border border-[#6C3FA8] rounded-2xl p-4 sm:p-8 shadow-xl">
-                                <h2 className="text-2xl font-bold text-white mb-8 flex items-center gap-4 tracking-tight">
+                        <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+                            <div className="bg-[#441E73]/60 backdrop-blur-xl border border-[#6C3FA8] rounded-2xl p-3 sm:p-8 shadow-xl">
+                                <h2 className="text-lg sm:text-2xl font-bold text-white mb-4 sm:mb-8 flex flex-wrap items-center gap-2 sm:gap-4 tracking-tight">
                                     <div className="p-2 bg-[#A944FF]/10 rounded-lg">
-                                        <ShoppingCart className="text-[#A944FF]" size={24} />
+                                        <ShoppingCart className="text-[#A944FF]" size={20} />
                                     </div>
-                                    DETALLE DEL PEDIDO
-                                    <span className="text-xs font-bold text-[#A944FF] ml-auto bg-[#A944FF]/10 px-4 py-2 rounded-full border border-[#A944FF]/20 uppercase tracking-wider">{orderItems.length} items</span>
+                                    <span className="flex-shrink-0">DETALLE DEL PEDIDO</span>
+                                    <span className="text-xs font-bold text-[#A944FF] ml-auto bg-[#A944FF]/10 px-3 py-1.5 rounded-full border border-[#A944FF]/20 uppercase tracking-wider">{orderItems.length} items</span>
                                 </h2>
 
                                 <div className="space-y-4 max-h-[60vh] lg:max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
                                     {orderItems.map((item, index) => (
                                         <div
                                             key={item.producto.id || index}
-                                            className="group flex flex-col sm:flex-row items-center gap-4 bg-[#2B0D49]/80 hover:bg-[#2B0D49] p-4 rounded-2xl border border-[#6C3FA8]/50 hover:border-[#A944FF] transition-all duration-300 shadow-md"
+                                            className="group flex flex-col sm:flex-row items-center gap-3 sm:gap-4 bg-[#2B0D49]/80 hover:bg-[#2B0D49] p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-[#6C3FA8]/50 hover:border-[#A944FF] transition-all duration-300 shadow-md"
                                         >
                                             {/* Product Image */}
                                             <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[#0E0D23] rounded-xl p-2 flex-shrink-0 border border-[#6C3FA8]/30">
@@ -165,15 +165,15 @@ export default function PedidosPageDisco() {
                                             </div>
 
                                             {/* Product Info */}
-                                            <div className="flex-1 text-center sm:text-left">
-                                                <h3 className="font-bold text-white text-xl mb-1">{item.producto.nombre}</h3>
-                                                <p className="text-[#A944FF] font-bold tracking-wide">
+                                            <div className="flex-1 text-center sm:text-left min-w-0">
+                                                <h3 className="font-bold text-white text-base sm:text-xl mb-1 truncate">{item.producto.nombre}</h3>
+                                                <p className="text-[#A944FF] font-bold tracking-wide text-sm sm:text-base">
                                                     ${parseFloat(item.producto.precio).toLocaleString("es-CO")}
                                                 </p>
                                             </div>
 
                                             {/* Controls */}
-                                            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+                                            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto">
                                                 <div className="flex items-center justify-between w-full sm:w-auto">
                                                     <div className="flex items-center bg-[#0E0D23] rounded-lg p-1 border border-[#6C3FA8]/50">
                                                         <button
@@ -216,20 +216,20 @@ export default function PedidosPageDisco() {
 
                         {/* Right Column: Summary & Checkout */}
                         <div className="lg:col-span-1">
-                            <div className="bg-[#441E73]/80 backdrop-blur-xl border border-[#6C3FA8] rounded-2xl p-6 sm:p-8 shadow-[0_0_40px_rgba(0,0,0,0.3)] lg:sticky top-28 relative overflow-hidden">
+                            <div className="bg-[#441E73]/80 backdrop-blur-xl border border-[#6C3FA8] rounded-2xl p-4 sm:p-8 shadow-[0_0_40px_rgba(0,0,0,0.3)] lg:sticky top-28 relative overflow-hidden">
                                 {/* Glow Effect */}
                                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#A944FF] to-transparent"></div>
 
-                                <h2 className="text-xl font-bold text-white mb-6 sm:mb-8 flex items-center gap-3 tracking-tight">
+                                <h2 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-8 flex items-center gap-3 tracking-tight">
                                     <div className="p-2 bg-[#A944FF]/10 rounded-lg">
-                                        <CreditCard className="text-[#A944FF]" size={20} />
+                                        <CreditCard className="text-[#A944FF]" size={18} />
                                     </div>
                                     RESUMEN
                                 </h2>
 
                                 {/* Mesa Selector */}
-                                <div className="mb-6 sm:mb-8">
-                                    <label htmlFor="mesa-select" className="block mb-2 text-xs font-bold text-[#C2B6D9] uppercase tracking-widest">
+                                <div className="mb-4 sm:mb-8">
+                                    <label htmlFor="mesa-select" className="block mb-2 text-xs font-bold text-[#C2B6D9] uppercase tracking-wider sm:tracking-widest">
                                         Seleccionar Mesa
                                     </label>
                                     <div className="relative">
@@ -237,7 +237,7 @@ export default function PedidosPageDisco() {
                                             id="mesa-select"
                                             value={selectedMesaId}
                                             onChange={(e) => setSelectedMesaId(e.target.value)}
-                                            className="w-full bg-[#2B0D49] border border-[#6C3FA8] text-white text-sm rounded-xl focus:ring-[#A944FF] focus:border-[#A944FF] block p-3.5 transition-all appearance-none cursor-pointer hover:bg-[#2B0D49]/80"
+                                            className="w-full bg-[#2B0D49] border border-[#6C3FA8] text-white text-sm rounded-xl focus:ring-[#A944FF] focus:border-[#A944FF] block p-2.5 sm:p-3.5 transition-all appearance-none cursor-pointer hover:bg-[#2B0D49]/80"
                                             disabled={mesas.length === 0}
                                         >
                                             <option value="">-- Seleccionar --</option>
@@ -254,35 +254,35 @@ export default function PedidosPageDisco() {
                                 </div>
 
                                 {/* Totals */}
-                                <div className="space-y-3 py-5 border-t border-[#6C3FA8]/30">
-                                    <div className="flex justify-between text-[#C2B6D9]">
+                                <div className="space-y-2 sm:space-y-3 py-4 sm:py-5 border-t border-[#6C3FA8]/30">
+                                    <div className="flex justify-between text-sm sm:text-base text-[#C2B6D9]">
                                         <span>Subtotal</span>
                                         <span className="text-white font-bold">${totalPedido.toLocaleString("es-CO")}</span>
                                     </div>
-                                    <div className="flex justify-between text-[#C2B6D9]">
+                                    <div className="flex justify-between text-sm sm:text-base text-[#C2B6D9]">
                                         <span>Servicio</span>
                                         <span className="text-white font-bold">$0</span>
                                     </div>
-                                    <div className="flex justify-between items-end pt-5 border-t border-[#6C3FA8]/30">
-                                        <span className="text-base sm:text-lg font-bold text-white">Total a Pagar</span>
-                                        <span className="text-2xl sm:text-3xl font-black text-[#A944FF] drop-shadow-[0_0_10px_rgba(169,68,255,0.3)]">
+                                    <div className="flex justify-between items-end pt-3 sm:pt-5 border-t border-[#6C3FA8]/30">
+                                        <span className="text-sm sm:text-lg font-bold text-white">Total a Pagar</span>
+                                        <span className="text-xl sm:text-3xl font-black text-[#A944FF] drop-shadow-[0_0_10px_rgba(169,68,255,0.3)]">
                                             ${totalPedido.toLocaleString("es-CO")}
                                         </span>
                                     </div>
                                 </div>
 
                                 {/* Actions */}
-                                <div className="mt-8 space-y-3">
+                                <div className="mt-6 sm:mt-8 space-y-2 sm:space-y-3">
                                     <button
                                         onClick={handleFinalizarPedido}
                                         disabled={orderItems.length === 0}
-                                        className="w-full py-4 rounded-xl bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] hover:brightness-110 text-white font-bold uppercase tracking-widest text-xs shadow-lg shadow-[#A944FF]/30 hover:shadow-[#A944FF]/50 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                                        className="w-full py-3 sm:py-4 rounded-xl bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] hover:brightness-110 text-white font-bold uppercase tracking-wider sm:tracking-widest text-xs shadow-lg shadow-[#A944FF]/30 hover:shadow-[#A944FF]/50 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 sm:gap-3"
                                     >
                                         Confirmar Pedido <ArrowRight size={16} />
                                     </button>
                                     <button
                                         onClick={onClearOrder}
-                                        className="w-full py-3 rounded-xl bg-white/5 text-[#C2B6D9] font-bold uppercase tracking-widest text-xs hover:bg-white/10 hover:text-white transition-all border border-white/5"
+                                        className="w-full py-2.5 sm:py-3 rounded-xl bg-white/5 text-[#C2B6D9] font-bold uppercase tracking-wider sm:tracking-widest text-xs hover:bg-white/10 hover:text-white transition-all border border-white/5"
                                     >
                                         Cancelar Todo
                                     </button>
