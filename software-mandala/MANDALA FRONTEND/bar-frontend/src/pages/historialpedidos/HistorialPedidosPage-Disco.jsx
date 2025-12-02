@@ -219,8 +219,7 @@ const HistorialPedidosPageDisco = () => {
                                 type="date"
                                 value={fechaSeleccionada}
                                 onChange={e => setFechaSeleccionada(e.target.value)}
-                                className="bg-gray-900/80 backdrop-blur-sm border border-purple-500/30 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block w-full p-2.5 sm:p-3 max-w-full"
-                                style={{ maxWidth: '100%' }}
+                                className="bg-gray-900/80 backdrop-blur-sm border border-purple-500/30 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block w-full p-2.5 sm:p-3"
                             />
                         </div>
 
