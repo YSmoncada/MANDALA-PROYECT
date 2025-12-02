@@ -211,16 +211,19 @@ const HistorialPedidosPageDisco = () => {
                         </div>
 
                         {/* Date Filter */}
-                        <div className="w-full">
+                        <div className="w-full overflow-hidden">
                             <label className="flex items-center gap-2 mb-2 text-xs sm:text-sm font-semibold text-white">
                                 <Calendar size={16} className="text-yellow-400" /> Fecha
                             </label>
-                            <input
-                                type="date"
-                                value={fechaSeleccionada}
-                                onChange={e => setFechaSeleccionada(e.target.value)}
-                                className="bg-gray-900/80 backdrop-blur-sm border border-purple-500/30 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block w-full p-2.5 sm:p-3"
-                            />
+                            <div className="overflow-hidden">
+                                <input
+                                    type="date"
+                                    value={fechaSeleccionada}
+                                    onChange={e => setFechaSeleccionada(e.target.value)}
+                                    className="bg-gray-900/80 backdrop-blur-sm border border-purple-500/30 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block w-full p-2.5 sm:p-3"
+                                    style={{ boxSizing: 'border-box', width: '100%' }}
+                                />
+                            </div>
                         </div>
 
                         {/* Clear Button */}
