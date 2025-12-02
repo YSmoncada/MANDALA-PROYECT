@@ -287,50 +287,50 @@ const HistorialPedidosPageDisco = () => {
 
                 {/* Order List */}
                 {loading ? (
-                    <div className="text-center py-12">
+                    <div className="text-center py-12 mb-6 sm:mb-8">
                         <div className="inline-block p-4 bg-white/5 rounded-full">
                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400"></div>
                         </div>
                         <p className="text-purple-300 mt-4">Cargando pedidos...</p>
                     </div>
                 ) : (
-                    <div className="space-y-4">
+                    <div className="space-y-4 py-6 sm:py-0 mb-6 sm:mb-8">
                         {pedidos.length > 0 ? pedidos.map(pedido => (
-                            <div key={pedido.id} className="bg-white/5 backdrop-blur-md border border-white/10 hover:border-yellow-400/30 rounded-xl p-6 transition-all duration-300 hover:scale-[1.01]">
-                                <div className="flex justify-between items-start mb-4 pb-3 border-b border-white/10">
+                            <div key={pedido.id} className="bg-white/5 backdrop-blur-md border border-white/10 hover:border-yellow-400/30 rounded-xl p-4 sm:p-6 transition-all duration-300 hover:scale-[1.01]">
+                                <div className="flex flex-col sm:flex-row justify-between items-start mb-4 pb-3 border-b border-white/10 gap-3 sm:gap-0">
                                     <div>
-                                        <div className="flex items-center gap-3 mb-1">
-                                            <h2 className="font-black text-2xl text-white">Pedido #{pedido.id}</h2>
+                                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 mb-1">
+                                            <h2 className="font-black text-xl sm:text-2xl text-white">Pedido #{pedido.id}</h2>
                                             {/* Replaced static badge with StatusSelector */}
                                             <StatusSelector pedido={pedido} />
                                         </div>
                                         <p className="text-sm text-gray-400">Mesa: <span className="text-yellow-400 font-semibold">{pedido.mesa_numero}</span></p>
                                     </div>
-                                    <div className="text-right">
+                                    <div className="text-left sm:text-right w-full sm:w-auto">
                                         <p className="text-xs text-gray-500">{new Date(pedido.fecha_hora).toLocaleDateString()}</p>
                                         <p className="text-sm text-gray-400">{new Date(pedido.fecha_hora).toLocaleTimeString()}</p>
                                     </div>
                                 </div>
                                 <div className="space-y-2 mb-4">
                                     {pedido.productos_detalle.map((item, idx) => (
-                                        <div key={idx} className="flex justify-between items-center bg-black/20 p-3 rounded-lg">
-                                            <div className="flex items-center gap-3">
-                                                <span className="bg-yellow-500/20 text-yellow-400 font-bold px-2 py-1 rounded text-sm">{item.cantidad}x</span>
-                                                <span className="text-white font-medium">{item.producto_nombre}</span>
+                                        <div key={idx} className="flex justify-between items-center bg-black/20 p-2.5 sm:p-3 rounded-lg gap-2">
+                                            <div className="flex items-center gap-2 sm:gap-3">
+                                                <span className="bg-yellow-500/20 text-yellow-400 font-bold px-2 py-1 rounded text-xs sm:text-sm">{item.cantidad}x</span>
+                                                <span className="text-white font-medium text-sm sm:text-base">{item.producto_nombre}</span>
                                             </div>
-                                            <span className="text-white font-bold">{(parseFloat(item.producto_precio) * item.cantidad).toLocaleString('es-CO')}</span>
+                                            <span className="text-white font-bold text-sm sm:text-base whitespace-nowrap">{(parseFloat(item.producto_precio) * item.cantidad).toLocaleString('es-CO')}</span>
                                         </div>
                                     ))}
                                 </div>
                                 <div className="flex justify-between items-center pt-3 border-t border-white/10">
-                                    <span className="text-gray-400 font-medium">Total del Pedido</span>
-                                    <span className="text-3xl font-black text-white">{parseFloat(pedido.total).toLocaleString('es-CO')}</span>
+                                    <span className="text-gray-400 font-medium text-sm sm:text-base">Total del Pedido</span>
+                                    <span className="text-2xl sm:text-3xl font-black text-white">{parseFloat(pedido.total).toLocaleString('es-CO')}</span>
                                 </div>
                             </div>
                         )) : (
-                            <div className="text-center py-16">
-                                <div className="inline-block p-8 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl">
-                                    <p className="text-gray-400 text-lg">
+                            <div className="text-center py-12 sm:py-16 mb-6 sm:mb-8">
+                                <div className="inline-block p-6 sm:p-8 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl">
+                                    <p className="text-gray-400 text-base sm:text-lg">
                                         {(() => {
                                             if (meseraSeleccionada && fechaSeleccionada) return 'No hay pedidos para esta mesera en la fecha seleccionada.';
                                             if (meseraSeleccionada) return 'No hay pedidos para esta mesera.';
