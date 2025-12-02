@@ -128,14 +128,14 @@ export default function PedidosDisco() {
                     <div className="w-full max-w-6xl mx-auto -mt-16">
                         <button
                             onClick={() => navigate("/")}
-                            // Updated to match other sections: Larger size, normal text, rounded-lg
-                            className="absolute top-6 left-6 z-50 flex items-center gap-2 rounded-lg bg-[#441E73]/50 border border-[#6C3FA8] px-4 py-2 text-white hover:bg-[#441E73] transition-all backdrop-blur-md shadow-lg hover:scale-105"
+                            // Fixed position for mobile (top-4), absolute for desktop (sm:top-6 sm:left-6)
+                            className="fixed top-4 left-4 sm:absolute sm:top-6 sm:left-6 z-50 flex items-center gap-2 rounded-lg bg-[#441E73]/50 border border-[#6C3FA8] px-4 py-2 text-white hover:bg-[#441E73] transition-all backdrop-blur-md shadow-lg hover:scale-105"
                         >
                             <ArrowLeft size={18} />
                             <span className="font-medium">Volver</span>
                         </button>
 
-                        <div className="text-center mb-12 mt-2">
+                        <div className="text-center mb-12 mt-16 sm:mt-2">
                             <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight drop-shadow-[0_0_25px_rgba(169,68,255,0.4)]">
                                 BIENVENIDA
                             </h1>
