@@ -114,7 +114,7 @@ export default function PedidosPageDisco() {
 
             <HeaderPedidosDisco mesera={mesera} onLogout={handleLogout} codigoConfirmado={codigoConfirmado} />
 
-            <div className="flex flex-col items-center flex-1 p-4 sm:p-8 relative z-10">
+            <main className="flex-1 p-4 sm:p-8 relative z-10">
 
                 {orderItems.length === 0 ? (
                     <div className="bg-[#441E73]/80 backdrop-blur-xl border border-[#6C3FA8] rounded-2xl p-12 text-center shadow-[0_0_40px_rgba(0,0,0,0.3)] max-w-md w-full animate-fadeIn relative overflow-hidden">
@@ -136,7 +136,7 @@ export default function PedidosPageDisco() {
                         </button>
                     </div>
                 ) : (
-                    <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                         {/* Left Column: Order Items */}
                         <div className="lg:col-span-2 space-y-6">
@@ -292,7 +292,7 @@ export default function PedidosPageDisco() {
 
                     </div>
                 )}
-            </div>
+            </main>
         </div>
     );
 }
