@@ -136,7 +136,7 @@ export default function PedidosPageDisco() {
                         </button>
                     </div>
                 ) : (
-                    <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
+                    <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-2 sm:gap-8">
 
                         {/* Left Column: Order Items */}
                         <div className="lg:col-span-2 space-y-4 sm:space-y-6">
@@ -174,7 +174,7 @@ export default function PedidosPageDisco() {
 
                                             {/* Controls */}
                                             <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto">
-                                                <div className="flex items-center justify-between w-full sm:w-auto">
+                                                <div className="flex items-center justify-center w-full sm:w-auto">
                                                     <div className="flex items-center bg-[#0E0D23] rounded-lg p-1 border border-[#6C3FA8]/50">
                                                         <button
                                                             onClick={() => {
@@ -198,7 +198,7 @@ export default function PedidosPageDisco() {
                                                     </div>
                                                     <button
                                                         onClick={() => onRemoveItem(item.producto.id)}
-                                                        className="p-3 text-[#8A7BAF] hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors sm:hidden"
+                                                        className="ml-3 p-3 text-[#8A7BAF] hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors sm:hidden"
                                                     >
                                                         <Trash2 size={20} />
                                                     </button>
