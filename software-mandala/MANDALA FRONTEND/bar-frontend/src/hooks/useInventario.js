@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { validateImageFile, createImagePreview } from "../utils/imageUtils";
 import toast from 'react-hot-toast';
+import { uploadToCloudinary } from "../utils/cloudinaryUploader"; // Importar el uploader
 import * as inventarioService from "../services/inventarioService";
 import { useMovimientos } from "./useMovimientos";
 
@@ -14,7 +15,7 @@ const initialForm = {
     unidad: "",
     proveedor: "",
     ubicacion: "",
-    imagen: null,
+    imagen: "", // Ahora será una URL (string)
 };
 
 export const useInventario = () => {
@@ -25,7 +26,9 @@ export const useInventario = () => {
     const [query, setQuery] = useState("");
     const [categoria, setCategoria] = useState("all");
     const [imagePreview, setImagePreview] = useState(null);
+    const [imageFile, setImageFile] = useState(null); // Estado para el archivo de imagen
     const [originalImageUrl, setOriginalImageUrl] = useState(null);
+    const [isUploading, setIsUploading] = useState(false); // Estado para el feedback de subida
 
     const fetchProductos = async () => {
         const data = await inventarioService.getProductos();
@@ -55,13 +58,15 @@ export const useInventario = () => {
         setForm(initialForm);
         setEditId(null);
         setImagePreview(null);
+        setImageFile(null);
         setOriginalImageUrl(null);
         setModalOpen(true);
     };
 
     const handleEdit = (producto) => {
-        setForm({ ...producto, imagen: null });
+        setForm(producto); // Carga el producto completo, incluyendo la URL de la imagen
         setEditId(producto.id);
+        setImageFile(null);
         setImagePreview(null);
         setOriginalImageUrl(producto.imagen);
         setModalOpen(true);
@@ -79,11 +84,17 @@ export const useInventario = () => {
         setForm({ ...form, [name]: value });
     };
 
-    const handleImageChange = (e) => {
+    const handleImageChange = async (e) => {
         const file = e.target.files[0];
-        if (validateImageFile(file)) {
-            setForm({ ...form, imagen: file });
-            createImagePreview(file, setImagePreview);
+        if (!file) return;
+
+        try {
+            validateImageFile(file);
+            const preview = await createImagePreview(file);
+            setImagePreview(preview); // Muestra la previsualización
+            setImageFile(file); // Guarda el archivo para subirlo al guardar
+        } catch (error) {
+            toast.error(error.message);
         }
     };
 
@@ -100,7 +111,6 @@ export const useInventario = () => {
             return; // Detiene el envío del formulario
         }
 
-
         // --- VALIDACIONES ---
         const stockActual = parseInt(form.stock, 10);
         const stockMinimo = parseInt(form.stock_minimo, 10) || 0;
@@ -112,14 +122,38 @@ export const useInventario = () => {
             return; // Detiene el envío del formulario
         }
 
-        const data = new FormData();
-        Object.keys(form).forEach((key) => {
-            if (form[key] !== null) data.append(key, form[key]);
-        });
+        let imageUrl = editId ? originalImageUrl : ''; // Conserva la URL si se está editando
 
-        await inventarioService.saveProducto(editId, data);
-        fetchProductos();
-        setModalOpen(false);
+        // Si hay un nuevo archivo de imagen, súbelo a Cloudinary
+        if (imageFile) {
+            setIsUploading(true);
+            const uploadToast = toast.loading('Subiendo imagen...');
+            try {
+                imageUrl = await uploadToCloudinary(imageFile);
+                toast.success('Imagen subida con éxito.', { id: uploadToast });
+            } catch (error) {
+                setIsUploading(false);
+                toast.error('Error al subir la imagen.', { id: uploadToast });
+                console.error("Error al subir a Cloudinary:", error);
+                return; // Detiene el proceso si la subida de imagen falla
+            } finally {
+                setIsUploading(false);
+            }
+        }
+
+        // Prepara el payload para tu backend, ahora con la URL de la imagen
+        const payload = {
+            ...form,
+            imagen: imageUrl, // Envía la URL de Cloudinary
+        };
+
+        try {
+            await inventarioService.saveProducto(editId, payload); // saveProducto ahora recibe un objeto JSON
+            fetchProductos();
+            setModalOpen(false);
+        } catch (error) {
+            console.error("Error al guardar el producto:", error);
+        }
     };
 
     // Usar el hook de movimientos
@@ -128,7 +162,7 @@ export const useInventario = () => {
     return {
         filtered, modalOpen, form, editId, query, categorias, totalProductos, totalUnidades,
         categoria, // Exportamos el estado de la categoría seleccionada
-        imagePreview, originalImageUrl, setModalOpen, setQuery, setCategoria, handleAdd,
+        imagePreview, originalImageUrl, isUploading, setModalOpen, setQuery, setCategoria, handleAdd,
         handleEdit, handleDelete, handleSubmit, handleChange, handleImageChange, handleMovimiento,
         fetchProductos,
     };
