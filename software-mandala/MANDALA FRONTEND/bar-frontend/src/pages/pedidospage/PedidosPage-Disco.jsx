@@ -174,8 +174,8 @@ export default function PedidosPageDisco() {
 
                                             {/* Controls */}
                                             <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto">
-                                                <div className="flex items-center justify-between w-full sm:w-auto sm:justify-center gap-2">
-                                                    <div className="mx-auto sm:mx-0 flex items-center bg-[#0E0D23] rounded-lg p-1 border border-[#6C3FA8]/50">
+                                                <div className="relative flex items-center justify-center w-full sm:w-auto">
+                                                    <div className="flex items-center bg-[#0E0D23] rounded-lg p-1 border border-[#6C3FA8]/50">
                                                         <button
                                                             onClick={() => {
                                                                 if (item.cantidad > 1) {
@@ -198,7 +198,7 @@ export default function PedidosPageDisco() {
                                                     </div>
                                                     <button
                                                         onClick={() => onRemoveItem(item.producto.id)}
-                                                        className="p-2 text-[#8A7BAF] hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors sm:hidden flex-shrink-0"
+                                                        className="absolute right-0 p-2 text-[#8A7BAF] hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors sm:hidden flex-shrink-0"
                                                     >
                                                         <Trash2 size={20} />
                                                     </button>
