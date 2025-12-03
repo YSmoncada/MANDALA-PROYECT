@@ -11,7 +11,7 @@ function FiltersSummary({
   totalUnidades = 0
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 mb-6">
+    <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 mb-6">
       {/* Barra de búsqueda */}
       <div className="flex-1 relative">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -19,7 +19,7 @@ function FiltersSummary({
         </div>
         <input
           type="text"
-          placeholder="Buscar por nombre del producto..."
+          placeholder="Buscar producto..."
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           className="w-full pl-12 pr-4 py-3 rounded-lg bg-gray-600 bg-opacity-80 text-white placeholder-gray-300 focus:outline-none focus:ring-0 border-0"
@@ -27,11 +27,11 @@ function FiltersSummary({
       </div>
 
       {/* Selector de categoría */}
-      <div>
+      <div className="w-full md:w-auto">
         <select
           value={categoriaSeleccionada}
           onChange={(e) => onCategoriaChange(e.target.value)}
-          className="px-4 py-3 rounded-lg bg-gray-600 bg-opacity-80 text-white focus:outline-none focus:ring-0 border-0 cursor-pointer min-w-[200px]"
+          className="w-full md:w-auto px-4 py-3 rounded-lg bg-gray-600 bg-opacity-80 text-white focus:outline-none focus:ring-0 border-0 cursor-pointer min-w-[200px]"
         >
           <option value="all">Todas las categorías</option>
           {categorias.filter(cat => cat && cat !== 'all').map((cat, i) => (
@@ -43,23 +43,23 @@ function FiltersSummary({
       </div>
 
       {/* Contadores */}
-      <div className="flex gap-8">
+      <div className="flex gap-8 justify-center md:justify-start bg-gray-800/30 p-3 rounded-lg md:bg-transparent md:p-0">
         {/* Contador de productos */}
         <div className="text-center">
-          <div className="text-3xl font-bold text-white">
+          <div className="text-2xl md:text-3xl font-bold text-white">
             {(totalProductos || 0)}
           </div>
-          <div className="text-sm text-gray-300">
+          <div className="text-xs md:text-sm text-gray-300">
             Productos
           </div>
         </div>
 
         {/* Contador de unidades */}
-        <div className="text-center">
-          <div className="text-3xl font-bold text-white">
+        <div className="text-center border-l border-gray-600 pl-8 md:border-0 md:pl-0">
+          <div className="text-2xl md:text-3xl font-bold text-white">
             {(totalUnidades || 0)}
           </div>
-          <div className="text-sm text-gray-300">
+          <div className="text-xs md:text-sm text-gray-300">
             Unidades
           </div>
         </div>

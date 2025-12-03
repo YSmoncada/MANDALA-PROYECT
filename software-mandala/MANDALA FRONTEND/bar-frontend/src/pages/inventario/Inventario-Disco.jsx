@@ -8,8 +8,8 @@ import FiltersSummary from "./FiltersSummary";
 import { useInventario } from "../../hooks/useInventario";
 
 const Header = () => (
-    <div className="text-center mb-10">
-        <h1 className="text-5xl md:text-6xl font-black mb-3 bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
+    <div className="text-center mb-8 md:mb-10 pt-12 md:pt-0">
+        <h1 className="text-3xl md:text-6xl font-black mb-3 bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
             Gestión de Inventario
         </h1>
         <div className="h-1 w-24 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full mx-auto"></div>
@@ -44,7 +44,7 @@ function InventarioDisco() {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-8 relative">
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-4 md:p-8 relative overflow-x-hidden">
             {/* Subtle background effects */}
             <div className="absolute inset-0 opacity-20">
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl"></div>
@@ -60,7 +60,7 @@ function InventarioDisco() {
                 <span>Volver</span>
             </button>
 
-            <div className="relative z-10 max-w-5xl mx-auto bg-gray-900/50 backdrop-blur-sm border border-purple-500/30 rounded-2xl shadow-2xl p-8">
+            <div className="relative z-10 max-w-5xl mx-auto bg-gray-900/50 backdrop-blur-sm border border-purple-500/30 rounded-2xl shadow-2xl p-4 md:p-8">
                 <InventoryCard onAdd={handleAdd} />
 
                 <FiltersSummary
