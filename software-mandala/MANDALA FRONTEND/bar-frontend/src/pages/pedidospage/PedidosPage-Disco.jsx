@@ -105,7 +105,7 @@ export default function PedidosPageDisco() {
 
     return (
         // Unified Background: Matches Home-Disco and Inventario-Disco
-        <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white selection:bg-purple-500/30">
+        <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white selection:bg-purple-500/30 overflow-x-hidden">
             {/* Background Glows matching Home-Disco */}
             <div className="fixed inset-0 pointer-events-none">
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
@@ -114,7 +114,7 @@ export default function PedidosPageDisco() {
 
             <HeaderPedidosDisco mesera={mesera} onLogout={handleLogout} codigoConfirmado={codigoConfirmado} />
 
-            <main className="flex-1 p-3 pt-6 pb-20 sm:p-8 relative z-10 overflow-x-hidden">
+            <main className="flex-1 p-3 pt-6 pb-20 sm:p-8 relative z-10">
 
                 {orderItems.length === 0 ? (
                     <div className="bg-[#441E73]/80 backdrop-blur-xl border border-[#6C3FA8] rounded-2xl p-12 text-center shadow-[0_0_40px_rgba(0,0,0,0.3)] max-w-md w-full animate-fadeIn relative overflow-hidden">
