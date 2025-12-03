@@ -105,7 +105,7 @@ export default function PedidosPageDisco() {
 
     return (
         // Unified Background: Matches Home-Disco and Inventario-Disco
-        <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white selection:bg-purple-500/30 overflow-x-hidden">
+        <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white selection:bg-purple-500/30 overflow-x-hidden" style={{ WebkitOverflowScrolling: 'touch' }}>
             {/* Background Glows matching Home-Disco */}
             <div className="fixed inset-0 pointer-events-none">
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
@@ -149,7 +149,7 @@ export default function PedidosPageDisco() {
                                     <span className="text-xs font-bold text-[#A944FF] ml-auto bg-[#A944FF]/10 px-3 py-1.5 rounded-full border border-[#A944FF]/20 uppercase tracking-wider">{orderItems.length} items</span>
                                 </h2>
 
-                                <div className="space-y-4 max-h-[35vh] sm:max-h-[60vh] lg:max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                                <div className="space-y-4 max-h-[35vh] sm:max-h-[60vh] lg:max-h-[600px] overflow-y-auto pr-2 custom-scrollbar" style={{ WebkitOverflowScrolling: 'touch' }}>
                                     {orderItems.map((item, index) => (
                                         <div
                                             key={item.producto.id || index}
