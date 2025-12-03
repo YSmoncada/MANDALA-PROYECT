@@ -173,7 +173,7 @@ export default function PedidosPageDisco() {
                                             </div>
 
                                             {/* Controls */}
-                                            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto">
+                                            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto relative">
                                                 <div className="flex items-center justify-center w-full sm:w-auto">
                                                     <div className="flex items-center bg-[#0E0D23] rounded-lg p-1 border border-[#6C3FA8]/50">
                                                         <button
@@ -196,13 +196,15 @@ export default function PedidosPageDisco() {
                                                             <Plus size={16} />
                                                         </button>
                                                     </div>
-                                                    <button
-                                                        onClick={() => onRemoveItem(item.producto.id)}
-                                                        className="ml-3 p-3 text-[#8A7BAF] hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors sm:hidden"
-                                                    >
-                                                        <Trash2 size={20} />
-                                                    </button>
                                                 </div>
+
+                                                {/* Trash button - absolute right on mobile, hidden on desktop */}
+                                                <button
+                                                    onClick={() => onRemoveItem(item.producto.id)}
+                                                    className="absolute right-0 top-1/2 -translate-y-1/2 p-2 text-[#8A7BAF] hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors sm:hidden"
+                                                >
+                                                    <Trash2 size={20} />
+                                                </button>
 
                                                 <p className="font-black text-lg sm:text-xl text-white text-center sm:text-right w-full sm:w-auto sm:min-w-[100px]">
                                                     ${(parseFloat(item.producto.precio) * item.cantidad).toLocaleString("es-CO")}
@@ -215,7 +217,7 @@ export default function PedidosPageDisco() {
                         </div>
 
                         {/* Right Column: Summary & Checkout */}
-                        <div className="lg:col-span-1">
+                        <div className="lg:col-span-1 mb-20 sm:mb-0">
                             <div className="bg-[#441E73]/80 backdrop-blur-xl border border-[#6C3FA8] rounded-2xl p-4 sm:p-8 shadow-[0_0_40px_rgba(0,0,0,0.3)] lg:sticky top-28 relative overflow-hidden">
                                 {/* Glow Effect */}
                                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#A944FF] to-transparent"></div>
