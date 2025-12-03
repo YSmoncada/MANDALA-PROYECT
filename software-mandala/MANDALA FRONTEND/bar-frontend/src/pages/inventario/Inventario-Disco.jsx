@@ -51,14 +51,16 @@ function InventarioDisco() {
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
             </div>
 
-            <div className="relative z-10">
-                <button
-                    onClick={() => navigate(-1)}
-                    className="mb-6 md:mb-0 md:absolute md:top-6 md:left-6 z-10 flex items-center gap-2 text-white bg-purple-600/80 backdrop-blur-sm hover:bg-purple-600 px-4 py-2 rounded-lg transition-all shadow-lg hover:scale-105"
-                >
-                    <ArrowLeft size={18} />
-                    <span>Volver</span>
-                </button>
+            <div className="relative z-10 flex flex-col md:block">
+                <div className="self-start md:absolute md:top-6 md:left-6 z-20 mb-6 md:mb-0">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="flex items-center gap-2 text-white bg-purple-600/80 backdrop-blur-sm hover:bg-purple-600 px-4 py-2 rounded-lg transition-all shadow-lg hover:scale-105"
+                    >
+                        <ArrowLeft size={18} />
+                        <span>Volver</span>
+                    </button>
+                </div>
                 <Header />
             </div>
 
