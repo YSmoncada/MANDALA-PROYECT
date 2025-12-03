@@ -5,7 +5,26 @@ import { API_URL } from '../apiConfig'; // Importar la URL centralizada
 
 export const useOrder = () => {
     const [productos, setProductos] = useState([]);
-    const [orderItems, setOrderItems] = useState([]);
+
+    // Cargar orderItems desde localStorage al iniciar
+    const [orderItems, setOrderItems] = useState(() => {
+        try {
+            const savedOrder = localStorage.getItem('currentOrder');
+            return savedOrder ? JSON.parse(savedOrder) : [];
+        } catch (error) {
+            console.error('Error loading order from localStorage:', error);
+            return [];
+        }
+    });
+
+    // Guardar orderItems en localStorage cada vez que cambien
+    useEffect(() => {
+        try {
+            localStorage.setItem('currentOrder', JSON.stringify(orderItems));
+        } catch (error) {
+            console.error('Error saving order to localStorage:', error);
+        }
+    }, [orderItems]);
 
     useEffect(() => {
         const fetchProductos = async () => {
@@ -35,6 +54,7 @@ export const useOrder = () => {
 
     const clearOrder = () => {
         setOrderItems([]);
+        localStorage.removeItem('currentOrder');
     };
 
     const updateProductQuantity = (productId, newQuantity) => {
