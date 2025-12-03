@@ -8,7 +8,7 @@ import FiltersSummary from "./FiltersSummary";
 import { useInventario } from "../../hooks/useInventario";
 
 const Header = () => (
-    <div className="text-center mb-8 md:mb-10 pt-12 md:pt-0">
+    <div className="text-center mb-8 md:mb-10">
         <h1 className="text-3xl md:text-6xl font-black mb-3 bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
             Gestión de Inventario
         </h1>
@@ -51,14 +51,16 @@ function InventarioDisco() {
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
             </div>
 
-            <Header />
-            <button
-                onClick={() => navigate(-1)}
-                className="absolute top-6 left-6 z-10 flex items-center gap-2 text-white bg-purple-600/80 backdrop-blur-sm hover:bg-purple-600 px-4 py-2 rounded-lg transition-all shadow-lg hover:scale-105"
-            >
-                <ArrowLeft size={18} />
-                <span>Volver</span>
-            </button>
+            <div className="relative z-10">
+                <button
+                    onClick={() => navigate(-1)}
+                    className="mb-6 md:mb-0 md:absolute md:top-6 md:left-6 z-10 flex items-center gap-2 text-white bg-purple-600/80 backdrop-blur-sm hover:bg-purple-600 px-4 py-2 rounded-lg transition-all shadow-lg hover:scale-105"
+                >
+                    <ArrowLeft size={18} />
+                    <span>Volver</span>
+                </button>
+                <Header />
+            </div>
 
             <div className="relative z-10 max-w-5xl mx-auto bg-gray-900/50 backdrop-blur-sm border border-purple-500/30 rounded-2xl shadow-2xl p-4 md:p-8">
                 <InventoryCard onAdd={handleAdd} />
