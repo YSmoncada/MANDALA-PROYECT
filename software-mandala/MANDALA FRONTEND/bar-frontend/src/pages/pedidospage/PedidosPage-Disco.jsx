@@ -114,7 +114,7 @@ export default function PedidosPageDisco() {
 
             <HeaderPedidosDisco mesera={mesera} onLogout={handleLogout} codigoConfirmado={codigoConfirmado} />
 
-            <main className="flex-1 p-3 sm:p-8 relative z-10 overflow-x-hidden">
+            <main className="flex-1 p-3 pt-6 sm:p-8 relative z-10 overflow-x-hidden">
 
                 {orderItems.length === 0 ? (
                     <div className="bg-[#441E73]/80 backdrop-blur-xl border border-[#6C3FA8] rounded-2xl p-12 text-center shadow-[0_0_40px_rgba(0,0,0,0.3)] max-w-md w-full animate-fadeIn relative overflow-hidden">
@@ -149,7 +149,7 @@ export default function PedidosPageDisco() {
                                     <span className="text-xs font-bold text-[#A944FF] ml-auto bg-[#A944FF]/10 px-3 py-1.5 rounded-full border border-[#A944FF]/20 uppercase tracking-wider">{orderItems.length} items</span>
                                 </h2>
 
-                                <div className="space-y-4 max-h-[50vh] sm:max-h-[60vh] lg:max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                                <div className="space-y-4 max-h-[45vh] sm:max-h-[60vh] lg:max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
                                     {orderItems.map((item, index) => (
                                         <div
                                             key={item.producto.id || index}
@@ -215,7 +215,7 @@ export default function PedidosPageDisco() {
                         </div>
 
                         {/* Right Column: Summary & Checkout */}
-                        <div className="lg:col-span-1 mb-24 sm:mb-0">
+                        <div className="lg:col-span-1 mb-16 sm:mb-0">
                             <div className="bg-[#441E73]/80 backdrop-blur-xl border border-[#6C3FA8] rounded-2xl p-4 sm:p-8 shadow-[0_0_40px_rgba(0,0,0,0.3)] lg:sticky top-28 relative overflow-hidden">
                                 {/* Glow Effect */}
                                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#A944FF] to-transparent"></div>
