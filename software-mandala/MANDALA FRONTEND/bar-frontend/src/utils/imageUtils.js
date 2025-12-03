@@ -1,4 +1,4 @@
-// Utilidades para manejo de imágenes
+import { API_URL } from '../apiConfig';
 
 export const validateImageFile = (file) => {
   const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
@@ -17,15 +17,20 @@ export const validateImageFile = (file) => {
 
 export const getImageUrl = (imagePath) => {
   if (!imagePath) return null;
-  
-  // Si es un data URL o ya es una URL completa
+
+  // Si es un data URL o ya es una URL completa (Cloudinary, S3, etc.)
   if (imagePath.startsWith('data:') || imagePath.startsWith('http')) {
     return imagePath;
   }
-  
+
   // Si no comienza con /, agregarlo
   const path = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
-  return `http://127.0.0.1:8000${path}`;
+
+  // Usar la URL base de la API (quitando el sufijo /api si existe) para construir la URL de la imagen
+  // Esto asume que las imágenes se sirven desde la raíz del backend o una carpeta estática relativa
+  const baseUrl = API_URL.endsWith('/api') ? API_URL.slice(0, -4) : API_URL;
+
+  return `${baseUrl}${path}`;
 };
 
 export const createImagePreview = (file) => {

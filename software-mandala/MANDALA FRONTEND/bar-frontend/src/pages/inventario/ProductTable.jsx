@@ -1,7 +1,8 @@
 // src/components/ProductTableWithModal.jsx
 import React, { useState } from "react";
-import { PlusCircle, Edit, Trash2 } from "lucide-react"; // Íconos que faltaban
+import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import MovimientoModal from "./MovimientoModal";
+import { getImageUrl } from "../../utils/imageUtils";
 
 function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -64,7 +65,7 @@ function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
                       <th scope="row" className="px-6 py-4 font-medium text-white whitespace-nowrap">
                         <div className="flex items-center gap-3">
                           <img
-                            src={prod.imagen}
+                            src={getImageUrl(prod.imagen)}
                             alt={prod.nombre}
                             className="w-10 h-10 object-contain rounded-md bg-white p-1"
                             onError={(e) => {
@@ -150,7 +151,7 @@ function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
                 <div key={prod.id} className="bg-purple-900/20 border border-purple-500/30 rounded-xl p-4 shadow-sm">
                   <div className="flex items-start gap-4">
                     <img
-                      src={prod.imagen}
+                      src={getImageUrl(prod.imagen)}
                       alt={prod.nombre}
                       className="w-16 h-16 object-contain rounded-lg bg-white p-1 flex-shrink-0"
                       onError={(e) => {
