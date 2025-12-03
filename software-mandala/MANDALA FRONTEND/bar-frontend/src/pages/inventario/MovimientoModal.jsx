@@ -134,8 +134,8 @@ const MovimientoModal = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={onClose}>
-      <div className="bg-slate-900/95 rounded-lg shadow-xl w-full max-w-lg mx-4 p-6 border border-slate-700" onClick={handleContentClick}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
+      <div className="bg-slate-900/95 rounded-lg shadow-xl w-full max-w-lg mx-auto p-6 border border-slate-700 max-h-[90vh] overflow-y-auto" onClick={handleContentClick}>
 
         {/* Encabezado del Modal */}
         <div className="flex justify-between items-center pb-4 border-b border-slate-700">
