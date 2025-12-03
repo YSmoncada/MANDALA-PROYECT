@@ -136,7 +136,7 @@ export default function PedidosPageDisco() {
                         </button>
                     </div>
                 ) : (
-                    <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-2 sm:gap-8">
+                    <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
 
                         {/* Left Column: Order Items */}
                         <div className="lg:col-span-2 space-y-4 sm:space-y-6">
@@ -149,7 +149,7 @@ export default function PedidosPageDisco() {
                                     <span className="text-xs font-bold text-[#A944FF] ml-auto bg-[#A944FF]/10 px-3 py-1.5 rounded-full border border-[#A944FF]/20 uppercase tracking-wider">{orderItems.length} items</span>
                                 </h2>
 
-                                <div className="space-y-4 max-h-[45vh] sm:max-h-[60vh] lg:max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                                <div className="space-y-4 max-h-[35vh] sm:max-h-[60vh] lg:max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
                                     {orderItems.map((item, index) => (
                                         <div
                                             key={item.producto.id || index}
