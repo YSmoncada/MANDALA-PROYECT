@@ -51,7 +51,6 @@ function InventarioDisco() {
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
             </div>
 
-            <Header />
             <button
                 onClick={() => navigate("/")}
                 className="absolute top-6 left-6 z-50 flex items-center gap-2 rounded-lg bg-[#441E73]/50 border border-[#6C3FA8] px-4 py-2 text-white hover:bg-[#441E73] transition-all backdrop-blur-md shadow-lg hover:scale-105"
@@ -59,6 +58,9 @@ function InventarioDisco() {
                 <ArrowLeft size={18} />
                 <span className="font-medium">Volver</span>
             </button>
+
+            <Header />
+
 
             <div className="relative z-10 max-w-5xl mx-auto bg-gray-900/50 backdrop-blur-sm border border-purple-500/30 rounded-2xl shadow-2xl p-8">
                 <InventoryCard onAdd={handleAdd} />
