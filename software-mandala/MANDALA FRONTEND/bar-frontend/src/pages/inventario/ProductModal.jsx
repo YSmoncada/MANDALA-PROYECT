@@ -10,8 +10,8 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50 p-4">
-      <div className="bg-[#1A1B2F] w-full max-w-2xl rounded-xl shadow-2xl p-6 md:p-8 relative text-white max-h-[90vh] overflow-y-auto" onClick={handleContentClick}>
+    <div className="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50 p-4 sm:p-6">
+      <div className="bg-[#1A1B2F] w-full max-w-md md:max-w-2xl rounded-xl shadow-2xl p-5 md:p-8 relative text-white max-h-[85vh] overflow-y-auto border border-gray-700/50" onClick={handleContentClick}>
         {/* Cerrar */}
         <button
           className="absolute top-4 right-4 text-gray-400 hover:text-white bg-gray-800/50 rounded-full p-1 transition-colors"
