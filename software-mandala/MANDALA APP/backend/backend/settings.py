@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'bar_app',
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
@@ -75,7 +76,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware', 
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -174,3 +175,15 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# settings.py
+
+# --- CONFIGURACIÓN DE CORS ---
+
+# Obtén la URL de tu frontend en Vercel y añádela aquí
+CORS_ALLOWED_ORIGINS = [
+    "https://tu-proyecto-frontend.vercel.app",  # <--- REEMPLAZA CON TU URL DE VERCEL
+    "http://localhost:5173",  # Para desarrollo local con Vite
+    "http://127.0.0.1:5173", # También para desarrollo local
+]
+
