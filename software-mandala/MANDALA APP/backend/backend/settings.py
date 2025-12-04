@@ -165,7 +165,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Almacenamiento de archivos estáticos optimizado para producción con WhiteNoise
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage' # DEPRECATED in Django 5.x
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -190,12 +190,19 @@ cloudinary.config(
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Use Cloudinary for media storage ALWAYS
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# Configuración moderna de almacenamiento para Django 5.x
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Log para verificar configuración en Render
-print("--- CONFIGURACIÓN DE ALMACENAMIENTO ---")
-print(f"DEFAULT_FILE_STORAGE: {DEFAULT_FILE_STORAGE}")
+print("--- CONFIGURACIÓN DE ALMACENAMIENTO (Django 5.x) ---")
+print(f"STORAGES: {STORAGES}")
 print(f"CLOUDINARY_CLOUD_NAME: {os.environ.get('CLOUDINARY_CLOUD_NAME')}")
-print("---------------------------------------")
+print("----------------------------------------------------")
 
