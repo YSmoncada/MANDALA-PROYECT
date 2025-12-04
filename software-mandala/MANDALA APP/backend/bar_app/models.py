@@ -2,7 +2,7 @@ from django.db import models
 
 class Producto(models.Model):
     nombre = models.CharField(max_length=100)
-    imagen = models.URLField(max_length=255, blank=True, null=True)
+    imagen = models.ImageField(upload_to='productos/', blank=True, null=True)
     categoria = models.CharField(max_length=50, blank=True, null=True)  # ✅ NUEVO
     stock = models.IntegerField(default=0)
     stock_minimo = models.IntegerField(default=0)
