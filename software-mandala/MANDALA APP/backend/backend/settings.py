@@ -49,6 +49,10 @@ if RENDER_EXTERNAL_HOSTNAME:
 
 
 INSTALLED_APPS = [
+    # Cloudinary apps (deben ir al principio)
+    'cloudinary_storage',
+    'cloudinary',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -59,8 +63,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'django_filters',
-    'cloudinary_storage',
-    'cloudinary',
     'bar_app',
 ]
 

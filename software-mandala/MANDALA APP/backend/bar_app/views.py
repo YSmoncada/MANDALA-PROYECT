@@ -27,7 +27,25 @@ from django.db import transaction
 from rest_framework import status
 from django.core.exceptions import FieldDoesNotExist
 
+import os
+from django.core.files.storage import default_storage
+from django.conf import settings
+
 logger = logging.getLogger(__name__)
+
+class DebugStorageView(generics.GenericAPIView):
+    def get(self, request):
+        storage_class = default_storage.__class__.__name__
+        is_cloudinary = 'Cloudinary' in storage_class
+        
+        return Response({
+            'storage_backend': storage_class,
+            'is_cloudinary_active': is_cloudinary,
+            'cloudinary_cloud_name': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+            'default_file_storage_setting': getattr(settings, 'DEFAULT_FILE_STORAGE', 'Not Set'),
+            'media_url': settings.MEDIA_URL,
+            'debug_mode': settings.DEBUG
+        })
 
 # --- VISTAS EXISTENTES ---
 
