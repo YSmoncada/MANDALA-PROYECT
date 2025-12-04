@@ -188,7 +188,12 @@ cloudinary.config(
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Use Cloudinary for media storage ALWAYS (both development and production)
-# This ensures consistent behavior and avoids issues with missing local files
+# Use Cloudinary for media storage ALWAYS
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# Log para verificar configuración en Render
+print("--- CONFIGURACIÓN DE ALMACENAMIENTO ---")
+print(f"DEFAULT_FILE_STORAGE: {DEFAULT_FILE_STORAGE}")
+print(f"CLOUDINARY_CLOUD_NAME: {os.environ.get('CLOUDINARY_CLOUD_NAME')}")
+print("---------------------------------------")
 
