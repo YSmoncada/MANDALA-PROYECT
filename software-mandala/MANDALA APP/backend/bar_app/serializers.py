@@ -2,11 +2,31 @@ from rest_framework import serializers
 from .models import Producto, Movimiento, Pedido, PedidoProducto, Mesa, Mesera
 from django.utils import timezone
 
-# Volvemos a una versión simple y estable del serializador de Producto
 class ProductoSerializer(serializers.ModelSerializer):
+    # Sobrescribir el campo imagen para retornar la URL completa
+    imagen = serializers.SerializerMethodField()
+    
     class Meta:
         model = Producto
         fields = '__all__'
+    
+    def get_imagen(self, obj):
+        """
+        Retorna la URL completa de la imagen.
+        Si es una URL de Cloudinary, la retorna tal cual.
+        Si es un archivo local, construye la URL completa.
+        """
+        if obj.imagen:
+            # Si ya es una URL completa (http/https), retornarla tal cual
+            if str(obj.imagen).startswith('http'):
+                return str(obj.imagen)
+            # Si es un archivo, obtener la URL completa
+            request = self.context.get('request')
+            if request and hasattr(obj.imagen, 'url'):
+                return request.build_absolute_uri(obj.imagen.url)
+            elif hasattr(obj.imagen, 'url'):
+                return obj.imagen.url
+        return None
 
 class MovimientoSerializer(serializers.ModelSerializer):
     class Meta:
