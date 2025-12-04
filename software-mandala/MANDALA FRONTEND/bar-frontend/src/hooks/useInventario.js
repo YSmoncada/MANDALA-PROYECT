@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { validateImageFile, createImagePreview } from "../utils/imageUtils";
 import toast from 'react-hot-toast';
-import { uploadToCloudinary } from "../utils/cloudinaryUploader"; // Importar el uploader
 import * as inventarioService from "../services/inventarioService";
 import { useMovimientos } from "./useMovimientos";
 
@@ -122,37 +121,43 @@ export const useInventario = () => {
             return; // Detiene el envío del formulario
         }
 
-        let imageUrl = editId ? originalImageUrl : ''; // Conserva la URL si se está editando
-
-        // Si hay un nuevo archivo de imagen, súbelo a Cloudinary
-        if (imageFile) {
-            setIsUploading(true);
-            const uploadToast = toast.loading('Subiendo imagen...');
-            try {
-                imageUrl = await uploadToCloudinary(imageFile);
-                toast.success('Imagen subida con éxito.', { id: uploadToast });
-            } catch (error) {
-                setIsUploading(false);
-                toast.error('Error al subir la imagen.', { id: uploadToast });
-                console.error("Error al subir a Cloudinary:", error);
-                return; // Detiene el proceso si la subida de imagen falla
-            } finally {
-                setIsUploading(false);
-            }
-        }
-
-        // Prepara el payload para tu backend, ahora con la URL de la imagen
+        // Prepara el payload para tu backend
         const payload = {
             ...form,
-            imagen: imageUrl, // Envía la URL de Cloudinary
         };
 
+        // Si no hay un nuevo archivo de imagen, conserva la URL original (si existe)
+        if (!imageFile && editId && originalImageUrl) {
+            payload.imagen = originalImageUrl;
+        }
+
         try {
-            await inventarioService.saveProducto(editId, payload); // saveProducto ahora recibe un objeto JSON
+            setIsUploading(true);
+
+            // Enviar el archivo de imagen directamente al backend
+            if (imageFile) {
+                const uploadToast = toast.loading('Guardando producto y subiendo imagen...');
+                try {
+                    await inventarioService.saveProducto(editId, payload, imageFile);
+                    toast.success('Producto guardado con éxito.', { id: uploadToast });
+                } catch (error) {
+                    toast.error('Error al guardar el producto.', { id: uploadToast });
+                    console.error("Error al guardar producto:", error);
+                    return;
+                } finally {
+                    setIsUploading(false);
+                }
+            } else {
+                // Si no hay imagen nueva, guardar solo los datos
+                await inventarioService.saveProducto(editId, payload);
+            }
+
             fetchProductos();
             setModalOpen(false);
         } catch (error) {
             console.error("Error al guardar el producto:", error);
+        } finally {
+            setIsUploading(false);
         }
     };
 

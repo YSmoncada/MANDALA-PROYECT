@@ -19,22 +19,50 @@ export const getProductos = async () => {
  * Guarda un producto (crea o actualiza).
  * @param {string|null} id - El ID del producto para actualizar, o null para crear.
  * @param {object} payload - Los datos del producto en formato JSON.
+ * @param {File|null} imageFile - El archivo de imagen opcional para subir.
  */
-export const saveProducto = async (id, payload) => {
+export const saveProducto = async (id, payload, imageFile = null) => {
     try {
         let response;
-        if (id) {
-            // Si hay un ID, actualizamos (PUT) el producto existente.
-            response = await apiClient.put(`/productos/${id}/`, payload);
-            toast.success("Producto actualizado con éxito.");
+
+        // Si hay un archivo de imagen, usamos FormData
+        if (imageFile) {
+            const formData = new FormData();
+
+            // Agregar todos los campos del payload al FormData
+            Object.keys(payload).forEach(key => {
+                if (payload[key] !== null && payload[key] !== undefined && key !== 'imagen') {
+                    formData.append(key, payload[key]);
+                }
+            });
+
+            // Agregar el archivo de imagen
+            formData.append('imagen', imageFile);
+
+            if (id) {
+                response = await apiClient.put(`/productos/${id}/`, formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                toast.success("Producto actualizado con éxito.");
+            } else {
+                response = await apiClient.post("/productos/", formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                toast.success("Producto creado con éxito.");
+            }
         } else {
-            // Si no hay ID, creamos (POST) un nuevo producto.
-            response = await apiClient.post("/productos/", payload);
-            toast.success("Producto creado con éxito.");
+            // Si no hay imagen, enviamos JSON normal
+            if (id) {
+                response = await apiClient.put(`/productos/${id}/`, payload);
+                toast.success("Producto actualizado con éxito.");
+            } else {
+                response = await apiClient.post("/productos/", payload);
+                toast.success("Producto creado con éxito.");
+            }
         }
+
         return response.data;
     } catch (error) {
-        // El apiClient (si usa interceptores) o el hook que lo llama debería mostrar el error.
         console.error("Error en saveProducto:", error.response?.data || error.message);
         throw error;
     }
