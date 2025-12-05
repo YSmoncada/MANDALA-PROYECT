@@ -24,7 +24,7 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn" onClick={onClose}>
-      <div className="bg-[#1A103C] border border-[#6C3FA8] rounded-2xl shadow-2xl w-full max-w-4xl relative max-h-[90vh] overflow-y-auto" onClick={handleContentClick}>
+      <div className="bg-[#1A103C] border border-[#6C3FA8] rounded-2xl shadow-2xl w-full max-w-2xl relative max-h-[90vh] overflow-y-auto" onClick={handleContentClick}>
 
         <button
           onClick={onClose}
@@ -33,7 +33,7 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
 
-        <div className="p-8">
+        <div className="p-6">
           <h2 className="text-2xl font-bold text-white mb-6 text-center">
             {editId ? "Editar Producto" : "Agregar Nuevo Producto"}
           </h2>
