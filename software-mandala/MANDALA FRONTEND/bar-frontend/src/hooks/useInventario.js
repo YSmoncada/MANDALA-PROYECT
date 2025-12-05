@@ -65,9 +65,9 @@ export const useInventario = () => {
     const handleEdit = (producto) => {
         setForm(producto); // Carga el producto completo, incluyendo la URL de la imagen
         setEditId(producto.id);
-        setImageFile(null);
-        setImagePreview(null);
-        setOriginalImageUrl(producto.imagen);
+        setImageFile(null); // No hay archivo nuevo aún
+        setImagePreview(producto.imagen); // Mostrar la imagen existente
+        setOriginalImageUrl(producto.imagen); // Guardar la URL original
         setModalOpen(true);
     };
 
@@ -126,9 +126,9 @@ export const useInventario = () => {
             ...form,
         };
 
-        // Si no hay un nuevo archivo de imagen, conserva la URL original (si existe)
-        if (!imageFile && editId && originalImageUrl) {
-            payload.imagen = originalImageUrl;
+        // Si estamos editando y no hay un nuevo archivo de imagen, conservar la imagen original
+        if (editId && !imageFile) {
+            payload.imagen = originalImageUrl || form.imagen || '';
         }
 
         try {
@@ -148,8 +148,9 @@ export const useInventario = () => {
                     setIsUploading(false);
                 }
             } else {
-                // Si no hay imagen nueva, guardar solo los datos
+                // Si no hay imagen nueva, guardar solo los datos (con la imagen original si existe)
                 await inventarioService.saveProducto(editId, payload);
+                toast.success(editId ? 'Producto actualizado con éxito.' : 'Producto creado con éxito.');
             }
 
             fetchProductos();

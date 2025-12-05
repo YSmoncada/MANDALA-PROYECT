@@ -41,7 +41,9 @@ export default function ImageUploader({ imagePreview, onImageChange, editId }) {
             </div>
             <p className="text-xs text-gray-400 mt-1">
                 {editId
-                    ? "Selecciona una nueva imagen solo si quieres cambiarla"
+                    ? imagePreview
+                        ? "✓ Imagen actual cargada. Selecciona una nueva solo si deseas cambiarla."
+                        : "No hay imagen. Puedes agregar una si lo deseas."
                     : "Opcional: selecciona una imagen (JPEG, PNG, GIF, WebP - máx 5MB)"}
             </p>
         </div>
