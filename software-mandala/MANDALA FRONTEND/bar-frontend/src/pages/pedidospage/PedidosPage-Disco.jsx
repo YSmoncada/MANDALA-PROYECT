@@ -9,15 +9,22 @@ export default function PedidosPageDisco() {
     const {
         auth,
         orderItems,
-        clearOrder: onClearOrder,
+        clearOrder: onClearOrderContext,
         updateProductQuantity: onUpdateCantidad,
         removeProductFromOrder: onRemoveItem,
         mesas,
         selectedMesaId,
         setSelectedMesaId,
         isLoading,
-        finalizarPedido
+        finalizarPedido,
+        isTableLocked,
+        setIsTableLocked
     } = usePedidosContext();
+
+    const onClearOrder = () => {
+        onClearOrderContext();
+        setIsTableLocked(false);
+    };
 
     const {
         mesera,
@@ -85,7 +92,7 @@ export default function PedidosPageDisco() {
                     secondary: '#fff',
                 },
             });
-            onClearOrder();
+            onClearOrder(); // This now calls local wrapper which unlocks table
             navigate('/login-disco');
         } else {
             toast.error(result.message);
@@ -241,8 +248,8 @@ export default function PedidosPageDisco() {
                                             id="mesa-select"
                                             value={selectedMesaId}
                                             onChange={(e) => setSelectedMesaId(e.target.value)}
-                                            className="w-full bg-[#2B0D49] border border-[#6C3FA8] text-white text-sm rounded-xl focus:ring-[#A944FF] focus:border-[#A944FF] block p-2.5 sm:p-3.5 transition-all appearance-none cursor-pointer hover:bg-[#2B0D49]/80"
-                                            disabled={mesas.length === 0}
+                                            className={`w-full bg-[#2B0D49] border border-[#6C3FA8] text-white text-sm rounded-xl focus:ring-[#A944FF] focus:border-[#A944FF] block p-2.5 sm:p-3.5 transition-all appearance-none cursor-pointer hover:bg-[#2B0D49]/80 ${isTableLocked ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                            disabled={mesas.length === 0 || isTableLocked}
                                         >
                                             <option value="">-- Seleccionar --</option>
                                             {mesas.map((mesa) => (

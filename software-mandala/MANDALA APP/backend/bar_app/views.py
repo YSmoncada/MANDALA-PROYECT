@@ -153,6 +153,86 @@ class PedidoViewSet(viewsets.ModelViewSet):
 
         return queryset.select_related('mesera', 'mesa')
 
+    def create(self, request, *args, **kwargs):
+        mesa_id = request.data.get('mesa')
+        
+        # Filtramos pedidos activos para esta mesa (ni finalizados ni cancelados)
+        active_pedido = Pedido.objects.filter(
+            mesa_id=mesa_id
+        ).exclude(
+            estado__in=['finalizada', 'cancelado']
+        ).first()
+
+        if active_pedido:
+            # Lógica para AGREGAR productos a un pedido existente
+            from .models import PedidoProducto  # Importación local para evitar circular, si aplica
+
+            productos_data = request.data.get('productos', [])
+            if not productos_data:
+                 return Response({"detail": "No se enviaron productos."}, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                with transaction.atomic():
+                    # Opcional: Actualizar mesera si cambió
+                    if 'mesera' in request.data:
+                        active_pedido.mesera_id = request.data['mesera']
+
+                    total_adicional = 0
+                    
+                    for item in productos_data:
+                        producto_id = item.get('producto_id')
+                        cantidad = int(item.get('cantidad', 0))
+                        
+                        if cantidad <= 0:
+                            continue
+
+                        # Obtener producto y bloquear fila
+                        producto = Producto.objects.select_for_update().get(pk=producto_id)
+                        
+                        # Validar stock
+                        if producto.stock < cantidad:
+                             raise ValueError(f"Stock insuficiente para {producto.nombre}")
+                        
+                        # Descontar stock
+                        producto.stock -= cantidad
+                        producto.save()
+                        
+                        total_adicional += producto.precio * cantidad
+                        
+                        # Agregar o Actualizar PedidoProducto
+                        # Buscamos si ya existe este producto en este pedido para sumar cantidad
+                        pp_existente = PedidoProducto.objects.filter(pedido=active_pedido, producto=producto).first()
+                        
+                        if pp_existente:
+                            pp_existente.cantidad += cantidad
+                            pp_existente.save()
+                        else:
+                            PedidoProducto.objects.create(pedido=active_pedido, producto=producto, cantidad=cantidad)
+                    
+                    # Actualizar Total y Estado del Pedido
+                    active_pedido.total += Decimal(total_adicional)
+                    # Si se agregan nuevos productos, el bartender debe verlos como pendientes
+                    # (Incluso si el pedido estaba 'despachado', vuelve a 'pendiente' parcialmente?)
+                    # Simplificación: Lo ponemos en 'pendiente' para alertar.
+                    active_pedido.estado = 'pendiente' 
+                    active_pedido.save()
+            
+            except Producto.DoesNotExist:
+                return Response({"detail": "Uno de los productos no existe."}, status=status.HTTP_400_BAD_REQUEST)
+            except ValueError as e:
+                return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as e:
+                logger.error(f"Error actualizando pedido: {e}")
+                return Response({"detail": "Error interno al actualizar el pedido."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            # Retornar el pedido actualizado
+            serializer = self.get_serializer(active_pedido)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        else:
+            # Comportamiento estándar (Crear Nuevo)
+            return super().create(request, *args, **kwargs)
+
 class MesaViewSet(viewsets.ModelViewSet):
     queryset = Mesa.objects.all().order_by('numero')
     serializer_class = MesaSerializer

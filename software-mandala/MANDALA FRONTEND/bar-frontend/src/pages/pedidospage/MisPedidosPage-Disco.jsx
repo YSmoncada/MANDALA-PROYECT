@@ -7,7 +7,7 @@ import { usePedidosContext } from '../../context/PedidosContext';
 import HeaderPedidosDisco from '../pedidospage/HeaderPedidos-Disco';
 
 const MisPedidosPageDisco = () => {
-    const { auth, setSelectedMesaId } = usePedidosContext();
+    const { auth, setSelectedMesaId, setIsTableLocked } = usePedidosContext();
     const { mesera, meseraId, codigoConfirmado, handleLogout } = auth;
     const [pedidos, setPedidos] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -54,6 +54,7 @@ const MisPedidosPageDisco = () => {
 
     const handleAgregarProductos = (mesaId) => {
         setSelectedMesaId(mesaId);
+        setIsTableLocked(true);
         navigate('/login-disco');
     };
 

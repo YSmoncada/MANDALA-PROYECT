@@ -6,6 +6,7 @@ import { API_URL } from '../apiConfig'; // Importar la URL centralizada
 export const usePedido = () => {
     const [mesas, setMesas] = useState([]);
     const [selectedMesaId, setSelectedMesaId] = useState('');
+    const [isTableLocked, setIsTableLocked] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
         const fetchMesas = async () => {
@@ -43,5 +44,5 @@ export const usePedido = () => {
         }
     };
 
-    return { mesas, selectedMesaId, setSelectedMesaId, isLoading, finalizarPedido };
+    return { mesas, selectedMesaId, setSelectedMesaId, isLoading, finalizarPedido, isTableLocked, setIsTableLocked };
 };
