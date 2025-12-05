@@ -114,7 +114,7 @@ export default function PedidosPageDisco() {
 
             <HeaderPedidosDisco mesera={mesera} onLogout={handleLogout} codigoConfirmado={codigoConfirmado} />
 
-            <main className="flex-1 p-3 pt-6 pb-20 sm:p-8 relative z-10">
+            <main className="flex-1 flex items-center justify-center p-3 pt-6 pb-20 sm:p-8 relative z-10">
 
                 {orderItems.length === 0 ? (
                     <div className="bg-[#441E73]/80 backdrop-blur-xl border border-[#6C3FA8] rounded-2xl p-12 text-center shadow-[0_0_40px_rgba(0,0,0,0.3)] max-w-md w-full animate-fadeIn relative overflow-hidden">
