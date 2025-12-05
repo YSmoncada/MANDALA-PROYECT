@@ -27,8 +27,8 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
 
           <form onSubmit={onSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Columna de Imagen */}
-            <div className="lg:col-span-1">
-              <label className="text-xs text-gray-400 font-bold uppercase mb-2 block">Imagen del Producto</label>
+            <div className="lg:col-span-1 flex flex-col items-center">
+              <label className="text-xs text-white font-bold uppercase mb-2 block">Imagen del Producto</label>
               <ImageUploader
                 imagePreview={imagePreview}
                 onImageChange={onImageChange}
