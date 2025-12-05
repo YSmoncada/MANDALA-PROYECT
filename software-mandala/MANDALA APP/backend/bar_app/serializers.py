@@ -3,6 +3,8 @@ from .models import Producto, Movimiento, Pedido, PedidoProducto, Mesa, Mesera
 from django.utils import timezone
 
 class ProductoSerializer(serializers.ModelSerializer):
+    imagen = serializers.ImageField(required=False, allow_null=True)
+    
     class Meta:
         model = Producto
         fields = '__all__'

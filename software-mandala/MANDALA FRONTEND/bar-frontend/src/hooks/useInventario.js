@@ -151,6 +151,15 @@ export const useInventario = () => {
             payload.imagen = '';
         }
 
+        // DEBUG: Ver qué se está enviando
+        console.log('🔍 DEBUG - Datos a enviar:');
+        console.log('editId:', editId);
+        console.log('imageFile:', imageFile);
+        console.log('originalImageUrl:', originalImageUrl);
+        console.log('form.imagen:', form.imagen);
+        console.log('payload.imagen:', payload.imagen);
+        console.log('payload completo:', payload);
+
         try {
             setIsUploading(true);
 
@@ -163,14 +172,23 @@ export const useInventario = () => {
                 } catch (error) {
                     toast.error('Error al guardar el producto.', { id: uploadToast });
                     console.error("Error al guardar producto:", error);
+                    console.error("Respuesta del servidor:", error.response?.data);
                     return;
                 } finally {
                     setIsUploading(false);
                 }
             } else {
                 // Si no hay imagen nueva, guardar solo los datos (con la imagen original si existe)
-                await inventarioService.saveProducto(editId, payload);
-                toast.success(editId ? 'Producto actualizado con éxito.' : 'Producto creado con éxito.');
+                console.log('📤 Enviando sin archivo de imagen...');
+                try {
+                    await inventarioService.saveProducto(editId, payload);
+                    toast.success(editId ? 'Producto actualizado con éxito.' : 'Producto creado con éxito.');
+                } catch (error) {
+                    console.error("❌ Error al guardar producto:", error);
+                    console.error("Respuesta del servidor:", error.response?.data);
+                    toast.error(error.response?.data?.detail || 'Error al guardar el producto.');
+                    return;
+                }
             }
 
             fetchProductos();
