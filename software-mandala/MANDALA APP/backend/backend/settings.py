@@ -200,6 +200,9 @@ STORAGES = {
     },
 }
 
+# Evitar error si faltan archivos estáticos de librerías externas
+WHITENOISE_MANIFEST_STRICT = False
+
 # Log para verificar configuración en Render
 print("--- CONFIGURACIÓN DE ALMACENAMIENTO (Django 5.x) ---")
 print(f"STORAGES: {STORAGES}")
