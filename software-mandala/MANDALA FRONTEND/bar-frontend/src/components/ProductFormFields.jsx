@@ -11,7 +11,7 @@ export default function ProductFormFields({ form, onChange }) {
                 <input
                     type="text"
                     name="nombre"
-                    placeholder="Ej: Aguardiente, cerveza, vino, etc."
+                    placeholder="Ej: Aguardiente, cerveza, vino, destilado, coctel, etc."
                     value={form.nombre || ""}
                     onChange={(e) => {
                         // Capturar el valor directamente sin procesamiento
