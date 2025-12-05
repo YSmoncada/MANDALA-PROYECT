@@ -1,12 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import ImageUploader from "../../components/ImageUploader";
 import ProductFormFields from "../../components/ProductFormFields";
+import { Loader2 } from "lucide-react";
 
 function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImageChange, imagePreview, originalImageUrl }) {
   if (!open) return null;
 
   const handleContentClick = (e) => {
     e.stopPropagation();
+  };
+
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    setIsSaving(true);
+    try {
+      await onSubmit(e);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -25,10 +38,10 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
             {editId ? "Editar Producto" : "Agregar Nuevo Producto"}
           </h2>
 
-          <form onSubmit={onSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <form onSubmit={handleFormSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Columna de Imagen */}
-            <div className="lg:col-span-1 flex flex-col items-center">
-              <label className="text-xs text-white font-bold uppercase mb-2 block">Imagen del Producto</label>
+            <div className="lg:col-span-1 flex flex-col items-center justify-center">
+              <label className="text-xs text-white font-bold uppercase mb-2 block w-full text-center">Imagen del Producto</label>
               <ImageUploader
                 imagePreview={imagePreview}
                 onImageChange={onImageChange}
@@ -49,8 +62,13 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
               <button type="button" onClick={onClose} className="px-6 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors">
                 Cancelar
               </button>
-              <button type="submit" className="px-6 py-2 bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] text-white font-bold rounded-lg hover:brightness-110 transition-all">
-                {editId ? "Guardar Cambios" : "Guardar Producto"}
+              <button
+                type="submit"
+                disabled={isSaving}
+                className="px-6 py-2 bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] text-white font-bold rounded-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed min-w-[180px]"
+              >
+                {isSaving && <Loader2 size={16} className="animate-spin" />}
+                {isSaving ? 'Guardando...' : (editId ? "Guardar Cambios" : "Guardar Producto")}
               </button>
             </div>
           </form>
