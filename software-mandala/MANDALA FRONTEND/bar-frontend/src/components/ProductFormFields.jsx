@@ -29,6 +29,7 @@ export default function ProductFormFields({ form, onChange }) {
                     className={`${commonInputClasses} appearance-none`}
                     required
                 >
+                    <option value="">Seleccione una categoría</option>
                     <option value="cerveza">Cervezas</option>
                     <option value="vinos">Vinos</option>
                     <option value="destilados">Destilados</option>
@@ -145,6 +146,6 @@ export default function ProductFormFields({ form, onChange }) {
                     className={commonInputClasses}
                 />
             </div>
-        </div>
+        </div >
     );
 }
