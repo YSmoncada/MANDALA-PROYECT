@@ -85,7 +85,20 @@ export const useInventario = () => {
 
     const handleImageChange = async (e) => {
         const file = e.target.files[0];
-        if (!file) return;
+
+        // Si no hay archivo (usuario eliminó la imagen o canceló)
+        if (!file) {
+            setImageFile(null); // Limpiar el archivo nuevo
+
+            // Si estamos editando, restaurar la imagen original
+            if (editId && originalImageUrl) {
+                setImagePreview(originalImageUrl);
+            } else {
+                // Si es nuevo producto, limpiar el preview
+                setImagePreview(null);
+            }
+            return;
+        }
 
         try {
             validateImageFile(file);
@@ -126,9 +139,16 @@ export const useInventario = () => {
             ...form,
         };
 
-        // Si estamos editando y no hay un nuevo archivo de imagen, conservar la imagen original
-        if (editId && !imageFile) {
+        // Manejo de la imagen en el payload
+        if (imageFile) {
+            // Si hay un archivo nuevo, se enviará con FormData (no incluir en payload JSON)
+            delete payload.imagen;
+        } else if (editId) {
+            // Si estamos editando sin imagen nueva, conservar la imagen original
             payload.imagen = originalImageUrl || form.imagen || '';
+        } else {
+            // Si es producto nuevo sin imagen, dejar vacío
+            payload.imagen = '';
         }
 
         try {
