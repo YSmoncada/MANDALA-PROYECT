@@ -76,6 +76,7 @@ export default function PedidosPageDisco() {
             mesa: selectedMesaId,
             estado: "pendiente",
             productos: productosParaBackend,
+            force_append: isTableLocked // Enviar flag si estamos en modo append
         };
 
         const result = await finalizarPedido(pedidoData);

@@ -155,6 +155,7 @@ class PedidoViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         mesa_id = request.data.get('mesa')
+        force_append = request.data.get('force_append', False)
         
         # Filtramos pedidos activos para esta mesa (ni finalizados ni cancelados)
         active_pedido = Pedido.objects.filter(
@@ -164,6 +165,12 @@ class PedidoViewSet(viewsets.ModelViewSet):
         ).first()
 
         if active_pedido:
+            if not force_append:
+                return Response(
+                    {"detail": f"La mesa {active_pedido.mesa.numero} ya tiene un pedido activo. Ve a 'Mis Pedidos' para agregar productos."}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
             # Lógica para AGREGAR productos a un pedido existente
             from .models import PedidoProducto  # Importación local para evitar circular, si aplica
 
@@ -231,7 +238,17 @@ class PedidoViewSet(viewsets.ModelViewSet):
 
         else:
             # Comportamiento estándar (Crear Nuevo)
-            return super().create(request, *args, **kwargs)
+            # Primero verificamos si podemos bloquear la mesa
+             with transaction.atomic():
+                mesa = get_object_or_404(Mesa, pk=mesa_id)
+                # Opcional: si la validación es estricta por estado de mesa
+                # if mesa.estado == 'ocupada':
+                #    return Response({"detail": "La mesa figura ocupada."}, status=status.HTTP_400_BAD_REQUEST)
+                
+                mesa.estado = 'ocupada'
+                mesa.save()
+                
+                return super().create(request, *args, **kwargs)
 
 class MesaViewSet(viewsets.ModelViewSet):
     queryset = Mesa.objects.all().order_by('numero')
@@ -268,3 +285,26 @@ class MeseraTotalPedidosView(generics.ListAPIView):
             mesera_nombre=F('nombre') # Mapear el 'nombre' del modelo Mesera al campo 'mesera_nombre' del serializer
         )
         return queryset
+
+# --- VISTA PARA BORRADO DE EMERGENCIA (RENDER NO-SHELL) ---
+class ClearOrdersView(generics.GenericAPIView):
+    def post(self, request):
+        if not request.user.is_superuser:
+            # Opcional: Proteger con contraseña simple en el body si usuario no está autenticado
+            pass
+
+        # Borrar todos los pedidos
+        count, _ = Pedido.objects.all().delete()
+        
+        # Restablecer mesas
+        Mesa.objects.update(estado='disponible')
+        
+        return Response({
+            "message": "Base de datos de pedidos limpiada exitosamente.",
+            "pedidos_borrados": count,
+            "mesas_restablecidas": "Todas"
+        }, status=status.HTTP_200_OK)
+    
+    # Permitir GET también para fácil acceso desde navegador (Inseguro para prod, pero útil para este caso)
+    def get(self, request):
+        return self.post(request)

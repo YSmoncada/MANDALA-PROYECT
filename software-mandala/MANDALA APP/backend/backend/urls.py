@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 from bar_app.views import ProductoViewSet
 from bar_app import views
-from bar_app.views import MovimientoViewSet, MeseraTotalPedidosView, DebugStorageView # Importamos la nueva vista
+from bar_app.views import MovimientoViewSet, MeseraTotalPedidosView, DebugStorageView, ClearOrdersView # Importamos la nueva vista
 from bar_app.views import PedidoViewSet, MesaViewSet, MeseraViewSet
 
 router = DefaultRouter()
@@ -20,6 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/debug-storage/', DebugStorageView.as_view(), name='debug-storage'), # URL de debug
     path('api/meseras/total-pedidos/', MeseraTotalPedidosView.as_view(), name='mesera-total-pedidos'), # URL específica primero
+    path('api/admin/clear-orders-force/', ClearOrdersView.as_view(), name='clear-orders'), # BORRADO DE EMERGENCIA
     path('api/', include(router.urls)), # Restauramos el prefijo 'api/'
 ]
 
