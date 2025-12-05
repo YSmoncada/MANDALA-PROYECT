@@ -143,12 +143,10 @@ export const useInventario = () => {
         if (imageFile) {
             // Si hay un archivo nuevo, se enviará con FormData (no incluir en payload JSON)
             delete payload.imagen;
-        } else if (editId) {
-            // Si estamos editando sin imagen nueva, conservar la imagen original
-            payload.imagen = originalImageUrl || form.imagen || '';
         } else {
-            // Si es producto nuevo sin imagen, dejar vacío
-            payload.imagen = '';
+            // Si no hay archivo nuevo (tanto al crear como al editar), NO enviar el campo imagen
+            // El backend mantendrá la imagen existente si estamos editando
+            delete payload.imagen;
         }
 
         // DEBUG: Ver qué se está enviando
