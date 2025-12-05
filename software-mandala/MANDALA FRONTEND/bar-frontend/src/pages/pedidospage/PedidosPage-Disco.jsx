@@ -156,11 +156,11 @@ export default function PedidosPageDisco() {
                                             className="group flex flex-col sm:flex-row items-center gap-3 sm:gap-4 bg-[#2B0D49]/80 hover:bg-[#2B0D49] p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-[#6C3FA8]/50 hover:border-[#A944FF] transition-all duration-300 shadow-md"
                                         >
                                             {/* Product Image */}
-                                            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[#0E0D23] rounded-xl p-2 flex-shrink-0 border border-[#6C3FA8]/30">
+                                            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-xl flex-shrink-0 border border-[#6C3FA8]/30 flex items-center justify-center overflow-hidden">
                                                 <img
                                                     src={item.producto.imagen}
                                                     alt={item.producto.nombre}
-                                                    className="w-full h-full object-contain drop-shadow-lg"
+                                                    className="w-full h-full object-contain"
                                                 />
                                             </div>
 
