@@ -7,9 +7,6 @@ import { getImageUrl } from "../utils/imageUtils";
 export default function ImageUploader({ imagePreview, onImageChange, editId }) {
     return (
         <div className="col-span-2">
-            <label className="text-sm block mb-1">
-                Imagen del Producto <span className="text-gray-500">(Opcional)</span>
-            </label>
             <div className="flex items-center gap-4">
                 <input
                     type="file"

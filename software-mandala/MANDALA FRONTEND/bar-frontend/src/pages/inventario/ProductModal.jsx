@@ -34,14 +34,12 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
         </button>
 
         <div className="p-8">
-          <h2 className="text-2xl font-bold text-white mb-6">
+          <h2 className="text-2xl font-bold text-white mb-6 text-center">
             {editId ? "Editar Producto" : "Agregar Nuevo Producto"}
           </h2>
 
           <form onSubmit={handleFormSubmit} className="flex flex-col items-center gap-6">
-            {/* Imagen del Producto (Centrado) */}
             <div>
-              <label className="text-xs text-white font-bold uppercase mb-2 block text-center">Imagen del Producto</label>
               <ImageUploader
                 imagePreview={imagePreview}
                 onImageChange={onImageChange}
