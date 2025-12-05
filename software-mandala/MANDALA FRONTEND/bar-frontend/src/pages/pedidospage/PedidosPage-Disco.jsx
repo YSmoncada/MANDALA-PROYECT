@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import HeaderPedidosDisco from "./HeaderPedidos-Disco";
-import { usePedido } from "../../hooks/usePedido";
 import toast from 'react-hot-toast';
 import { usePedidosContext } from "../../context/PedidosContext";
 import { ShoppingCart, Trash2, Plus, Minus, CreditCard, ArrowRight } from 'lucide-react';
@@ -13,6 +12,11 @@ export default function PedidosPageDisco() {
         clearOrder: onClearOrder,
         updateProductQuantity: onUpdateCantidad,
         removeProductFromOrder: onRemoveItem,
+        mesas,
+        selectedMesaId,
+        setSelectedMesaId,
+        isLoading,
+        finalizarPedido
     } = usePedidosContext();
 
     const {
@@ -24,7 +28,7 @@ export default function PedidosPageDisco() {
     } = auth;
 
     const navigate = useNavigate();
-    const { mesas, selectedMesaId, setSelectedMesaId, isLoading, finalizarPedido } = usePedido();
+    // const { mesas, selectedMesaId, setSelectedMesaId, isLoading, finalizarPedido } = usePedido(); // Removed local hook
 
     const totalPedido = orderItems.reduce(
         (total, item) => total + item.producto.precio * item.cantidad,

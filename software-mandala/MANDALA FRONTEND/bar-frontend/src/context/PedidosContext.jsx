@@ -1,6 +1,7 @@
 import React, { createContext, useContext } from 'react';
 import { useOrder } from '../hooks/useOrder';
 import { usePedidosAuth } from '../hooks/usePedidosAuth';
+import { usePedido } from '../hooks/usePedido';
 
 const PedidosContext = createContext();
 
@@ -15,9 +16,11 @@ export const usePedidosContext = () => {
 export const PedidosProvider = ({ children }) => {
     const order = useOrder();
     const auth = usePedidosAuth();
+    const pedido = usePedido();
 
     const value = {
         ...order,
+        ...pedido,
         auth
     };
 

@@ -53,6 +53,7 @@ const MisPedidosPageDisco = () => {
     }, [mesera, meseraId, codigoConfirmado, navigate]);
 
     const handleAgregarProductos = (mesaId) => {
+        setSelectedMesaId(mesaId);
         navigate('/login-disco');
     };
 
