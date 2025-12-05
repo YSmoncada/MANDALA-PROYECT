@@ -11,10 +11,21 @@ export default function ProductFormFields({ form, onChange }) {
                 <input
                     type="text"
                     name="nombre"
-                    placeholder="Ej: Whisky Jack Daniels"
-                    value={form.nombre}
-                    onChange={onChange}
+                    placeholder="Ej: Whisky Jack Daniels, Curaçao, Peña Dorada"
+                    value={form.nombre || ""}
+                    onChange={(e) => {
+                        // Capturar el valor directamente sin procesamiento
+                        const newValue = e.target.value;
+                        onChange({ target: { name: 'nombre', value: newValue } });
+                    }}
+                    onKeyDown={(e) => {
+                        // No prevenir ninguna tecla
+                        e.stopPropagation();
+                    }}
                     className={commonInputClasses}
+                    autoComplete="off"
+                    spellCheck="false"
+                    inputMode="text"
                     required
                 />
             </div>
