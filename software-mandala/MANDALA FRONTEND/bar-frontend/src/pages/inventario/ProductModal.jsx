@@ -38,10 +38,10 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
             {editId ? "Editar Producto" : "Agregar Nuevo Producto"}
           </h2>
 
-          <form onSubmit={handleFormSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Columna de Imagen */}
-            <div className="lg:col-span-1 flex flex-col items-center justify-center">
-              <label className="text-xs text-white font-bold uppercase mb-2 block w-full text-center">Imagen del Producto</label>
+          <form onSubmit={handleFormSubmit} className="flex flex-col items-center gap-6">
+            {/* Imagen del Producto (Centrado) */}
+            <div>
+              <label className="text-xs text-white font-bold uppercase mb-2 block text-center">Imagen del Producto</label>
               <ImageUploader
                 imagePreview={imagePreview}
                 onImageChange={onImageChange}
@@ -49,16 +49,16 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
               />
             </div>
 
-            {/* Columna de Campos */}
-            <div className="lg:col-span-2">
+            {/* Campos del Formulario */}
+            <div className="w-full max-w-md">
               <ProductFormFields
                 form={form}
                 onChange={onChange}
               />
             </div>
 
-            {/* Botones de Acción (abarcan todo el ancho) */}
-            <div className="lg:col-span-3 mt-4 flex justify-end gap-4">
+            {/* Botones de Acción */}
+            <div className="w-full max-w-md mt-4 flex flex-col-reverse sm:flex-row justify-end gap-4">
               <button type="button" onClick={onClose} className="px-6 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors">
                 Cancelar
               </button>
