@@ -286,25 +286,3 @@ class MeseraTotalPedidosView(generics.ListAPIView):
         )
         return queryset
 
-# --- VISTA PARA BORRADO DE EMERGENCIA (RENDER NO-SHELL) ---
-class ClearOrdersView(generics.GenericAPIView):
-    def post(self, request):
-        if not request.user.is_superuser:
-            # Opcional: Proteger con contraseña simple en el body si usuario no está autenticado
-            pass
-
-        # Borrar todos los pedidos
-        count, _ = Pedido.objects.all().delete()
-        
-        # Restablecer mesas
-        Mesa.objects.update(estado='disponible')
-        
-        return Response({
-            "message": "Base de datos de pedidos limpiada exitosamente.",
-            "pedidos_borrados": count,
-            "mesas_restablecidas": "Todas"
-        }, status=status.HTTP_200_OK)
-    
-    # Permitir GET también para fácil acceso desde navegador (Inseguro para prod, pero útil para este caso)
-    def get(self, request):
-        return self.post(request)
