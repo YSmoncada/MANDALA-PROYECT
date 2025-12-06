@@ -11,7 +11,7 @@ const HistorialPedidosPageDisco = () => {
     const [meseraSeleccionada, setMeseraSeleccionada] = useState('');
     const [fechaSeleccionada, setFechaSeleccionada] = useState(() => {
         const today = new Date();
-        return today.toISOString().split('T')[0]; // YYYY-MM-DD
+        return today.toISOString().split('T')[0];
     });
     const [totalMostrado, setTotalMostrado] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -34,17 +34,14 @@ const HistorialPedidosPageDisco = () => {
     useEffect(() => {
         const fetchPedidos = async () => {
             setLoading(true);
+            setPedidos([]); // Limpiar pedidos antes de cada nueva búsqueda
             try {
                 const params = new URLSearchParams();
                 if (meseraSeleccionada) params.append('mesera', meseraSeleccionada);
                 if (fechaSeleccionada) params.append('fecha', fechaSeleccionada);
                 const response = await axios.get(`${API_URL}/pedidos/?${params.toString()}`);
-                // Filter by exact local date (YYYY-MM-DD) using locale string to avoid timezone shifts
-                const filtered = response.data.filter(pedido => {
-                    const datePart = new Date(pedido.fecha_hora).toLocaleDateString('en-CA');
-                    return datePart === fechaSeleccionada;
-                });
-                setPedidos(filtered);
+
+                setPedidos(response.data);
             } catch (error) {
                 console.error('Error al cargar los pedidos:', error);
                 setPedidos([]);
@@ -53,11 +50,9 @@ const HistorialPedidosPageDisco = () => {
             }
         };
 
-        if (meseraSeleccionada || fechaSeleccionada) {
-            fetchPedidos();
-        } else {
-            setPedidos([]);
-        }
+        // Solo busca si al menos un filtro está activo para evitar cargar todo al inicio
+        if (meseraSeleccionada || fechaSeleccionada) fetchPedidos();
+        else setPedidos([]); // Si no hay filtros, la lista está vacía
     }, [meseraSeleccionada, fechaSeleccionada]);
 
     // Calculate total when pedidos change
@@ -84,6 +79,33 @@ const HistorialPedidosPageDisco = () => {
         } catch (error) {
             console.error('Error al actualizar estado:', error);
             toast.error('No se pudo actualizar el estado');
+        }
+    };
+
+    const handleDeletePedidos = async () => {
+        if (pedidos.length === 0) {
+            toast.error('No hay pedidos en la lista para borrar.');
+            return;
+        }
+
+        const confirmacion = window.confirm(
+            `¿Está seguro de que desea borrar los ${pedidos.length} pedidos mostrados? Esta acción es irreversible.`
+        );
+
+        if (confirmacion) {
+            try {
+                const params = new URLSearchParams();
+                if (meseraSeleccionada) params.append('mesera', meseraSeleccionada);
+                if (fechaSeleccionada) params.append('fecha', fechaSeleccionada);
+
+                await axios.delete(`${API_URL}/pedidos/borrar_historial/?${params.toString()}`);
+
+                toast.success('Historial de pedidos borrado exitosamente.');
+                setPedidos([]); // Limpiar la lista de pedidos en el frontend
+            } catch (error) {
+                console.error('Error al borrar el historial de pedidos:', error);
+                toast.error('No se pudo borrar el historial. Intente de nuevo.');
+            }
         }
     };
 
@@ -194,7 +216,7 @@ const HistorialPedidosPageDisco = () => {
 
                 {/* Filters */}
                 <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-3 sm:p-6 mb-8 overflow-hidden">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         {/* Mesera Filter */}
                         <div className="w-full">
                             <label className="flex items-center gap-2 mb-2 text-xs sm:text-sm font-semibold text-white">
@@ -235,12 +257,23 @@ const HistorialPedidosPageDisco = () => {
                         </div>
 
                         {/* Clear Button */}
-                        <div className="w-full flex items-end">
+                        <div className="w-full flex items-end ">
                             <button
                                 onClick={limpiarFiltros}
-                                className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 sm:py-3 px-4 rounded-lg w-full transition-all hover:scale-105 text-sm"
+                                className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2.5 sm:py-3 px-4 rounded-lg w-full transition-all hover:scale-105 text-sm"
                             >
-                                Limpiar Todo
+                                Limpiar Filtros
+                            </button>
+                        </div>
+
+                        {/* Delete History Button */}
+                        <div className="w-full flex items-end">
+                            <button
+                                onClick={handleDeletePedidos}
+                                disabled={pedidos.length === 0}
+                                className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 sm:py-3 px-4 rounded-lg w-full transition-all hover:scale-105 text-sm disabled:bg-red-900/50 disabled:cursor-not-allowed disabled:scale-100"
+                            >
+                                Borrar Historial
                             </button>
                         </div>
                     </div>

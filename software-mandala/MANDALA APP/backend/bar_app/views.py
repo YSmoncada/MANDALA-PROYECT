@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework import generics
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet, DateFilter
@@ -153,6 +154,39 @@ class PedidoViewSet(viewsets.ModelViewSet):
 
         return queryset.select_related('mesera', 'mesa')
 
+    @action(detail=False, methods=['delete'], url_path='borrar_historial')
+    def borrar_historial(self, request, *args, **kwargs):
+        """
+        Elimina los pedidos que coinciden con los filtros de mesera y/o fecha.
+        Este endpoint es llamado por el botón "Borrar Historial" en el frontend.
+        """
+        # Reutilizamos get_queryset() que ya sabe cómo filtrar por los query params
+        queryset = self.get_queryset()
+
+        if not queryset.exists():
+            return Response({"detail": "No hay pedidos que coincidan con los filtros para eliminar."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Usar una transacción para asegurar la integridad de los datos.
+        # Si algo falla, todos los cambios se revierten.
+        try:
+            with transaction.atomic():
+                pedidos_a_eliminar = list(queryset) # Convertir a lista para poder contar
+                count = len(pedidos_a_eliminar)
+
+                for pedido in pedidos_a_eliminar:
+                    # Por cada pedido, devolvemos el stock de sus productos
+                    for item in pedido.pedidoproducto_set.all():
+                        producto = item.producto
+                        producto.stock += item.cantidad
+                        producto.save()
+                
+                # Después de revertir el stock, eliminamos los pedidos.
+                queryset.delete()
+        except Exception as e:
+            logger.error(f"Error al intentar borrar el historial de pedidos: {e}")
+            return Response({"detail": "Ocurrió un error al intentar eliminar el historial. No se realizaron cambios."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({"detail": f"Se eliminaron {count} pedidos exitosamente y se restauró el stock."}, status=status.HTTP_200_OK)
 
 class MesaViewSet(viewsets.ModelViewSet):
     queryset = Mesa.objects.all().order_by('numero')
@@ -189,4 +223,3 @@ class MeseraTotalPedidosView(generics.ListAPIView):
             mesera_nombre=F('nombre') # Mapear el 'nombre' del modelo Mesera al campo 'mesera_nombre' del serializer
         )
         return queryset
-
