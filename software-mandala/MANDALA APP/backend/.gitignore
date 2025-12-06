@@ -143,6 +143,3 @@ cython_debug/
 
 # VS Code
 .vscode/
-
-# Ignore generated static files
-staticfiles/
