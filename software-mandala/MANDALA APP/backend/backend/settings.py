@@ -164,9 +164,12 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
 # Almacenamiento de archivos estáticos optimizado para producción con WhiteNoise
-# Usamos CompressedStaticFilesStorage en lugar de Manifest para evitar errores con archivos faltantes de Cloudinary
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -197,12 +200,9 @@ STORAGES = {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
-
-# Evitar error si faltan archivos estáticos de librerías externas
-WHITENOISE_MANIFEST_STRICT = False
 
 # Log para verificar configuración en Render
 print("--- CONFIGURACIÓN DE ALMACENAMIENTO (Django 5.x) ---")
