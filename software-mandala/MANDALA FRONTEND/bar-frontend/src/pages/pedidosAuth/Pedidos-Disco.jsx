@@ -26,6 +26,13 @@ export default function PedidosDisco() {
     const [newMeseraCode, setNewMeseraCode] = useState("");
     const navigate = useNavigate();
 
+    // Redirección si ya está logueado
+    useEffect(() => {
+        if (mesera && codigoConfirmado) {
+            navigate('/login-disco', { replace: true });
+        }
+    }, [mesera, codigoConfirmado, navigate]);
+
     if (!isInitialized) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-black">
