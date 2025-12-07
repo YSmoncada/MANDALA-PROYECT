@@ -21,23 +21,14 @@ const MisPedidosPageDisco = () => {
 
         const fetchMisPedidos = async () => {
             try {
-                const response = await axios.get(`${API_URL}/pedidos/?mesera=${meseraId}`);
+                // Obtener la fecha actual en formato YYYY-MM-DD para la API
+                const hoy = new Date().toISOString().split('T')[0];
 
-                // Obtener fecha actual
-                const hoy = new Date();
+                // Pedir al backend solo los pedidos de la mesera para el día de hoy
+                const response = await axios.get(`${API_URL}/pedidos/?mesera=${meseraId}&fecha=${hoy}`);
 
-                // Filtrar pedidos del día actual
-                const pedidosHoy = response.data.filter(p => {
-                    const fecha = new Date(p.fecha_hora);
-                    return (
-                        fecha.getDate() === hoy.getDate() &&
-                        fecha.getMonth() === hoy.getMonth() &&
-                        fecha.getFullYear() === hoy.getFullYear()
-                    );
-                });
-
-                // Ordenar por fecha descendente
-                const sorted = pedidosHoy.sort((a, b) => new Date(b.fecha_hora) - new Date(a.fecha_hora));
+                // El backend ya debería devolver los pedidos ordenados, pero re-ordenamos por seguridad
+                const sorted = response.data.sort((a, b) => new Date(b.fecha_hora) - new Date(a.fecha_hora));
 
                 setPedidos(sorted);
             } catch (error) {
