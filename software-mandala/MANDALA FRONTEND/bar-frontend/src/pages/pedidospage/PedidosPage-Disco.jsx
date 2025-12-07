@@ -112,10 +112,6 @@ export default function PedidosPageDisco() {
         );
     }
 
-    if (!mesera || !codigoConfirmado) {
-        return null;
-    }
-
     return (
         // Unified Background: Matches Home-Disco and Inventario-Disco
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white selection:bg-purple-500/30 overflow-x-hidden" style={{ WebkitOverflowScrolling: 'touch' }}>
