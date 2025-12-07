@@ -18,7 +18,8 @@ export default function PedidosPageDisco() {
         isLoading,
         finalizarPedido,
         isTableLocked,
-        setIsTableLocked
+        setIsTableLocked,
+        pedidosActivos // <-- Traemos los pedidos activos del contexto
     } = usePedidosContext();
 
     const onClearOrder = () => {
@@ -252,12 +253,19 @@ export default function PedidosPageDisco() {
                                             className={`w-full bg-[#2B0D49] border border-[#6C3FA8] text-white text-sm rounded-xl focus:ring-[#A944FF] focus:border-[#A944FF] block p-2.5 sm:p-3.5 transition-all appearance-none cursor-pointer hover:bg-[#2B0D49]/80 ${isTableLocked ? 'opacity-50 cursor-not-allowed' : ''}`}
                                             disabled={mesas.length === 0 || isTableLocked}
                                         >
-                                            <option value="">-- Seleccionar --</option>
-                                            {mesas.map((mesa) => (
-                                                <option key={mesa.id} value={mesa.id}>
-                                                    Mesa #{mesa.numero} (Cap: {mesa.capacidad})
-                                                </option>
-                                            ))}
+                                            <option value="">-- {isTableLocked ? 'Mesa Bloqueada' : 'Seleccionar Mesa'} --</option>
+                                            {mesas.map((mesa) => {
+                                                // Comprobar si la mesa ya tiene un pedido activo y no estamos en modo "agregar productos"
+                                                const mesaOcupada = pedidosActivos.some(p => p.mesa === mesa.id && p.estado !== 'entregado' && p.estado !== 'cancelado');
+                                                const isDisabled = mesaOcupada && !isTableLocked;
+
+                                                return (
+                                                    <option key={mesa.id} value={mesa.id} disabled={isDisabled} className={isDisabled ? "text-gray-500" : ""}>
+                                                        Mesa #{mesa.numero}
+                                                        {isDisabled ? " (Ocupada)" : ` (Cap: ${mesa.capacidad})`}
+                                                    </option>
+                                                );
+                                            })}
                                         </select>
                                         <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
                                             <svg className="w-4 h-4 text-[#8A7BAF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
