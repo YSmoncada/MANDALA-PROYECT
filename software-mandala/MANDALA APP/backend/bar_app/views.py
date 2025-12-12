@@ -154,6 +154,23 @@ class PedidoViewSet(viewsets.ModelViewSet):
 
         return queryset.select_related('mesera', 'mesa')
 
+    def perform_update(self, serializer):
+        """
+        Si el pedido se marca como 'despachado', actualizamos todos sus items
+        para que cantidad_despachada = cantidad.
+        """
+        instance = serializer.save()
+        
+        if instance.estado == 'despachado':
+            with transaction.atomic():
+                # Actualizar cada item para que esté totalmente despachado
+                # Usamos F() para evitar condiciones de carrera, aunque en update simple está bien.
+                # Lo hacemos directo:
+                for item in instance.pedidoproducto_set.all():
+                    if item.cantidad_despachada < item.cantidad:
+                        item.cantidad_despachada = item.cantidad
+                        item.save()
+
     def create(self, request, *args, **kwargs):
         """
         Crea un nuevo pedido o agrega productos a uno existente si 'force_append' es True.
@@ -180,6 +197,15 @@ class PedidoViewSet(viewsets.ModelViewSet):
                         # Bloquear el pedido para edición segura
                         pedido = Pedido.objects.select_for_update().get(pk=pedido_activo.id)
                         
+                        # Si el pedido estaba "despachado", significa que todo lo anterior ya fue entregado.
+                        # Debemos asegurar que los items existentes estén marcados como despachados
+                        # ANTES de agregar lo nuevo, para que no aparezcan como nuevos.
+                        if pedido.estado == 'despachado':
+                            for old_item in pedido.pedidoproducto_set.all():
+                                if old_item.cantidad_despachada < old_item.cantidad:
+                                    old_item.cantidad_despachada = old_item.cantidad
+                                    old_item.save()
+
                         total_agregado = 0
                         
                         for item in productos_data:
