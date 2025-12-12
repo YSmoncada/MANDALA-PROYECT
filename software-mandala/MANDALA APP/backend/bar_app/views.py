@@ -10,7 +10,7 @@ from django.db.models import DecimalField, F
 from django.db.models.functions import Coalesce
 import logging
 from django.db import models
-from .models import Producto, Pedido, Movimiento, Mesa, Mesera
+from .models import Producto, Pedido, Movimiento, Mesa, Mesera, PedidoProducto
 from .serializers import (
     ProductoSerializer, 
     MovimientoSerializer, 
@@ -153,6 +153,95 @@ class PedidoViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(fecha_hora__date=fecha)
 
         return queryset.select_related('mesera', 'mesa')
+
+    def create(self, request, *args, **kwargs):
+        """
+        Crea un nuevo pedido o agrega productos a uno existente si 'force_append' es True.
+        """
+        force_append = request.data.get('force_append', False)
+        mesa_id = request.data.get('mesa')
+
+        if force_append:
+            # Buscar un pedido activo para esta mesa (pendiente, despachado o en_proceso)
+            # Excluimos cancelado y finalizada
+            pedido_activo = Pedido.objects.filter(
+                mesa_id=mesa_id
+            ).exclude(
+                estado__in=['cancelado', 'finalizada']
+            ).order_by('-fecha_hora').first()
+
+            if pedido_activo:
+                logger.info(f"Agregando productos al pedido existente #{pedido_activo.id}")
+                
+                productos_data = request.data.get('productos', [])
+                
+                try:
+                    with transaction.atomic():
+                        # Bloquear el pedido para edición segura
+                        pedido = Pedido.objects.select_for_update().get(pk=pedido_activo.id)
+                        
+                        total_agregado = 0
+                        
+                        for item in productos_data:
+                            producto_id = item.get('producto_id')
+                            cantidad = int(item.get('cantidad', 0))
+                            
+                            if cantidad <= 0:
+                                continue
+
+                            producto = Producto.objects.select_for_update().get(pk=producto_id)
+                            
+                            # Verificar stock
+                            if producto.stock < cantidad:
+                                return Response(
+                                    {"detail": f"Stock insuficiente para {producto.nombre}"}, 
+                                    status=status.HTTP_400_BAD_REQUEST
+                                )
+
+                            # Actualizar stock
+                            producto.stock -= cantidad
+                            producto.save()
+
+                            # Buscar si el producto ya está en el pedido
+                            pedido_producto, created = PedidoProducto.objects.get_or_create(
+                                pedido=pedido,
+                                producto=producto,
+                                defaults={'cantidad': 0}
+                            )
+                            
+                            # Actualizar cantidad en el pedido
+                            pedido_producto.cantidad += cantidad
+                            pedido_producto.save()
+                            
+                            # Sumar al total
+                            total_agregado += producto.precio * cantidad
+
+                        # Actualizar total del pedido
+                        pedido.total += total_agregado
+                        
+                        # IMPORTANTE: Resetear estado a 'pendiente' para que el bartender lo vea de nuevo
+                        # Solo si no estaba ya pendiente, para asegurar que se note el cambio
+                        pedido.estado = 'pendiente'
+                        pedido.save()
+                        
+                        # Serializar y devolver (usamos el serializer de lectura/detalle si es posible, o el standard)
+                        serializer = self.get_serializer(pedido)
+                        return Response(serializer.data, status=status.HTTP_200_OK)
+
+                except Exception as e:
+                    logger.error(f"Error al agregar productos al pedido: {e}")
+                    return Response(
+                        {"detail": "Error al actualizar el pedido existente."}, 
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                    )
+            else:
+                # Si no hay pedido activo, fallback a crear uno nuevo normal o error?
+                # El frontend asume que si manda force_append es porque sabe que existe, 
+                # pero si se cerró justo antes, mejor crear uno nuevo.
+                logger.warning(f"No se encontró pedido activo para mesa {mesa_id} con force_append=True. Creando nuevo.")
+        
+        # Comportamiento normal (crear nuevo)
+        return super().create(request, *args, **kwargs)
 
     @action(detail=False, methods=['delete'], url_path='borrar_historial')
     def borrar_historial(self, request, *args, **kwargs):
