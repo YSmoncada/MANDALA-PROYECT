@@ -45,6 +45,7 @@ class PedidoProducto(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField()
+    cantidad_despachada = models.PositiveIntegerField(default=0)
 
 class Movimiento(models.Model):
     TIPOS_MOVIMIENTO = [

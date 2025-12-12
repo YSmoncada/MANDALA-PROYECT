@@ -277,6 +277,40 @@ class PedidoViewSet(viewsets.ModelViewSet):
 
         return Response({"detail": f"Se eliminaron {count} pedidos exitosamente y se restauró el stock."}, status=status.HTTP_200_OK)
 
+    @action(detail=True, methods=['post'], url_path='despachar_producto')
+    def despachar_producto(self, request, pk=None):
+        """
+        Marca un producto específico de un pedido como despachado (cantidad_despachada = cantidad).
+        Si todos los productos están despachados, cambia el estado del pedido a 'despachado'.
+        """
+        pedido = self.get_object()
+        item_id = request.data.get('item_id')
+        
+        if not item_id:
+            return Response({"detail": "Se requiere item_id"}, status=status.HTTP_400_BAD_REQUEST)
+            
+        try:
+            item = PedidoProducto.objects.get(id=item_id, pedido=pedido)
+        except PedidoProducto.DoesNotExist:
+            return Response({"detail": "Producto no encontrado en este pedido"}, status=status.HTTP_404_NOT_FOUND)
+            
+        # Actualizar cantidad despachada
+        item.cantidad_despachada = item.cantidad
+        item.save()
+        
+        # Verificar si todos los productos del pedido han sido despachados completely
+        # (usamos item.cantidad <= item.cantidad_despachada para ser seguros)
+        all_dispatched = not pedido.pedidoproducto_set.filter(cantidad__gt=models.F('cantidad_despachada')).exists()
+        
+        if all_dispatched:
+            pedido.estado = 'despachado'
+            pedido.save()
+            msg = "Producto despachado. Pedido completado."
+        else:
+            msg = "Producto despachado."
+            
+        return Response({"detail": msg, "pedido_estado": pedido.estado}, status=status.HTTP_200_OK)
+
 class MesaViewSet(viewsets.ModelViewSet):
     queryset = Mesa.objects.all().order_by('numero')
     serializer_class = MesaSerializer

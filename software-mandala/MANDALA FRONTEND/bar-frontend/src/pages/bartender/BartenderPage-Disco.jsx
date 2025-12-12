@@ -57,6 +57,25 @@ const BartenderPageDisco = () => {
         }
     };
 
+    const handleDespacharProducto = async (pedidoId, itemId) => {
+        try {
+            const response = await axios.post(`${API_URL}/pedidos/${pedidoId}/despachar_producto/`, { item_id: itemId });
+
+            toast.success("Producto marcado como listo");
+
+            if (response.data.pedido_estado === 'despachado') {
+                // Remove order from view if fully dispatched
+                setPedidos(prev => prev.filter(p => p.id !== pedidoId));
+            } else {
+                // Update local state to reflect dispatched count
+                fetchPedidosPendientes(); // Simple refresh to get latest data
+            }
+        } catch (error) {
+            console.error("Error al despachar producto:", error);
+            toast.error("Error al marcar producto.");
+        }
+    };
+
     return (
         <div className="relative min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-4 sm:p-8 text-white">
             {/* Subtle background effects */}
@@ -114,12 +133,46 @@ const BartenderPageDisco = () => {
                                         </p>
                                     </div>
                                     <ul className="space-y-2 text-gray-300 max-h-48 overflow-y-auto pr-2">
-                                        {pedido.productos_detalle.map((item, index) => (
-                                            <li key={index} className="text-sm flex justify-between bg-black/20 p-2 rounded">
-                                                <span className="font-medium">{item.cantidad}x</span>
-                                                <span className="flex-1 ml-2">{item.producto_nombre}</span>
-                                            </li>
-                                        ))}
+                                        {pedido.productos_detalle.map((item, index) => {
+                                            const nuevos = item.cantidad - (item.cantidad_despachada || 0);
+                                            const esNuevo = nuevos > 0;
+
+                                            return (
+                                                <li
+                                                    key={index}
+                                                    className={`text-sm flex justify-between items-center p-2 rounded transition-colors ${esNuevo
+                                                            ? 'bg-gradient-to-r from-green-900/60 to-emerald-900/40 border border-green-500/50 shadow-[0_0_10px_rgba(74,222,128,0.1)]'
+                                                            : 'bg-black/20 text-gray-400'
+                                                        }`}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <span className={`font-bold ${esNuevo ? 'text-green-400' : 'text-gray-500'}`}>
+                                                            {item.cantidad}x
+                                                        </span>
+                                                        <span className={`flex-1 ${esNuevo ? 'text-white' : 'text-gray-400 decoration-gray-600'}`}>
+                                                            {item.producto_nombre}
+                                                        </span>
+
+                                                        {item.cantidad_despachada > 0 && item.cantidad_despachada < item.cantidad && (
+                                                            <span className="text-[10px] uppercase tracking-wider bg-gray-700 px-1.5 py-0.5 rounded text-gray-300">
+                                                                {item.cantidad_despachada} listos
+                                                            </span>
+                                                        )}
+                                                    </div>
+
+                                                    {esNuevo && (
+                                                        <button
+                                                            onClick={() => handleDespacharProducto(pedido.id, item.id)}
+                                                            className="ml-2 bg-green-500 hover:bg-green-600 active:bg-green-700 text-white p-1.5 rounded-lg shadow-lg shadow-green-900/50 transition-all hover:scale-110 flex items-center gap-1"
+                                                            title="Marcar estos productos como listos"
+                                                        >
+                                                            <Check size={14} strokeWidth={3} />
+                                                            <span className="text-[10px] font-bold">LISTO</span>
+                                                        </button>
+                                                    )}
+                                                </li>
+                                            );
+                                        })}
                                     </ul>
                                 </div>
 
