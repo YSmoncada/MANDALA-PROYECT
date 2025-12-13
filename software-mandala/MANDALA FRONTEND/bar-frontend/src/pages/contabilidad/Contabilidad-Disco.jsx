@@ -11,16 +11,46 @@ import { API_URL } from '../../apiConfig';
 export default function ContabilidadDisco() {
     const { auth } = usePedidosContext();
     const { mesera, codigoConfirmado, handleLogout } = auth;
-    const [activeTab, setActiveTab] = useState('dashboard');
     const [ventasDiarias, setVentasDiarias] = useState([]);
+    const [pedidosRecientes, setPedidosRecientes] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [loadingReporte, setLoadingReporte] = useState(false);
     const navigate = useNavigate();
 
-    // Placeholder data
+    useEffect(() => {
+        fetchDashboardData();
+    }, []);
+
+    const fetchDashboardData = async () => {
+        setLoading(true);
+        try {
+            const [ventasRes, pedidosRes] = await Promise.all([
+                axios.get(`${API_URL}/reportes/ventas-diarias/`),
+                axios.get(`${API_URL}/pedidos/?limit=10`) // Assuming pagination or just fetching latest
+            ]);
+            setVentasDiarias(ventasRes.data);
+            setPedidosRecientes(pedidosRes.data.results || pedidosRes.data); // Handle pagination if present
+        } catch (error) {
+            console.error("Error cargando dashboard:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Calculate Totals
+    const totalVentas = ventasDiarias.reduce((acc, curr) => acc + parseFloat(curr.total_ventas), 0);
+    // Estimating standard expenses/taxes for visualization if real data is missing
+    const totalImpuestos = totalVentas - (totalVentas / 1.08);
+    const gananciaEstimada = totalVentas / 1.08; // Base taxable amount as rough "Net Revenue" before actual cost
+
+    const formatCurrency = (val) => {
+        return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(val);
+    };
+
     const stats = [
-        { title: "Ventas Totales", value: "$0.00", icon: <DollarSign size={24} />, color: "text-green-400", bg: "bg-green-500/10", border: "border-green-500/20" },
-        { title: "Gastos", value: "$0.00", icon: <TrendingDown size={24} />, color: "text-red-400", bg: "bg-red-500/10", border: "border-red-500/20" },
-        { title: "Ganancia Neta", value: "$0.00", icon: <TrendingUp size={24} />, color: "text-[#A944FF]", bg: "bg-[#A944FF]/10", border: "border-[#A944FF]/20" },
+        { title: "Ventas Totales", value: formatCurrency(totalVentas), icon: <DollarSign size={24} />, color: "text-green-400", bg: "bg-green-500/10", border: "border-green-500/20" },
+        { title: "Impuestos (Est. 8%)", value: formatCurrency(totalImpuestos), icon: <TrendingDown size={24} />, color: "text-orange-400", bg: "bg-orange-500/10", border: "border-orange-500/20" },
+        { title: "Venta Neta (Base)", value: formatCurrency(gananciaEstimada), icon: <TrendingUp size={24} />, color: "text-[#A944FF]", bg: "bg-[#A944FF]/10", border: "border-[#A944FF]/20" },
     ];
 
     const tabs = [
@@ -30,26 +60,12 @@ export default function ContabilidadDisco() {
     ];
 
     useEffect(() => {
-        if (activeTab === 'reportes') {
-            fetchReporteVentas();
+        if (activeTab === 'reportes' && ventasDiarias.length === 0) {
+            fetchDashboardData();
         }
     }, [activeTab]);
 
-    const fetchReporteVentas = async () => {
-        try {
-            setLoadingReporte(true);
-            const response = await axios.get(`${API_URL}/reportes/ventas-diarias/`);
-            setVentasDiarias(response.data);
-        } catch (error) {
-            console.error("Error al cargar reporte de ventas:", error);
-        } finally {
-            setLoadingReporte(false);
-        }
-    };
-
-    const formatCurrency = (val) => {
-        return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(val);
-    };
+    const fetchReporteVentas = fetchDashboardData;
 
     return (
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white selection:bg-purple-500/30">
@@ -100,9 +116,9 @@ export default function ContabilidadDisco() {
                 </div>
 
                 {activeTab === 'dashboard' && (
-                    <div className="animate-fadeIn">
+                    <div className="animate-fadeIn space-y-8">
                         {/* Stats Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {stats.map((stat, index) => (
                                 <div key={index} className={`p-6 rounded-2xl backdrop-blur-md border ${stat.border} ${stat.bg} flex items-center gap-4 transition-transform hover:scale-[1.02]`}>
                                     <div className={`p-3 rounded-xl bg-black/20 ${stat.color}`}>
@@ -116,11 +132,72 @@ export default function ContabilidadDisco() {
                             ))}
                         </div>
 
-                        {/* Content Area Placeholder */}
-                        <div className="bg-[#1A103C]/60 backdrop-blur-xl border border-[#6C3FA8]/30 rounded-2xl p-8 min-h-[400px] flex items-center justify-center">
-                            <div className="text-center text-[#8A7BAF]">
-                                <p className="text-lg mb-2">Detalle de movimientos próximamente</p>
-                                <p className="text-sm opacity-60">Aquí podrás ver tablas y gráficos detallados.</p>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            {/* Simple CSS Bar Chart */}
+                            <div className="bg-[#1A103C]/80 backdrop-blur-xl border border-[#6C3FA8]/30 rounded-2xl p-6">
+                                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                                    <PieChart size={20} className="text-[#A944FF]" />
+                                    Ventas de los Últimos Días
+                                </h3>
+
+                                {ventasDiarias.length > 0 ? (
+                                    <div className="flex items-end gap-2 h-64 pb-2 border-b border-gray-700/50">
+                                        {ventasDiarias.slice(0, 7).reverse().map((dia, idx) => { // Show max 7 days
+                                            const maxVal = Math.max(...ventasDiarias.map(d => parseFloat(d.total_ventas)));
+                                            const heightPerc = (parseFloat(dia.total_ventas) / maxVal) * 100;
+
+                                            return (
+                                                <div key={idx} className="flex-1 flex flex-col items-center gap-2 group">
+                                                    <div
+                                                        className="w-full bg-gradient-to-t from-[#A944FF] to-[#FF4BC1] rounded-t-lg opacity-80 group-hover:opacity-100 transition-all relative min-h-[4px]"
+                                                        style={{ height: `${heightPerc}%` }}
+                                                    >
+                                                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black/80 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">
+                                                            {formatCurrency(dia.total_ventas)}
+                                                        </div>
+                                                    </div>
+                                                    <span className="text-[10px] text-gray-400 rotate-0 truncate w-full text-center">
+                                                        {new Date(dia.fecha).toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit' })}
+                                                    </span>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                ) : (
+                                    <div className="h-64 flex items-center justify-center text-gray-500">
+                                        No hay datos de ventas recientes
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Recent Orders List */}
+                            <div className="bg-[#1A103C]/80 backdrop-blur-xl border border-[#6C3FA8]/30 rounded-2xl p-6 flex flex-col">
+                                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                                    <Receipt size={20} className="text-green-400" />
+                                    Pedidos Recientes
+                                </h3>
+
+                                <div className="flex-1 overflow-y-auto max-h-[300px] pr-2 space-y-3 custom-scrollbar">
+                                    {pedidosRecientes.length > 0 ? pedidosRecientes.map(pedido => (
+                                        <div key={pedido.id} className="bg-black/20 p-4 rounded-xl border border-[#6C3FA8]/10 hover:border-[#A944FF]/30 transition-colors flex justify-between items-center">
+                                            <div>
+                                                <p className="font-bold text-white">Pedido #{pedido.id}</p>
+                                                <p className="text-xs text-gray-400">{new Date(pedido.fecha_hora).toLocaleDateString()} - {new Date(pedido.fecha_hora).toLocaleTimeString()}</p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="font-bold text-[#A944FF]">{formatCurrency(pedido.total)}</p>
+                                                <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider ${pedido.estado === 'despachado' ? 'bg-green-500/20 text-green-300' :
+                                                        pedido.estado === 'pendiente' ? 'bg-yellow-500/20 text-yellow-300' :
+                                                            'bg-gray-700 text-gray-300'
+                                                    }`}>
+                                                    {pedido.estado}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )) : (
+                                        <p className="text-center text-gray-500 py-10">No hay pedidos registrados</p>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
