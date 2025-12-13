@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { User, Lock, ArrowLeft, Plus, Sparkles } from "lucide-react";
+import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import HeaderPedidosDisco from "../pedidospage/HeaderPedidos-Disco";
 import CodeInputDisco from "./CodeInput-Disco";
@@ -192,7 +193,25 @@ export default function PedidosDisco() {
                         <CodeInputDisco
                             mesera={mesera}
                             onBack={handleLogout}
-                            onSubmit={handleCodigoSubmit}
+                            onSubmit={(code) => {
+                                const success = handleCodigoSubmit(code);
+                                if (!success) {
+                                    toast.error("Clave incorrecta", {
+                                        style: {
+                                            background: "rgba(220, 38, 38, 0.9)", // red-600
+                                            color: "white",
+                                            border: "1px solid #991B1B", // red-800
+                                            fontWeight: "bold",
+                                            backdropFilter: "blur(10px)",
+                                            boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
+                                        },
+                                        iconTheme: {
+                                            primary: "white",
+                                            secondary: "#DC2626"
+                                        }
+                                    });
+                                }
+                            }}
                         />
                     </div>
                 )}

@@ -51,7 +51,6 @@ export const usePedidosAuth = () => {
             sessionStorage.setItem('codigoConfirmado', 'true');
             return true;
         }
-        alert('Código incorrecto. Inténtalo de nuevo.');
         return false;
     }, [selectedMesera]);
 
