@@ -372,3 +372,35 @@ class MeseraTotalPedidosView(generics.ListAPIView):
             mesera_nombre=F('nombre') # Mapear el 'nombre' del modelo Mesera al campo 'mesera_nombre' del serializer
         )
         return queryset
+
+class ReporteVentasDiariasView(generics.ListAPIView):
+    """
+    Vista para obtener el reporte de ventas diarias.
+    Agrupa los pedidos por fecha y suma los totales.
+    Útil para reportes contables y DIAN.
+    """
+    def list(self, request, *args, **kwargs):
+        # Obtener rango de fechas opcional
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+
+        queryset = Pedido.objects.exclude(estado='cancelado')
+
+        if start_date:
+            queryset = queryset.filter(fecha_hora__date__gte=start_date)
+        if end_date:
+            queryset = queryset.filter(fecha_hora__date__lte=end_date)
+
+        # Agrupar por fecha
+        # Nota: En SQLite la función de fecha es diferente que en Postgres,
+        # pero Django suele abstraer esto con TruncDate.
+        from django.db.models.functions import TruncDate
+        
+        ventas_diarias = queryset.annotate(
+            fecha=TruncDate('fecha_hora')
+        ).values('fecha').annotate(
+            total_ventas=Sum('total'),
+            cantidad_pedidos=models.Count('id')
+        ).order_by('-fecha')
+
+        return Response(ventas_diarias)

@@ -1,27 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import HeaderPedidosDisco from '../pedidospage/HeaderPedidos-Disco';
 import { usePedidosContext } from '../../context/PedidosContext';
-import { DollarSign, TrendingUp, TrendingDown, Calendar, FileText, PieChart, ArrowLeft } from 'lucide-react';
+import { DollarSign, TrendingUp, TrendingDown, Calendar, FileText, PieChart, ArrowLeft, Receipt, ExternalLink, Copy } from 'lucide-react';
+import toast from 'react-hot-toast';
 import PUCDisco from './components/PUC-Disco';
+import { API_URL } from '../../apiConfig';
 
 export default function ContabilidadDisco() {
     const { auth } = usePedidosContext();
     const { mesera, codigoConfirmado, handleLogout } = auth;
     const [activeTab, setActiveTab] = useState('dashboard');
+    const [ventasDiarias, setVentasDiarias] = useState([]);
+    const [loadingReporte, setLoadingReporte] = useState(false);
     const navigate = useNavigate();
 
     // Placeholder data
     const stats = [
-        { title: "Ventas Totales", value: "$1,250.00", icon: <DollarSign size={24} />, color: "text-green-400", bg: "bg-green-500/10", border: "border-green-500/20" },
-        { title: "Gastos", value: "$450.00", icon: <TrendingDown size={24} />, color: "text-red-400", bg: "bg-red-500/10", border: "border-red-500/20" },
-        { title: "Ganancia Neta", value: "$800.00", icon: <TrendingUp size={24} />, color: "text-[#A944FF]", bg: "bg-[#A944FF]/10", border: "border-[#A944FF]/20" },
+        { title: "Ventas Totales", value: "$0.00", icon: <DollarSign size={24} />, color: "text-green-400", bg: "bg-green-500/10", border: "border-green-500/20" },
+        { title: "Gastos", value: "$0.00", icon: <TrendingDown size={24} />, color: "text-red-400", bg: "bg-red-500/10", border: "border-red-500/20" },
+        { title: "Ganancia Neta", value: "$0.00", icon: <TrendingUp size={24} />, color: "text-[#A944FF]", bg: "bg-[#A944FF]/10", border: "border-[#A944FF]/20" },
     ];
 
     const tabs = [
         { id: 'dashboard', label: 'Panel', icon: <PieChart size={18} /> },
+        { id: 'reportes', label: 'Reportes DIAN', icon: <Receipt size={18} /> },
         { id: 'puc', label: 'Plan de Cuentas (PUC)', icon: <FileText size={18} /> },
     ];
+
+    useEffect(() => {
+        if (activeTab === 'reportes') {
+            fetchReporteVentas();
+        }
+    }, [activeTab]);
+
+    const fetchReporteVentas = async () => {
+        try {
+            setLoadingReporte(true);
+            const response = await axios.get(`${API_URL}/reportes/ventas-diarias/`);
+            setVentasDiarias(response.data);
+        } catch (error) {
+            console.error("Error al cargar reporte de ventas:", error);
+        } finally {
+            setLoadingReporte(false);
+        }
+    };
+
+    const formatCurrency = (val) => {
+        return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(val);
+    };
 
     return (
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white selection:bg-purple-500/30">
@@ -94,6 +122,108 @@ export default function ContabilidadDisco() {
                                 <p className="text-lg mb-2">Detalle de movimientos próximamente</p>
                                 <p className="text-sm opacity-60">Aquí podrás ver tablas y gráficos detallados.</p>
                             </div>
+                        </div>
+                    </div>
+                )}
+
+                {activeTab === 'reportes' && (
+                    <div className="animate-fadeIn space-y-6">
+                        <div className="bg-[#441E73]/30 border border-[#A944FF]/20 rounded-xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div>
+                                <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                                    <Receipt size={20} className="text-[#A944FF]" />
+                                    Solución Gratuita DIAN
+                                </h3>
+                                <p className="text-[#C2B6D9] text-sm max-w-2xl">
+                                    Utiliza estos valores para realizar tu <strong>Factura Global Diaria</strong> o <strong>Nota Crédito</strong> en el software gratuito.
+                                    Al final del día, consolida las ventas POS en un solo documento electrónico si utilizas el modelo de Factura Global.
+                                </p>
+                            </div>
+                            <a
+                                href="https://facturaciongratuitadian.dian.gov.co/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="whitespace-nowrap flex items-center gap-2 bg-[#104a28] hover:bg-[#156035] text-white px-6 py-3 rounded-xl font-bold transition-all hover:scale-105 shadow-lg shadow-green-900/30 border border-green-500/30"
+                            >
+                                Ingresar a DIAN
+                                <ExternalLink size={16} />
+                            </a>
+                        </div>
+
+                        <div className="bg-[#1A103C]/80 backdrop-blur-xl border border-[#6C3FA8]/30 rounded-2xl overflow-hidden">
+                            <div className="p-6 border-b border-[#6C3FA8]/20 flex justify-between items-center">
+                                <h2 className="text-lg font-bold text-white">Datos para Facturación Global</h2>
+                                <button onClick={fetchReporteVentas} className="text-xs bg-[#A944FF]/20 text-[#A944FF] px-3 py-1 rounded hover:bg-[#A944FF]/40 transition">Refrescar Datos</button>
+                            </div>
+
+                            {loadingReporte ? (
+                                <div className="p-12 text-center text-[#A944FF]">Cargando reporte...</div>
+                            ) : (
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-left">
+                                        <thead className="bg-[#2B0D49] text-[#C2B6D9] text-xs uppercase tracking-wider">
+                                            <tr>
+                                                <th className="p-4">Fecha</th>
+                                                <th className="p-4 text-left">Concepto Sugerido</th>
+                                                <th className="p-4 text-right">Base Imponible (Sin Imp.)</th>
+                                                <th className="p-4 text-right">Impuesto (INC 8%)</th>
+                                                <th className="p-4 text-right">Total a Pagar</th>
+                                                <th className="p-4 text-center">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-[#6C3FA8]/10 text-sm">
+                                            {ventasDiarias.length > 0 ? ventasDiarias.map((dia, idx) => {
+                                                const total = parseFloat(dia.total_ventas);
+                                                const base = total / 1.08;
+                                                const impuesto = total - base;
+
+                                                return (
+                                                    <tr key={idx} className="hover:bg-[#A944FF]/5 transition-colors text-gray-300">
+                                                        <td className="p-4 font-bold text-white whitespace-nowrap">{dia.fecha}</td>
+                                                        <td className="p-4 text-sm italic text-gray-400">
+                                                            Ventas generales del día {dia.fecha} (Consumo POS)
+                                                        </td>
+                                                        <td className="p-4 text-right font-mono text-[#A944FF]">
+                                                            {formatCurrency(base)}
+                                                        </td>
+                                                        <td className="p-4 text-right font-mono text-orange-400">
+                                                            {formatCurrency(impuesto)}
+                                                        </td>
+                                                        <td className="p-4 text-right font-mono font-bold text-green-400">
+                                                            {formatCurrency(total)}
+                                                        </td>
+                                                        <td className="p-4 text-center">
+                                                            <button
+                                                                onClick={() => {
+                                                                    navigator.clipboard.writeText(`Base: ${Math.round(base)} | Impuesto: ${Math.round(impuesto)} | Total: ${Math.round(total)}`);
+                                                                    toast.success("Valores copiados al portapapeles");
+                                                                }}
+                                                                className="text-xs flex items-center gap-1 mx-auto bg-white/5 hover:bg-white/10 px-2 py-1 rounded text-[#C2B6D9] transition"
+                                                                title="Copiar valores para pegar en DIAN"
+                                                            >
+                                                                <Copy size={12} /> Copiar
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            }) : (
+                                                <tr>
+                                                    <td colSpan="6" className="p-8 text-center text-gray-500">
+                                                        No hay ventas para reportar hoy.
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                        <tfoot className="bg-[#2B0D49]/50 text-xs text-gray-500">
+                                            <tr>
+                                                <td colSpan="6" className="p-4 text-center">
+                                                    * Los valores se calculan asumiendo que los precios de los productos ya tienen el Impuesto al Consumo (8%) incluido.
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}
