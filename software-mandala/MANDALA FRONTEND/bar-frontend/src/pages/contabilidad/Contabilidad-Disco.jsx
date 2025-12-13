@@ -11,6 +11,7 @@ import { API_URL } from '../../apiConfig';
 export default function ContabilidadDisco() {
     const { auth } = usePedidosContext();
     const { mesera, codigoConfirmado, handleLogout } = auth;
+    const [activeTab, setActiveTab] = useState('dashboard');
     const [ventasDiarias, setVentasDiarias] = useState([]);
     const [pedidosRecientes, setPedidosRecientes] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -29,15 +30,17 @@ export default function ContabilidadDisco() {
                 axios.get(`${API_URL}/pedidos/?limit=10`)
             ]);
 
-            // Safety checks to ensure we always have arrays
-            const ventasData = Array.isArray(ventasRes.data) ? ventasRes.data : [];
-            const pedidosData = pedidosRes.data.results ? pedidosRes.data.results : (Array.isArray(pedidosRes.data) ? pedidosRes.data : []);
+            // Safety checks
+            const rawVentas = Array.isArray(ventasRes.data) ? ventasRes.data : [];
+            const safeVentas = rawVentas.filter(v => v && typeof v === 'object');
 
-            setVentasDiarias(ventasData);
-            setPedidosRecientes(pedidosData);
+            const rawPedidos = pedidosRes.data.results ? pedidosRes.data.results : (Array.isArray(pedidosRes.data) ? pedidosRes.data : []);
+            const safePedidos = rawPedidos.filter(p => p && typeof p === 'object');
+
+            setVentasDiarias(safeVentas);
+            setPedidosRecientes(safePedidos);
         } catch (error) {
             console.error("Error cargando dashboard:", error);
-            // Default to empty arrays on error to prevent crashes
             setVentasDiarias([]);
             setPedidosRecientes([]);
         } finally {
@@ -45,14 +48,23 @@ export default function ContabilidadDisco() {
         }
     };
 
-    // Calculate Totals
-    const totalVentas = ventasDiarias.reduce((acc, curr) => acc + parseFloat(curr.total_ventas), 0);
+    // Calculate Totals safely
+    const totalVentas = ventasDiarias.reduce((acc, curr) => {
+        const val = parseFloat(curr?.total_ventas || 0);
+        return acc + (isNaN(val) ? 0 : val);
+    }, 0);
+
     // Estimating standard expenses/taxes for visualization if real data is missing
-    const totalImpuestos = totalVentas - (totalVentas / 1.08);
-    const gananciaEstimada = totalVentas / 1.08; // Base taxable amount as rough "Net Revenue" before actual cost
+    const totalImpuestos = totalVentas > 0 ? totalVentas - (totalVentas / 1.08) : 0;
+    const gananciaEstimada = totalVentas > 0 ? totalVentas / 1.08 : 0;
 
     const formatCurrency = (val) => {
-        return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(val);
+        if (val === null || val === undefined || isNaN(val)) return "$ 0";
+        try {
+            return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(val);
+        } catch (e) {
+            return "$ 0";
+        }
     };
 
     const stats = [
@@ -150,9 +162,14 @@ export default function ContabilidadDisco() {
 
                                 {ventasDiarias.length > 0 ? (
                                     <div className="flex items-end gap-2 h-64 pb-2 border-b border-gray-700/50">
-                                        {ventasDiarias.slice(0, 7).reverse().map((dia, idx) => { // Show max 7 days
-                                            const maxVal = Math.max(...ventasDiarias.map(d => parseFloat(d.total_ventas)));
-                                            const heightPerc = (parseFloat(dia.total_ventas) / maxVal) * 100;
+                                        {ventasDiarias.slice(0, 7).reverse().map((dia, idx) => {
+                                            const total = parseFloat(dia.total_ventas || 0);
+                                            // Calculate max value safely
+                                            const maxVal = Math.max(...ventasDiarias.map(d => parseFloat(d.total_ventas || 0)), 1); // Avoid 0 or -Infinity
+
+                                            // Handle potential edge cases
+                                            let heightPerc = (total / maxVal) * 100;
+                                            if (isNaN(heightPerc) || heightPerc < 0) heightPerc = 0;
 
                                             return (
                                                 <div key={idx} className="flex-1 flex flex-col items-center gap-2 group">
@@ -161,7 +178,7 @@ export default function ContabilidadDisco() {
                                                         style={{ height: `${heightPerc}%` }}
                                                     >
                                                         <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black/80 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">
-                                                            {formatCurrency(dia.total_ventas)}
+                                                            {formatCurrency(total)}
                                                         </div>
                                                     </div>
                                                     <span className="text-[10px] text-gray-400 rotate-0 truncate w-full text-center">
