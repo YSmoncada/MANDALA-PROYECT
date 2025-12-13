@@ -26,12 +26,20 @@ export default function ContabilidadDisco() {
         try {
             const [ventasRes, pedidosRes] = await Promise.all([
                 axios.get(`${API_URL}/reportes/ventas-diarias/`),
-                axios.get(`${API_URL}/pedidos/?limit=10`) // Assuming pagination or just fetching latest
+                axios.get(`${API_URL}/pedidos/?limit=10`)
             ]);
-            setVentasDiarias(ventasRes.data);
-            setPedidosRecientes(pedidosRes.data.results || pedidosRes.data); // Handle pagination if present
+
+            // Safety checks to ensure we always have arrays
+            const ventasData = Array.isArray(ventasRes.data) ? ventasRes.data : [];
+            const pedidosData = pedidosRes.data.results ? pedidosRes.data.results : (Array.isArray(pedidosRes.data) ? pedidosRes.data : []);
+
+            setVentasDiarias(ventasData);
+            setPedidosRecientes(pedidosData);
         } catch (error) {
             console.error("Error cargando dashboard:", error);
+            // Default to empty arrays on error to prevent crashes
+            setVentasDiarias([]);
+            setPedidosRecientes([]);
         } finally {
             setLoading(false);
         }
@@ -187,8 +195,8 @@ export default function ContabilidadDisco() {
                                             <div className="text-right">
                                                 <p className="font-bold text-[#A944FF]">{formatCurrency(pedido.total)}</p>
                                                 <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider ${pedido.estado === 'despachado' ? 'bg-green-500/20 text-green-300' :
-                                                        pedido.estado === 'pendiente' ? 'bg-yellow-500/20 text-yellow-300' :
-                                                            'bg-gray-700 text-gray-300'
+                                                    pedido.estado === 'pendiente' ? 'bg-yellow-500/20 text-yellow-300' :
+                                                        'bg-gray-700 text-gray-300'
                                                     }`}>
                                                     {pedido.estado}
                                                 </span>
