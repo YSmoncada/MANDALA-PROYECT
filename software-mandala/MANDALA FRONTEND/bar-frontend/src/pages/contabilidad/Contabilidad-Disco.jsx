@@ -13,7 +13,6 @@ export default function ContabilidadDisco() {
     const { mesera, codigoConfirmado, handleLogout } = auth;
     const [activeTab, setActiveTab] = useState('dashboard');
     const [ventasDiarias, setVentasDiarias] = useState([]);
-    const [pedidosRecientes, setPedidosRecientes] = useState([]);
     const [loading, setLoading] = useState(false);
     const [loadingReporte, setLoadingReporte] = useState(false);
     const navigate = useNavigate();
@@ -25,24 +24,16 @@ export default function ContabilidadDisco() {
     const fetchDashboardData = async () => {
         setLoading(true);
         try {
-            const [ventasRes, pedidosRes] = await Promise.all([
-                axios.get(`${API_URL}/reportes/ventas-diarias/`),
-                axios.get(`${API_URL}/pedidos/?limit=10`)
-            ]);
+            const response = await axios.get(`${API_URL}/reportes/ventas-diarias/`);
 
             // Safety checks
-            const rawVentas = Array.isArray(ventasRes.data) ? ventasRes.data : [];
+            const rawVentas = Array.isArray(response.data) ? response.data : [];
             const safeVentas = rawVentas.filter(v => v && typeof v === 'object');
 
-            const rawPedidos = pedidosRes.data.results ? pedidosRes.data.results : (Array.isArray(pedidosRes.data) ? pedidosRes.data : []);
-            const safePedidos = rawPedidos.filter(p => p && typeof p === 'object');
-
             setVentasDiarias(safeVentas);
-            setPedidosRecientes(safePedidos);
         } catch (error) {
             console.error("Error cargando dashboard:", error);
             setVentasDiarias([]);
-            setPedidosRecientes([]);
         } finally {
             setLoading(false);
         }
@@ -152,77 +143,74 @@ export default function ContabilidadDisco() {
                             ))}
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            {/* Simple CSS Bar Chart */}
-                            <div className="bg-[#1A103C]/80 backdrop-blur-xl border border-[#6C3FA8]/30 rounded-2xl p-6">
-                                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                                    <PieChart size={20} className="text-[#A944FF]" />
-                                    Ventas de los Últimos Días
+                        <div className="w-full">
+                            {/* Enhanced Full Width Chart */}
+                            <div className="bg-[#1A103C]/80 backdrop-blur-xl border border-[#A944FF]/30 rounded-2xl p-8 relative overflow-hidden shadow-[0_0_50px_rgba(169,68,255,0.1)]">
+                                {/* Glow Effect Behind */}
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-purple-600/10 blur-3xl rounded-full -mr-10 -mt-10 pointer-events-none"></div>
+
+                                <h3 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
+                                    <TrendingUp size={24} className="text-[#A944FF]" />
+                                    Comportamiento de Ventas (Últimos 7 días)
                                 </h3>
 
                                 {ventasDiarias.length > 0 ? (
-                                    <div className="flex items-end gap-2 h-64 pb-2 border-b border-gray-700/50">
-                                        {ventasDiarias.slice(0, 7).reverse().map((dia, idx) => {
-                                            const total = parseFloat(dia.total_ventas || 0);
-                                            // Calculate max value safely
-                                            const maxVal = Math.max(...ventasDiarias.map(d => parseFloat(d.total_ventas || 0)), 1); // Avoid 0 or -Infinity
+                                    <div className="relative h-96 w-full">
+                                        {/* Grid Lines */}
+                                        <div className="absolute inset-0 flex flex-col justify-between text-xs text-gray-600 pointer-events-none z-0 pb-6 pr-4">
+                                            {[100, 75, 50, 25, 0].map((percent) => (
+                                                <div key={percent} className="w-full border-b border-gray-700/30 flex items-center h-0.5">
+                                                    <span className="mb-2 ml-1 opacity-50">{percent}%</span>
+                                                </div>
+                                            ))}
+                                        </div>
 
-                                            // Handle potential edge cases
-                                            let heightPerc = (total / maxVal) * 100;
-                                            if (isNaN(heightPerc) || heightPerc < 0) heightPerc = 0;
+                                        {/* Bars Container */}
+                                        <div className="absolute inset-x-0 bottom-0 top-0 flex items-end justify-around gap-4 pb-6 px-4 z-10 pl-8">
+                                            {ventasDiarias.slice(0, 7).reverse().map((dia, idx) => {
+                                                const total = parseFloat(dia.total_ventas || 0);
+                                                const maxVal = Math.max(...ventasDiarias.map(d => parseFloat(d.total_ventas || 0)), 1);
 
-                                            return (
-                                                <div key={idx} className="flex-1 flex flex-col items-center gap-2 group">
-                                                    <div
-                                                        className="w-full bg-gradient-to-t from-[#A944FF] to-[#FF4BC1] rounded-t-lg opacity-80 group-hover:opacity-100 transition-all relative min-h-[4px]"
-                                                        style={{ height: `${heightPerc}%` }}
-                                                    >
-                                                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black/80 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">
-                                                            {formatCurrency(total)}
+                                                let heightPerc = (total / maxVal) * 100;
+                                                if (isNaN(heightPerc) || heightPerc < 0) heightPerc = 0;
+
+                                                return (
+                                                    <div key={idx} className="flex-1 flex flex-col items-center gap-3 group h-full justify-end">
+                                                        {/* Bar */}
+                                                        <div
+                                                            className="w-full max-w-[60px] bg-gradient-to-t from-[#441E73] to-[#A944FF] rounded-t-xl relative transition-all duration-500 hover:shadow-[0_0_20px_rgba(169,68,255,0.6)] hover:brightness-110 group-hover:scale-y-105 origin-bottom cursor-pointer"
+                                                            style={{ height: `${heightPerc}%`, minHeight: '4px' }}
+                                                        >
+                                                            {/* Top Cap Highlight */}
+                                                            <div className="absolute top-0 left-0 right-0 h-1 bg-white/30 rounded-t-xl"></div>
+
+                                                            {/* Tooltip */}
+                                                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-[#0E0D23] border border-[#A944FF] text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 whitespace-nowrap shadow-xl z-20 pointer-events-none">
+                                                                {formatCurrency(total)}
+                                                                <div className="absolute bottom-[-5px] left-1/2 -translate-x-1/2 w-2 h-2 bg-[#0E0D23] border-b border-r border-[#A944FF] rotate-45"></div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Label */}
+                                                        <div className="text-center">
+                                                            <span className="text-xs font-bold text-gray-300 block mb-1">
+                                                                {new Date(dia.fecha).toLocaleDateString('es-CO', { weekday: 'short' })}
+                                                            </span>
+                                                            <span className="text-[10px] text-gray-500">
+                                                                {new Date(dia.fecha).toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit' })}
+                                                            </span>
                                                         </div>
                                                     </div>
-                                                    <span className="text-[10px] text-gray-400 rotate-0 truncate w-full text-center">
-                                                        {new Date(dia.fecha).toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit' })}
-                                                    </span>
-                                                </div>
-                                            )
-                                        })}
+                                                )
+                                            })}
+                                        </div>
                                     </div>
                                 ) : (
-                                    <div className="h-64 flex items-center justify-center text-gray-500">
-                                        No hay datos de ventas recientes
+                                    <div className="h-96 flex flex-col items-center justify-center text-gray-500 border border-dashed border-gray-700 rounded-2xl bg-black/20">
+                                        <PieChart size={48} className="text-gray-700 mb-4" />
+                                        <p>No hay datos de ventas recientes para graficar</p>
                                     </div>
                                 )}
-                            </div>
-
-                            {/* Recent Orders List */}
-                            <div className="bg-[#1A103C]/80 backdrop-blur-xl border border-[#6C3FA8]/30 rounded-2xl p-6 flex flex-col">
-                                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                                    <Receipt size={20} className="text-green-400" />
-                                    Pedidos Recientes
-                                </h3>
-
-                                <div className="flex-1 overflow-y-auto max-h-[300px] pr-2 space-y-3 custom-scrollbar">
-                                    {pedidosRecientes.length > 0 ? pedidosRecientes.map(pedido => (
-                                        <div key={pedido.id} className="bg-black/20 p-4 rounded-xl border border-[#6C3FA8]/10 hover:border-[#A944FF]/30 transition-colors flex justify-between items-center">
-                                            <div>
-                                                <p className="font-bold text-white">Pedido #{pedido.id}</p>
-                                                <p className="text-xs text-gray-400">{new Date(pedido.fecha_hora).toLocaleDateString()} - {new Date(pedido.fecha_hora).toLocaleTimeString()}</p>
-                                            </div>
-                                            <div className="text-right">
-                                                <p className="font-bold text-[#A944FF]">{formatCurrency(pedido.total)}</p>
-                                                <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider ${pedido.estado === 'despachado' ? 'bg-green-500/20 text-green-300' :
-                                                    pedido.estado === 'pendiente' ? 'bg-yellow-500/20 text-yellow-300' :
-                                                        'bg-gray-700 text-gray-300'
-                                                    }`}>
-                                                    {pedido.estado}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    )) : (
-                                        <p className="text-center text-gray-500 py-10">No hay pedidos registrados</p>
-                                    )}
-                                </div>
                             </div>
                         </div>
                     </div>
