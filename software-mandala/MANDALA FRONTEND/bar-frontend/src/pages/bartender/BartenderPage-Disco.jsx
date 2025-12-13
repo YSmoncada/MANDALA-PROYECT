@@ -141,8 +141,8 @@ const BartenderPageDisco = () => {
                                                 <li
                                                     key={index}
                                                     className={`text-sm flex justify-between items-center p-2 rounded transition-colors ${esNuevo
-                                                            ? 'bg-gradient-to-r from-green-900/60 to-emerald-900/40 border border-green-500/50 shadow-[0_0_10px_rgba(74,222,128,0.1)]'
-                                                            : 'bg-black/20 text-gray-400'
+                                                        ? 'bg-gradient-to-r from-green-900/60 to-emerald-900/40 border border-green-500/50 shadow-[0_0_10px_rgba(74,222,128,0.1)]'
+                                                        : 'bg-black/20 text-gray-400'
                                                         }`}
                                                 >
                                                     <div className="flex items-center gap-2">
@@ -154,8 +154,8 @@ const BartenderPageDisco = () => {
                                                         </span>
 
                                                         {item.cantidad_despachada > 0 && item.cantidad_despachada < item.cantidad && (
-                                                            <span className="text-[10px] uppercase tracking-wider bg-gray-700 px-1.5 py-0.5 rounded text-gray-300">
-                                                                {item.cantidad_despachada} listos
+                                                            <span className="text-[10px] uppercase tracking-wider bg-orange-500/20 border border-orange-500/50 px-2 py-0.5 rounded text-orange-300 font-bold ml-2">
+                                                                {nuevos} por alistar
                                                             </span>
                                                         )}
                                                     </div>
