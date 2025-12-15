@@ -437,4 +437,7 @@ class LoginView(APIView):
                 'detail': f'Bienvenido {user.username}'
             })
             
-        return Response({'detail': 'Credenciales inválidas'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({
+            'success': False,
+            'detail': 'Credenciales inválidas'
+        }, status=status.HTTP_401_UNAUTHORIZED)
