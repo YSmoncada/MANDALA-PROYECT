@@ -46,10 +46,13 @@ export default function PedidosPageDisco() {
     useEffect(() => {
         if (!isInitialized) return;
 
-        if (!mesera || !codigoConfirmado) {
+        // Solo redirigir si el usuario NO es bartender/admin y no tiene credenciales de mesera.
+        const esOtroRol = auth.role === 'bartender' || auth.role === 'admin';
+
+        if (!esOtroRol && (!mesera || !codigoConfirmado)) {
             navigate('/login-disco', { replace: true });
         }
-    }, [isInitialized, mesera, codigoConfirmado, navigate]);
+    }, [isInitialized, mesera, codigoConfirmado, navigate, auth.role]);
 
     const handleFinalizarPedido = async () => {
         if (orderItems.length === 0) {
