@@ -19,9 +19,9 @@ export default function HeaderPedidosDisco({ mesera, onLogout, codigoConfirmado 
     const inactiveClasses = "text-[#C2B6D9] hover:text-white hover:bg-[#441E73]/50";
 
     const navLinks = [
-        { href: "/login-mesera-pedidos", label: "Menú", icon: <ShoppingCart size={18} /> },
+        { href: "/", label: "Menú", icon: <HomeIcon size={18} /> },
+        { href: "/login-mesera-pedidos", label: "Pedido", icon: <ShoppingCart size={18} /> },
         { href: "/mis-pedidos-disco", label: "Mis Pedidos", icon: <Clock size={18} /> },
-        { href: "/", label: "Inicio", icon: <HomeIcon size={18} /> },
     ];
 
     return (
