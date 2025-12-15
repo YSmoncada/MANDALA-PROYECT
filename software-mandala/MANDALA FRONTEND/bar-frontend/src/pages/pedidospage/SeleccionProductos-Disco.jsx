@@ -17,10 +17,14 @@ export default function SeleccionProductosDisco() {
 
     // Redirect to login if not authenticated
     useEffect(() => {
-        if (isInitialized && !codigoConfirmado) {
-            navigate('/login', { replace: true });
+        if (!isInitialized) return;
+
+        const esAdminOBartender = auth.role === 'admin' || auth.role === 'bartender';
+
+        if (!esAdminOBartender && !codigoConfirmado) {
+            navigate('/login-disco', { replace: true });
         }
-    }, [isInitialized, codigoConfirmado, navigate]);
+    }, [isInitialized, codigoConfirmado, auth.role, navigate]);
 
     if (!isInitialized) {
         return (

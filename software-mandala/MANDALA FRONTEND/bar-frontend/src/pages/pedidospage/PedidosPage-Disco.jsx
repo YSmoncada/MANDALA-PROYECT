@@ -104,7 +104,9 @@ export default function PedidosPageDisco() {
             if (auth.role === 'bartender') {
                 navigate('/bartender'); // Redirigir al bartender a su vista principal
             } else {
-                navigate('/pedidos-disco'); // Comportamiento por defecto para meseras
+                // Para admin y meseras, los redirigimos al menú principal para que puedan elegir qué hacer.
+                // Esto evita que el admin quede "atrapado" en un flujo de mesera.
+                navigate('/home-disco');
             }
 
         } else {
