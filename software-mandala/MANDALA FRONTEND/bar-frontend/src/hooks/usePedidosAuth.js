@@ -78,10 +78,13 @@ export const usePedidosAuth = () => {
                 sessionStorage.setItem('codigoConfirmado', 'true');
                 return { success: true, role };
             }
-            return { success: false, message: 'Invalid credentials' };
+            return { success: false, message: 'Credenciales inválidas' };
         } catch (error) {
             console.error("Login error:", error);
-            return { success: false, message: error.response?.data?.detail || "Error de conexión" };
+            if (error.response?.status === 404) {
+                return { success: false, message: "Endpoint de login no encontrado. Verifica que el backend esté corriendo." };
+            }
+            return { success: false, message: error.response?.data?.detail || error.response?.data?.message || "Error de conexión con el servidor" };
         }
     };
 
