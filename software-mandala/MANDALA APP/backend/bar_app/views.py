@@ -414,13 +414,15 @@ class LoginView(APIView):
     Las Meseras siguen usando su código PIN (validado en frontend por ahora).
     """
     def post(self, request):
+        from django.contrib.auth import login
         username = request.data.get('username')
         password = request.data.get('password')
         
         # Validar credenciales contra el sistema de usuarios de Django
-        user = authenticate(username=username, password=password)
+        user = authenticate(request, username=username, password=password)
         
         if user:
+            login(request, user) # Establish session
             # Determinar rol basado en grupos
             role = 'admin' # Default
             if user.groups.filter(name='Bartender').exists():

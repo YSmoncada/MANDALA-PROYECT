@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { User, Lock, ArrowLeft, Plus, Sparkles } from "lucide-react";
+import { User, Lock, ArrowLeft, Plus, Sparkles, Trash2Icon } from "lucide-react";
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import HeaderPedidosDisco from "../pedidospage/HeaderPedidos-Disco";
@@ -100,15 +100,15 @@ export default function PedidosDisco() {
             {/* Adjusted padding - only add top padding when header is visible */}
             <div className={`flex flex-1 items-center justify-center p-4 sm:p-8 relative z-10 pt-20 sm:pt-24`}>
 
-                {/* System Login Form */}
+                {/* System Login Form (Modal-like) */}
                 {showSystemLogin && (
                     <div className="bg-[#441E73]/80 backdrop-blur-xl border border-[#6C3FA8] p-8 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.3)] w-full max-w-md text-center animate-fadeIn relative overflow-hidden">
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#A944FF] to-transparent"></div>
                         <div className="w-16 h-16 bg-gradient-to-br from-[#A944FF] to-[#FF4BC1] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-[#A944FF]/20">
                             <Lock size={24} className="text-white" />
                         </div>
-                        <h2 className="text-2xl font-bold text-white mb-2">Acceso Administrativo</h2>
-                        <p className="text-[#C2B6D9] text-sm mb-8">Ingresa tus credenciales de sistema</p>
+                        <h2 className="text-2xl font-bold text-white mb-2">Acceso Sistema</h2>
+                        <p className="text-[#C2B6D9] text-sm mb-8">Ingresa tus credenciales</p>
 
                         <form onSubmit={handleSystemLoginSubmit} className="flex flex-col gap-4">
                             <div className="group relative">
@@ -186,40 +186,67 @@ export default function PedidosDisco() {
 
                 {/* Step 1: Select Mesera / System Login Option */}
                 {!mesera && !codigoConfirmado && !showAddForm && !showSystemLogin && (
-                    <div className="w-full max-w-6xl mx-auto -mt-16">
+                    <div className="w-full max-w-6xl mx-auto -mt-16 relative">
+                        {/* Admin Button - Floating Top Right or Distinct */}
+                        <div className="absolute top-0 right-0 hidden sm:block">
+                            <button
+                                onClick={() => {
+                                    setSysUsername('admin');
+                                    setShowSystemLogin(true);
+                                }}
+                                className="flex items-center gap-2 px-4 py-2 rounded-full border border-purple-500/30 bg-purple-900/20 text-purple-300 hover:bg-purple-900/40 hover:text-white transition-all text-xs font-bold tracking-widest uppercase hover:shadow-[0_0_15px_rgba(169,68,255,0.3)]"
+                            >
+                                <Lock size={12} />
+                                Admin
+                            </button>
+                        </div>
 
                         <div className="text-center mb-12 mt-16 sm:mt-2">
                             <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight drop-shadow-[0_0_25px_rgba(169,68,255,0.4)]">
                                 LOGIN
                             </h1>
-                            <p className="text-xl text-[#C2B6D9] font-light tracking-wide">Selecciona tu perfil o ingresa al sistema</p>
+                            <p className="text-xl text-[#C2B6D9] font-light tracking-wide">Selecciona tu perfil</p>
                         </div>
 
                         <div className="flex flex-wrap justify-center gap-6">
-                            {meseras.map((meseraObj) => (
+
+                            {/* Render Meseras + Bartender Combined */}
+                            {/* We put Bartender at the START or END? User said "next to". Let's put it as the first item or last item of the list. */}
+                            {/* Let's combine them array */}
+                            {[bartenderUser, ...meseras].map((profile) => (
                                 <button
-                                    key={meseraObj.id}
-                                    onClick={() => handleSelectMesera(meseraObj)}
-                                    className="group relative flex flex-col items-center gap-4 bg-[#6C3FA8]/20 hover:bg-[#6C3FA8]/40 border border-[#6C3FA8] hover:border-[#A944FF] rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(169,68,255,0.2)] backdrop-blur-sm w-48"
+                                    key={profile.id}
+                                    onClick={() => handleProfileClick(profile)}
+                                    className={`group relative flex flex-col items-center gap-4 border rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm w-48 ${profile.role === 'bartender'
+                                        ? 'bg-emerald-900/20 hover:bg-emerald-900/40 border-emerald-500/50 hover:border-emerald-400 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)]'
+                                        : 'bg-[#6C3FA8]/20 hover:bg-[#6C3FA8]/40 border-[#6C3FA8] hover:border-[#A944FF] hover:shadow-[0_0_30px_rgba(169,68,255,0.2)]'
+                                        }`}
                                 >
                                     <div className="relative">
-                                        <div className="absolute inset-0 bg-[#A944FF] blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-full"></div>
-                                        <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-[#441E73] to-[#6C3FA8] flex items-center justify-center text-2xl font-bold text-white shadow-inner group-hover:scale-110 transition-transform duration-300 border border-[#6C3FA8]">
-                                            {meseraObj.nombre.charAt(0).toUpperCase()}
+                                        <div className={`absolute inset-0 blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-full ${profile.role === 'bartender' ? 'bg-emerald-500' : 'bg-[#A944FF]'}`}></div>
+                                        <div className={`relative w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-inner group-hover:scale-110 transition-transform duration-300 border ${profile.role === 'bartender'
+                                            ? 'bg-gradient-to-br from-emerald-900 to-emerald-700 border-emerald-500'
+                                            : 'bg-gradient-to-br from-[#441E73] to-[#6C3FA8] border-[#6C3FA8]'
+                                            }`}>
+                                            {profile.nombre ? profile.nombre.charAt(0).toUpperCase() : '?'}
                                         </div>
                                     </div>
 
                                     <div className="text-center">
-                                        <span className="text-lg font-bold text-white block mb-1 group-hover:text-[#FF4BC1] transition-colors truncate max-w-[120px]">{meseraObj.nombre}</span>
-                                        <span className="text-[10px] text-[#8A7BAF] uppercase tracking-widest font-bold group-hover:text-[#C2B6D9] transition-colors">Mesera</span>
+                                        <span className={`text-lg font-bold block mb-1 transition-colors truncate max-w-[120px] ${profile.role === 'bartender' ? 'text-emerald-100 group-hover:text-emerald-300' : 'text-white group-hover:text-[#FF4BC1]'}`}>{profile.nombre}</span>
+                                        <span className={`text-[10px] uppercase tracking-widest font-bold transition-colors ${profile.role === 'bartender' ? 'text-emerald-500/70 group-hover:text-emerald-400' : 'text-[#8A7BAF] group-hover:text-[#C2B6D9]'}`}>
+                                            {profile.role === 'bartender' ? 'Bartender' : 'Mesera'}
+                                        </span>
                                     </div>
 
-                                    <div
-                                        onClick={(e) => handleDeleteClick(e, meseraObj)}
-                                        className="absolute top-2 right-2 p-1.5 text-[#8A7BAF] hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all duration-300"
-                                    >
-                                        <Trash2Icon />
-                                    </div>
+                                    {!profile.isSystem && (
+                                        <div
+                                            onClick={(e) => handleDeleteClick(e, profile)}
+                                            className="absolute top-2 right-2 p-1.5 text-[#8A7BAF] hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all duration-300"
+                                        >
+                                            <Trash2Icon />
+                                        </div>
+                                    )}
                                 </button>
                             ))}
 
@@ -234,15 +261,18 @@ export default function PedidosDisco() {
                                 <span className="font-bold text-xs tracking-widest uppercase">Nueva Mesera</span>
                             </button>
 
-                            {/* System Login Button */}
+                            {/* Mobile Admin Button (if needed inline) */}
                             <button
-                                onClick={() => setShowSystemLogin(true)}
-                                className="flex flex-col items-center justify-center gap-3 min-h-[180px] border-2 border-dashed border-[#6C3FA8] hover:border-[#FF4BC1] hover:bg-[#441E73]/20 rounded-2xl text-[#8A7BAF] hover:text-white transition-all duration-300 group w-48"
+                                onClick={() => {
+                                    setSysUsername('admin');
+                                    setShowSystemLogin(true);
+                                }}
+                                className="sm:hidden flex flex-col items-center justify-center gap-3 min-h-[180px] border-2 border-dashed border-gray-600 hover:border-white hover:bg-gray-800/20 rounded-2xl text-gray-500 hover:text-white transition-all duration-300 group w-48"
                             >
-                                <div className="w-12 h-12 rounded-full bg-[#441E73]/30 flex items-center justify-center group-hover:bg-[#FF4BC1]/20 transition-all duration-300">
-                                    <Lock size={20} className="group-hover:text-[#FF4BC1] transition-colors" />
+                                <div className="w-12 h-12 rounded-full bg-gray-800/30 flex items-center justify-center group-hover:bg-white/10 transition-all duration-300">
+                                    <Lock size={20} className="group-hover:text-white transition-colors" />
                                 </div>
-                                <span className="font-bold text-xs tracking-widest uppercase text-center">Admin / Barra</span>
+                                <span className="font-bold text-xs tracking-widest uppercase text-center">Admin</span>
                             </button>
                         </div>
                     </div>
