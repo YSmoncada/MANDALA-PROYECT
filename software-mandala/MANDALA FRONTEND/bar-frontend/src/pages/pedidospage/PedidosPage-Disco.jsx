@@ -60,9 +60,11 @@ export default function PedidosPageDisco() {
             return;
         }
 
-        if (!meseraId) {
-            toast.error("Error de autenticación. Inicie sesión nuevamente.");
-            return;
+        // Si el usuario es admin o bartender, no necesita meseraId.
+        // Solo validamos meseraId si el rol no es admin ni bartender.
+        const esOtroRol = auth.role !== 'admin' && auth.role !== 'bartender';
+        if (esOtroRol && !meseraId) {
+            toast.error("Error de autenticación de mesera. Inicie sesión nuevamente.");
         }
 
         if (!selectedMesaId) {
@@ -76,7 +78,7 @@ export default function PedidosPageDisco() {
         }));
 
         const pedidoData = {
-            mesera: meseraId,
+            mesera: meseraId, // Se envía el ID de la mesera si existe, o null si es admin/bartender
             mesa: selectedMesaId,
             estado: "pendiente",
             productos: productosParaBackend,
