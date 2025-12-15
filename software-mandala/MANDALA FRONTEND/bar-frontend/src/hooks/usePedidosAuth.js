@@ -4,6 +4,11 @@ import axios from 'axios';
 import { API_URL } from '../apiConfig';
 
 export const usePedidosAuth = () => {
+    const [meseras, setMeseras] = useState([]);
+    const [selectedMesera, setSelectedMesera] = useState(null);
+    const [codigoConfirmado, setCodigoConfirmado] = useState(false);
+    const [isInitialized, setIsInitialized] = useState(false);
+    const [error, setError] = useState(null);
     const [userRole, setUserRole] = useState(null); // 'admin', 'bartender', 'mesera', null
 
     // Cargar meseras desde la API al iniciar
