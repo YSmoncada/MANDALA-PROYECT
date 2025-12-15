@@ -16,7 +16,7 @@ function HomeDisco() {
             // Esto permite que admin y bartender (que tienen auth.role) puedan entrar.
             navigate('/login', { replace: true });
         }
-    }, [isInitialized, codigoConfirmado, navigate]);
+    }, [isInitialized, auth.role, codigoConfirmado, navigate]);
 
     // Define all available modules
     const allModules = [
