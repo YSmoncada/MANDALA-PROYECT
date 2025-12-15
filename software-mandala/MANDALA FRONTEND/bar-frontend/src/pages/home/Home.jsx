@@ -10,7 +10,7 @@ function HomeDisco() {
 
     useEffect(() => {
         if (isInitialized && (!codigoConfirmado)) {
-            navigate('/login-disco');
+            navigate('/login'); // Redirect to new main login
         }
     }, [isInitialized, codigoConfirmado, navigate]);
 
@@ -28,7 +28,7 @@ function HomeDisco() {
             id: 'pedidos',
             icon: ClipboardList,
             label: "Pedidos",
-            path: "/pedidos-disco", // Direct to grid
+            path: "/login-mesera-pedidos", // New route name
             color: "from-pink-400 to-rose-500",
             allowedRoles: ['admin', 'bartender', 'mesera']
         },

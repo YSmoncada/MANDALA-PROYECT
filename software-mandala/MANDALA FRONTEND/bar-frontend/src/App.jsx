@@ -40,16 +40,20 @@ function App() {
             <Route path="/bartender" element={<BartenderPageDisco />} />
 
             {/* Rutas de Pedidos (Contexto global ahora disponible) */}
-            <Route path="/login" element={<PedidosDisco />} />
+            <Route path="/login" element={<PedidosDisco />} /> {/* Login Principal */}
+            <Route path="/login-mesera-pedidos" element={<PedidosPageDisco />} /> {/* Modulo Pedidos Mesera */}
+
+            {/* Alias por compatibilidad o futuros usos */}
             <Route path="/pedidos" element={<PedidosPageDisco />} />
             <Route path="/login-disco" element={<PedidosDisco />} />
             <Route path="/pedidos-disco" element={<PedidosPageDisco />} />
+
             <Route path="/mis-pedidos-disco" element={<MisPedidosPageDisco />} />
             <Route path="/contabilidad-disco" element={<ContabilidadDisco />} />
 
             <Route path="/historial-pedidos" element={<HistorialPedidosPageDisco />} />
 
-            <Route path="*" element={<Navigate to="/" />} />
+            <Route path="*" element={<Navigate to="/login" />} /> {/* Redirect default to login */}
           </Routes>
         </Suspense>
       </PedidosProvider>
