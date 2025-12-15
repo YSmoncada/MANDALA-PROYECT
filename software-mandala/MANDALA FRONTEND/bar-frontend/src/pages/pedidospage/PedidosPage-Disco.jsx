@@ -95,7 +95,7 @@ export default function PedidosPageDisco() {
                 },
             });
             onClearOrder(); // This now calls local wrapper which unlocks table
-            navigate('/login-disco');
+            navigate('/pedidos-disco'); // Volver al menú de productos
         } else {
             toast.error(result.message);
         }
