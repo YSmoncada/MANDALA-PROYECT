@@ -95,7 +95,13 @@ export default function PedidosPageDisco() {
                 },
             });
             onClearOrder(); // This now calls local wrapper which unlocks table
-            navigate('/pedidos-disco'); // Volver al menú de productos
+            // Redirección basada en el rol del usuario autenticado
+            if (auth.role === 'bartender') {
+                navigate('/bartender'); // Redirigir al bartender a su vista principal
+            } else {
+                navigate('/pedidos-disco'); // Comportamiento por defecto para meseras
+            }
+
         } else {
             toast.error(result.message);
         }
