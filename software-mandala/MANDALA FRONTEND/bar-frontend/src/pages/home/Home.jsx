@@ -28,7 +28,7 @@ function HomeDisco() {
             id: 'pedidos',
             icon: ClipboardList,
             label: "Pedidos",
-            path: "/login-mesera-pedidos", // New route name
+            path: "/pedidos-disco", // Ruta a la página de productos
             color: "from-pink-400 to-rose-500",
             allowedRoles: ['admin', 'bartender', 'mesera']
         },

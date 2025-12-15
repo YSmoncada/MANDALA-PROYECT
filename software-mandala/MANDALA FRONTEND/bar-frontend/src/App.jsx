@@ -9,6 +9,7 @@ const Home = lazy(() => import("./pages/home/Home"));
 const HistorialPedidosPageDisco = lazy(() => import("./pages/historialpedidos/HistorialPedidosPage-Disco"));
 const PedidosDisco = lazy(() => import("./pages/pedidosAuth/Pedidos-Disco"));
 const PedidosPageDisco = lazy(() => import("./pages/pedidospage/PedidosPage-Disco"));
+const SeleccionProductosDisco = lazy(() => import("./pages/pedidospage/SeleccionProductos-Disco")); // Página de selección de productos
 const MisPedidosPageDisco = lazy(() => import("./pages/pedidospage/MisPedidosPage-Disco")); // 🎨 Disco Mis Pedidos
 const ContabilidadDisco = lazy(() => import("./pages/contabilidad/Contabilidad-Disco")); // 🎨 Disco Contabilidad
 const MesasPage = lazy(() => import("./pages/mesas/MesasPage"));
@@ -41,12 +42,12 @@ function App() {
 
             {/* Rutas de Pedidos (Contexto global ahora disponible) */}
             <Route path="/login" element={<PedidosDisco />} /> {/* Login Principal */}
-            <Route path="/login-mesera-pedidos" element={<PedidosPageDisco />} /> {/* Modulo Pedidos Mesera */}
+            <Route path="/login-mesera-pedidos" element={<PedidosDisco />} /> {/* Modulo Pedidos Mesera */}
 
             {/* Alias por compatibilidad o futuros usos */}
             <Route path="/pedidos" element={<PedidosPageDisco />} />
             <Route path="/login-disco" element={<PedidosDisco />} />
-            <Route path="/pedidos-disco" element={<PedidosPageDisco />} />
+            <Route path="/pedidos-disco" element={<SeleccionProductosDisco />} /> {/* Página de selección de productos */}
 
             <Route path="/mis-pedidos-disco" element={<MisPedidosPageDisco />} />
             <Route path="/contabilidad-disco" element={<ContabilidadDisco />} />
