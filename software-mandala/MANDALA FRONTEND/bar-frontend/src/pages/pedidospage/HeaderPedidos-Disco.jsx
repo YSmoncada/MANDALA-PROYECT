@@ -19,9 +19,9 @@ export default function HeaderPedidosDisco({ mesera, onLogout, codigoConfirmado 
     const inactiveClasses = "text-[#C2B6D9] hover:text-white hover:bg-[#441E73]/50";
 
     const navLinks = [
-        { href: "/login-disco", label: "Menú", icon: <HomeIcon size={18} /> },
-        { href: "/pedidos-disco", label: "Pedido", icon: <ShoppingCart size={18} /> },
+        { href: "/login-mesera-pedidos", label: "Menú", icon: <ShoppingCart size={18} /> },
         { href: "/mis-pedidos-disco", label: "Mis Pedidos", icon: <Clock size={18} /> },
+        { href: "/", label: "Inicio", icon: <HomeIcon size={18} /> },
     ];
 
     return (
@@ -47,7 +47,7 @@ export default function HeaderPedidosDisco({ mesera, onLogout, codigoConfirmado 
                             {/* Desktop Nav - Moved to right side */}
                             <nav className="hidden md:flex items-center gap-2">
                                 {navLinks.map(link => {
-                                    const isEnabled = mesera && (link.href === '/login-disco' || codigoConfirmado);
+                                    const isEnabled = mesera && (link.href === '/' || codigoConfirmado);
                                     return isEnabled ? (
                                         <Link
                                             key={link.href}
@@ -117,7 +117,7 @@ export default function HeaderPedidosDisco({ mesera, onLogout, codigoConfirmado 
                             )}
 
                             {navLinks.map(link => {
-                                const isEnabled = mesera && (link.href === '/login-disco' || codigoConfirmado);
+                                const isEnabled = mesera && (link.href === '/' || codigoConfirmado);
                                 return isEnabled ? (
                                     <Link
                                         key={link.href}
