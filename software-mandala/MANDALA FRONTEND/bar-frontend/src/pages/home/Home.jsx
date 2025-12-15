@@ -8,9 +8,13 @@ function HomeDisco() {
     const { auth } = usePedidosContext();
     const { isInitialized, codigoConfirmado, userRole, handleLogout, mesera } = auth;
 
+    // Redirección mejorada: solo redirige si no hay un rol de admin/bartender
+    // Y TAMPOCO hay un código de mesera confirmado.
     useEffect(() => {
-        if (isInitialized && !codigoConfirmado) {
-            navigate('/login', { replace: true }); // Redirect to new main login
+        if (isInitialized && !auth.role && !codigoConfirmado) {
+            // Si no hay rol de Django Y no hay código de mesera, entonces sí redirigir.
+            // Esto permite que admin y bartender (que tienen auth.role) puedan entrar.
+            navigate('/login', { replace: true });
         }
     }, [isInitialized, codigoConfirmado, navigate]);
 
