@@ -4,17 +4,13 @@ import axios from 'axios';
 import { API_URL } from '../apiConfig';
 
 export const usePedidosAuth = () => {
-    const [meseras, setMeseras] = useState([]);
-    const [selectedMesera, setSelectedMesera] = useState(null); // Almacenará el objeto completo {id, nombre, codigo}
-    const [codigoConfirmado, setCodigoConfirmado] = useState(false);
-    const [isInitialized, setIsInitialized] = useState(false);
-    const [error, setError] = useState(null);
+    const [userRole, setUserRole] = useState(null); // 'admin', 'bartender', 'mesera', null
 
     // Cargar meseras desde la API al iniciar
     useEffect(() => {
         const fetchMeseras = async () => {
             try {
-                const response = await axios.get(`${API_URL}/meseras/`); // Ya estaba bien, pero se confirma
+                const response = await axios.get(`${API_URL}/meseras/`);
                 setMeseras(response.data);
             } catch (error) {
                 setError("No se pudo conectar con el servidor para cargar las meseras.");
@@ -31,49 +27,78 @@ export const usePedidosAuth = () => {
     useEffect(() => {
         const storedMesera = sessionStorage.getItem('selectedMesera');
         const storedCodigoConfirmado = sessionStorage.getItem('codigoConfirmado');
+        const storedRole = sessionStorage.getItem('userRole');
+
+        if (storedRole) {
+            setUserRole(storedRole);
+        }
 
         if (storedMesera && storedCodigoConfirmado) {
             setSelectedMesera(JSON.parse(storedMesera));
             setCodigoConfirmado(true);
+            if (!storedRole) setUserRole('mesera'); // Fallback legacy
         }
     }, []);
 
     const handleSelectMesera = useCallback((meseraSeleccionada) => {
-        // meseraSeleccionada es ahora el objeto completo
         setSelectedMesera(meseraSeleccionada);
     }, []);
 
     const handleCodigoSubmit = useCallback((codigo) => {
         if (selectedMesera && selectedMesera.codigo === codigo) {
             setCodigoConfirmado(true);
-            // Guardar en sessionStorage para persistir la sesión
+            setUserRole('mesera');
+
             sessionStorage.setItem('selectedMesera', JSON.stringify(selectedMesera));
             sessionStorage.setItem('codigoConfirmado', 'true');
+            sessionStorage.setItem('userRole', 'mesera');
             return true;
         }
         return false;
     }, [selectedMesera]);
 
+    const loginSystem = async (username, password) => {
+        try {
+            const response = await axios.post(`${API_URL}/login/`, { username, password });
+            if (response.data.success) {
+                const { role, username: dbUsername } = response.data;
+                setUserRole(role);
+                // Set fake mesera object for compatibility with components that display name
+                const sysUser = { id: 'sys', nombre: dbUsername, role: role };
+                setSelectedMesera(sysUser);
+                setCodigoConfirmado(true);
+
+                sessionStorage.setItem('userRole', role);
+                sessionStorage.setItem('selectedMesera', JSON.stringify(sysUser));
+                sessionStorage.setItem('codigoConfirmado', 'true');
+                return { success: true, role };
+            }
+            return { success: false, message: 'Invalid credentials' };
+        } catch (error) {
+            console.error("Login error:", error);
+            return { success: false, message: error.response?.data?.detail || "Error de conexión" };
+        }
+    };
+
     const handleLogout = useCallback(() => {
         setSelectedMesera(null);
         setCodigoConfirmado(false);
-        // Limpiar sessionStorage
+        setUserRole(null);
+
         sessionStorage.removeItem('selectedMesera');
         sessionStorage.removeItem('codigoConfirmado');
+        sessionStorage.removeItem('userRole');
     }, []);
 
     const addMesera = async (nombre, codigo) => {
         try {
-            const response = await axios.post(`${API_URL}/meseras/`, { nombre, codigo }); // Ya estaba bien, pero se confirma
+            const response = await axios.post(`${API_URL}/meseras/`, { nombre, codigo });
             const nuevaMesera = response.data;
-            // Actualizar la lista de meseras en el estado para que aparezca inmediatamente
             setMeseras(prevMeseras => [nuevaMesera, ...prevMeseras]);
-            // Seleccionar automáticamente la nueva mesera
             handleSelectMesera(nuevaMesera);
             return { success: true };
         } catch (error) {
             console.error("Error al agregar la mesera:", error.response?.data || error.message);
-            // Lógica mejorada para mostrar el mensaje de error correcto
             const errorData = error.response?.data;
             let errorMessage = "Error al crear la mesera.";
             if (errorData?.nombre) errorMessage = `Nombre: ${errorData.nombre[0]}`;
@@ -86,31 +111,31 @@ export const usePedidosAuth = () => {
     const deleteMesera = async (meseraId) => {
         try {
             await axios.delete(`${API_URL}/meseras/${meseraId}/`);
-            // Actualiza el estado para remover la mesera de la lista en la UI
             setMeseras(prevMeseras => prevMeseras.filter(m => m.id !== meseraId));
-            // Si la mesera eliminada era la que estaba seleccionada, se desloguea
             if (selectedMesera?.id === meseraId) {
                 handleLogout();
             }
             return { success: true };
         } catch (error) {
             console.error("Error al eliminar la mesera:", error.response?.data || error.message);
-            const errorMessage = error.response?.data?.detail || "No se pudo eliminar la mesera. Es posible que tenga pedidos asociados.";
+            const errorMessage = error.response?.data?.detail || "No se pudo eliminar la mesera.";
             return { success: false, message: errorMessage };
         }
     };
 
     return {
-        mesera: selectedMesera?.nombre, // Devuelve solo el nombre para la UI
-        meseraId: selectedMesera?.id,   // Devuelve el ID para las llamadas a la API
+        mesera: selectedMesera?.nombre,
+        meseraId: selectedMesera?.id,
         codigoConfirmado,
+        userRole, // Expose role
         isInitialized,
-        meseras, // La lista completa de objetos de meseras
+        meseras,
         handleSelectMesera,
         handleCodigoSubmit,
+        loginSystem, // Expose loginSystem
         handleLogout,
-        addMesera, // Función para agregar
-        deleteMesera, // Exponemos la nueva función para eliminar
+        addMesera,
+        deleteMesera,
         error,
         selectedMeseraObject: selectedMesera
     };

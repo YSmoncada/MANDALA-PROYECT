@@ -8,24 +8,40 @@ import ProductGridDisco from "./ProductGrid-Disco";
 import { usePedidosContext } from "../../context/PedidosContext";
 
 export default function PedidosDisco() {
-    const { auth, addProductToOrder: onProductAdd } = usePedidosContext();
+    const { auth } = usePedidosContext();
 
     const {
         mesera,
         codigoConfirmado,
+        userRole,
         isInitialized,
         meseras,
         handleSelectMesera,
         handleCodigoSubmit,
+        loginSystem,
         handleLogout,
         addMesera,
         deleteMesera,
     } = auth;
 
     const [showAddForm, setShowAddForm] = useState(false);
+    const [showSystemLogin, setShowSystemLogin] = useState(false); // New state for Admin login
     const [newMeseraName, setNewMeseraName] = useState("");
     const [newMeseraCode, setNewMeseraCode] = useState("");
+
+    // System Login States
+    const [sysUsername, setSysUsername] = useState("");
+    const [sysPassword, setSysPassword] = useState("");
+
     const navigate = useNavigate();
+
+    // Redirect Logic based on Role
+    useEffect(() => {
+        if (isInitialized && codigoConfirmado) {
+            // Everyone goes to Dashboard (Home)
+            navigate('/');
+        }
+    }, [isInitialized, codigoConfirmado, userRole, navigate]);
 
     if (!isInitialized) {
         return (
@@ -54,6 +70,14 @@ export default function PedidosDisco() {
         }
     };
 
+    const handleSystemLoginSubmit = async (e) => {
+        e.preventDefault();
+        const result = await loginSystem(sysUsername, sysPassword);
+        if (!result.success) {
+            toast.error(result.message);
+        }
+    };
+
     const handleDeleteClick = async (e, meseraObj) => {
         e.stopPropagation();
         if (window.confirm(`¿Estás seguro de que quieres eliminar a ${meseraObj.nombre}?`)) {
@@ -73,15 +97,51 @@ export default function PedidosDisco() {
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl"></div>
             </div>
 
-            {mesera && codigoConfirmado && (
-                <HeaderPedidosDisco mesera={mesera} onLogout={handleLogout} codigoConfirmado={codigoConfirmado} />
-            )}
-
             {/* Adjusted padding - only add top padding when header is visible */}
-            <div className={`flex flex-1 items-center justify-center p-4 sm:p-8 relative z-10 ${mesera && codigoConfirmado ? 'pt-20 sm:pt-24' : ''}`}>
+            <div className={`flex flex-1 items-center justify-center p-4 sm:p-8 relative z-10 pt-20 sm:pt-24`}>
+
+                {/* System Login Form */}
+                {showSystemLogin && (
+                    <div className="bg-[#441E73]/80 backdrop-blur-xl border border-[#6C3FA8] p-8 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.3)] w-full max-w-md text-center animate-fadeIn relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#A944FF] to-transparent"></div>
+                        <div className="w-16 h-16 bg-gradient-to-br from-[#A944FF] to-[#FF4BC1] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-[#A944FF]/20">
+                            <Lock size={24} className="text-white" />
+                        </div>
+                        <h2 className="text-2xl font-bold text-white mb-2">Acceso Administrativo</h2>
+                        <p className="text-[#C2B6D9] text-sm mb-8">Ingresa tus credenciales de sistema</p>
+
+                        <form onSubmit={handleSystemLoginSubmit} className="flex flex-col gap-4">
+                            <div className="group relative">
+                                <User className="absolute left-4 top-3.5 text-[#8A7BAF] group-focus-within:text-[#A944FF] transition-colors" size={18} />
+                                <input
+                                    type="text"
+                                    placeholder="Usuario"
+                                    value={sysUsername}
+                                    onChange={(e) => setSysUsername(e.target.value)}
+                                    className="w-full pl-12 pr-4 py-3 rounded-xl bg-[#2B0D49] border border-[#6C3FA8]/30 text-white placeholder-[#8A7BAF] focus:outline-none focus:bg-[#2B0D49]/80 focus:border-[#A944FF] focus:ring-1 focus:ring-[#A944FF] transition-all"
+                                />
+                            </div>
+                            <div className="group relative">
+                                <Lock className="absolute left-4 top-3.5 text-[#8A7BAF] group-focus-within:text-[#A944FF] transition-colors" size={18} />
+                                <input
+                                    type="password"
+                                    placeholder="Contraseña"
+                                    value={sysPassword}
+                                    onChange={(e) => setSysPassword(e.target.value)}
+                                    className="w-full pl-12 pr-4 py-3 rounded-xl bg-[#2B0D49] border border-[#6C3FA8]/30 text-white placeholder-[#8A7BAF] focus:outline-none focus:bg-[#2B0D49]/80 focus:border-[#A944FF] focus:ring-1 focus:ring-[#A944FF] transition-all"
+                                />
+                            </div>
+                            <div className="flex gap-3 mt-6">
+                                <button type="button" onClick={() => setShowSystemLogin(false)} className="flex-1 bg-white/5 hover:bg-white/10 text-[#C2B6D9] py-3 rounded-xl font-bold transition-all text-sm tracking-wide border border-white/5">VOLVER</button>
+                                <button type="submit" className="flex-1 bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] hover:brightness-110 text-white py-3 rounded-xl font-bold shadow-lg shadow-[#A944FF]/30 transition-all transform hover:scale-[1.02] text-sm tracking-wide">INGRESAR</button>
+                            </div>
+                        </form>
+                    </div>
+                )}
+
 
                 {/* Add New Mesera Form */}
-                {showAddForm && !mesera && (
+                {showAddForm && !showSystemLogin && !mesera && (
                     <div className="bg-[#441E73]/80 backdrop-blur-xl border border-[#6C3FA8] p-8 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.3)] w-full max-w-md text-center animate-fadeIn relative overflow-hidden">
                         {/* Glow Effect */}
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#A944FF] to-transparent"></div>
@@ -124,23 +184,15 @@ export default function PedidosDisco() {
                     </div>
                 )}
 
-                {/* Step 1: Select Mesera */}
-                {!mesera && !codigoConfirmado && !showAddForm && (
+                {/* Step 1: Select Mesera / System Login Option */}
+                {!mesera && !codigoConfirmado && !showAddForm && !showSystemLogin && (
                     <div className="w-full max-w-6xl mx-auto -mt-16">
-                        <button
-                            onClick={() => navigate("/")}
-                            // Fixed position for mobile (top-4), absolute for desktop (sm:top-6 sm:left-6)
-                            className="fixed top-4 left-4 sm:absolute sm:top-6 sm:left-6 z-50 flex items-center gap-2 rounded-lg bg-[#441E73]/50 border border-[#6C3FA8] px-4 py-2 text-white hover:bg-[#441E73] transition-all backdrop-blur-md shadow-lg hover:scale-105"
-                        >
-                            <ArrowLeft size={18} />
-                            <span className="font-medium">Volver</span>
-                        </button>
 
                         <div className="text-center mb-12 mt-16 sm:mt-2">
                             <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight drop-shadow-[0_0_25px_rgba(169,68,255,0.4)]">
-                                BIENVENIDA
+                                LOGIN
                             </h1>
-                            <p className="text-xl text-[#C2B6D9] font-light tracking-wide">Selecciona tu perfil para ingresar</p>
+                            <p className="text-xl text-[#C2B6D9] font-light tracking-wide">Selecciona tu perfil o ingresa al sistema</p>
                         </div>
 
                         <div className="flex flex-wrap justify-center gap-6">
@@ -148,12 +200,10 @@ export default function PedidosDisco() {
                                 <button
                                     key={meseraObj.id}
                                     onClick={() => handleSelectMesera(meseraObj)}
-                                    // Reduced padding (p-8 -> p-6) and adjusted sizing
                                     className="group relative flex flex-col items-center gap-4 bg-[#6C3FA8]/20 hover:bg-[#6C3FA8]/40 border border-[#6C3FA8] hover:border-[#A944FF] rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(169,68,255,0.2)] backdrop-blur-sm w-48"
                                 >
                                     <div className="relative">
                                         <div className="absolute inset-0 bg-[#A944FF] blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-full"></div>
-                                        {/* Reduced avatar size (w-20 h-20 -> w-16 h-16) */}
                                         <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-[#441E73] to-[#6C3FA8] flex items-center justify-center text-2xl font-bold text-white shadow-inner group-hover:scale-110 transition-transform duration-300 border border-[#6C3FA8]">
                                             {meseraObj.nombre.charAt(0).toUpperCase()}
                                         </div>
@@ -173,7 +223,7 @@ export default function PedidosDisco() {
                                 </button>
                             ))}
 
-                            {/* Add New Button - Adjusted size */}
+                            {/* Add New Mesera Button */}
                             <button
                                 onClick={() => setShowAddForm(true)}
                                 className="flex flex-col items-center justify-center gap-3 min-h-[180px] border-2 border-dashed border-[#6C3FA8] hover:border-[#A944FF] hover:bg-[#441E73]/20 rounded-2xl text-[#8A7BAF] hover:text-white transition-all duration-300 group w-48"
@@ -183,11 +233,22 @@ export default function PedidosDisco() {
                                 </div>
                                 <span className="font-bold text-xs tracking-widest uppercase">Nueva Mesera</span>
                             </button>
+
+                            {/* System Login Button */}
+                            <button
+                                onClick={() => setShowSystemLogin(true)}
+                                className="flex flex-col items-center justify-center gap-3 min-h-[180px] border-2 border-dashed border-[#6C3FA8] hover:border-[#FF4BC1] hover:bg-[#441E73]/20 rounded-2xl text-[#8A7BAF] hover:text-white transition-all duration-300 group w-48"
+                            >
+                                <div className="w-12 h-12 rounded-full bg-[#441E73]/30 flex items-center justify-center group-hover:bg-[#FF4BC1]/20 transition-all duration-300">
+                                    <Lock size={20} className="group-hover:text-[#FF4BC1] transition-colors" />
+                                </div>
+                                <span className="font-bold text-xs tracking-widest uppercase text-center">Admin / Barra</span>
+                            </button>
                         </div>
                     </div>
                 )}
 
-                {/* Step 2: Code Input */}
+                {/* Step 2: Code Input (Only for Meseras) */}
                 {mesera && !codigoConfirmado && (
                     <div className="w-full max-w-md animate-fadeIn flex justify-center">
                         <CodeInputDisco
@@ -215,16 +276,6 @@ export default function PedidosDisco() {
                         />
                     </div>
                 )}
-                {/* Step 3: Product Grid */}
-                {mesera && codigoConfirmado && (
-                    <div className="w-full max-w-[1600px] mx-auto">
-
-                        <ProductGridDisco
-                            onProductAdd={onProductAdd}
-                        />
-                    </div>
-                )}
-
             </div >
         </div >
     );

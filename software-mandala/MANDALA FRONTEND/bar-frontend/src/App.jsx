@@ -25,34 +25,34 @@ const LoadingFallback = () => (
   </div>
 );
 
+import { PedidosProvider } from "./context/PedidosContext";
+
 function App() {
   return (
     <BrowserRouter>
-      <Notificaciones />
-      <Suspense fallback={<LoadingFallback />}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/inventario" element={<Inventario />} />
-          <Route path="/mesas" element={<MesasPage />} />
-          <Route path="/bartender" element={<BartenderPageDisco />} />
+      <PedidosProvider>
+        <Notificaciones />
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/inventario" element={<Inventario />} />
+            <Route path="/mesas" element={<MesasPage />} />
+            <Route path="/bartender" element={<BartenderPageDisco />} />
 
-          {/* Rutas que comparten el contexto de Pedidos */}
-          <Route element={<PedidosLayout />}>
+            {/* Rutas de Pedidos (Contexto global ahora disponible) */}
             <Route path="/login" element={<PedidosDisco />} />
             <Route path="/pedidos" element={<PedidosPageDisco />} />
-
-            {/* 🎨 Rutas Disco Pedidos */}
             <Route path="/login-disco" element={<PedidosDisco />} />
             <Route path="/pedidos-disco" element={<PedidosPageDisco />} />
             <Route path="/mis-pedidos-disco" element={<MisPedidosPageDisco />} />
             <Route path="/contabilidad-disco" element={<ContabilidadDisco />} />
-          </Route>
 
-          <Route path="/historial-pedidos" element={<HistorialPedidosPageDisco />} /> {/* 🎨 Disco */}
+            <Route path="/historial-pedidos" element={<HistorialPedidosPageDisco />} />
 
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </Suspense>
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </Suspense>
+      </PedidosProvider>
     </BrowserRouter>
   );
 }

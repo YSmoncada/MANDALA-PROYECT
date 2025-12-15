@@ -404,3 +404,35 @@ class ReporteVentasDiariasView(generics.ListAPIView):
         ).order_by('-fecha')
 
         return Response(ventas_diarias)
+
+from rest_framework.views import APIView
+from django.contrib.auth import authenticate
+
+class LoginView(APIView):
+    """
+    Vista personalizada para login de Administrativos y Bartenders.
+    Las Meseras siguen usando su código PIN (validado en frontend por ahora).
+    """
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        
+        # Validar credenciales contra el sistema de usuarios de Django
+        user = authenticate(username=username, password=password)
+        
+        if user:
+            # Determinar rol basado en grupos
+            role = 'admin' # Default
+            if user.groups.filter(name='Bartender').exists():
+                role = 'bartender'
+            elif user.is_superuser:
+                role = 'admin'
+            
+            return Response({
+                'success': True,
+                'role': role,
+                'username': user.username,
+                'detail': f'Bienvenido {user.username}'
+            })
+            
+        return Response({'detail': 'Credenciales inválidas'}, status=status.HTTP_401_UNAUTHORIZED)

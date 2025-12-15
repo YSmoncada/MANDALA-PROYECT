@@ -21,6 +21,7 @@ urlpatterns = [
     path('api/debug-storage/', DebugStorageView.as_view(), name='debug-storage'), # URL de debug
     path('api/meseras/total-pedidos/', MeseraTotalPedidosView.as_view(), name='mesera-total-pedidos'), # URL específica primero
     path('api/reportes/ventas-diarias/', ReporteVentasDiariasView.as_view(), name='reporte-ventas-diarias'),
+    path('api/login/', views.LoginView.as_view(), name='login'), # Login Admin/Bartender
     path('api/', include(router.urls)), # Restauramos el prefijo 'api/'
 ]
 
