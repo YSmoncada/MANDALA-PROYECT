@@ -68,14 +68,10 @@ function HomeDisco() {
 
     // Filter modules based on role
     // Fallback: if role is null (but codigoConfirmado is true, likely Mesera legacy), default to mesera role
-    const currentRole = userRole || 'mesera';
+    const currentRole = auth.role || (codigoConfirmado ? 'mesera' : null);
 
-    // Admin sees everything (override check just in case, or rely on array)
-    // Actually simplicity:
-    const visibleModules = allModules.filter(m => m.allowedRoles.includes(currentRole));
+    const visibleModules = currentRole ? allModules.filter(m => m.allowedRoles.includes(currentRole)) : [];
 
-    // For Meseras, maybe we only want Pedidos? The array handles this.
-    // userRole might be specific strings from backend.
 
     if (!isInitialized) return null; // Or loading spinner
 
