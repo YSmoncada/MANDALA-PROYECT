@@ -442,44 +442,20 @@ class LoginView(APIView):
             'detail': 'Credenciales inválidas'
         }, status=status.HTTP_401_UNAUTHORIZED)
 
-class SetupDefaultUsersView(APIView):
+@api_view(['GET'])
+def total_pedidos_mesera_hoy(request):
     """
-    Endpoint temporal para crear usuarios por defecto.
-    Solo funciona si los usuarios no existen.
+    Calcula el total de pedidos para cada mesera en el día actual.
     """
-    def post(self, request):
-        from django.contrib.auth.models import User
-        created_users = []
-        
-        # Crear usuario Admin
-        if not User.objects.filter(username='admin').exists():
-            User.objects.create_user(
-                username='admin',
-                password='admin123',
-                is_staff=True,
-                is_superuser=True
-            )
-            created_users.append('admin')
-        
-        # Crear usuario Bartender
-        if not User.objects.filter(username='barra').exists():
-            User.objects.create_user(
-                username='barra',
-                password='barra123'
-            )
-            created_users.append('barra')
-        
-        if created_users:
-            return Response({
-                'success': True,
-                'message': f'Usuarios creados: {", ".join(created_users)}',
-                'credentials': {
-                    'admin': 'admin / admin123',
-                    'bartender': 'barra / barra123'
-                }
-            })
-        else:
-            return Response({
-                'success': False,
-                'message': 'Los usuarios ya existen'
-            })
+    hoy = timezone.now().date()
+    
+    # Usamos Coalesce para asegurar que si una mesera no tiene pedidos, su total sea 0.
+    ventas_por_mesera = Mesera.objects.annotate(
+        total_vendido=Coalesce(
+            Sum('pedido__total', filter=Q(pedido__fecha_hora__date=hoy)),
+            Value(0),
+            output_field=DecimalField()
+        )
+    ).values('id', 'nombre', 'total_vendido')
+
+    return Response(list(ventas_por_mesera))
