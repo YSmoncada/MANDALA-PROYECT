@@ -441,3 +441,45 @@ class LoginView(APIView):
             'success': False,
             'detail': 'Credenciales inválidas'
         }, status=status.HTTP_401_UNAUTHORIZED)
+
+class SetupDefaultUsersView(APIView):
+    """
+    Endpoint temporal para crear usuarios por defecto.
+    Solo funciona si los usuarios no existen.
+    """
+    def post(self, request):
+        from django.contrib.auth.models import User
+        created_users = []
+        
+        # Crear usuario Admin
+        if not User.objects.filter(username='admin').exists():
+            User.objects.create_user(
+                username='admin',
+                password='admin123',
+                is_staff=True,
+                is_superuser=True
+            )
+            created_users.append('admin')
+        
+        # Crear usuario Bartender
+        if not User.objects.filter(username='barra').exists():
+            User.objects.create_user(
+                username='barra',
+                password='barra123'
+            )
+            created_users.append('barra')
+        
+        if created_users:
+            return Response({
+                'success': True,
+                'message': f'Usuarios creados: {", ".join(created_users)}',
+                'credentials': {
+                    'admin': 'admin / admin123',
+                    'bartender': 'barra / barra123'
+                }
+            })
+        else:
+            return Response({
+                'success': False,
+                'message': 'Los usuarios ya existen'
+            })
