@@ -38,7 +38,7 @@ export default function PedidosDisco() {
     // Redirect Logic based on Role
     useEffect(() => {
         if (isInitialized && codigoConfirmado) {
-            // Everyone goes to Dashboard (Home)
+            // Everyone goes to Dashboard (Home) - Modules will be filtered there by role
             navigate('/');
         }
     }, [isInitialized, codigoConfirmado, userRole, navigate]);
@@ -88,13 +88,14 @@ export default function PedidosDisco() {
         }
     };
 
-    // Fake Bartender User for UI
+    // Fake Bartender & Admin Users for UI
     const bartenderUser = { id: 'sys_bartender', nombre: 'Barra', role: 'bartender', isSystem: true };
+    const adminUser = { id: 'sys_admin', nombre: 'Admin', role: 'admin', isSystem: true };
 
     const handleProfileClick = (profile) => {
         if (profile.isSystem) {
             // Is Bartender or Admin -> Show Password Login
-            setSysUsername(profile.username || 'barra'); // Default if known
+            setSysUsername(profile.username || (profile.role === 'admin' ? 'admin' : 'barra'));
             setShowSystemLogin(true);
             // Optionally set focus or pre-fill
         } else {
@@ -202,55 +203,53 @@ export default function PedidosDisco() {
                 {/* Step 1: Select Mesera / System Login Option */}
                 {!mesera && !codigoConfirmado && !showAddForm && !showSystemLogin && (
                     <div className="w-full max-w-6xl mx-auto -mt-16 relative">
-                        {/* Admin Button - Floating Top Right or Distinct */}
-                        <div className="absolute top-0 right-0 hidden sm:block">
-                            <button
-                                onClick={() => {
-                                    setSysUsername('admin');
-                                    setShowSystemLogin(true);
-                                }}
-                                className="flex items-center gap-2 px-4 py-2 rounded-full border border-purple-500/30 bg-purple-900/20 text-purple-300 hover:bg-purple-900/40 hover:text-white transition-all text-xs font-bold tracking-widest uppercase hover:shadow-[0_0_15px_rgba(169,68,255,0.3)]"
-                            >
-                                <Lock size={12} />
-                                Admin
-                            </button>
-                        </div>
-
                         <div className="text-center mb-12 mt-16 sm:mt-2">
                             <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight drop-shadow-[0_0_25px_rgba(169,68,255,0.4)]">
                                 LOGIN
                             </h1>
                             <p className="text-xl text-[#C2B6D9] font-light tracking-wide">Selecciona tu perfil</p>
                         </div>
-
                         <div className="flex flex-wrap justify-center gap-6">
 
-                            {/* Render Meseras + Bartender Combined */}
-                            {/* We put Bartender at the START or END? User said "next to". Let's put it as the first item or last item of the list. */}
-                            {/* Let's combine them array */}
-                            {[bartenderUser, ...meseras].map((profile) => (
+                            {/* Render Admin + Bartender + Meseras Combined */}
+                            {[adminUser, bartenderUser, ...meseras].map((profile) => (
                                 <button
                                     key={profile.id}
                                     onClick={() => handleProfileClick(profile)}
-                                    className={`group relative flex flex-col items-center gap-4 border rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm w-48 ${profile.role === 'bartender'
-                                        ? 'bg-emerald-900/20 hover:bg-emerald-900/40 border-emerald-500/50 hover:border-emerald-400 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)]'
-                                        : 'bg-[#6C3FA8]/20 hover:bg-[#6C3FA8]/40 border-[#6C3FA8] hover:border-[#A944FF] hover:shadow-[0_0_30px_rgba(169,68,255,0.2)]'
+                                    className={`group relative flex flex-col items-center gap-4 border rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm w-48 
+                                        ${profile.role === 'admin'
+                                            ? 'bg-rose-900/20 hover:bg-rose-900/40 border-rose-500/50 hover:border-rose-400 hover:shadow-[0_0_30px_rgba(244,63,94,0.2)]'
+                                            : profile.role === 'bartender'
+                                                ? 'bg-emerald-900/20 hover:bg-emerald-900/40 border-emerald-500/50 hover:border-emerald-400 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)]'
+                                                : 'bg-[#6C3FA8]/20 hover:bg-[#6C3FA8]/40 border-[#6C3FA8] hover:border-[#A944FF] hover:shadow-[0_0_30px_rgba(169,68,255,0.2)]'
                                         }`}
                                 >
                                     <div className="relative">
-                                        <div className={`absolute inset-0 blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-full ${profile.role === 'bartender' ? 'bg-emerald-500' : 'bg-[#A944FF]'}`}></div>
-                                        <div className={`relative w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-inner group-hover:scale-110 transition-transform duration-300 border ${profile.role === 'bartender'
-                                            ? 'bg-gradient-to-br from-emerald-900 to-emerald-700 border-emerald-500'
-                                            : 'bg-gradient-to-br from-[#441E73] to-[#6C3FA8] border-[#6C3FA8]'
+                                        <div className={`absolute inset-0 blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-full 
+                                            ${profile.role === 'admin' ? 'bg-rose-500'
+                                                : profile.role === 'bartender' ? 'bg-emerald-500'
+                                                    : 'bg-[#A944FF]'}`}></div>
+                                        <div className={`relative w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-inner group-hover:scale-110 transition-transform duration-300 border 
+                                            ${profile.role === 'admin'
+                                                ? 'bg-gradient-to-br from-rose-900 to-rose-700 border-rose-500'
+                                                : profile.role === 'bartender'
+                                                    ? 'bg-gradient-to-br from-emerald-900 to-emerald-700 border-emerald-500'
+                                                    : 'bg-gradient-to-br from-[#441E73] to-[#6C3FA8] border-[#6C3FA8]'
                                             }`}>
                                             {profile.nombre ? profile.nombre.charAt(0).toUpperCase() : '?'}
                                         </div>
                                     </div>
 
                                     <div className="text-center">
-                                        <span className={`text-lg font-bold block mb-1 transition-colors truncate max-w-[120px] ${profile.role === 'bartender' ? 'text-emerald-100 group-hover:text-emerald-300' : 'text-white group-hover:text-[#FF4BC1]'}`}>{profile.nombre}</span>
-                                        <span className={`text-[10px] uppercase tracking-widest font-bold transition-colors ${profile.role === 'bartender' ? 'text-emerald-500/70 group-hover:text-emerald-400' : 'text-[#8A7BAF] group-hover:text-[#C2B6D9]'}`}>
-                                            {profile.role === 'bartender' ? 'Bartender' : 'Mesera'}
+                                        <span className={`text-lg font-bold block mb-1 transition-colors truncate max-w-[120px] 
+                                            ${profile.role === 'admin' ? 'text-rose-100 group-hover:text-rose-300'
+                                                : profile.role === 'bartender' ? 'text-emerald-100 group-hover:text-emerald-300'
+                                                    : 'text-white group-hover:text-[#FF4BC1]'}`}>{profile.nombre}</span>
+                                        <span className={`text-[10px] uppercase tracking-widest font-bold transition-colors 
+                                            ${profile.role === 'admin' ? 'text-rose-500/70 group-hover:text-rose-400'
+                                                : profile.role === 'bartender' ? 'text-emerald-500/70 group-hover:text-emerald-400'
+                                                    : 'text-[#8A7BAF] group-hover:text-[#C2B6D9]'}`}>
+                                            {profile.role === 'admin' ? 'Administrador' : profile.role === 'bartender' ? 'Bartender' : 'Mesera'}
                                         </span>
                                     </div>
 
@@ -274,20 +273,6 @@ export default function PedidosDisco() {
                                     <Plus size={20} className="group-hover:text-[#A944FF] transition-colors" />
                                 </div>
                                 <span className="font-bold text-xs tracking-widest uppercase">Nueva Mesera</span>
-                            </button>
-
-                            {/* Mobile Admin Button (if needed inline) */}
-                            <button
-                                onClick={() => {
-                                    setSysUsername('admin');
-                                    setShowSystemLogin(true);
-                                }}
-                                className="sm:hidden flex flex-col items-center justify-center gap-3 min-h-[180px] border-2 border-dashed border-gray-600 hover:border-white hover:bg-gray-800/20 rounded-2xl text-gray-500 hover:text-white transition-all duration-300 group w-48"
-                            >
-                                <div className="w-12 h-12 rounded-full bg-gray-800/30 flex items-center justify-center group-hover:bg-white/10 transition-all duration-300">
-                                    <Lock size={20} className="group-hover:text-white transition-colors" />
-                                </div>
-                                <span className="font-bold text-xs tracking-widest uppercase text-center">Admin</span>
                             </button>
                         </div>
                     </div>
