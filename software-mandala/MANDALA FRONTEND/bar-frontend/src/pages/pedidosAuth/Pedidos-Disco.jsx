@@ -39,7 +39,7 @@ export default function PedidosDisco() {
     useEffect(() => {
         if (isInitialized && codigoConfirmado) {
             // Everyone goes to Dashboard (Home) - Modules will be filtered there by role
-            navigate('/');
+            navigate('/', { replace: true });
         }
     }, [isInitialized, codigoConfirmado, userRole, navigate]);
 

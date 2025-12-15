@@ -9,8 +9,8 @@ function HomeDisco() {
     const { isInitialized, codigoConfirmado, userRole, handleLogout, mesera } = auth;
 
     useEffect(() => {
-        if (isInitialized && (!codigoConfirmado)) {
-            navigate('/login'); // Redirect to new main login
+        if (isInitialized && !codigoConfirmado) {
+            navigate('/login', { replace: true }); // Redirect to new main login
         }
     }, [isInitialized, codigoConfirmado, navigate]);
 
