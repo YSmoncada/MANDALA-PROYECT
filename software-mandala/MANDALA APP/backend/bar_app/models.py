@@ -1,9 +1,21 @@
 from django.db import models
 
+
+class Categoria(models.Model):
+    nombre = models.CharField(max_length=50, unique=True)
+    imagen = models.ImageField(upload_to='categorias/', blank=True, null=True)
+
+    def __str__(self):
+        return self.nombre
+
+    class Meta:
+        ordering = ['nombre']
+
 class Producto(models.Model):
     nombre = models.CharField(max_length=100)
     imagen = models.ImageField(upload_to='productos/', blank=True, null=True)
-    categoria = models.CharField(max_length=50, blank=True, null=True)  # ✅ NUEVO
+    categoria = models.CharField(max_length=50, blank=True, null=True)  # Deprecated: use categoria_rel
+    categoria_rel = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, blank=True, related_name='productos')
     stock = models.IntegerField(default=0)
     stock_minimo = models.IntegerField(default=0)
     stock_maximo = models.IntegerField(default=0)
@@ -14,6 +26,9 @@ class Producto(models.Model):
 
     def __str__(self):
         return self.nombre
+
+    class Meta:
+        ordering = ['nombre']
 
 class Mesera(models.Model):
     nombre = models.CharField(max_length=100)
@@ -41,10 +56,14 @@ class Pedido(models.Model):
     def __str__(self):
         return f"Pedido #{self.id} - {self.fecha_hora}"
 
+    class Meta:
+        ordering = ['-fecha_hora']
+
 class PedidoProducto(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField()
+    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     cantidad_despachada = models.PositiveIntegerField(default=0)
 
 class Movimiento(models.Model):

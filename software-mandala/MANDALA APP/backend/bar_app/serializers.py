@@ -38,7 +38,12 @@ class PedidoProductoWriteSerializer(serializers.Serializer):
 # Serializer para LEER un pedido (muestra detalles)
 class PedidoProductoReadSerializer(serializers.ModelSerializer):
     producto_nombre = serializers.CharField(source='producto.nombre', read_only=True)
-    producto_precio = serializers.DecimalField(source='producto.precio', max_digits=10, decimal_places=2, read_only=True)
+    producto_precio = serializers.SerializerMethodField()
+    
+    def get_producto_precio(self, obj):
+        if obj.precio_unitario and obj.precio_unitario > 0:
+            return obj.precio_unitario
+        return obj.producto.precio
 
     class Meta:
         model = PedidoProducto
@@ -106,7 +111,12 @@ class PedidoSerializer(serializers.ModelSerializer):
 
         # Crear los registros de PedidoProducto después de que el pedido ya tiene un ID.
         for item in productos_data:
-            PedidoProducto.objects.create(pedido=pedido, producto=item['producto'], cantidad=item['cantidad'])
+            PedidoProducto.objects.create(
+                pedido=pedido,
+                producto=item['producto'],
+                cantidad=item['cantidad'],
+                precio_unitario=item['producto'].precio
+            )
             
         return pedido
 
