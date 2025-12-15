@@ -88,6 +88,21 @@ export default function PedidosDisco() {
         }
     };
 
+    // Fake Bartender User for UI
+    const bartenderUser = { id: 'sys_bartender', nombre: 'Barra', role: 'bartender', isSystem: true };
+
+    const handleProfileClick = (profile) => {
+        if (profile.isSystem) {
+            // Is Bartender or Admin -> Show Password Login
+            setSysUsername(profile.username || 'barra'); // Default if known
+            setShowSystemLogin(true);
+            // Optionally set focus or pre-fill
+        } else {
+            // Is Mesera -> Show Pin Pad
+            handleSelectMesera(profile);
+        }
+    };
+
     return (
         // Unified Background: Matches Home-Disco and Inventario-Disco
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white selection:bg-purple-500/30">
