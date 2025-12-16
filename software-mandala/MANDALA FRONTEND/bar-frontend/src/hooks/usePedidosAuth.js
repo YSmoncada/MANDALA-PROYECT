@@ -75,20 +75,29 @@ export const usePedidosAuth = () => {
             console.log("Respuesta del backend al login:", response.data);
             // --------------------------
 
-            // Validación estricta de la respuesta del backend
-            const receivedRole = response.data?.role;
-            if (!receivedRole || !['admin', 'bartender'].includes(receivedRole)) {
+            let finalRole = response.data?.role;
+            const username = response.data?.username;
+
+            // **PARCHE DE SEGURIDAD CRÍTICO**
+            // Si el usuario es 'barra', forzamos su rol a 'bartender' en el frontend,
+            // ignorando lo que el backend haya respondido.
+            if (username === 'barra') {
+                finalRole = 'bartender';
+            }
+
+            // Validación estricta del rol final
+            if (!finalRole || !['admin', 'bartender'].includes(finalRole)) {
                 return { success: false, message: 'El servidor devolvió un rol inválido o nulo.' };
             }
 
-            setUserRole(receivedRole);
-            const sysUser = { id: 'sys', nombre: response.data.username, role: receivedRole };
+            setUserRole(finalRole);
+            const sysUser = { id: 'sys', nombre: username, role: finalRole };
             setSelectedMesera(sysUser);
             setCodigoConfirmado(true);
-            sessionStorage.setItem('userRole', receivedRole);
+            sessionStorage.setItem('userRole', finalRole);
             sessionStorage.setItem('selectedMesera', JSON.stringify(sysUser));
             sessionStorage.setItem('codigoConfirmado', 'true');
-            return { success: true, role: receivedRole };
+            return { success: true, role: finalRole };
         } catch (error) {
             console.error("Login error:", error);
             if (error.response?.status === 404) {
