@@ -67,6 +67,7 @@ function HomeDisco() {
     // Y TAMPOCO hay un código de mesera confirmado.
     useEffect(() => {
         if (isInitialized && !role && !userRole && !codigoConfirmado) {
+            console.log("DEBUG: Auth object from context:", JSON.stringify(auth, null, 2));
             // Si no hay rol de Django Y no hay código de mesera, entonces sí redirigir.
             // Esto permite que admin y bartender (que tienen auth.role) puedan entrar.
             navigate('/login', { replace: true });
