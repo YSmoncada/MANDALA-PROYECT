@@ -13,6 +13,50 @@ const LoadingSpinner = () => (
     </div>
 );
 
+// Definimos los módulos fuera del componente para mayor claridad y rendimiento.
+const ALL_MODULES = [
+    {
+        id: 'inventario',
+        icon: Package,
+        label: "Inventario",
+        path: "/inventario",
+        color: "from-cyan-400 to-blue-500",
+        allowedRoles: ['admin']
+    },
+    {
+        id: 'pedidos',
+        icon: ClipboardList,
+        label: "Pedidos",
+        path: "/pedidos-disco",
+        color: "from-pink-400 to-rose-500",
+        allowedRoles: ['admin', 'bartender', 'mesera']
+    },
+    {
+        id: 'mesas',
+        icon: SquareKanban,
+        label: "Mesas",
+        path: "/mesas",
+        color: "from-purple-400 to-fuchsia-500",
+        allowedRoles: ['admin']
+    },
+    {
+        id: 'historial',
+        icon: History,
+        label: "Historial",
+        path: "/historial-pedidos",
+        color: "from-yellow-400 to-orange-500",
+        allowedRoles: ['admin']
+    },
+    {
+        id: 'bartender',
+        icon: GlassWater,
+        label: "Bartender",
+        path: "/bartender-disco",
+        color: "from-green-400 to-emerald-500",
+        allowedRoles: ['admin', 'bartender']
+    },
+];
+
 function HomeDisco() {
     const navigate = useNavigate();
     const { auth } = usePedidosContext();
@@ -29,63 +73,26 @@ function HomeDisco() {
         }
     }, [isInitialized, role, userRole, codigoConfirmado, navigate]);
 
-    // Define all available modules
-    const allModules = [
-        {
-            id: 'inventario',
-            icon: Package,
-            label: "Inventario",
-            path: "/inventario",
-            color: "from-cyan-400 to-blue-500",
-            allowedRoles: ['admin']
-        },
-        {
-            id: 'pedidos',
-            icon: ClipboardList,
-            label: "Pedidos",
-            path: "/pedidos-disco", // Ruta a la página de productos
-            color: "from-pink-400 to-rose-500",
-            allowedRoles: ['admin', 'bartender', 'mesera']
-        },
-        {
-            id: 'mesas',
-            icon: SquareKanban,
-            label: "Mesas",
-            path: "/mesas",
-            color: "from-purple-400 to-fuchsia-500",
-            allowedRoles: ['admin']
-        },
-        {
-            id: 'historial',
-            icon: History,
-            label: "Historial",
-            path: "/historial-pedidos",
-            color: "from-yellow-400 to-orange-500",
-            allowedRoles: ['admin']
-        },
-        {
-            id: 'bartender',
-            icon: GlassWater,
-            label: "Bartender",
-            path: "/bartender-disco",
-            color: "from-green-400 to-emerald-500",
-            allowedRoles: ['admin', 'bartender']
-        },
-        {
-            id: 'contabilidad',
-            icon: DollarSign,
-            label: "Contabilidad",
-            path: "/contabilidad-disco",
-            color: "from-indigo-400 to-violet-500",
-            allowedRoles: ['admin']
-        },
-    ];
+    // Agregamos el módulo de Contabilidad solo si el rol es 'admin'
+    const modulesForRole = [...ALL_MODULES];
+    if (role === 'admin' || userRole === 'admin') {
+        modulesForRole.push(
+            {
+                id: 'contabilidad',
+                icon: DollarSign,
+                label: "Contabilidad",
+                path: "/contabilidad-disco",
+                color: "from-indigo-400 to-violet-500",
+                allowedRoles: ['admin']
+            },
+        );
+    }
 
     // Filter modules based on role
     // Fallback: if role is null (but codigoConfirmado is true, likely Mesera legacy), default to mesera role
     const currentRole = role || userRole || (codigoConfirmado ? 'mesera' : null);
 
-    const visibleModules = currentRole ? allModules.filter(m => m.allowedRoles.includes(currentRole)) : [];
+    const visibleModules = currentRole ? modulesForRole.filter(m => m.allowedRoles.includes(currentRole)) : [];
 
     // Muestra un spinner de carga mientras se inicializa la autenticación.
     if (!isInitialized) return <LoadingSpinner />;
