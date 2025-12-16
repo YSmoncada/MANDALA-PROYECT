@@ -67,7 +67,6 @@ function HomeDisco() {
     // Y TAMPOCO hay un código de mesera confirmado.
     useEffect(() => {
         if (isInitialized && !role && !userRole && !codigoConfirmado) {
-            console.log("DEBUG: Auth object from context:", JSON.stringify(auth, null, 2));
             // Si no hay rol de Django Y no hay código de mesera, entonces sí redirigir.
             // Esto permite que admin y bartender (que tienen auth.role) puedan entrar.
             navigate('/login', { replace: true });
@@ -91,15 +90,12 @@ function HomeDisco() {
 
     // Filter modules based on role
     // Fallback: if role is null (but codigoConfirmado is true, likely Mesera legacy), default to mesera role
-    let currentRole = role || userRole || (codigoConfirmado ? 'mesera' : null);
+    const currentRole = role || userRole || (codigoConfirmado ? 'mesera' : null);
 
-    // **Corrección de Seguridad Crítica**
-    // Si el nombre de usuario en el contexto es 'barra', forzamos el rol a 'bartender'.
-    // Esto previene que un usuario 'barra' pueda tener permisos de 'admin' por un error en los datos del contexto.
-    // Asumimos que `auth.user.username` contiene el nombre de usuario. Si es otra propiedad, ajústala aquí.
-    if (auth.user && auth.user.username === 'barra') {
-        currentRole = 'bartender';
-    }
+    // --- LÍNEA DE DEPURACIÓN CLAVE ---
+    // Esta línea se ejecutará justo antes de mostrar los módulos.
+    console.log("DEBUG (Post-Login): Auth Object:", JSON.stringify(auth, null, 2));
+    // ---------------------------------
 
     const visibleModules = currentRole ? modulesForRole.filter(m => m.allowedRoles.includes(currentRole)) : [];
 
