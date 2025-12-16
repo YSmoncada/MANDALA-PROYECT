@@ -56,7 +56,7 @@ function Home() {
             id: 'bartender',
             icon: GlassWater,
             label: "Bartender",
-            path: "/bartender",
+            path: "/bartender-disco",
             color: "from-green-400 to-emerald-500",
             allowedRoles: ['admin', 'bartender']
         },
