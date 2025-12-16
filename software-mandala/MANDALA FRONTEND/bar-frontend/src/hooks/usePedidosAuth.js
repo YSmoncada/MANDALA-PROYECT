@@ -75,13 +75,13 @@ export const usePedidosAuth = () => {
             console.log("Respuesta del backend al login:", response.data);
             // --------------------------
 
-            let finalRole = response.data?.role;
-            const username = response.data?.username;
+            let finalRole = response.data?.role; // Rol que envía el backend
+            const responseUsername = response.data?.username; // Nombre de usuario que envía el backend
 
             // **PARCHE DE SEGURIDAD CRÍTICO**
             // Si el usuario es 'barra', forzamos su rol a 'bartender' en el frontend,
             // ignorando lo que el backend haya respondido.
-            if (username === 'barra') {
+            if (username === 'barra') { // Usamos el username del formulario para la comprobación
                 finalRole = 'bartender';
             }
 
@@ -91,7 +91,7 @@ export const usePedidosAuth = () => {
             }
 
             setUserRole(finalRole);
-            const sysUser = { id: 'sys', nombre: username, role: finalRole };
+            const sysUser = { id: 'sys', nombre: responseUsername, role: finalRole };
             setSelectedMesera(sysUser);
             setCodigoConfirmado(true);
             sessionStorage.setItem('userRole', finalRole);
