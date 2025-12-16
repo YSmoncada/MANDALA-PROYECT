@@ -99,13 +99,12 @@ export const usePedidosAuth = () => {
     };
 
     const handleLogout = useCallback(() => {
+        // Limpiar el estado local
         setSelectedMesera(null);
         setCodigoConfirmado(false);
         setUserRole(null);
-
-        sessionStorage.removeItem('selectedMesera');
-        sessionStorage.removeItem('codigoConfirmado');
-        sessionStorage.removeItem('userRole');
+        // Limpiar TODA la sesión para evitar conflictos de roles.
+        sessionStorage.clear();
     }, []);
 
     const addMesera = async (nombre, codigo) => {
