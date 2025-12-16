@@ -90,9 +90,18 @@ function HomeDisco() {
 
     // Filter modules based on role
     // Fallback: if role is null (but codigoConfirmado is true, likely Mesera legacy), default to mesera role
-    const currentRole = role || userRole || (codigoConfirmado ? 'mesera' : null);
+    let currentRole = role || userRole || (codigoConfirmado ? 'mesera' : null);
+
+    // **Corrección de Seguridad Crítica**
+    // Si el nombre de usuario en el contexto es 'barra', forzamos el rol a 'bartender'.
+    // Esto previene que un usuario 'barra' pueda tener permisos de 'admin' por un error en los datos del contexto.
+    // Asumimos que `auth.user.username` contiene el nombre de usuario. Si es otra propiedad, ajústala aquí.
+    if (auth.user && auth.user.username === 'barra') {
+        currentRole = 'bartender';
+    }
 
     const visibleModules = currentRole ? modulesForRole.filter(m => m.allowedRoles.includes(currentRole)) : [];
+
 
     // Muestra un spinner de carga mientras se inicializa la autenticación.
     if (!isInitialized) return <LoadingSpinner />;
