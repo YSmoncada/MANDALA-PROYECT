@@ -66,6 +66,12 @@ function HomeDisco() {
     // Redirección mejorada: solo redirige si no hay un rol de admin/bartender
     // Y TAMPOCO hay un código de mesera confirmado.
     useEffect(() => {
+        // --- LÍNEA DE DEPURACIÓN ---
+        // Esta línea nos ayudará a ver qué datos de usuario llegan del backend en CADA render.
+        // Revisa la consola del navegador (F12) después de iniciar sesión como 'barra'.
+        console.log("DEBUG: Auth object from context:", JSON.stringify(auth, null, 2));
+        // --------------------------
+
         if (isInitialized && !role && !userRole && !codigoConfirmado) {
             // Si no hay rol de Django Y no hay código de mesera, entonces sí redirigir.
             // Esto permite que admin y bartender (que tienen auth.role) puedan entrar.
@@ -90,11 +96,10 @@ function HomeDisco() {
 
     // Filter modules based on role
     // Fallback: if role is null (but codigoConfirmado is true, likely Mesera legacy), default to mesera role
-    const currentRole = role || userRole || (codigoConfirmado ? 'mesera' : null);
+    let currentRole = role || userRole || (codigoConfirmado ? 'mesera' : null);
 
     // --- LÍNEA DE DEPURACIÓN CLAVE ---
-    // Esta línea se ejecutará justo antes de mostrar los módulos.
-    console.log("DEBUG (Post-Login): Auth Object:", JSON.stringify(auth, null, 2));
+    console.log(`DEBUG: El rol actual calculado es: ${currentRole}`);
     // ---------------------------------
 
     const visibleModules = currentRole ? modulesForRole.filter(m => m.allowedRoles.includes(currentRole)) : [];

@@ -64,21 +64,31 @@ export const usePedidosAuth = () => {
 
     const loginSystem = async (username, password) => {
         try {
-            const response = await axios.post(`${API_URL}/login/`, { username, password });
-            if (response.data.success) {
-                const { role, username: dbUsername } = response.data;
-                setUserRole(role);
-                // Set fake mesera object for compatibility with components that display name
-                const sysUser = { id: 'sys', nombre: dbUsername, role: role };
-                setSelectedMesera(sysUser);
-                setCodigoConfirmado(true);
+            // --- LÍNEA DE DEPURACIÓN ---
+            // Para ver qué envía el backend exactamente al hacer login.
+            console.log(`Intentando iniciar sesión como: ${username}`);
+            // --------------------------
 
-                sessionStorage.setItem('userRole', role);
-                sessionStorage.setItem('selectedMesera', JSON.stringify(sysUser));
-                sessionStorage.setItem('codigoConfirmado', 'true');
-                return { success: true, role };
+            const response = await axios.post(`${API_URL}/login/`, { username, password });
+
+            // --- LÍNEA DE DEPURACIÓN ---
+            console.log("Respuesta del backend al login:", response.data);
+            // --------------------------
+
+            // Validación estricta de la respuesta del backend
+            const receivedRole = response.data?.role;
+            if (!receivedRole || !['admin', 'bartender'].includes(receivedRole)) {
+                return { success: false, message: 'El servidor devolvió un rol inválido o nulo.' };
             }
-            return { success: false, message: 'Credenciales inválidas' };
+
+            setUserRole(receivedRole);
+            const sysUser = { id: 'sys', nombre: response.data.username, role: receivedRole };
+            setSelectedMesera(sysUser);
+            setCodigoConfirmado(true);
+            sessionStorage.setItem('userRole', receivedRole);
+            sessionStorage.setItem('selectedMesera', JSON.stringify(sysUser));
+            sessionStorage.setItem('codigoConfirmado', 'true');
+            return { success: true, role: receivedRole };
         } catch (error) {
             console.error("Login error:", error);
             if (error.response?.status === 404) {
