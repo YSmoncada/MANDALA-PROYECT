@@ -1,82 +1,13 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Package, ClipboardList, SquareKanban, History, GlassWater, DollarSign, LogOut } from "lucide-react";
-import { usePedidosContext } from "../../context/PedidosContext";
+import React from "react";
+import { LogOut } from "lucide-react";
+import { useHomeLogic } from "./useHomeLogic"; // 1. Importamos el nuevo hook
 
 function Home() {
-    const navigate = useNavigate();
-    const { auth } = usePedidosContext();
-    // Simplificamos: 'role' es la propiedad principal para el rol.
-    const { isInitialized, codigoConfirmado, handleLogout, mesera, role } = auth;
+    // 2. Usamos el hook para obtener la lógica y los datos
+    const { isInitialized, visibleModules, mesera, handleLogout, navigate } = useHomeLogic();
 
-    // Redirección mejorada: solo redirige si no hay un rol de admin/bartender
-    // Y TAMPOCO hay un código de mesera confirmado.
-    useEffect(() => {
-        if (isInitialized && !role && !codigoConfirmado) {
-            // Si no hay rol de Django Y no hay código de mesera, entonces sí redirigir.
-            navigate('/login', { replace: true });
-        }
-    }, [isInitialized, role, codigoConfirmado, navigate]);
-
-    // Define all available modules
-    const allModules = [
-        {
-            id: 'inventario',
-            icon: Package,
-            label: "Inventario",
-            path: "/inventario",
-            color: "from-cyan-400 to-blue-500",
-            allowedRoles: ['admin', 'mesera']
-        },
-        {
-            id: 'pedidos',
-            icon: ClipboardList,
-            label: "Pedidos",
-            path: "/pedidos-disco", // Ruta a la página de productos
-            color: "from-pink-400 to-rose-500",
-            allowedRoles: ['admin', 'bartender', 'mesera']
-        },
-        {
-            id: 'mesas',
-            icon: SquareKanban,
-            label: "Mesas",
-            path: "/mesas",
-            color: "from-purple-400 to-fuchsia-500",
-            allowedRoles: ['admin', 'mesera']
-        },
-        {
-            id: 'historial',
-            icon: History,
-            label: "Historial",
-            path: "/historial-pedidos",
-            color: "from-yellow-400 to-orange-500",
-            allowedRoles: ['admin', 'mesera']
-        },
-        {
-            id: 'bartender',
-            icon: GlassWater,
-            label: "Bartender",
-            path: "/bartender",
-            color: "from-green-400 to-emerald-500",
-            allowedRoles: ['admin', 'bartender']
-        },
-        {
-            id: 'contabilidad',
-            icon: DollarSign,
-            label: "Contabilidad",
-            path: "/contabilidad-disco",
-            color: "from-indigo-400 to-violet-500",
-            allowedRoles: ['admin', 'mesera']
-        },
-    ];
-
-    // Filter modules based on role
-    // Fallback: if role is null (but codigoConfirmado is true, likely Mesera legacy), default to mesera role
-    const currentRole = role || (codigoConfirmado ? 'mesera' : null);
-
-    const visibleModules = currentRole ? allModules.filter(m => m.allowedRoles.includes(currentRole)) : [];
-
-
+    // 3. El componente ahora es mucho más simple.
+    //    No renderiza nada hasta que la lógica de autenticación esté inicializada.
     if (!isInitialized) return null; // Or loading spinner
 
     return (
