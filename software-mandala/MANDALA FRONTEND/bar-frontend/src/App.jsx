@@ -5,7 +5,7 @@ import Notificaciones from "./components/Notificaciones";
 
 // Lazy loading de componentes para mejorar el rendimiento
 const Inventario = lazy(() => import("./pages/inventario/Inventario"));
-const Home = lazy(() => import("./pages/home/Home"));
+const Home = lazy(() => import("./pages/home/Home-Disco"));
 const HistorialPedidosPageDisco = lazy(() => import("./pages/historialpedidos/HistorialPedidosPage-Disco"));
 const PedidosDisco = lazy(() => import("./pages/pedidosAuth/Pedidos-Disco"));
 const PedidosPageDisco = lazy(() => import("./pages/pedidospage/PedidosPage-Disco"));
