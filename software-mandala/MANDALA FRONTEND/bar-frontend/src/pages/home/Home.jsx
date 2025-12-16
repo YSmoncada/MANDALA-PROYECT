@@ -6,17 +6,17 @@ import { usePedidosContext } from "../../context/PedidosContext";
 function Home() {
     const navigate = useNavigate();
     const { auth } = usePedidosContext();
-    const { isInitialized, codigoConfirmado, handleLogout, mesera, role } = auth; // Añadido 'role'
+    const { isInitialized, codigoConfirmado, handleLogout, mesera, role, userRole } = auth;
 
     // Redirección mejorada: solo redirige si no hay un rol de admin/bartender
     // Y TAMPOCO hay un código de mesera confirmado.
     useEffect(() => {
-        if (isInitialized && !role && !codigoConfirmado) { // Usar 'role' directamente
+        if (isInitialized && !role && !userRole && !codigoConfirmado) {
             // Si no hay rol de Django Y no hay código de mesera, entonces sí redirigir.
             // Esto permite que admin y bartender (que tienen auth.role) puedan entrar.
             navigate('/login', { replace: true });
         }
-    }, [isInitialized, role, codigoConfirmado, navigate]);
+    }, [isInitialized, role, userRole, codigoConfirmado, navigate]);
 
     // Define all available modules
     const allModules = [
@@ -56,7 +56,7 @@ function Home() {
             id: 'bartender',
             icon: GlassWater,
             label: "Bartender",
-            path: "/bartender-disco",
+            path: "/bartender",
             color: "from-green-400 to-emerald-500",
             allowedRoles: ['admin', 'bartender']
         },
@@ -72,7 +72,7 @@ function Home() {
 
     // Filter modules based on role
     // Fallback: if role is null (but codigoConfirmado is true, likely Mesera legacy), default to mesera role
-    const currentRole = role || (codigoConfirmado ? 'mesera' : null); // Usar 'role' directamente
+    const currentRole = role || userRole || (codigoConfirmado ? 'mesera' : null);
 
     const visibleModules = currentRole ? allModules.filter(m => m.allowedRoles.includes(currentRole)) : [];
 
