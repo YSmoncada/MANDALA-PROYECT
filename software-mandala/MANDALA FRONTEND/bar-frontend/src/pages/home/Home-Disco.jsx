@@ -72,7 +72,7 @@ function HomeDisco() {
 
     // Filter modules based on role
     // Fallback: if role is null (but codigoConfirmado is true, likely Mesera legacy), default to mesera role
-    const currentRole = auth.role || (codigoConfirmado ? 'mesera' : null);
+    const currentRole = userRole || auth.role || (codigoConfirmado ? 'mesera' : null);
 
     const visibleModules = currentRole ? allModules.filter(m => m.allowedRoles.includes(currentRole)) : [];
 
