@@ -24,7 +24,7 @@ export const useHomeLogic = () => {
             label: "Inventario",
             path: "/inventario",
             color: "from-cyan-400 to-blue-500",
-            allowedRoles: ['admin', 'mesera']
+            allowedRoles: ['admin']
         },
         {
             id: 'pedidos',
@@ -40,7 +40,7 @@ export const useHomeLogic = () => {
             label: "Mesas",
             path: "/mesas",
             color: "from-purple-400 to-fuchsia-500",
-            allowedRoles: ['admin', 'mesera']
+            allowedRoles: ['admin']
         },
         {
             id: 'historial',
@@ -48,13 +48,13 @@ export const useHomeLogic = () => {
             label: "Historial",
             path: "/historial-pedidos",
             color: "from-yellow-400 to-orange-500",
-            allowedRoles: ['admin', 'mesera']
+            allowedRoles: ['admin']
         },
         {
             id: 'bartender',
             icon: GlassWater,
             label: "Bartender",
-            path: "/bartender",
+            path: "/bartender-disco",
             color: "from-green-400 to-emerald-500",
             allowedRoles: ['admin', 'bartender']
         },
@@ -64,7 +64,7 @@ export const useHomeLogic = () => {
             label: "Contabilidad",
             path: "/contabilidad-disco",
             color: "from-indigo-400 to-violet-500",
-            allowedRoles: ['admin', 'mesera']
+            allowedRoles: ['admin']
         },
     ];
 
