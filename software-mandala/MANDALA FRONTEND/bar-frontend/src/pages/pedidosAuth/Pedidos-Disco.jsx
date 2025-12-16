@@ -113,15 +113,6 @@ export default function PedidosDisco() {
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl"></div>
             </div>
 
-            {/* Botón para Volver al Home */}
-            <button
-                onClick={() => navigate('/')}
-                className="absolute top-6 left-6 z-50 flex items-center gap-2 rounded-lg bg-[#441E73]/50 border border-[#6C3FA8] px-4 py-2 text-white hover:bg-[#441E73] transition-all backdrop-blur-md shadow-lg hover:scale-105"
-            >
-                <ArrowLeftIcon size={18} />
-                <span className="font-medium">Volver</span>
-            </button>
-
             {/* Adjusted padding - only add top padding when header is visible */}
             <div className={`flex flex-1 items-center justify-center p-4 sm:p-8 relative z-10 pt-20 sm:pt-24`}>
 
