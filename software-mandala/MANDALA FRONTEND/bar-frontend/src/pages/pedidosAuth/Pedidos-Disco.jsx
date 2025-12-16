@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { User, Lock, ArrowLeft, Plus, Sparkles, Trash2Icon } from "lucide-react";
+import { User, Lock, ArrowLeft, Plus, Sparkles, Trash2Icon, ArrowLeft as ArrowLeftIcon } from "lucide-react";
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import HeaderPedidosDisco from "../pedidospage/HeaderPedidos-Disco";
@@ -113,12 +113,21 @@ export default function PedidosDisco() {
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl"></div>
             </div>
 
+            {/* Botón para Volver al Home */}
+            <button
+                onClick={() => navigate('/')}
+                className="absolute top-6 left-6 z-50 flex items-center gap-2 rounded-lg bg-[#441E73]/50 border border-[#6C3FA8] px-4 py-2 text-white hover:bg-[#441E73] transition-all backdrop-blur-md shadow-lg hover:scale-105"
+            >
+                <ArrowLeftIcon size={18} />
+                <span className="font-medium">Volver</span>
+            </button>
+
             {/* Adjusted padding - only add top padding when header is visible */}
             <div className={`flex flex-1 items-center justify-center p-4 sm:p-8 relative z-10 pt-20 sm:pt-24`}>
 
                 {/* System Login Form (Modal-like) */}
                 {showSystemLogin && (
-                    <div className="bg-[#441E73]/80 backdrop-blur-xl border border-[#6C3FA8] p-8 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.3)] w-full max-w-md text-center animate-fadeIn relative overflow-hidden">
+                    <div className="bg-[#441E73]/80 backdrop-blur-xl border border-[#6C3FA8] p-8 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.3)] w-full max-w-md text-center animate-fadeIn relative">
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#A944FF] to-transparent"></div>
                         <div className="w-16 h-16 bg-gradient-to-br from-[#A944FF] to-[#FF4BC1] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-[#A944FF]/20">
                             <Lock size={24} className="text-white" />
@@ -310,5 +319,3 @@ export default function PedidosDisco() {
         </div >
     );
 }
-
-

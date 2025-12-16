@@ -51,7 +51,7 @@ const ALL_MODULES = [
         id: 'bartender',
         icon: GlassWater,
         label: "Bartender",
-        path: "/bartender-disco",
+        path: "/bartender",
         color: "from-green-400 to-emerald-500",
         allowedRoles: ['admin', 'bartender']
     },
@@ -97,10 +97,16 @@ function HomeDisco() {
     // Filter modules based on role
     // Fallback: if role is null (but codigoConfirmado is true, likely Mesera legacy), default to mesera role
     let currentRole = role || userRole || (codigoConfirmado ? 'mesera' : null);
+    let displayName = mesera || 'Usuario';
 
     // --- LÍNEA DE DEPURACIÓN CLAVE ---
     console.log(`DEBUG: El rol actual calculado es: ${currentRole}`);
     // ---------------------------------
+
+    // Si el rol es bartender, cambiamos el nombre a mostrar.
+    if (currentRole === 'bartender') {
+        displayName = 'Bartender';
+    }
 
     const visibleModules = currentRole ? modulesForRole.filter(m => m.allowedRoles.includes(currentRole)) : [];
 
@@ -136,13 +142,13 @@ function HomeDisco() {
                             MANDALA
                         </span>
                     </h1>
-                    <p className="text-lg sm:text-2xl md:text-3xl text-white/80 font-light tracking-wide">
-                        Hola, <span className="font-bold text-[#A944FF]">{mesera || 'Usuario'}</span>
+                    <p className="text-lg sm:text-2xl md:text-3xl text-white/80 font-light tracking-wide capitalize">
+                        Hola, <span className="font-bold text-[#A944FF]">{displayName}</span>
                     </p>
                 </div>
 
                 {/* Improved menu grid with glass effect */}
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl justify-items-center">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl justify-center px-4">
                     {visibleModules.map((item, index) => (
                         <button
                             key={item.path}
