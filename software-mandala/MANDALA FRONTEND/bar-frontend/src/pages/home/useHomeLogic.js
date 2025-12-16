@@ -7,14 +7,14 @@ import { usePedidosContext } from "../../context/PedidosContext";
 export const useHomeLogic = () => {
     const navigate = useNavigate();
     const { auth } = usePedidosContext();
-    const { isInitialized, codigoConfirmado, handleLogout, mesera, role } = auth;
+    const { isInitialized, codigoConfirmado, handleLogout, mesera, role, userRole } = auth;
 
     // Efecto para redirigir si el usuario no está autenticado.
     useEffect(() => {
-        if (isInitialized && !role && !codigoConfirmado) {
+        if (isInitialized && !role && !userRole && !codigoConfirmado) {
             navigate('/login', { replace: true });
         }
-    }, [isInitialized, role, codigoConfirmado, navigate]);
+    }, [isInitialized, role, userRole, codigoConfirmado, navigate]);
 
     // Definición centralizada de todos los módulos disponibles en la aplicación.
     const allModules = [
@@ -69,7 +69,7 @@ export const useHomeLogic = () => {
     ];
 
     // Lógica para determinar los módulos visibles según el rol del usuario.
-    const currentRole = role || (codigoConfirmado ? 'mesera' : null);
+    const currentRole = role || userRole || (codigoConfirmado ? 'mesera' : null);
     const visibleModules = currentRole ? allModules.filter(m => m.allowedRoles.includes(currentRole)) : [];
 
     // El hook devuelve solo lo que el componente necesita para renderizar.
