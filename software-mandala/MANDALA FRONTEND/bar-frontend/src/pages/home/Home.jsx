@@ -26,7 +26,7 @@ function HomeDisco() {
             label: "Inventario",
             path: "/inventario",
             color: "from-cyan-400 to-blue-500",
-            allowedRoles: ['admin'] // Only admin
+            allowedRoles: ['admin', 'bartender', 'mesera'] // Only admin
         },
         {
             id: 'pedidos',
@@ -42,7 +42,7 @@ function HomeDisco() {
             label: "Mesas",
             path: "/mesas",
             color: "from-purple-400 to-fuchsia-500",
-            allowedRoles: ['admin']
+            allowedRoles: ['admin', 'bartender', 'mesera']
         },
         {
             id: 'historial',
@@ -50,7 +50,7 @@ function HomeDisco() {
             label: "Historial",
             path: "/historial-pedidos",
             color: "from-yellow-400 to-orange-500",
-            allowedRoles: ['admin']
+            allowedRoles: ['admin', 'bartender', 'mesera']
         },
         {
             id: 'bartender',
@@ -66,7 +66,7 @@ function HomeDisco() {
             label: "Contabilidad",
             path: "/contabilidad-disco",
             color: "from-indigo-400 to-violet-500",
-            allowedRoles: ['admin']
+            allowedRoles: ['admin', 'bartender', 'mesera']
         },
     ];
 
