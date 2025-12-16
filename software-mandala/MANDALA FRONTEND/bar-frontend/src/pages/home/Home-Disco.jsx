@@ -1,24 +1,83 @@
-import React from "react";
-import { LogOut } from "lucide-react";
-import { useHomeLogic } from "./useHomeLogic"; // 1. Importamos el nuevo hook
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Package, ClipboardList, SquareKanban, History, GlassWater, DollarSign, LogOut } from "lucide-react";
+import { usePedidosContext } from "../../context/PedidosContext";
 
-// Componente de carga para una mejor experiencia de usuario.
-const LoadingSpinner = () => (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-black">
-        <div className="text-white text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-            <p className="text-lg">Verificando sesión...</p>
-        </div>
-    </div>
-);
+function HomeDisco() {
+    const navigate = useNavigate();
+    const { auth } = usePedidosContext();
+    const { isInitialized, codigoConfirmado, userRole, handleLogout, mesera } = auth;
 
-function Home() {
-    // 2. Usamos el hook para obtener la lógica y los datos
-    const { isInitialized, visibleModules, mesera, handleLogout, navigate } = useHomeLogic();
+    // Redirección mejorada: solo redirige si no hay un rol de admin/bartender
+    // Y TAMPOCO hay un código de mesera confirmado.
+    useEffect(() => {
+        if (isInitialized && !auth.role && !codigoConfirmado) {
+            // Si no hay rol de Django Y no hay código de mesera, entonces sí redirigir.
+            // Esto permite que admin y bartender (que tienen auth.role) puedan entrar.
+            navigate('/login', { replace: true });
+        }
+    }, [isInitialized, auth.role, codigoConfirmado, navigate]);
 
-    // 3. El componente ahora es mucho más simple.
-    //    Muestra un spinner de carga mientras se inicializa la autenticación.
-    if (!isInitialized) return <LoadingSpinner />;
+    // Define all available modules
+    const allModules = [
+        {
+            id: 'inventario',
+            icon: Package,
+            label: "Inventario",
+            path: "/inventario",
+            color: "from-cyan-400 to-blue-500",
+            allowedRoles: ['admin']
+        },
+        {
+            id: 'pedidos',
+            icon: ClipboardList,
+            label: "Pedidos",
+            path: "/pedidos-disco", // Ruta a la página de productos
+            color: "from-pink-400 to-rose-500",
+            allowedRoles: ['admin', 'bartender', 'mesera']
+        },
+        {
+            id: 'mesas',
+            icon: SquareKanban,
+            label: "Mesas",
+            path: "/mesas",
+            color: "from-purple-400 to-fuchsia-500",
+            allowedRoles: ['admin']
+        },
+        {
+            id: 'historial',
+            icon: History,
+            label: "Historial",
+            path: "/historial-pedidos",
+            color: "from-yellow-400 to-orange-500",
+            allowedRoles: ['admin']
+        },
+        {
+            id: 'bartender',
+            icon: GlassWater,
+            label: "Bartender",
+            path: "/bartender",
+            color: "from-green-400 to-emerald-500",
+            allowedRoles: ['admin', 'bartender']
+        },
+        {
+            id: 'contabilidad',
+            icon: DollarSign,
+            label: "Contabilidad",
+            path: "/contabilidad-disco",
+            color: "from-indigo-400 to-violet-500",
+            allowedRoles: ['admin']
+        },
+    ];
+
+    // Filter modules based on role
+    // Fallback: if role is null (but codigoConfirmado is true, likely Mesera legacy), default to mesera role
+    const currentRole = userRole || auth.role || (codigoConfirmado ? 'mesera' : null);
+
+    const visibleModules = currentRole ? allModules.filter(m => m.allowedRoles.includes(currentRole)) : [];
+
+
+    if (!isInitialized) return null; // Or loading spinner
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white overflow-hidden relative selection:bg-purple-500/30">
@@ -101,4 +160,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default HomeDisco;
