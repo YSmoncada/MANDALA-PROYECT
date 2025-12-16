@@ -214,7 +214,7 @@ export default function PedidosDisco() {
                     <div className="w-full max-w-6xl mx-auto -mt-16 relative">
                         <div className="text-center mb-12 mt-16 sm:mt-2">
                             <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight drop-shadow-[0_0_25px_rgba(169,68,255,0.4)]">
-                                LOGIN
+                                Control de acceso
                             </h1>
                             <p className="text-xl text-[#C2B6D9] font-light tracking-wide">Selecciona tu perfil</p>
                         </div>

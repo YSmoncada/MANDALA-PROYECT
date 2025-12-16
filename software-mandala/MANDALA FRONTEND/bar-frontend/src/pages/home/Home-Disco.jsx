@@ -96,17 +96,11 @@ function HomeDisco() {
 
     // Filter modules based on role
     // Fallback: if role is null (but codigoConfirmado is true, likely Mesera legacy), default to mesera role
-    let currentRole = role || userRole || (codigoConfirmado ? 'mesera' : null);
-    let displayName = mesera || 'Usuario';
+    const currentRole = role || userRole || (codigoConfirmado ? 'mesera' : null);
 
     // --- LÍNEA DE DEPURACIÓN CLAVE ---
     console.log(`DEBUG: El rol actual calculado es: ${currentRole}`);
     // ---------------------------------
-
-    // Si el rol es bartender, cambiamos el nombre a mostrar.
-    if (currentRole === 'bartender') {
-        displayName = 'Bartender';
-    }
 
     const visibleModules = currentRole ? modulesForRole.filter(m => m.allowedRoles.includes(currentRole)) : [];
 
@@ -142,13 +136,10 @@ function HomeDisco() {
                             MANDALA
                         </span>
                     </h1>
-                    <p className="text-lg sm:text-2xl md:text-3xl text-white/80 font-light tracking-wide capitalize">
-                        Hola, <span className="font-bold text-[#A944FF]">{displayName}</span>
-                    </p>
                 </div>
 
                 {/* Improved menu grid with glass effect */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl justify-center px-4">
+                <div className="flex flex-wrap justify-center items-center gap-6 w-full max-w-7xl px-4">
                     {visibleModules.map((item, index) => (
                         <button
                             key={item.path}
