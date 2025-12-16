@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { Package, ClipboardList, SquareKanban, History, GlassWater, DollarSign, LogOut } from "lucide-react";
 import { usePedidosContext } from "../../context/PedidosContext";
 
-function HomeDisco() {
+function Home() {
     const navigate = useNavigate();
     const { auth } = usePedidosContext();
-    const { isInitialized, codigoConfirmado, userRole, handleLogout, mesera } = auth;
+    const { isInitialized, codigoConfirmado, handleLogout, mesera } = auth;
 
     // Redirección mejorada: solo redirige si no hay un rol de admin/bartender
     // Y TAMPOCO hay un código de mesera confirmado.
@@ -160,4 +160,4 @@ function HomeDisco() {
     );
 }
 
-export default HomeDisco;
+export default Home;
