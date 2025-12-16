@@ -1,22 +1,13 @@
 // src/apiConfig.js
 
-// Intentar usar la variable de entorno primero
-const envApiUrl = import.meta.env.VITE_API_URL;
+// La URL base de tu API desplegada en Render.
+// Usamos `import.meta.env.VITE_API_URL` si está definida, si no, usamos la URL de producción directamente.
+const API_URL = import.meta.env.VITE_API_URL || "https://mandala-proyect.onrender.com/api";
 
-// Si no hay variable de entorno, usar la lógica de auto-detección como fallback
-let API_URL;
+// Para desarrollo local, puedes crear un archivo .env.local en la raíz de tu proyecto frontend
+// y añadir la línea: VITE_API_URL=http://127.0.0.1:8000/api
 
-if (envApiUrl) {
-    // Usar la URL de la variable de entorno
-    API_URL = envApiUrl;
-    console.log('📡 Usando API URL desde variable de entorno:', API_URL);
-} else {
-    // Fallback: Detectar automáticamente (comportamiento original)
-    const isNetwork = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-    const API_HOST = isNetwork ? window.location.hostname : '127.0.0.1';
-    API_URL = `http://${API_HOST}:8000/api`;
-    console.log('📡 Auto-detectando API URL:', API_URL);
-}
+console.log('📡 Usando API URL:', API_URL);
 
 // Exporta la URL completa de la API
 export { API_URL };
