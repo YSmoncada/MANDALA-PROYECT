@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ShoppingBag, Plus, Clock, Check, X, Loader2 } from 'lucide-react';
-import { API_URL } from '../../apiConfig';
 import { usePedidosContext } from '../../context/PedidosContext';
 import HeaderPedidosDisco from '../pedidospage/HeaderPedidos-Disco';
+import { useMisPedidos } from '../../hooks/useMisPedidos'; // Importamos el nuevo Hook
 
 const MisPedidosPageDisco = () => {
     const { auth, setSelectedMesaId, setIsTableLocked } = usePedidosContext();
     const { mesera, meseraId, codigoConfirmado, handleLogout } = auth;
-    const [pedidos, setPedidos] = useState([]);
-    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -18,30 +15,10 @@ const MisPedidosPageDisco = () => {
             navigate('/login-disco');
             return;
         }
+    }, [mesera, codigoConfirmado, navigate]);
 
-        const fetchMisPedidos = async () => {
-            try {
-                // Obtener la fecha actual en formato YYYY-MM-DD para la API
-                const hoy = new Date().toISOString().split('T')[0];
-
-                // Pedir al backend solo los pedidos de la mesera para el día de hoy
-                const response = await axios.get(`${API_URL}/pedidos/?mesera=${meseraId}&fecha=${hoy}`);
-
-                // El backend ya debería devolver los pedidos ordenados, pero re-ordenamos por seguridad
-                const sorted = response.data.sort((a, b) => new Date(b.fecha_hora) - new Date(a.fecha_hora));
-
-                setPedidos(sorted);
-            } catch (error) {
-                console.error('Error fetching orders:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchMisPedidos();
-        const interval = setInterval(fetchMisPedidos, 15000);
-        return () => clearInterval(interval);
-    }, [mesera, meseraId, codigoConfirmado, navigate]);
+    // Usamos el hook para obtener los datos y el estado de carga. ¡Así de simple!
+    const { pedidos, loading } = useMisPedidos(meseraId);
 
     const handleAgregarProductos = (mesaId) => {
         setSelectedMesaId(mesaId);

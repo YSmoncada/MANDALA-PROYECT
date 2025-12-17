@@ -1,0 +1,37 @@
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { API_URL } from '../apiConfig';
+
+export const useMisPedidos = (meseraId) => {
+    const [pedidos, setPedidos] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (!meseraId) {
+            setLoading(false);
+            return;
+        }
+
+        const fetchMisPedidos = async () => {
+            try {
+                const hoy = new Date().toISOString().split('T')[0];
+                const response = await axios.get(`${API_URL}/pedidos/?mesera=${meseraId}&fecha=${hoy}`);
+                const sorted = response.data.sort((a, b) => new Date(b.fecha_hora) - new Date(a.fecha_hora));
+                setPedidos(sorted);
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+                // Opcional: podrías añadir un estado de error aquí
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchMisPedidos();
+        const interval = setInterval(fetchMisPedidos, 15000); // Auto-refresh
+
+        // Limpieza al desmontar el componente
+        return () => clearInterval(interval);
+    }, [meseraId]); // El efecto se ejecuta si cambia el meseraId
+
+    return { pedidos, loading };
+};
