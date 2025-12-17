@@ -7,8 +7,8 @@ import toast from 'react-hot-toast';
 import { API_URL } from '../../apiConfig';
 import { usePedidosContext } from '../../context/PedidosContext';
 
-const MESAS_API_URL = `${API_URL}/mesas`;
-const MESEROS_API_URL = `${API_URL}/meseros`;
+const MESAS_API_URL = `${API_URL}/mesas/`;
+const MESEROS_API_URL = `${API_URL}/meseros/`;
 
 const MesasPageDisco = () => {
     const [mesas, setMesas] = useState([]);
@@ -50,7 +50,7 @@ const MesasPageDisco = () => {
         }
 
         try {
-            await axios.delete(`${MESEROS_API_URL}/${meseroId}`, {
+            await axios.delete(`${MESEROS_API_URL}${meseroId}/`, {
                 headers: {
                     Authorization: `Bearer ${auth.token}`
                 }
@@ -82,7 +82,7 @@ const MesasPageDisco = () => {
     const handleDeleteMesa = async (id) => {
         if (window.confirm('¿Estás seguro de que quieres eliminar esta mesa?')) {
             try {
-                await axios.delete(`${MESAS_API_URL}/${id}`, {
+                await axios.delete(`${MESAS_API_URL}${id}/`, {
                     headers: {
                         Authorization: `Bearer ${auth.token}`
                     }
