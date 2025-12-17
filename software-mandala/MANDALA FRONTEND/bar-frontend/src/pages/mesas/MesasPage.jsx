@@ -15,7 +15,7 @@ const MesasPageDisco = () => {
     const [meseros, setMeseros] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-    const { auth, isInitialized } = usePedidosContext(); // Añadimos isInitialized
+    const { auth } = usePedidosContext();
 
     const fetchData = async () => {
         try {
@@ -34,18 +34,9 @@ const MesasPageDisco = () => {
     };
 
     useEffect(() => {
-        // No hacer nada hasta que el contexto de autenticación esté inicializado
-        if (!isInitialized) return;
-
-        // Proteger la ruta solo para administradores
-        if (auth.role !== 'admin') {
-            toast.error('Acceso no autorizado.');
-            navigate('/home-disco'); // O a la página de login
-            return;
-        }
-
+        // Carga los datos directamente al montar el componente.
         fetchData();
-    }, [isInitialized, auth.role, navigate]);
+    }, []);
 
     const handleEliminarMesero = async (meseroId) => {
         if (!window.confirm('¿Estás seguro de que quieres eliminar este mesero? Esta acción no se puede deshacer.')) {
@@ -86,8 +77,8 @@ const MesasPageDisco = () => {
         }
     };
 
-    // Mostrar loader mientras se inicializa la autenticación o se cargan los datos
-    if (loading || !isInitialized) {
+    // Mostrar loader solo mientras se cargan los datos
+    if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
