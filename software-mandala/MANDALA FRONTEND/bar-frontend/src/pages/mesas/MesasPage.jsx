@@ -108,8 +108,8 @@ const MesasPageDisco = () => {
         }
     };
 
-    // Mostrar loader solo mientras se cargan los datos
-    if (loading || !isInitialized) {
+    // Mostrar loader mientras se inicializa o se cargan los datos.
+    if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
