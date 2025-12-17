@@ -8,45 +8,55 @@ import { API_URL } from '../../apiConfig';
 import { usePedidosContext } from '../../context/PedidosContext';
 
 const MESAS_API_URL = `${API_URL}/mesas/`;
+const MESEROS_API_URL = `${API_URL}/meseras/`;
 
 const MesasPageDisco = () => {
     const [mesas, setMesas] = useState([]);
+    const [meseros, setMeseros] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const { auth } = usePedidosContext();
-    const { meseras, deleteMesera } = auth; // Obtenemos los meseros y la función de eliminar del contexto
 
-    const fetchMesas = async () => {
+    const fetchData = async () => {
         try {
-            // Añadimos el token para la petición
-            const response = await axios.get(MESAS_API_URL, {
+            const config = {
                 headers: { Authorization: `Bearer ${auth.token}` }
-            });
-            setMesas(response.data);
+            };
+            const [mesasRes, meserosRes] = await Promise.all([
+                axios.get(MESAS_API_URL, config),
+                axios.get(MESEROS_API_URL, config)
+            ]);
+            setMesas(mesasRes.data);
+            setMeseros(meserosRes.data);
         } catch (error) {
-            console.error("Error al cargar las mesas:", error);
-            toast.error("No se pudieron cargar las mesas.");
+            console.error("Error al cargar los datos:", error);
+            toast.error("No se pudieron cargar los datos.");
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        // Solo cargar datos si tenemos el token de admin
         if (auth.token) {
-            fetchMesas();
+            fetchData();
         } else {
-            setLoading(false); // Si no hay token, no intentar cargar
+            setLoading(false);
         }
     }, [auth.token]);
 
     const handleEliminarMesero = async (meseroId) => {
         if (window.confirm('¿Estás seguro de que quieres eliminar este mesero?')) {
-            const result = await deleteMesera(meseroId); // Usamos la función del contexto
-            if (result.success) {
+            try {
+                await axios.delete(`${MESEROS_API_URL}${meseroId}/`, {
+                    headers: {
+                        Authorization: `Bearer ${auth.token}`
+                    }
+                });
                 toast.success('Mesero eliminado correctamente.');
-            } else {
-                toast.error(result.message || 'No se pudo eliminar el mesero.');
+                setMeseros(currentMeseros => currentMeseros.filter(m => m.id !== meseroId));
+            } catch (error) {
+                console.error("Error al eliminar el mesero:", error);
+                toast.error(error.response?.data?.error || 'No se pudo eliminar el mesero.');
             }
         }
     };
@@ -59,7 +69,7 @@ const MesasPageDisco = () => {
                 }
             });
             toast.success('¡Mesa guardada con éxito!');
-            fetchMesas();
+            fetchData();
         } catch (error) {
             console.error("Error al agregar la mesa:", error.response?.data || error.message);
             toast.error(`Error: ${error.response?.data?.numero?.[0] || 'No se pudo guardar la mesa.'}`);
@@ -74,7 +84,7 @@ const MesasPageDisco = () => {
                         Authorization: `Bearer ${auth.token}`
                     }
                 });
-                fetchMesas();
+                fetchData();
             } catch (error) {
                 console.error("Error al eliminar la mesa:", error);
                 alert('No se pudo eliminar la mesa. Es posible que tenga pedidos asociados.');
@@ -150,7 +160,7 @@ const MesasPageDisco = () => {
                     <div>
                         <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><Users /> Meseros</h2>
                         <div className="space-y-3 bg-gray-800/50 backdrop-blur-sm border border-purple-500/40 rounded-xl p-6">
-                            {meseras.map(mesero => (
+                            {meseros.map(mesero => (
                                 <div key={mesero.id} className="bg-purple-950/40 p-4 rounded-lg flex justify-between items-center">
                                     <span className="font-semibold capitalize">{mesero.nombre}</span>
                                     <button
@@ -162,7 +172,7 @@ const MesasPageDisco = () => {
                                     </button>
                                 </div>
                             ))}
-                            {meseras.length === 0 && !loading && (
+                            {meseros.length === 0 && !loading && (
                                 <p className="text-center text-gray-400 py-8">No hay meseros registrados.</p>
                             )}
                         </div>
