@@ -35,7 +35,7 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
     return (
         <form
             onSubmit={handleSubmit}
-            className="bg-[#2B0D49]/80 border border-[#6C3FA8] rounded-xl p-6 mb-8 flex items-end gap-4"
+            className="bg-[#1A103C]/80 backdrop-blur-md border border-[#6C3FA8]/50 rounded-2xl p-6 mb-8 flex flex-wrap items-end gap-4"
         >
             <div>
                 <label htmlFor="numero" className="block mb-2 text-sm font-medium text-gray-300">
@@ -49,7 +49,7 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
                         const value = e.target.value;
                         setNumero(value.replace(/[^0-9]/g, '')); // Solo permite números
                     }}
-                    className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
+                    className="w-full p-3 bg-[#2B0D49] border border-[#6C3FA8]/50 rounded-lg text-white focus:ring-2 focus:ring-[#A944FF] outline-none transition-all placeholder:text-gray-500"
                     placeholder="Ej: 1, 2, 10"
                     required
                 />
@@ -64,7 +64,7 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
                     id="capacidad"
                     value={capacidad}
                     onChange={(e) => setCapacidad(e.target.value)}
-                    className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
+                    className="w-full p-3 bg-[#2B0D49] border border-[#6C3FA8]/50 rounded-lg text-white focus:ring-2 focus:ring-[#A944FF] outline-none transition-all placeholder:text-gray-500"
                     placeholder="Ej: 4"
                     min="1"
                     required
@@ -73,7 +73,7 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
 
             <button
                 type="submit"
-                className="bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] text-white font-bold py-2.5 px-6 rounded-lg hover:opacity-90 transition"
+                className="bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] text-white font-bold py-3 px-6 rounded-lg hover:brightness-110 transition-all shadow-lg shadow-[#A944FF]/20"
             >
                 Guardar Mesa
             </button>

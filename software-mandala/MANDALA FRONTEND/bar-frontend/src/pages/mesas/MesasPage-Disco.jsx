@@ -124,9 +124,10 @@ const MesasPageDisco = () => {
 
     return (
         <div className="relative min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-4 sm:p-8 text-white">
-            <div className="absolute inset-0 opacity-20">
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl"></div>
+            {/* Background Glows matching Home-Disco */}
+            <div className="fixed inset-0 pointer-events-none">
+                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl"></div>
             </div>
 
             <button
@@ -139,7 +140,7 @@ const MesasPageDisco = () => {
 
             <div className="relative z-10 mx-auto max-w-6xl pt-20 sm:pt-0">
                 <div className="text-center mb-10">
-                    <h1 className="text-5xl md:text-6xl font-black mb-3 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+                    <h1 className="text-5xl md:text-6xl font-black mb-3 text-white drop-shadow-[0_0_15px_rgba(168,85,247,0.3)]">
                         Gestión de Mesas y Meseros
                     </h1>
                     <div className="h-1 w-24 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mx-auto"></div>
@@ -154,7 +155,7 @@ const MesasPageDisco = () => {
                             {mesas.map((mesa) => (
                                 <div
                                     key={mesa.id}
-                                    className="relative bg-gray-800/70 backdrop-blur-sm border border-purple-500/40 hover:border-purple-400 rounded-xl p-5 text-center group transition-all duration-300 hover:scale-105"
+                                    className="relative bg-[#1A103C]/70 backdrop-blur-md border border-[#6C3FA8]/50 hover:border-[#A944FF] rounded-2xl p-5 text-center group transition-all duration-300 hover:scale-105 hover:bg-[#2B0D49]"
                                 >
                                     <p className="text-xs font-medium text-purple-300/80 mb-1">Mesa</p>
                                     <p className="text-5xl font-black text-white my-2">
@@ -164,7 +165,7 @@ const MesasPageDisco = () => {
 
                                     <button
                                         onClick={() => handleDeleteMesa(mesa.id)}
-                                        className="absolute top-2 right-2 p-1.5 text-red-400 bg-red-900/70 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-800"
+                                        className="absolute top-2 right-2 p-1.5 text-red-400 bg-red-900/50 rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-red-800 hover:scale-110"
                                     >
                                         <Trash2 size={14} />
                                     </button>
@@ -179,13 +180,13 @@ const MesasPageDisco = () => {
                     {/* Columna de Meseros */}
                     <div>
                         <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><Users /> Meseros</h2>
-                        <div className="space-y-3 bg-gray-800/50 backdrop-blur-sm border border-purple-500/40 rounded-xl p-6">
+                        <div className="space-y-3 bg-[#1A103C]/70 backdrop-blur-md border border-[#6C3FA8]/50 rounded-2xl p-6">
                             {meseros.map(mesero => (
-                                <div key={mesero.id} className="bg-purple-950/40 p-4 rounded-lg flex justify-between items-center">
+                                <div key={mesero.id} className="bg-[#2B0D49]/80 hover:bg-[#2B0D49] p-4 rounded-xl flex justify-between items-center transition-colors border border-transparent hover:border-[#A944FF]/50">
                                     <span className="font-semibold capitalize">{mesero.nombre}</span>
                                     <button
                                         onClick={() => handleEliminarMesero(mesero.id)}
-                                        className="text-red-400 hover:text-red-200 p-2 rounded-md hover:bg-red-500/20 transition-colors"
+                                        className="text-red-400/70 hover:text-red-400 p-2 rounded-md hover:bg-red-500/20 transition-colors"
                                         title="Eliminar mesero"
                                     >
                                         <Trash2 size={18} />
