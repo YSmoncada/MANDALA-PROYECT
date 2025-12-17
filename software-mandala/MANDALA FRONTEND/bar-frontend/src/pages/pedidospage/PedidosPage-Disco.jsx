@@ -115,25 +115,18 @@ export default function PedidosPageDisco() {
         }
     };
 
-    // Evita el "flash" de contenido si el usuario no está autenticado.
-    // Muestra el loader hasta que useEffect redirija.
+    // Renderizado condicional para evitar "flash" de contenido no autorizado.
+    // No renderiza la página hasta que la inicialización esté completa Y el usuario esté autenticado.
     const esRolAutorizado = auth.role === 'bartender' || auth.role === 'admin';
     const esMeseraAutenticada = mesera && codigoConfirmado;
+    const puedeRenderizar = isInitialized && (esRolAutorizado || esMeseraAutenticada);
 
-    if (isInitialized && !esRolAutorizado && !esMeseraAutenticada) {
-        // Muestra el loader mientras se produce la redirección para evitar el parpadeo.
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-black">
-            </div>
-        );
-    }
-
-    if (isLoading || !isInitialized) {
+    if (isLoading || !puedeRenderizar) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-black">
                 <div className="text-center">
                     <div className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-purple-400 font-bold tracking-widest text-xs">PROCESANDO</p>
+                    <p className="text-purple-400 font-bold tracking-widest text-xs">CARGANDO...</p>
                 </div>
             </div>
         );
