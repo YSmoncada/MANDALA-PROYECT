@@ -42,18 +42,19 @@ const MesasPageDisco = () => {
 
     useEffect(() => {
         // Esperar a que el contexto de autenticación se inicialice.
-        if (!isInitialized) {
-            return; // No hacer nada hasta que la sesión esté cargada.
-        }
-
-        // Una vez inicializado, verificamos si tenemos un token de admin.
-        if (auth.token && auth.role === 'admin') {
-            fetchData();
+        if (isInitialized) {
+            // Una vez inicializado, verificamos si tenemos un token de admin.
+            if (auth.token && auth.role === 'admin') {
+                fetchData();
+            } else {
+                // Si no hay token o el rol no es admin, redirigir.
+                toast.error("Acceso no autorizado.");
+                setLoading(false); // Detener la carga antes de redirigir
+                navigate('/login');
+            }
         } else {
-            // Si no hay token o el rol no es admin, redirigir.
-            toast.error("Acceso no autorizado.");
-            setLoading(false); // Detener la carga antes de redirigir
-            navigate('/login');
+            // Si aún no está inicializado, mantenemos el estado de carga.
+            setLoading(true);
         }
     }, [isInitialized, auth.token, auth.role, navigate]);
 
