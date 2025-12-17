@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 import { API_URL } from '../../apiConfig';
 import { usePedidosContext } from '../../context/PedidosContext';
 
-const MESAS_API_URL = `${API_URL}/mesas/`;
+const MESAS_API_URL = `${API_URL}/mesas`;
 const MESEROS_API_URL = `${API_URL}/meseros`;
 
 const MesasPageDisco = () => {
@@ -68,7 +68,7 @@ const MesasPageDisco = () => {
     const handleDeleteMesa = async (id) => {
         if (window.confirm('¿Estás seguro de que quieres eliminar esta mesa?')) {
             try {
-                await axios.delete(`${MESAS_API_URL}${id}/`);
+                await axios.delete(`${MESAS_API_URL}/${id}`);
                 fetchData(); // Recarga mesas
             } catch (error) {
                 console.error("Error al eliminar la mesa:", error);
