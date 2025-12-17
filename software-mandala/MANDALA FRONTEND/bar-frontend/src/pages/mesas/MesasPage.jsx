@@ -19,9 +19,15 @@ const MesasPageDisco = () => {
 
     const fetchData = async () => {
         try {
+            // Añadir el token de autenticación a las cabeceras
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${auth.token}`
+                }
+            };
             const [mesasRes, meserosRes] = await Promise.all([
-                axios.get(MESAS_API_URL),
-                axios.get(MESEROS_API_URL)
+                axios.get(MESAS_API_URL, config),
+                axios.get(MESEROS_API_URL, config)
             ]);
             setMesas(mesasRes.data);
             setMeseros(meserosRes.data);
@@ -44,7 +50,11 @@ const MesasPageDisco = () => {
         }
 
         try {
-            await axios.delete(`${MESEROS_API_URL}/${meseroId}`);
+            await axios.delete(`${MESEROS_API_URL}/${meseroId}`, {
+                headers: {
+                    Authorization: `Bearer ${auth.token}`
+                }
+            });
             toast.success('Mesero eliminado correctamente.');
             // Actualizar el estado para reflejar el cambio en la UI
             setMeseros(meseros.filter(m => m.id !== meseroId));
@@ -56,7 +66,11 @@ const MesasPageDisco = () => {
 
     const handleAddMesa = async (mesaData) => {
         try {
-            await axios.post(MESAS_API_URL, mesaData);
+            await axios.post(MESAS_API_URL, mesaData, {
+                headers: {
+                    Authorization: `Bearer ${auth.token}`
+                }
+            });
             toast.success('¡Mesa guardada con éxito!');
             fetchData(); // Recarga mesas
         } catch (error) {
@@ -68,7 +82,11 @@ const MesasPageDisco = () => {
     const handleDeleteMesa = async (id) => {
         if (window.confirm('¿Estás seguro de que quieres eliminar esta mesa?')) {
             try {
-                await axios.delete(`${MESAS_API_URL}/${id}`);
+                await axios.delete(`${MESAS_API_URL}/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${auth.token}`
+                    }
+                });
                 fetchData(); // Recarga mesas
             } catch (error) {
                 console.error("Error al eliminar la mesa:", error);
