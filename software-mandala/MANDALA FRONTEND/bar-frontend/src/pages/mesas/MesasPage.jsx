@@ -12,10 +12,10 @@ const MESEROS_API_URL = `${API_URL}/meseras/`; // Corregido de 'meseros' a 'mese
 
 const MesasPageDisco = () => {
     const [mesas, setMesas] = useState([]);
-    const [meseros, setMeseros] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const { auth, isInitialized } = usePedidosContext();
+    const { meseras, deleteMesera } = auth; // Obtenemos los meseros y la función de eliminar del contexto
 
     const fetchData = async () => {
         try {
@@ -25,12 +25,9 @@ const MesasPageDisco = () => {
                     Authorization: `Bearer ${auth.token}`
                 }
             };
-            const [mesasRes, meserosRes] = await Promise.all([
-                axios.get(MESAS_API_URL, config),
-                axios.get(MESEROS_API_URL, config)
-            ]);
+            // Ahora solo necesitamos cargar las mesas, los meseros vienen del contexto.
+            const mesasRes = await axios.get(MESAS_API_URL, config);
             setMesas(mesasRes.data);
-            setMeseros(meserosRes.data);
         } catch (error) {
             console.error("Error al cargar los datos:", error);
             toast.error('No se pudieron cargar los datos.');
@@ -40,12 +37,20 @@ const MesasPageDisco = () => {
     };
 
     useEffect(() => {
-        // Solo ejecutar fetchData si tenemos un token de autenticación y el rol es admin.
-        // Esto evita llamadas fallidas mientras el contexto se inicializa.
+        // Esperar a que el contexto de autenticación se inicialice.
+        if (!isInitialized) {
+            return; // No hacer nada hasta que la sesión esté cargada.
+        }
+
+        // Una vez inicializado, verificamos si tenemos un token de admin.
         if (auth.token && auth.role === 'admin') {
             fetchData();
+        } else {
+            // Si no hay token o el rol no es admin, redirigir.
+            toast.error("Acceso no autorizado.");
+            navigate('/login');
         }
-    }, [auth.token, auth.role]); // El efecto se ejecutará solo cuando el token o el rol cambien.
+    }, [isInitialized, auth.token, auth.role, navigate]);
 
     const handleEliminarMesero = async (meseroId) => {
         if (!window.confirm('¿Estás seguro de que quieres eliminar este mesero? Esta acción no se puede deshacer.')) {
@@ -53,14 +58,12 @@ const MesasPageDisco = () => {
         }
 
         try {
-            await axios.delete(`${MESEROS_API_URL}${meseroId}/`, {
-                headers: {
-                    Authorization: `Bearer ${auth.token}`
-                }
-            });
-            toast.success('Mesero eliminado correctamente.');
-            // Actualizar el estado para reflejar el cambio en la UI
-            setMeseros(meseros.filter(m => m.id !== meseroId));
+            const result = await deleteMesera(meseroId); // Usamos la función del contexto
+            if (result.success) {
+                toast.success('Mesero eliminado correctamente.');
+            } else {
+                toast.error(result.message || 'No se pudo eliminar el mesero.');
+            }
         } catch (error) {
             console.error("Error al eliminar el mesero:", error);
             toast.error(error.response?.data?.error || 'No se pudo eliminar el mesero.');
@@ -98,8 +101,8 @@ const MesasPageDisco = () => {
         }
     };
 
-    // Mostrar loader mientras se cargan los datos iniciales.
-    if (loading) {
+    // Mostrar loader solo mientras se cargan los datos
+    if (loading || !isInitialized) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
@@ -168,7 +171,7 @@ const MesasPageDisco = () => {
                     <div>
                         <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><Users /> Meseros</h2>
                         <div className="space-y-3 bg-gray-800/50 backdrop-blur-sm border border-purple-500/40 rounded-xl p-6">
-                            {meseros.map(mesero => (
+                            {meseras.map(mesero => (
                                 <div key={mesero.id} className="bg-purple-950/40 p-4 rounded-lg flex justify-between items-center">
                                     <span className="font-semibold capitalize">{mesero.nombre}</span>
                                     <button
@@ -180,7 +183,7 @@ const MesasPageDisco = () => {
                                     </button>
                                 </div>
                             ))}
-                            {meseros.length === 0 && (
+                            {meseras.length === 0 && (
                                 <p className="text-center text-gray-400 py-8">No hay meseros registrados.</p>
                             )}
                         </div>
