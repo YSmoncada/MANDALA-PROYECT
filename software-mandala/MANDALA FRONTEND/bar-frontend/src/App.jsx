@@ -1,6 +1,7 @@
 // src/App.jsx
 import React, { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import ProtectedRoute from "./components/ProtectedRoute";
 import Notificaciones from "./components/Notificaciones";
 
 // Lazy loading de componentes para mejorar el rendimiento
@@ -36,10 +37,26 @@ function App() {
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/inventario" element={<Inventario />} />
-            <Route path="/mesas" element={<MesasPageDisco />} />
-            <Route path="/bartender" element={<BartenderPageDisco />} />
 
+            {/* Rutas Protegidas */}
+            <Route path="/inventario" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <Inventario />
+              </ProtectedRoute>
+            } />
+            <Route path="/mesas" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <MesasPageDisco />
+              </ProtectedRoute>
+            } />
+            <Route path="/bartender" element={
+              <ProtectedRoute allowedRoles={['admin', 'bartender']}>
+                <BartenderPageDisco />
+              </ProtectedRoute>
+            } />
+            <Route path="/contabilidad-disco" element={
+              <ProtectedRoute allowedRoles={['admin']}><ContabilidadDisco /></ProtectedRoute>
+            } />
             {/* Rutas de Pedidos (Contexto global ahora disponible) */}
             <Route path="/login" element={<PedidosDisco />} /> {/* Login Principal */}
             <Route path="/login-mesera-pedidos" element={<PedidosDisco />} /> {/* Modulo Pedidos Mesera */}
@@ -50,8 +67,6 @@ function App() {
             <Route path="/pedidos-disco" element={<SeleccionProductosDisco />} /> {/* Página de selección de productos */}
 
             <Route path="/mis-pedidos-disco" element={<MisPedidosPageDisco />} />
-            <Route path="/contabilidad-disco" element={<ContabilidadDisco />} />
-
             <Route path="/historial-pedidos" element={<HistorialPedidosPageDisco />} />
 
             <Route path="*" element={<Navigate to="/login" />} /> {/* Redirect default to login */}
