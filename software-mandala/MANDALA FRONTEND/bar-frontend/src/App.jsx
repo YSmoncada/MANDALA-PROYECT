@@ -12,7 +12,7 @@ const PedidosPageDisco = lazy(() => import("./pages/pedidospage/PedidosPage-Disc
 const SeleccionProductosDisco = lazy(() => import("./pages/pedidospage/SeleccionProductos-Disco")); // Página de selección de productos
 const MisPedidosPageDisco = lazy(() => import("./pages/pedidospage/MisPedidosPage-Disco")); // 🎨 Disco Mis Pedidos
 const ContabilidadDisco = lazy(() => import("./pages/contabilidad/Contabilidad-Disco")); // 🎨 Disco Contabilidad
-const MesasPage = lazy(() => import("./pages/mesas/MesasPage"));
+const MesasPage = lazy(() => import("./pages/mesas/MesasPage-Disco"));
 const BartenderPageDisco = lazy(() => import("./pages/bartender/BartenderPage-Disco"));
 const PedidosLayout = lazy(() => import("./layouts/PedidosLayout"));
 
