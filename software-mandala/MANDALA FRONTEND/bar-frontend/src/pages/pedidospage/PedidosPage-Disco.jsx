@@ -158,7 +158,7 @@ export default function PedidosPageDisco() {
                             Agrega productos desde el menú para comenzar.
                         </p>
                         <button
-                            onClick={() => navigate('/login-disco')}
+                            onClick={() => navigate('/pedidos-disco')}
                             className="px-10 py-4 rounded-xl bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] hover:brightness-110 text-white font-bold uppercase tracking-widest text-xs transition-all shadow-lg shadow-[#A944FF]/30 transform hover:scale-105"
                         >
                             Ir al Menú

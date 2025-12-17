@@ -73,9 +73,9 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
 
             <button
                 type="submit"
-                className="bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] text-white font-bold py-3 px-6 rounded-lg hover:brightness-110 transition-all shadow-lg shadow-[#A944FF]/20"
+                className="h-[52px] px-6 bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] text-white font-bold uppercase tracking-widest text-xs rounded-xl hover:brightness-110 transition-all shadow-lg shadow-[#A944FF]/30 hover:shadow-[#A944FF]/50 hover:scale-[1.02] active:scale-[0.98]"
             >
-                Guardar Mesa
+                Guardar
             </button>
         </form>
     );
