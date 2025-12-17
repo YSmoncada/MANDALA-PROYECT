@@ -8,7 +8,7 @@ import { API_URL } from '../../apiConfig';
 import { usePedidosContext } from '../../context/PedidosContext';
 
 const MESAS_API_URL = `${API_URL}/mesas/`;
-const MESEROS_API_URL = `${API_URL}/meseros/`;
+const MESEROS_API_URL = `${API_URL}/meseras/`; // Corregido de 'meseros' a 'meseras'
 
 const MesasPageDisco = () => {
     const [mesas, setMesas] = useState([]);
