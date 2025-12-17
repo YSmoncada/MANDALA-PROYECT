@@ -12,10 +12,10 @@ const MESEROS_API_URL = `${API_URL}/meseras/`; // Corregido de 'meseros' a 'mese
 
 const MesasPageDisco = () => {
     const [mesas, setMesas] = useState([]);
+    const [meseros, setMeseros] = useState([]); // Re-añadimos estado local para meseros
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const { auth, isInitialized } = usePedidosContext();
-    const { meseras, deleteMesera } = auth; // Obtenemos los meseros y la función de eliminar del contexto
 
     const fetchData = async () => {
         try {
@@ -25,9 +25,13 @@ const MesasPageDisco = () => {
                     Authorization: `Bearer ${auth.token}`
                 }
             };
-            // Ahora solo necesitamos cargar las mesas, los meseros vienen del contexto.
-            const mesasRes = await axios.get(MESAS_API_URL, config);
+            // Volvemos a cargar tanto mesas como meseros, ya que el contexto no los provee para el admin.
+            const [mesasRes, meserosRes] = await Promise.all([
+                axios.get(MESAS_API_URL, config),
+                axios.get(MESEROS_API_URL, config)
+            ]);
             setMesas(mesasRes.data);
+            setMeseros(meserosRes.data);
         } catch (error) {
             console.error("Error al cargar los datos:", error);
             toast.error('No se pudieron cargar los datos.');
@@ -58,12 +62,15 @@ const MesasPageDisco = () => {
         }
 
         try {
-            const result = await deleteMesera(meseroId); // Usamos la función del contexto
-            if (result.success) {
-                toast.success('Mesero eliminado correctamente.');
-            } else {
-                toast.error(result.message || 'No se pudo eliminar el mesero.');
-            }
+            // Usamos una llamada directa a la API con el token del admin
+            await axios.delete(`${MESEROS_API_URL}${meseroId}/`, {
+                headers: {
+                    Authorization: `Bearer ${auth.token}`
+                }
+            });
+            toast.success('Mesero eliminado correctamente.');
+            // Actualizamos el estado local para que la UI refleje el cambio
+            setMeseros(currentMeseros => currentMeseros.filter(m => m.id !== meseroId));
         } catch (error) {
             console.error("Error al eliminar el mesero:", error);
             toast.error(error.response?.data?.error || 'No se pudo eliminar el mesero.');
@@ -171,7 +178,7 @@ const MesasPageDisco = () => {
                     <div>
                         <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><Users /> Meseros</h2>
                         <div className="space-y-3 bg-gray-800/50 backdrop-blur-sm border border-purple-500/40 rounded-xl p-6">
-                            {meseras.map(mesero => (
+                            {meseros.map(mesero => (
                                 <div key={mesero.id} className="bg-purple-950/40 p-4 rounded-lg flex justify-between items-center">
                                     <span className="font-semibold capitalize">{mesero.nombre}</span>
                                     <button
@@ -183,7 +190,7 @@ const MesasPageDisco = () => {
                                     </button>
                                 </div>
                             ))}
-                            {meseras.length === 0 && (
+                            {meseros.length === 0 && (
                                 <p className="text-center text-gray-400 py-8">No hay meseros registrados.</p>
                             )}
                         </div>
