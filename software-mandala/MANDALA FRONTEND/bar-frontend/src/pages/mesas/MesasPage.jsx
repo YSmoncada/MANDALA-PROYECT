@@ -40,9 +40,12 @@ const MesasPageDisco = () => {
     };
 
     useEffect(() => {
-        // Carga los datos directamente al montar el componente.
-        fetchData();
-    }, []);
+        // Solo ejecutar fetchData si tenemos un token de autenticación.
+        // Esto evita hacer una llamada fallida mientras el contexto se inicializa.
+        if (auth.token) {
+            fetchData();
+        }
+    }, [auth.token]); // El efecto se re-ejecutará cuando el token esté disponible.
 
     const handleEliminarMesero = async (meseroId) => {
         if (!window.confirm('¿Estás seguro de que quieres eliminar este mesero? Esta acción no se puede deshacer.')) {
