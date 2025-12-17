@@ -52,6 +52,7 @@ const MesasPageDisco = () => {
         } else {
             // Si no hay token o el rol no es admin, redirigir.
             toast.error("Acceso no autorizado.");
+            setLoading(false); // Detener la carga antes de redirigir
             navigate('/login');
         }
     }, [isInitialized, auth.token, auth.role, navigate]);
