@@ -38,19 +38,46 @@ const MesasPageDisco = () => {
     }, []);
 
     const handleEliminarMesero = async (meseroId) => {
-        if (window.confirm('¿Estás seguro de que quieres eliminar este mesero?')) {
-            try {
-                await axios.delete(`${MESEROS_API_URL}${meseroId}/`, {
-                    headers: {
-                        Authorization: `Bearer ${auth.token}`
-                    }
-                });
-                toast.success('Mesero eliminado correctamente.');
-                setMeseros(currentMeseros => currentMeseros.filter(m => m.id !== meseroId));
-            } catch (error) {
-                console.error("Error al eliminar el mesero:", error);
-                toast.error(error.response?.data?.error || 'No se pudo eliminar el mesero.');
-            }
+        const meseroAEliminar = meseros.find(m => m.id === meseroId);
+        if (!meseroAEliminar) return;
+
+        toast((t) => (
+            <div className="bg-[#1A103C] text-white p-5 rounded-xl shadow-lg border border-purple-700/50 max-w-sm">
+                <p className="font-bold text-lg mb-2">Confirmar Eliminación</p>
+                <p className="text-sm text-gray-300 mb-4">
+                    ¿Estás seguro de que quieres eliminar a <span className="font-bold capitalize text-pink-400">{meseroAEliminar.nombre}</span>? Esta acción no se puede deshacer.
+                </p>
+                <div className="flex gap-3">
+                    <button
+                        onClick={() => {
+                            toast.dismiss(t.id);
+                            procederEliminacion(meseroId);
+                        }}
+                        className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition text-sm"
+                    >
+                        Sí, eliminar
+                    </button>
+                    <button
+                        onClick={() => toast.dismiss(t.id)}
+                        className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition text-sm"
+                    >
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: 6000, // La notificación desaparecerá después de 6 segundos si no se interactúa
+        });
+    };
+
+    const procederEliminacion = async (meseroId) => {
+        try {
+            await axios.delete(`${MESEROS_API_URL}${meseroId}/`);
+            toast.success('Mesero eliminado correctamente.');
+            setMeseros(currentMeseros => currentMeseros.filter(m => m.id !== meseroId));
+        } catch (error) {
+            console.error("Error al eliminar el mesero:", error);
+            toast.error(error.response?.data?.error || 'No se pudo eliminar el mesero.');
         }
     };
 
