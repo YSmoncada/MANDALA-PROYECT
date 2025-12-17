@@ -115,6 +115,19 @@ export default function PedidosPageDisco() {
         }
     };
 
+    // Evita el "flash" de contenido si el usuario no está autenticado.
+    // Muestra el loader hasta que useEffect redirija.
+    const esRolAutorizado = auth.role === 'bartender' || auth.role === 'admin';
+    const esMeseraAutenticada = mesera && codigoConfirmado;
+
+    if (isInitialized && !esRolAutorizado && !esMeseraAutenticada) {
+        // Muestra el loader mientras se produce la redirección para evitar el parpadeo.
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-black">
+            </div>
+        );
+    }
+
     if (isLoading || !isInitialized) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-black">
