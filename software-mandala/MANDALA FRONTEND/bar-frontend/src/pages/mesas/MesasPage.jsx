@@ -41,22 +41,14 @@ const MesasPageDisco = () => {
     };
 
     useEffect(() => {
-        // Esperar a que el contexto de autenticación se inicialice.
-        if (isInitialized) {
-            // Una vez inicializado, verificamos si tenemos un token de admin.
-            if (auth.token && auth.role === 'admin') {
-                fetchData();
-            } else {
-                // Si no hay token o el rol no es admin, redirigir.
-                toast.error("Acceso no autorizado.");
-                setLoading(false); // Detener la carga antes de redirigir
-                navigate('/login');
-            }
+        // Cargar los datos directamente. Si el token no es válido, la petición fallará
+        // y mostrará el toast de error, pero no se quedará cargando.
+        if (auth.token) {
+            fetchData();
         } else {
-            // Si aún no está inicializado, mantenemos el estado de carga.
-            setLoading(true);
+            setLoading(false); // Si no hay token, no intentes cargar nada.
         }
-    }, [isInitialized, auth.token, auth.role, navigate]);
+    }, [auth.token]);
 
     const handleEliminarMesero = async (meseroId) => {
         if (!window.confirm('¿Estás seguro de que quieres eliminar este mesero? Esta acción no se puede deshacer.')) {
