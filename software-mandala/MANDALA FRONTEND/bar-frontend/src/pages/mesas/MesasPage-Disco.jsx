@@ -19,12 +19,9 @@ const MesasPageDisco = () => {
 
     const fetchData = async () => {
         try {
-            const config = {
-                headers: { Authorization: `Bearer ${auth.token}` }
-            };
             const [mesasRes, meserosRes] = await Promise.all([
-                axios.get(MESAS_API_URL, config),
-                axios.get(MESEROS_API_URL, config)
+                axios.get(MESAS_API_URL),
+                axios.get(MESEROS_API_URL)
             ]);
             setMesas(mesasRes.data);
             setMeseros(meserosRes.data);
@@ -37,12 +34,8 @@ const MesasPageDisco = () => {
     };
 
     useEffect(() => {
-        if (auth.token) {
-            fetchData();
-        } else {
-            setLoading(false);
-        }
-    }, [auth.token]);
+        fetchData();
+    }, []);
 
     const handleEliminarMesero = async (meseroId) => {
         if (window.confirm('¿Estás seguro de que quieres eliminar este mesero?')) {
