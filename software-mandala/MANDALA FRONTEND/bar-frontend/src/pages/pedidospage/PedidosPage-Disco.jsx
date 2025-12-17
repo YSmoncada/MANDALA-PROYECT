@@ -31,6 +31,7 @@ export default function PedidosPageDisco() {
         mesera,
         meseraId,
         codigoConfirmado,
+        selectedMeseraObject,
         isInitialized,
         handleLogout,
     } = auth;
@@ -78,7 +79,7 @@ export default function PedidosPageDisco() {
         }));
 
         const pedidoData = {
-            mesera: meseraId, // Se envía el ID de la mesera si existe, o null si es admin/bartender
+            mesera: esOtroRol ? meseraId : selectedMeseraObject?.id, // Asigna el ID de la mesera o del admin/bartender
             mesa: selectedMesaId,
             estado: "pendiente",
             productos: productosParaBackend,
