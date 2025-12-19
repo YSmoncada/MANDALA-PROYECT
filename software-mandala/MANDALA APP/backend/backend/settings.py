@@ -85,6 +85,10 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend'
     ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.AnonRateThrottle',
         'rest_framework.throttling.UserRateThrottle'
@@ -121,6 +125,12 @@ CSRF_TRUSTED_ORIGINS = [
     "https://mandala-proyect.vercel.app",
     "https://mandala-proyect-*.vercel.app" # Para previews
 ]
+
+# Configuración de Cookies para permitir cross-site (Vercel -> Render)
+SESSION_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True
 
 TEMPLATES = [
     {

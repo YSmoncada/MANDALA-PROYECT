@@ -480,9 +480,11 @@ def verificar_codigo_mesera(request):
     else:
         return Response({'success': False, 'detail': 'Código incorrecto'}, status=status.HTTP_401_UNAUTHORIZED)
 
-from rest_framework.permissions import IsAdminUser
-from django.contrib.auth.models import User
-from .serializers import UserSerializer
+from rest_framework import permissions
+
+class IsSuperUser(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_superuser)
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -490,7 +492,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all().order_by('username')
     serializer_class = UserSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsSuperUser]
 
     @action(detail=True, methods=['post'], url_path='cambiar-password')
     def cambiar_password(self, request, pk=None):
