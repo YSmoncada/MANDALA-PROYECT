@@ -1,3 +1,5 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import api_view
 from rest_framework import generics
@@ -36,9 +38,20 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
+@api_view(['GET'])
+def api_root_view(request):
+    return Response({
+        "message": "Bienvenido a la API de Mandala Proyect",
+        "status": "running"
+    })
+
 class CsrfExemptSessionAuthentication(SessionAuthentication):
     def enforce_csrf(self, request):
         return  # Desactivar CSRF para permitir peticiones Vercel -> Render
+
+class IsSuperUser(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_superuser)
 
 class DebugStorageView(generics.GenericAPIView):
     def get(self, request):
@@ -414,7 +427,9 @@ class ReporteVentasDiariasView(generics.ListAPIView):
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 
+@method_decorator(csrf_exempt, name='dispatch')
 class LoginView(APIView):
+    authentication_classes = [CsrfExemptSessionAuthentication, BasicAuthentication]
     """
     Vista personalizada para login de Administrativos y Bartenders.
     Las Meseras siguen usando su código PIN (validado en frontend por ahora).
@@ -485,10 +500,8 @@ def verificar_codigo_mesera(request):
         return Response({'success': True})
     else:
         return Response({'success': False, 'detail': 'Código incorrecto'}, status=status.HTTP_401_UNAUTHORIZED)
-class IsSuperUser(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return bool(request.user and request.user.is_superuser)
 
+@method_decorator(csrf_exempt, name='dispatch')
 class UserViewSet(viewsets.ModelViewSet):
     """
     ViewSet para la gestión de usuarios por parte del administrador.

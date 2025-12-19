@@ -18,6 +18,7 @@ router.register(r'meseras', MeseraViewSet, basename='mesera')
 router.register(r'usuarios', UserViewSet, basename='usuario')
 
 urlpatterns = [
+    path('', views.api_root_view, name='api-root'),
     path('admin/', admin.site.urls),
     path('api/debug-storage/', DebugStorageView.as_view(), name='debug-storage'), # URL de debug
     path('api/meseras/total-pedidos/', MeseraTotalPedidosView.as_view(), name='mesera-total-pedidos'), # URL específica primero
