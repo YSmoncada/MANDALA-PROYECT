@@ -6,16 +6,64 @@ import { API_URL } from '../../apiConfig';
 import toast from 'react-hot-toast';
 import { usePedidosContext } from '../../context/PedidosContext';
 
+// Componente de tarjeta reutilizable para Usuario/Mesera
+const UserCard = ({ item, type, onEdit }) => {
+    const isUser = type === 'usuario';
+    const isMesera = type === 'mesera';
+    const isAdmin = isUser && item.role === 'admin';
+
+    return (
+        <div
+            className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 hover:bg-white/10 transition-all duration-500 group relative overflow-hidden"
+        >
+            {/* Decorative line */}
+            <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${isUser ? 'from-purple-500 to-indigo-600' : 'from-pink-500 to-rose-600'
+                } opacity-50`}></div>
+
+            <div className="flex items-start justify-between mb-6">
+                <div className={`p-4 rounded-2xl bg-gradient-to-br ${isAdmin ? 'from-rose-500 to-pink-600' : (isUser ? 'from-purple-500 to-indigo-600' : 'from-pink-500 to-rose-600')
+                    } shadow-lg shadow-black/20 transform group-hover:scale-110 transition-transform duration-500`}>
+                    {isUser ? <User className="text-white" size={24} /> : <GlassWater className="text-white" size={24} />}
+                </div>
+                <div className="text-right">
+                    <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border ${isAdmin ? 'bg-rose-500/10 border-rose-500/30 text-rose-400' : (isUser ? 'bg-indigo-500/10 border-indigo-500/30 text-indigo-400' : 'bg-pink-500/10 border-pink-500/30 text-pink-400')
+                        }`}>
+                        {isUser ? item.role : 'Mesera'}
+                    </span>
+                </div>
+            </div>
+
+            <div className="mb-8">
+                <h3 className="text-xl font-bold text-white mb-1 truncate tracking-tight">{item.username || item.nombre}</h3>
+                <p className="text-[10px] text-gray-500 font-black tracking-widest uppercase">ID: {String(item.id).padStart(4, '0')}</p>
+            </div>
+
+            <button
+                onClick={onEdit}
+                className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border font-bold text-xs uppercase tracking-widest transition-all ${isUser
+                    ? 'bg-[#2B0D49] border-[#6C3FA8]/50 text-white hover:bg-[#441E73] hover:border-[#A944FF] shadow-lg shadow-purple-900/20'
+                    : 'bg-[#3D0D26] border-[#731E44]/50 text-white hover:bg-[#5E1E3C] hover:border-[#FF4BC1] shadow-lg shadow-pink-900/20'
+                    }`}
+            >
+                <Lock size={14} />
+                Cambiar {isUser ? 'Clave' : 'PIN'}
+            </button>
+        </div>
+    );
+};
+
+
 const AdminUsuariosDisco = () => {
     const [usuarios, setUsuarios] = useState([]);
+    const [meseras, setMeseras] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selectedUser, setSelectedUser] = useState(null);
-    const [newPassword, setNewPassword] = useState('');
+    const [selectedItem, setSelectedItem] = useState(null); // Puede ser usuario o mesera
+    const [newValue, setNewValue] = useState(''); // Nueva password o nuevo codigo
     const [showModal, setShowModal] = useState(false);
 
     const navigate = useNavigate();
     const { auth } = usePedidosContext();
-    const { role, userRole, handleLogout } = auth;
+    const { role, userRole } = auth;
 
     // Verificar si es admin
     useEffect(() => {
@@ -25,44 +73,57 @@ const AdminUsuariosDisco = () => {
         }
     }, [role, userRole, navigate]);
 
-    const fetchUsuarios = async () => {
+    const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`${API_URL}/usuarios/`);
-            setUsuarios(response.data);
+            const [usersRes, meserasRes] = await Promise.all([
+                axios.get(`${API_URL}/usuarios/`),
+                axios.get(`${API_URL}/meseras/`)
+            ]);
+            setUsuarios(usersRes.data);
+            setMeseras(meserasRes.data);
         } catch (error) {
-            console.error("Error al cargar usuarios:", error);
-            toast.error("No se pudieron cargar los usuarios.");
+            console.error("Error al cargar datos:", error);
+            toast.error("No se pudieron cargar los datos.");
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchUsuarios();
+        fetchData();
     }, []);
 
-    const handleOpenResetModal = (user) => {
-        setSelectedUser(user);
-        setNewPassword('');
+    const handleOpenResetModal = (item, type) => {
+        setSelectedItem({ ...item, _type: type });
+        setNewValue('');
         setShowModal(true);
     };
 
-    const handleResetPassword = async () => {
-        if (!newPassword || newPassword.length < 4) {
-            toast.error("La contraseña debe tener al menos 4 caracteres.");
+    const handleUpdateCredentials = async () => {
+        if (!newValue || newValue.length < 4) {
+            toast.error("Debe tener al menos 4 caracteres/dígitos.");
             return;
         }
 
+        const isUser = selectedItem._type === 'usuario';
+
         try {
-            await axios.post(`${API_URL}/usuarios/${selectedUser.id}/cambiar-password/`, {
-                password: newPassword
-            });
-            toast.success(`Contraseña de ${selectedUser.username} actualizada.`);
+            if (isUser) {
+                await axios.post(`${API_URL}/usuarios/${selectedItem.id}/cambiar-password/`, {
+                    password: newValue
+                });
+            } else {
+                await axios.post(`${API_URL}/meseras/${selectedItem.id}/cambiar-codigo/`, {
+                    codigo: newValue
+                });
+            }
+            toast.success(`${isUser ? 'Contraseña' : 'Código'} de ${selectedItem.username || selectedItem.nombre} actualizado.`);
             setShowModal(false);
+            fetchData();
         } catch (error) {
-            console.error("Error al cambiar contraseña:", error);
-            const detail = error.response?.data?.detail || "Error al actualizar la contraseña.";
+            console.error("Error al actualizar:", error);
+            const detail = error.response?.data?.detail || "Error al actualizar.";
             toast.error(detail);
         }
     };
@@ -76,64 +137,70 @@ const AdminUsuariosDisco = () => {
             </div>
 
             {/* Header */}
-            <header className="relative z-20 flex items-center justify-between p-6 bg-white/5 backdrop-blur-md border-b border-white/10">
-                <div className="flex items-center gap-4">
-                    <button
-                        onClick={() => navigate('/')}
-                        className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all border border-white/5"
-                    >
-                        <ArrowLeft size={20} />
-                    </button>
-                    <div>
-                        <h1 className="text-2xl font-black tracking-tight text-white flex items-center gap-2">
-                            <Users className="text-purple-400" size={24} />
-                            GESTIÓN DE USUARIOS
-                        </h1>
-                        <p className="text-xs text-gray-400 font-bold tracking-widest uppercase">Panel de Control</p>
+            <header className="relative z-20 p-6 bg-white/5 backdrop-blur-md border-b border-white/10">
+                <div className="max-w-7xl mx-auto flex items-center justify-between gap-6">
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => navigate('/')}
+                            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all border border-white/5"
+                        >
+                            <ArrowLeft size={20} />
+                        </button>
+                        <div>
+                            <h1 className="text-2xl font-black tracking-tight text-white flex items-center gap-2">
+                                <Users className="text-purple-400" size={24} />
+                                GESTIÓN DE PERSONAL
+                            </h1>
+                            <p className="text-[10px] text-gray-400 font-black tracking-[0.2em] uppercase">Control de Accesos</p>
+                        </div>
                     </div>
                 </div>
             </header>
 
-            <main className="relative z-10 p-4 sm:p-8 max-w-5xl mx-auto">
+            <main className="relative z-10 p-4 sm:p-8 max-w-7xl mx-auto space-y-12">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-20">
                         <div className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin mb-4"></div>
-                        <p className="text-purple-400 font-bold tracking-widest text-xs">CARGANDO USUARIOS...</p>
+                        <p className="text-purple-400 font-bold tracking-widest text-[10px]">OBTENIENDO INFORMACIÓN...</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {usuarios.map(user => (
-                            <div
-                                key={user.id}
-                                className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 group"
-                            >
-                                <div className="flex items-start justify-between mb-6">
-                                    <div className={`p-4 rounded-2xl bg-gradient-to-br ${user.role === 'admin' ? 'from-rose-500 to-pink-600' : 'from-purple-500 to-indigo-600'} shadow-lg shadow-purple-500/10`}>
-                                        <User className="text-white" size={24} />
-                                    </div>
-                                    <div className="text-right">
-                                        <span className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border ${user.role === 'admin' ? 'bg-rose-500/10 border-rose-500/30 text-rose-400' : 'bg-indigo-500/10 border-indigo-500/30 text-indigo-400'
-                                            }`}>
-                                            {user.role}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div className="mb-8">
-                                    <h3 className="text-xl font-bold text-white mb-1 truncate">{user.username}</h3>
-                                    <p className="text-xs text-gray-400">ID del Sistema: #{user.id}</p>
-                                </div>
-
-                                <button
-                                    onClick={() => handleOpenResetModal(user)}
-                                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#2B0D49] border border-[#6C3FA8]/50 text-white font-bold text-sm hover:bg-[#441E73] hover:border-[#A944FF] transition-all"
-                                >
-                                    <Lock size={16} />
-                                    Cambiar Contraseña
-                                </button>
+                    <>
+                        {/* Seccion Usuarios Sistema */}
+                        <section>
+                            <h2 className="text-xs font-black tracking-[0.3em] uppercase text-purple-400 mb-6 flex items-center gap-3">
+                                <span className="w-8 h-px bg-purple-500/30"></span>
+                                Usuarios del Sistema
+                            </h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                {usuarios.map(user => (
+                                    <UserCard
+                                        key={`u-${user.id}`}
+                                        item={user}
+                                        type="usuario"
+                                        onEdit={() => handleOpenResetModal(user, 'usuario')}
+                                    />
+                                ))}
                             </div>
-                        ))}
-                    </div>
+                        </section>
+
+                        {/* Seccion Meseras */}
+                        <section>
+                            <h2 className="text-xs font-black tracking-[0.3em] uppercase text-pink-400 mb-6 flex items-center gap-3">
+                                <span className="w-8 h-px bg-pink-500/30"></span>
+                                Meseras
+                            </h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                {meseras.map(mesera => (
+                                    <UserCard
+                                        key={`m-${mesera.id}`}
+                                        item={mesera}
+                                        type="mesera"
+                                        onEdit={() => handleOpenResetModal(mesera, 'mesera')}
+                                    />
+                                ))}
+                            </div>
+                        </section>
+                    </>
                 )}
             </main>
 
@@ -152,8 +219,8 @@ const AdminUsuariosDisco = () => {
                             <div className="w-16 h-16 bg-purple-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-purple-500/20">
                                 <ShieldCheck className="text-purple-400" size={32} />
                             </div>
-                            <h2 className="text-2xl font-bold">Nueva Contraseña</h2>
-                            <p className="text-gray-400 text-sm">Cambiando clave para <span className="text-white font-bold">{selectedUser?.username}</span></p>
+                            <h2 className="text-2xl font-bold">Nueva {selectedItem?._type === 'usuario' ? 'Contraseña' : 'Clave/PIN'}</h2>
+                            <p className="text-gray-400 text-sm">Cambiando para <span className="text-white font-bold">{selectedItem?.username || selectedItem?.nombre}</span></p>
                         </div>
 
                         <div className="space-y-6">
@@ -161,9 +228,9 @@ const AdminUsuariosDisco = () => {
                                 <Lock className="absolute left-4 top-3.5 text-gray-500 group-focus-within:text-purple-400 transition-colors" size={18} />
                                 <input
                                     type="text"
-                                    placeholder="Ingrese nueva clave"
-                                    value={newPassword}
-                                    onChange={(e) => setNewPassword(e.target.value)}
+                                    placeholder={selectedItem?._type === 'usuario' ? "Ingrese nueva clave" : "Ingrese nuevo PIN numérico"}
+                                    value={newValue}
+                                    onChange={(e) => setNewValue(e.target.value)}
                                     className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-black/40 border border-white/10 text-white focus:outline-none focus:border-purple-500 transition-all font-mono"
                                 />
                             </div>
@@ -176,10 +243,10 @@ const AdminUsuariosDisco = () => {
                                     Cancelar
                                 </button>
                                 <button
-                                    onClick={handleResetPassword}
+                                    onClick={handleUpdateCredentials}
                                     className="flex-1 py-3.5 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 font-bold shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 transform hover:scale-[1.02] transition-all"
                                 >
-                                    Guardar Clave
+                                    Guardar
                                 </button>
                             </div>
                         </div>

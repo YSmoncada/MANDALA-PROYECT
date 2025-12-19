@@ -75,8 +75,26 @@ class MeseraViewSet(viewsets.ModelViewSet):
     
     # La validación de código único se ha movido al MeseraSerializer.
     # El método perform_create ya no es necesario aquí para esa validación.
-    # def perform_create(self, serializer):
-    #     ...
+    
+    @action(detail=True, methods=['post'], url_path='cambiar-codigo')
+    def cambiar_codigo(self, request, pk=None):
+        """
+        Permite al administrador cambiar el PIN de una mesera.
+        Solo accesible por superusuarios.
+        """
+        if not request.user.is_superuser:
+            return Response({'detail': 'No tienes permiso para esta acción.'}, status=status.HTTP_403_FORBIDDEN)
+            
+        mesera = self.get_object()
+        nuevo_codigo = request.data.get('codigo')
+
+        if not nuevo_codigo or len(str(nuevo_codigo)) < 4:
+            return Response({'detail': 'El código debe tener al menos 4 dígitos.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        mesera.codigo = nuevo_codigo
+        mesera.save()
+
+        return Response({'detail': f'Código de {mesera.nombre} actualizado correctamente.'})
 
 class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all().order_by('-id')
