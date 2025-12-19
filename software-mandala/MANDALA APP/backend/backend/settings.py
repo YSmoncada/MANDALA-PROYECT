@@ -123,7 +123,7 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
 CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     "https://mandala-proyect.vercel.app",
-    "https://mandala-proyect-*.vercel.app" # Para previews
+    "https://*.vercel.app" # Soporta dinámicamente todos los previews de Vercel
 ]
 
 # Configuración de Cookies para permitir cross-site (Vercel -> Render)
