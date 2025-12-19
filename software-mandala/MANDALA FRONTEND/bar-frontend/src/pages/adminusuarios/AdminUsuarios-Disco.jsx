@@ -62,7 +62,8 @@ const AdminUsuariosDisco = () => {
             setShowModal(false);
         } catch (error) {
             console.error("Error al cambiar contraseña:", error);
-            toast.error("Error al actualizar la contraseña.");
+            const detail = error.response?.data?.detail || "Error al actualizar la contraseña.";
+            toast.error(detail);
         }
     };
 

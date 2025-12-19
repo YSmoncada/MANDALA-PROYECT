@@ -11,13 +11,16 @@ from django.db.models.functions import Coalesce
 import logging
 from django.db import models
 from .models import Producto, Pedido, Movimiento, Mesa, Mesera, PedidoProducto
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from django.contrib.auth.models import User
 from .serializers import (
     ProductoSerializer, 
     MovimientoSerializer, 
     PedidoSerializer, 
     MesaSerializer, 
     MeseraSerializer,
-    MeseraTotalPedidosSerializer # Asegúrate que este serializer existe
+    MeseraTotalPedidosSerializer,
+    UserSerializer
 )
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -27,12 +30,15 @@ from django.shortcuts import get_object_or_404
 from django.db import transaction
 from rest_framework import status
 from django.core.exceptions import FieldDoesNotExist
-
 import os
 from django.core.files.storage import default_storage
 from django.conf import settings
 
 logger = logging.getLogger(__name__)
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+    def enforce_csrf(self, request):
+        return  # Desactivar CSRF para permitir peticiones Vercel -> Render
 
 class DebugStorageView(generics.GenericAPIView):
     def get(self, request):
@@ -479,11 +485,6 @@ def verificar_codigo_mesera(request):
         return Response({'success': True})
     else:
         return Response({'success': False, 'detail': 'Código incorrecto'}, status=status.HTTP_401_UNAUTHORIZED)
-
-from rest_framework import permissions
-from django.contrib.auth.models import User
-from .serializers import UserSerializer
-
 class IsSuperUser(permissions.BasePermission):
     def has_permission(self, request, view):
         return bool(request.user and request.user.is_superuser)
@@ -495,6 +496,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('username')
     serializer_class = UserSerializer
     permission_classes = [IsSuperUser]
+    authentication_classes = [CsrfExemptSessionAuthentication, BasicAuthentication]
 
     @action(detail=True, methods=['post'], url_path='cambiar-password')
     def cambiar_password(self, request, pk=None):
