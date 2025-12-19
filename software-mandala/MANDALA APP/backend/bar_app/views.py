@@ -481,6 +481,8 @@ def verificar_codigo_mesera(request):
         return Response({'success': False, 'detail': 'Código incorrecto'}, status=status.HTTP_401_UNAUTHORIZED)
 
 from rest_framework import permissions
+from django.contrib.auth.models import User
+from .serializers import UserSerializer
 
 class IsSuperUser(permissions.BasePermission):
     def has_permission(self, request, view):
