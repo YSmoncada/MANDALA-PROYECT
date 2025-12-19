@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ShoppingBag, Plus, Clock, Check, X, Loader2 } from 'lucide-react';
+import { ShoppingBag } from 'lucide-react';
 import { usePedidosContext } from '../../context/PedidosContext';
 import HeaderPedidosDisco from '../pedidospage/HeaderPedidos-Disco';
 import { useMisPedidos } from '../../hooks/useMisPedidos'; // Importamos el nuevo Hook
+import PedidoCard from './components/PedidoCard'; // Importar componente
 
 const MisPedidosPageDisco = () => {
     const { auth, setSelectedMesaId, setIsTableLocked } = usePedidosContext();
@@ -20,34 +21,11 @@ const MisPedidosPageDisco = () => {
     // Usamos el hook para obtener los datos y el estado de carga. ¡Así de simple!
     const { pedidos, loading } = useMisPedidos(meseraId);
 
-    const handleAgregarProductos = (mesaId) => {
+    const handleAgregarProductos = useCallback((mesaId) => {
         setSelectedMesaId(mesaId);
         setIsTableLocked(true);
         navigate('/login-disco');
-    };
-
-    const getStatusBadge = (estado) => {
-        const statusColors = {
-            pendiente: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-            despachado: 'bg-green-500/20 text-green-400 border-green-500/30',
-            cancelado: 'bg-red-500/20 text-red-400 border-red-500/30',
-            entregado: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-            en_proceso: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
-        };
-        const statusIcons = {
-            pendiente: <Clock size={12} />,
-            despachado: <Check size={12} />,
-            cancelado: <X size={12} />,
-            entregado: <Check size={12} />,
-            en_proceso: <Loader2 size={12} className="animate-spin" />,
-        };
-        const st = estado?.toLowerCase() || 'pendiente';
-        return (
-            <span className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-bold border ${statusColors[st] || 'bg-gray-500/20 text-gray-400'}`}>
-                {statusIcons[st]} {st.replace('_', ' ')}
-            </span>
-        );
-    };
+    }, [setSelectedMesaId, setIsTableLocked, navigate]);
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white">
@@ -81,47 +59,11 @@ const MisPedidosPageDisco = () => {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {pedidos.map(pedido => (
-                            <div key={pedido.id} className="bg-purple-950/40 backdrop-blur-md border border-purple-700/40 rounded-2xl p-6">
-                                <div className="flex justify-between items-start mb-4 pb-3 border-b border-purple-700/30">
-                                    <div>
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <h2 className="font-bold text-xl">Pedido #{pedido.id}</h2>
-                                            {getStatusBadge(pedido.estado)}
-                                        </div>
-                                        <p className="text-sm">
-                                            Mesa: <span className="text-pink-400 font-bold">{pedido.mesa_numero}</span>
-                                        </p>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="text-xs">{new Date(pedido.fecha_hora).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                                        <p className="text-xs">{new Date(pedido.fecha_hora).toLocaleDateString()}</p>
-                                    </div>
-                                </div>
-
-                                <div className="space-y-2 mb-6 max-h-40 overflow-y-auto pr-2">
-                                    {pedido.productos_detalle.map((item, idx) => (
-                                        <div key={idx} className="flex justify-between items-center bg-purple-900/40 p-2 rounded-lg text-sm">
-                                            <div className="flex items-center gap-2">
-                                                <span className="bg-purple-600/30 text-purple-400 font-bold px-1.5 py-0.5 rounded text-xs">{item.cantidad}x</span>
-                                                <span>{item.producto_nombre}</span>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <div className="flex items-center justify-between pt-4 border-t border-purple-700/30 mb-4">
-                                    <span className="text-sm">Total</span>
-                                    <span className="text-2xl font-black">${parseFloat(pedido.total).toLocaleString('es-CO')}</span>
-                                </div>
-
-                                <button
-                                    onClick={() => handleAgregarProductos(pedido.mesa)}
-                                    className="w-full py-3 bg-purple-700 hover:bg-purple-500 text-white rounded-xl font-bold text-sm uppercase tracking-wide transition-colors flex items-center justify-center gap-2"
-                                >
-                                    <Plus size={16} />
-                                    Agregar Productos
-                                </button>
-                            </div>
+                            <PedidoCard
+                                key={pedido.id}
+                                pedido={pedido}
+                                onAgregarProductos={handleAgregarProductos}
+                            />
                         ))}
                     </div>
                 )}

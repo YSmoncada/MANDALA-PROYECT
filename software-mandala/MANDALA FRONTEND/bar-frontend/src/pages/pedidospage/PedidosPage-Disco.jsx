@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import HeaderPedidosDisco from "./HeaderPedidos-Disco";
+import PedidoVacio from "./components/PedidoVacio"; // Importar componente
+import OrderItem from "./components/OrderItem"; // Importar componente
 import toast from 'react-hot-toast';
 import { usePedidosContext } from "../../context/PedidosContext";
-import { ShoppingCart, Trash2, Plus, Minus, CreditCard, ArrowRight } from 'lucide-react';
+import { ShoppingCart, CreditCard, ArrowRight } from 'lucide-react';
 
 export default function PedidosPageDisco() {
     const {
@@ -22,10 +24,11 @@ export default function PedidosPageDisco() {
         pedidosActivos // <-- Traemos los pedidos activos del contexto
     } = usePedidosContext();
 
-    const onClearOrder = () => {
+    // Usamos useCallback para memoizar la función y evitar recrearla en cada render.
+    const onClearOrder = useCallback(() => {
         onClearOrderContext();
         setIsTableLocked(false);
-    };
+    }, [onClearOrderContext, setIsTableLocked]);
 
     const {
         mesera,
@@ -36,35 +39,35 @@ export default function PedidosPageDisco() {
         handleLogout,
     } = auth;
 
+    // Centralizar la lógica de roles para mayor claridad y reutilización.
+    const esRolMesera = auth.role !== 'admin' && auth.role !== 'bartender';
+
     const navigate = useNavigate();
     // const { mesas, selectedMesaId, setSelectedMesaId, isLoading, finalizarPedido } = usePedido(); // Removed local hook
 
-    const totalPedido = orderItems.reduce(
-        (total, item) => total + item.producto.precio * item.cantidad,
-        0
+    // Usamos useMemo para que el total solo se recalcule si los `orderItems` cambian.
+    const totalPedido = useMemo(() =>
+        orderItems.reduce((total, item) => total + item.producto.precio * item.cantidad, 0),
+        [orderItems]
     );
 
     useEffect(() => {
         if (!isInitialized) return;
 
-        // Solo redirigir si el usuario NO es bartender/admin y no tiene credenciales de mesera.
-        const esOtroRol = auth.role === 'bartender' || auth.role === 'admin';
-
-        if (!esOtroRol && (!mesera || !codigoConfirmado)) {
+        if (esRolMesera && (!mesera || !codigoConfirmado)) {
             navigate('/login-disco', { replace: true });
         }
     }, [isInitialized, mesera, codigoConfirmado, navigate, auth.role]);
 
-    const handleFinalizarPedido = async () => {
+    // Memoizamos la función principal para finalizar el pedido.
+    const handleFinalizarPedido = useCallback(async () => {
         if (orderItems.length === 0) {
             toast.error("No hay productos en el pedido.");
             return;
         }
 
-        // Si el usuario es admin o bartender, no necesita meseraId.
-        // Solo validamos meseraId si el rol no es admin ni bartender.
-        const esOtroRol = auth.role !== 'admin' && auth.role !== 'bartender';
-        if (esOtroRol && !meseraId) {
+        // Solo se valida el meseraId si el rol es de mesera.
+        if (esRolMesera && !meseraId) {
             toast.error("Error de autenticación de mesera. Inicie sesión nuevamente.");
         }
 
@@ -79,7 +82,7 @@ export default function PedidosPageDisco() {
         }));
 
         const pedidoData = {
-            mesera: esOtroRol ? meseraId : selectedMeseraObject?.id, // Asigna el ID de la mesera o del admin/bartender
+            mesera: esRolMesera ? meseraId : selectedMeseraObject?.id, // Asigna el ID de la mesera o del admin/bartender
             mesa: selectedMesaId,
             estado: "pendiente",
             productos: productosParaBackend,
@@ -112,7 +115,7 @@ export default function PedidosPageDisco() {
         } else {
             toast.error(result.message);
         }
-    };
+    }, [orderItems, auth.role, meseraId, selectedMesaId, isTableLocked, finalizarPedido, selectedMeseraObject, onClearOrder, navigate]);
 
     // Renderizado condicional para evitar "flash" de contenido no autorizado.
     // No renderiza la página hasta que la inicialización esté completa Y el usuario esté autenticado.
@@ -145,24 +148,7 @@ export default function PedidosPageDisco() {
             <main className="flex-1 flex items-center justify-center p-3 pt-6 pb-20 sm:p-8 relative z-10">
 
                 {orderItems.length === 0 ? (
-                    <div className="bg-[#441E73]/80 backdrop-blur-xl border border-[#6C3FA8] rounded-2xl p-12 text-center shadow-[0_0_40px_rgba(0,0,0,0.3)] max-w-md w-full animate-fadeIn relative overflow-hidden">
-                        {/* Glow Effect */}
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#A944FF] to-transparent"></div>
-
-                        <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-[#A944FF]/10 mb-8 border border-[#A944FF]/20 shadow-lg shadow-[#A944FF]/10">
-                            <ShoppingCart size={40} className="text-[#A944FF]" />
-                        </div>
-                        <h2 className="text-3xl font-bold text-white mb-3 tracking-tight">PEDIDO VACÍO</h2>
-                        <p className="text-[#C2B6D9] mb-10 font-light">
-                            Agrega productos desde el menú para comenzar.
-                        </p>
-                        <button
-                            onClick={() => navigate('/pedidos-disco')}
-                            className="px-10 py-4 rounded-xl bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] hover:brightness-110 text-white font-bold uppercase tracking-widest text-xs transition-all shadow-lg shadow-[#A944FF]/30 transform hover:scale-105"
-                        >
-                            Ir al Menú
-                        </button>
-                    </div>
+                    <PedidoVacio />
                 ) : (
                     <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
 
@@ -179,64 +165,12 @@ export default function PedidosPageDisco() {
 
                                 <div className="space-y-4 max-h-[35vh] sm:max-h-[60vh] lg:max-h-[600px] overflow-y-auto pr-2 custom-scrollbar" style={{ WebkitOverflowScrolling: 'touch' }}>
                                     {orderItems.map((item, index) => (
-                                        <div
+                                        <OrderItem
                                             key={item.producto.id || index}
-                                            className="group flex flex-col sm:flex-row items-center gap-3 sm:gap-4 bg-[#2B0D49]/80 hover:bg-[#2B0D49] p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-[#6C3FA8]/50 hover:border-[#A944FF] transition-all duration-300 shadow-md"
-                                        >
-                                            {/* Product Image */}
-                                            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-xl flex-shrink-0 border border-[#6C3FA8]/30 flex items-center justify-center overflow-hidden">
-                                                <img
-                                                    src={item.producto.imagen}
-                                                    alt={item.producto.nombre}
-                                                    className="w-full h-full object-contain"
-                                                />
-                                            </div>
-
-                                            {/* Product Info */}
-                                            <div className="flex-1 text-center sm:text-left min-w-0">
-                                                <h3 className="font-bold text-white text-base sm:text-xl mb-1 truncate">{item.producto.nombre}</h3>
-                                                <p className="text-[#A944FF] font-bold tracking-wide text-sm sm:text-base">
-                                                    ${parseFloat(item.producto.precio).toLocaleString("es-CO")}
-                                                </p>
-                                            </div>
-
-                                            {/* Controls */}
-                                            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto">
-                                                <div className="relative flex items-center justify-center w-full sm:w-auto pr-10 sm:pr-0">
-                                                    <div className="flex items-center bg-[#0E0D23] rounded-lg p-1 border border-[#6C3FA8]/50">
-                                                        <button
-                                                            onClick={() => {
-                                                                if (item.cantidad > 1) {
-                                                                    onUpdateCantidad(item.producto.id, item.cantidad - 1);
-                                                                } else {
-                                                                    onRemoveItem(item.producto.id);
-                                                                }
-                                                            }}
-                                                            className="w-7 h-7 flex items-center justify-center text-[#8A7BAF] hover:text-white hover:bg-[#441E73] rounded-md transition-colors"
-                                                        >
-                                                            <Minus size={16} />
-                                                        </button>
-                                                        <span className="w-10 text-center font-bold text-white">{item.cantidad}</span>
-                                                        <button
-                                                            onClick={() => onUpdateCantidad(item.producto.id, item.cantidad + 1)}
-                                                            className="w-7 h-7 flex items-center justify-center text-[#8A7BAF] hover:text-white hover:bg-[#441E73] rounded-md transition-colors"
-                                                        >
-                                                            <Plus size={16} />
-                                                        </button>
-                                                    </div>
-                                                    <button
-                                                        onClick={() => onRemoveItem(item.producto.id)}
-                                                        className="absolute right-0 p-2 text-[#8A7BAF] hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors sm:hidden flex-shrink-0"
-                                                    >
-                                                        <Trash2 size={20} />
-                                                    </button>
-                                                </div>
-
-                                                <p className="font-black text-lg sm:text-xl text-white text-center sm:text-right w-full sm:w-auto sm:min-w-[100px]">
-                                                    ${(parseFloat(item.producto.precio) * item.cantidad).toLocaleString("es-CO")}
-                                                </p>
-                                            </div>
-                                        </div>
+                                            item={item}
+                                            onUpdateCantidad={onUpdateCantidad}
+                                            onRemoveItem={onRemoveItem}
+                                        />
                                     ))}
                                 </div>
                             </div>

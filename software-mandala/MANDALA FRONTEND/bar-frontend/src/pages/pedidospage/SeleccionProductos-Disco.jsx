@@ -20,9 +20,9 @@ export default function SeleccionProductosDisco() {
     useEffect(() => {
         if (!isInitialized) return;
 
-        const esAdminOBartender = auth.role === 'admin' || auth.role === 'bartender';
+        const esRolMesera = auth.role !== 'admin' && auth.role !== 'bartender';
 
-        if (!esAdminOBartender && !codigoConfirmado) {
+        if (esRolMesera && !codigoConfirmado) {
             navigate('/login-disco', { replace: true });
         }
     }, [isInitialized, codigoConfirmado, auth.role, navigate]);
