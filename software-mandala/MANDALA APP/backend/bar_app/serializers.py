@@ -143,3 +143,20 @@ class MeseraTotalPedidosSerializer(serializers.Serializer):
     mesera_id = serializers.IntegerField(read_only=True)
     mesera_nombre = serializers.CharField(read_only=True)
     total_vendido = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+
+# --- Serializer para Gestión de Usuarios ---
+from django.contrib.auth.models import User
+
+class UserSerializer(serializers.ModelSerializer):
+    role = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'role', 'is_active']
+
+    def get_role(self, obj):
+        if obj.is_superuser:
+            return "admin"
+        if obj.groups.filter(name='Bartender').exists():
+            return "bartender"
+        return "usuario"

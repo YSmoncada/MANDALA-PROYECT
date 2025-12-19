@@ -479,3 +479,28 @@ def verificar_codigo_mesera(request):
         return Response({'success': True})
     else:
         return Response({'success': False, 'detail': 'Código incorrecto'}, status=status.HTTP_401_UNAUTHORIZED)
+
+from rest_framework.permissions import IsAdminUser
+from django.contrib.auth.models import User
+from .serializers import UserSerializer
+
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para la gestión de usuarios por parte del administrador.
+    """
+    queryset = User.objects.all().order_by('username')
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
+
+    @action(detail=True, methods=['post'], url_path='cambiar-password')
+    def cambiar_password(self, request, pk=None):
+        user = self.get_object()
+        new_password = request.data.get('password')
+
+        if not new_password:
+            return Response({'detail': 'Se requiere una nueva contraseña.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(new_password)
+        user.save()
+
+        return Response({'detail': f'Contraseña de {user.username} actualizada correctamente.'})

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Package, ClipboardList, SquareKanban, History, GlassWater, DollarSign, LogOut } from "lucide-react";
+import { Package, ClipboardList, SquareKanban, History, GlassWater, DollarSign, LogOut, Users } from "lucide-react";
 import { usePedidosContext } from "../../context/PedidosContext";
 
 // Componente de carga para una mejor experiencia de usuario.
@@ -89,6 +89,14 @@ function HomeDisco() {
                 label: "Contabilidad",
                 path: "/contabilidad-disco",
                 color: "from-indigo-400 to-violet-500",
+                allowedRoles: ['admin']
+            },
+            {
+                id: 'usuarios',
+                icon: Users,
+                label: "Usuarios",
+                path: "/usuarios-disco",
+                color: "from-orange-400 to-red-500",
                 allowedRoles: ['admin']
             },
         );

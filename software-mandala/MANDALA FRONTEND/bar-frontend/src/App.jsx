@@ -15,6 +15,7 @@ const MisPedidosPageDisco = lazy(() => import("./pages/pedidospage/MisPedidosPag
 const ContabilidadDisco = lazy(() => import("./pages/contabilidad/Contabilidad-Disco")); // 🎨 Disco Contabilidad
 const MesasPageDisco = lazy(() => import("./pages/mesas/MesasPage-Disco"));
 const BartenderPageDisco = lazy(() => import("./pages/bartender/BartenderPage-Disco"));
+const AdminUsuariosDisco = lazy(() => import("./pages/adminusuarios/AdminUsuarios-Disco"));
 const PedidosLayout = lazy(() => import("./layouts/PedidosLayout"));
 
 // Componente de carga
@@ -56,6 +57,9 @@ function App() {
             } />
             <Route path="/contabilidad-disco" element={
               <ProtectedRoute allowedRoles={['admin']}><ContabilidadDisco /></ProtectedRoute>
+            } />
+            <Route path="/usuarios-disco" element={
+              <ProtectedRoute allowedRoles={['admin']}><AdminUsuariosDisco /></ProtectedRoute>
             } />
             {/* Rutas de Pedidos (Contexto global ahora disponible) */}
             <Route path="/login" element={<PedidosDisco />} /> {/* Login Principal */}
