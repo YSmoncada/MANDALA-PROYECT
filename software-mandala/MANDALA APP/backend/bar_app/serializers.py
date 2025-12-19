@@ -17,7 +17,10 @@ class MovimientoSerializer(serializers.ModelSerializer):
 class MeseraSerializer(serializers.ModelSerializer):
     class Meta:
         model = Mesera
-        fields = '__all__'
+        fields = ['id', 'nombre', 'codigo']
+        extra_kwargs = {
+            'codigo': {'write_only': True}
+        }
 
     def validate_codigo(self, value):
         """

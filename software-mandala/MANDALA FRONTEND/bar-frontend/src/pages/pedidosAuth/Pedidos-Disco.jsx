@@ -284,8 +284,8 @@ export default function PedidosDisco() {
                         <CodeInputDisco
                             mesera={mesera}
                             onBack={handleLogout}
-                            onSubmit={(code) => {
-                                const success = handleCodigoSubmit(code);
+                            onSubmit={async (code) => {
+                                const success = await handleCodigoSubmit(code);
                                 if (!success) {
                                     toast.error("Clave incorrecta", {
                                         style: {

@@ -49,15 +49,27 @@ export const usePedidosAuth = () => {
         setSelectedMesera(meseraSeleccionada);
     }, []);
 
-    const handleCodigoSubmit = useCallback((codigo) => {
-        if (selectedMesera && selectedMesera.codigo === codigo) {
-            setCodigoConfirmado(true);
-            setUserRole('mesera');
+    const handleCodigoSubmit = useCallback(async (codigo) => {
+        if (!selectedMesera) return false;
 
-            sessionStorage.setItem('selectedMesera', JSON.stringify(selectedMesera));
-            sessionStorage.setItem('codigoConfirmado', 'true');
-            sessionStorage.setItem('userRole', 'mesera');
-            return true;
+        try {
+            const response = await axios.post(`${API_URL}/verificar-codigo-mesera/`, {
+                mesera_id: selectedMesera.id,
+                codigo: codigo
+            });
+
+            if (response.data.success) {
+                setCodigoConfirmado(true);
+                setUserRole('mesera');
+
+                sessionStorage.setItem('selectedMesera', JSON.stringify(selectedMesera));
+                sessionStorage.setItem('codigoConfirmado', 'true');
+                sessionStorage.setItem('userRole', 'mesera');
+                return true;
+            }
+        } catch (error) {
+            console.error("Error verificando código:", error);
+            return false;
         }
         return false;
     }, [selectedMesera]);

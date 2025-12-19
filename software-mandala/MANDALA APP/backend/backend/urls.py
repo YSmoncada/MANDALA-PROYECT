@@ -22,6 +22,7 @@ urlpatterns = [
     path('api/meseras/total-pedidos/', MeseraTotalPedidosView.as_view(), name='mesera-total-pedidos'), # URL específica primero
     path('api/reportes/ventas-diarias/', ReporteVentasDiariasView.as_view(), name='reporte-ventas-diarias'),
     path('api/login/', views.LoginView.as_view(), name='login'), # Login Admin/Bartender
+    path('api/verificar-codigo-mesera/', views.verificar_codigo_mesera, name='verificar-codigo-mesera'), # Verificación segura de PIN
     path('api/total-pedidos-mesera-hoy/', views.total_pedidos_mesera_hoy, name='total-pedidos-mesera-hoy'),
     path('api/', include(router.urls)), # Restauramos el prefijo 'api/'
 ]

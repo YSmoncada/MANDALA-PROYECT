@@ -459,3 +459,23 @@ def total_pedidos_mesera_hoy(request):
     ).values('id', 'nombre', 'total_vendido')
 
     return Response(list(ventas_por_mesera))
+
+@api_view(['POST'])
+def verificar_codigo_mesera(request):
+    """
+    Verifica si el código ingresado corresponde a la mesera seleccionada.
+    """
+    mesera_id = request.data.get('mesera_id')
+    codigo = request.data.get('codigo')
+
+    if not mesera_id or not codigo:
+        return Response({'detail': 'Faltan datos'}, status=status.HTTP_400_BAD_REQUEST)
+
+    mesera = get_object_or_404(Mesera, pk=mesera_id)
+
+    # Comparación directa (en producción idealmente los PINs deberían estar hasheados,
+    # pero para un PIN numérico simple y este caso de uso, validación servidor es el primer paso vital)
+    if mesera.codigo == codigo:
+        return Response({'success': True})
+    else:
+        return Response({'success': False, 'detail': 'Código incorrecto'}, status=status.HTTP_401_UNAUTHORIZED)
