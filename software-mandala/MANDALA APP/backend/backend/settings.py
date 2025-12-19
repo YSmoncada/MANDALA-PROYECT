@@ -34,6 +34,18 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-4uz#pkuyvb!n!b@03$3!)
 # El modo DEBUG se deshabilita en producción si la variable de entorno DEBUG no es 'True'
 DEBUG = os.environ.get('DEBUG') == 'True'
 
+if not DEBUG:
+    # Production Security Settings
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 ALLOWED_HOSTS = [
     # IPs para desarrollo local
     '192.168.18.6',

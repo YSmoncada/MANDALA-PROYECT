@@ -58,6 +58,11 @@ class Pedido(models.Model):
 
     class Meta:
         ordering = ['-fecha_hora']
+        indexes = [
+            models.Index(fields=['fecha_hora']),
+            models.Index(fields=['estado']),
+            models.Index(fields=['mesera']),
+        ]
 
 class PedidoProducto(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
