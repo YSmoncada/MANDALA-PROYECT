@@ -4,7 +4,7 @@ import { ShoppingBag } from 'lucide-react';
 import { usePedidosContext } from '../../context/PedidosContext';
 import HeaderPedidosDisco from '../pedidospage/HeaderPedidos-Disco';
 import { useMisPedidos } from '../../hooks/useMisPedidos'; // Importamos el nuevo Hook
-import PedidoCard from './components/PedidoCard'; // Importar componente
+import PedidoCard from './PedidoCard'; // Importar componente
 
 const MisPedidosPageDisco = () => {
     const { auth, setSelectedMesaId, setIsTableLocked } = usePedidosContext();
