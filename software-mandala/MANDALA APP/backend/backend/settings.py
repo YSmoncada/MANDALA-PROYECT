@@ -116,6 +116,11 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^https://mandala-proyect-.*\.vercel\.app$", # Permite cualquier URL de despliegue/preview
     r"^https://mandala-proyect\.vercel\.app$",   # Permite la URL de producción principal
 ]
+CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = [
+    "https://mandala-proyect.vercel.app",
+    "https://mandala-proyect-*.vercel.app" # Para previews
+]
 
 TEMPLATES = [
     {
