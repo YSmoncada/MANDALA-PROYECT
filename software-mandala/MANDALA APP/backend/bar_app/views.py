@@ -152,7 +152,7 @@ class PedidoViewSet(viewsets.ModelViewSet):
         if fecha:
             queryset = queryset.filter(fecha_hora__date=fecha)
 
-        return queryset.select_related('mesera', 'mesa')
+        return queryset.select_related('mesera', 'mesa').prefetch_related('pedidoproducto_set', 'pedidoproducto_set__producto')
 
     def perform_update(self, serializer):
         """
