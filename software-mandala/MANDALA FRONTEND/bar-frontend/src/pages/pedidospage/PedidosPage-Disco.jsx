@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import HeaderPedidosDisco from "./HeaderPedidos-Disco";
-import PedidoVacio from "./components/PedidoVacio"; // Importar componente
-import OrderItem from "./components/OrderItem"; // Importar componente
+import PedidoVacio from "./PedidoVacio"; // Importar componente
+import OrderItem from "./OrderItem"; // Importar componente
 import toast from 'react-hot-toast';
 import { usePedidosContext } from "../../context/PedidosContext";
 import { ShoppingCart, CreditCard, ArrowRight } from 'lucide-react';
