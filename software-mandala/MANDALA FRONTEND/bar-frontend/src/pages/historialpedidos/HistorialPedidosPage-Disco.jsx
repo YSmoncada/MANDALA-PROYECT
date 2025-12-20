@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, User, DollarSign, ShoppingBag, TrendingUp, Check, X, Clock, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Calendar, User, DollarSign, ShoppingBag, TrendingUp, Check, X, Clock, AlertCircle, Printer } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { API_URL } from '../../apiConfig';
+import TicketPrinter from '../../components/TicketPrinter';
 
 const HistorialPedidosPageDisco = () => {
     const [pedidos, setPedidos] = useState([]);
     const [meseras, setMeseras] = useState([]);
+    const [empresaConfig, setEmpresaConfig] = useState(null);
+    const [pedidoAImprimir, setPedidoAImprimir] = useState(null);
     const [meseraSeleccionada, setMeseraSeleccionada] = useState('');
     const [fechaSeleccionada, setFechaSeleccionada] = useState(() => {
         const today = new Date();
@@ -17,8 +20,16 @@ const HistorialPedidosPageDisco = () => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-    // Fetch meseras once on mount
     useEffect(() => {
+        const fetchConfig = async () => {
+            try {
+                const res = await axios.get(`${API_URL}/config/`);
+                if (res.data && res.data.length > 0) setEmpresaConfig(res.data[0]);
+                else if (res.data && res.data.id) setEmpresaConfig(res.data);
+            } catch (error) { console.error(error); }
+        };
+        fetchConfig();
+
         const fetchMeseras = async () => {
             try {
                 const response = await axios.get(`${API_URL}/meseras/`);
@@ -30,17 +41,15 @@ const HistorialPedidosPageDisco = () => {
         fetchMeseras();
     }, []);
 
-    // Fetch pedidos whenever filters change
     useEffect(() => {
         const fetchPedidos = async () => {
             setLoading(true);
-            setPedidos([]); // Limpiar pedidos antes de cada nueva búsqueda
+            setPedidos([]);
             try {
                 const params = new URLSearchParams();
                 if (meseraSeleccionada) params.append('mesera', meseraSeleccionada);
                 if (fechaSeleccionada) params.append('fecha', fechaSeleccionada);
                 const response = await axios.get(`${API_URL}/pedidos/?${params.toString()}`);
-
                 setPedidos(response.data);
             } catch (error) {
                 console.error('Error al cargar los pedidos:', error);
@@ -50,15 +59,12 @@ const HistorialPedidosPageDisco = () => {
             }
         };
 
-        // Solo busca si al menos un filtro está activo para evitar cargar todo al inicio
         if (meseraSeleccionada || fechaSeleccionada) fetchPedidos();
-        else setPedidos([]); // Si no hay filtros, la lista está vacía
+        else setPedidos([]);
     }, [meseraSeleccionada, fechaSeleccionada]);
 
-    // Calculate total when pedidos change
     useEffect(() => {
         const total = pedidos.reduce((acc, p) => {
-            // Only sum if status is NOT 'cancelado' and NOT 'pendiente'
             const estado = p.estado?.toLowerCase();
             if (estado !== 'cancelado' && estado !== 'pendiente') {
                 return acc + parseFloat(p.total);
@@ -68,315 +74,131 @@ const HistorialPedidosPageDisco = () => {
         setTotalMostrado(total);
     }, [pedidos]);
 
+    const handlePrint = (pedido) => {
+        setPedidoAImprimir(pedido);
+        setTimeout(() => {
+            window.print();
+        }, 500);
+    };
+
     const handleUpdateEstado = async (pedidoId, nuevoEstado) => {
         try {
             await axios.patch(`${API_URL}/pedidos/${pedidoId}/`, { estado: nuevoEstado });
-            toast.success(`Pedido #${pedidoId} actualizado a ${nuevoEstado}`);
-            // Update local state
+            toast.success(`Pedido #${pedidoId} actualizado`);
             setPedidos(prev => prev.map(p =>
                 p.id === pedidoId ? { ...p, estado: nuevoEstado } : p
             ));
         } catch (error) {
-            console.error('Error al actualizar estado:', error);
-            toast.error('No se pudo actualizar el estado');
-        }
-    };
-
-    const handleDeletePedidos = async () => {
-        if (pedidos.length === 0) {
-            toast.error('No hay pedidos en la lista para borrar.');
-            return;
-        }
-
-        const confirmacion = window.confirm(
-            `¿Está seguro de que desea borrar los ${pedidos.length} pedidos mostrados? Esta acción es irreversible.`
-        );
-
-        if (confirmacion) {
-            try {
-                const params = new URLSearchParams();
-                if (meseraSeleccionada) params.append('mesera', meseraSeleccionada);
-                if (fechaSeleccionada) params.append('fecha', fechaSeleccionada);
-
-                await axios.delete(`${API_URL}/pedidos/borrar_historial/?${params.toString()}`);
-
-                toast.success('Historial de pedidos borrado exitosamente.');
-                setPedidos([]); // Limpiar la lista de pedidos en el frontend
-            } catch (error) {
-                console.error('Error al borrar el historial de pedidos:', error);
-                toast.error('No se pudo borrar el historial. Intente de nuevo.');
-            }
+            toast.error('No se pudo actualizar');
         }
     };
 
     const StatusSelector = ({ pedido }) => {
         const [isOpen, setIsOpen] = useState(false);
         const currentStatus = pedido.estado?.toLowerCase() || 'pendiente';
-
-        const statusColors = {
+        const colors = {
             pendiente: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
             despachado: 'bg-green-500/20 text-green-400 border-green-500/30',
-            cancelado: 'bg-red-500/20 text-red-400 border-red-500/30',
-            entregado: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-            en_proceso: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
+            cancelado: 'bg-red-500/20 text-red-400 border-red-500/30'
         };
-
-        const statusIcons = {
-            pendiente: <Clock size={14} />,
-            despachado: <Check size={14} />,
-            cancelado: <X size={14} />,
-            entregado: <Check size={14} />,
-            en_proceso: <Clock size={14} />,
-        };
-
         return (
             <div className="relative">
-                <button
-                    onClick={() => setIsOpen(!isOpen)}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-bold uppercase tracking-wider transition-all hover:brightness-110 ${statusColors[currentStatus] || 'bg-gray-500/20 text-gray-400 border-gray-500/30'}`}
-                >
-                    {statusIcons[currentStatus]}
-                    {currentStatus.replace('_', ' ')}
+                <button onClick={() => setIsOpen(!isOpen)} className={`px-3 py-1.5 rounded-lg border text-[10px] font-bold uppercase transition-all ${colors[currentStatus]}`}>
+                    {currentStatus}
                 </button>
-
                 {isOpen && (
-                    <>
-                        <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)}></div>
-                        <div className="absolute top-full left-0 mt-2 w-48 bg-[#1A1B2F] border border-purple-500/30 rounded-xl shadow-xl z-20 overflow-hidden backdrop-blur-xl">
-                            {['pendiente', 'despachado', 'cancelado'].map(status => (
-                                <button
-                                    key={status}
-                                    onClick={() => {
-                                        handleUpdateEstado(pedido.id, status);
-                                        setIsOpen(false);
-                                    }}
-                                    className={`w-full text-left px-4 py-3 text-sm font-medium hover:bg-white/5 transition-colors flex items-center gap-3 ${currentStatus === status ? 'text-white bg-white/10' : 'text-gray-400'}`}
-                                >
-                                    <span className={`p-1 rounded-md ${statusColors[status]}`}>
-                                        {statusIcons[status]}
-                                    </span>
-                                    <span className="capitalize">{status.replace('_', ' ')}</span>
-                                </button>
-                            ))}
-                        </div>
-                    </>
+                    <div className="absolute top-full left-0 mt-2 w-32 bg-gray-900 border border-white/10 rounded-xl z-50 overflow-hidden shadow-2xl">
+                        {['pendiente', 'despachado', 'cancelado'].map(s => (
+                            <button key={s} onClick={() => { handleUpdateEstado(pedido.id, s); setIsOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-white/5 text-gray-300">
+                                {s}
+                            </button>
+                        ))}
+                    </div>
                 )}
             </div>
         );
     };
 
-    const getTituloTotal = () => {
-        const nombreMesera = meseras.find(m => m.id == meseraSeleccionada)?.nombre;
-        const fechaFormateada = fechaSeleccionada
-            ? new Date(fechaSeleccionada + 'T00:00:00').toLocaleDateString('es-CO', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-            })
-            : '';
-        if (nombreMesera && fechaFormateada) return `Ventas de ${nombreMesera} el ${fechaFormateada}`;
-        if (nombreMesera) return `Total de Ventas de ${nombreMesera}`;
-        if (fechaFormateada) return `Total de Ventas para el ${fechaFormateada}`;
-        return 'Seleccione un filtro para ver el total';
-    };
-
-    const limpiarFiltros = () => {
-        setMeseraSeleccionada('');
-        setFechaSeleccionada('');
-        setPedidos([]);
-    };
-
-    const cantidadPedidos = pedidos.length;
-    const promedioVenta = cantidadPedidos > 0 ? totalMostrado / cantidadPedidos : 0;
-
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-4 sm:p-8 text-white relative">
-            {/* Background effects */}
-            <div className="absolute inset-0 opacity-20">
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-yellow-500/20 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl"></div>
-            </div>
+        <div className="min-h-screen bg-gray-900 p-4 sm:p-8 text-white relative">
+            <TicketPrinter pedido={pedidoAImprimir} empresaConfig={empresaConfig} />
 
-            <button
-                onClick={() => navigate('/')}
-                className="absolute top-6 left-6 z-50 flex items-center gap-2 rounded-lg bg-[#441E73]/50 border border-[#6C3FA8] px-4 py-2 text-white hover:bg-[#441E73] transition-all backdrop-blur-md shadow-lg hover:scale-105"
-            >
-                <ArrowLeft size={18} />
-                <span className="font-medium">Volver</span>
+            <button onClick={() => navigate('/')} className="fixed top-6 left-6 z-50 flex items-center gap-2 rounded-lg bg-white/5 border border-white/10 px-4 py-2 hover:bg-white/10 transition-all no-print">
+                <ArrowLeft size={18} /> <span>Volver</span>
             </button>
 
-            <div className="relative z-10 max-w-6xl mx-auto pt-20 sm:pt-0">
-                {/* Header */}
-                <div className="text-center mb-10">
-                    <h1 className="text-5xl md:text-6xl font-black mb-3 text-white drop-shadow-[0_0_15px_rgba(251,191,36,0.3)]">
-                        Historial de Pedidos
-                    </h1>
-                    <div className="h-1 w-24 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full mx-auto"></div>
-                </div>
+            <div className="max-w-6xl mx-auto pt-16 no-print">
+                <h1 className="text-4xl font-black mb-8 text-center text-white">Historial de Ventas</h1>
 
-                {/* Filters */}
-                <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-3 sm:p-6 mb-8 overflow-hidden">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        {/* Mesera Filter */}
-                        <div className="w-full">
-                            <label className="flex items-center gap-2 mb-2 text-xs sm:text-sm font-semibold text-white">
-                                <User size={16} className="text-yellow-400" /> Mesera
-                            </label>
-                            <select
-                                value={meseraSeleccionada}
-                                onChange={e => setMeseraSeleccionada(e.target.value)}
-                                className="bg-gray-900/80 backdrop-blur-sm border border-purple-500/30 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block w-full p-2.5 sm:p-3"
-                            >
-                                <option value="">-- Todas --</option>
-                                {meseras.map(m => (<option key={m.id} value={m.id}>{m.nombre}</option>))}
-                            </select>
-                        </div>
-
-                        {/* Date Filter */}
-                        <div className="w-full">
-                            <label className="flex items-center gap-2 mb-2 text-xs sm:text-sm font-semibold text-white">
-                                <Calendar size={16} className="text-yellow-400" /> Fecha
-                            </label>
-                            <input
-                                type="date"
-                                value={fechaSeleccionada}
-                                onChange={e => setFechaSeleccionada(e.target.value)}
-                                className="bg-gray-900/80 backdrop-blur-sm border border-purple-500/30 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block w-full p-2.5 sm:p-3"
-                                style={{
-                                    boxSizing: 'border-box',
-                                    WebkitAppearance: 'none',
-                                    MozAppearance: 'none',
-                                    appearance: 'none',
-                                    backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23FCD34D\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3crect x=\'3\' y=\'4\' width=\'18\' height=\'18\' rx=\'2\' ry=\'2\'%3e%3c/rect%3e%3cline x1=\'16\' y1=\'2\' x2=\'16\' y2=\'6\'%3e%3c/line%3e%3cline x1=\'8\' y1=\'2\' x2=\'8\' y2=\'6\'%3e%3c/line%3e%3cline x1=\'3\' y1=\'10\' x2=\'21\' y2=\'10\'%3e%3c/line%3e%3c/svg%3e")',
-                                    backgroundRepeat: 'no-repeat',
-                                    backgroundPosition: 'right 0.75rem center',
-                                    backgroundSize: '1.25rem',
-                                    paddingRight: '2.5rem'
-                                }}
-                            />
-                        </div>
-
-                        {/* Clear Button */}
-                        <div className="w-full flex items-end ">
-                            <button
-                                onClick={limpiarFiltros}
-                                className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2.5 sm:py-3 px-4 rounded-lg w-full transition-all hover:scale-105 text-sm"
-                            >
-                                Limpiar Filtros
-                            </button>
-                        </div>
-
-                        {/* Delete History Button */}
-                        <div className="w-full flex items-end">
-                            <button
-                                onClick={handleDeletePedidos}
-                                disabled={pedidos.length === 0}
-                                className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 sm:py-3 px-4 rounded-lg w-full transition-all hover:scale-105 text-sm disabled:bg-red-900/50 disabled:cursor-not-allowed disabled:scale-100"
-                            >
-                                Borrar Historial
-                            </button>
-                        </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 bg-white/5 p-6 rounded-2xl border border-white/10">
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-gray-400 uppercase">Mesera</label>
+                        <select value={meseraSeleccionada} onChange={e => setMeseraSeleccionada(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm focus:border-purple-500 outline-none">
+                            <option value="">-- Todas --</option>
+                            {meseras.map(m => (<option key={m.id} value={m.id}>{m.nombre}</option>))}
+                        </select>
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-gray-400 uppercase">Fecha</label>
+                        <input type="date" value={fechaSeleccionada} onChange={e => setFechaSeleccionada(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm focus:border-purple-500 outline-none" />
+                    </div>
+                    <div className="flex items-end">
+                        <button onClick={() => { setMeseraSeleccionada(''); setFechaSeleccionada(''); setPedidos([]); }} className="w-full bg-white/5 hover:bg-white/10 py-3 rounded-xl text-sm transition-all">Limpiar</button>
                     </div>
                 </div>
 
-                {/* Statistics */}
-                {pedidos.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5">
-                            <div className="flex items-center gap-3 mb-2">
-                                <div className="p-2 bg-yellow-500/20 rounded-lg">
-                                    <ShoppingBag size={24} className="text-yellow-400" />
-                                </div>
-                                <div>
-                                    <p className="text-sm text-gray-400">Total Pedidos</p>
-                                    <p className="text-3xl font-black text-white">{cantidadPedidos}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5">
-                            <div className="flex items-center gap-3 mb-2">
-                                <div className="p-2 bg-green-500/20 rounded-lg">
-                                    <DollarSign size={24} className="text-green-400" />
-                                </div>
-                                <div>
-                                    <p className="text-sm text-gray-400">Total Vendido</p>
-                                    <p className="text-3xl font-black text-white">{totalMostrado.toLocaleString('es-CO')}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5">
-                            <div className="flex items-center gap-3 mb-2">
-                                <div className="p-2 bg-purple-500/20 rounded-lg">
-                                    <TrendingUp size={24} className="text-purple-400" />
-                                </div>
-                                <div>
-                                    <p className="text-sm text-gray-400">Promedio/Pedido</p>
-                                    <p className="text-3xl font-black text-white">{promedioVenta.toLocaleString('es-CO', { maximumFractionDigits: 0 })}</p>
-                                </div>
-                            </div>
-                        </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                    <div className="bg-white/5 p-6 rounded-2xl border border-white/5">
+                        <p className="text-xs text-gray-400 font-bold uppercase mb-1">Total Ventas</p>
+                        <p className="text-3xl font-black text-green-400">${totalMostrado.toLocaleString()}</p>
                     </div>
-                )}
+                    <div className="bg-white/5 p-6 rounded-2xl border border-white/5">
+                        <p className="text-xs text-gray-400 font-bold uppercase mb-1">Pedidos</p>
+                        <p className="text-3xl font-black">{pedidos.length}</p>
+                    </div>
+                </div>
 
-                {/* Order List */}
-                {loading ? (
-                    <div className="text-center py-12 mb-6 sm:mb-8">
-                        <div className="inline-block p-4 bg-white/5 rounded-full">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400"></div>
+                <div className="space-y-4">
+                    {pedidos.map(pedido => (
+                        <div key={pedido.id} className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all group">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="flex items-center gap-4">
+                                    <h2 className="text-xl font-black">Pedido #{pedido.id}</h2>
+                                    <StatusSelector pedido={pedido} />
+                                </div>
+                                <button onClick={() => handlePrint(pedido)} className="p-2 rounded-lg bg-white/5 hover:bg-purple-500 text-purple-400 hover:text-white transition-all border border-white/10">
+                                    <Printer size={18} />
+                                </button>
+                            </div>
+                            <div className="space-y-2 text-sm text-gray-400 mb-4">
+                                <p>Mesa: <span className="text-white font-bold">{pedido.mesa_numero}</span> | Atendió: <span className="text-white">{pedido.mesera_nombre}</span></p>
+                                <p>{new Date(pedido.fecha_hora).toLocaleString()}</p>
+                            </div>
+                            <div className="space-y-1 mb-4">
+                                {pedido.productos_detalle.map((it, i) => (
+                                    <div key={i} className="flex justify-between text-sm py-1 border-b border-white/5">
+                                        <span><span className="font-bold text-purple-400">{it.cantidad}x</span> {it.producto_nombre}</span>
+                                        <span className="text-white">${(it.cantidad * it.producto_precio).toLocaleString()}</span>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="flex justify-between items-center pt-2">
+                                <span className="text-xs font-bold text-gray-500 uppercase">Total Cobrado</span>
+                                <span className="text-2xl font-black text-white">${parseFloat(pedido.total).toLocaleString()}</span>
+                            </div>
                         </div>
-                        <p className="text-purple-300 mt-4">Cargando pedidos...</p>
-                    </div>
-                ) : (
-                    <div className="space-y-4 py-6 sm:py-0 mb-6 sm:mb-8">
-                        {pedidos.length > 0 ? pedidos.map(pedido => (
-                            <div key={pedido.id} className="bg-white/5 backdrop-blur-md border border-white/10 hover:border-yellow-400/30 rounded-xl p-4 sm:p-6 transition-all duration-300 hover:scale-[1.01]">
-                                <div className="flex flex-col sm:flex-row justify-between items-start mb-4 pb-3 border-b border-white/10 gap-3 sm:gap-0">
-                                    <div>
-                                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 mb-1">
-                                            <h2 className="font-black text-xl sm:text-2xl text-white">Pedido #{pedido.id}</h2>
-                                            {/* Replaced static badge with StatusSelector */}
-                                            <StatusSelector pedido={pedido} />
-                                        </div>
-                                        <p className="text-sm text-gray-400">Mesa: <span className="text-yellow-400 font-semibold">{pedido.mesa_numero}</span></p>
-                                    </div>
-                                    <div className="text-left sm:text-right w-full sm:w-auto">
-                                        <p className="text-xs text-gray-500">{new Date(pedido.fecha_hora).toLocaleDateString()}</p>
-                                        <p className="text-sm text-gray-400">{new Date(pedido.fecha_hora).toLocaleTimeString()}</p>
-                                    </div>
-                                </div>
-                                <div className="space-y-2 mb-4">
-                                    {pedido.productos_detalle.map((item, idx) => (
-                                        <div key={idx} className="flex justify-between items-center bg-black/20 p-2.5 sm:p-3 rounded-lg gap-2">
-                                            <div className="flex items-center gap-2 sm:gap-3">
-                                                <span className="bg-yellow-500/20 text-yellow-400 font-bold px-2 py-1 rounded text-xs sm:text-sm">{item.cantidad}x</span>
-                                                <span className="text-white font-medium text-sm sm:text-base">{item.producto_nombre}</span>
-                                            </div>
-                                            <span className="text-white font-bold text-sm sm:text-base whitespace-nowrap">{(parseFloat(item.producto_precio) * item.cantidad).toLocaleString('es-CO')}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="flex justify-between items-center pt-3 border-t border-white/10">
-                                    <span className="text-gray-400 font-medium text-sm sm:text-base">Total del Pedido</span>
-                                    <span className="text-2xl sm:text-3xl font-black text-white">{parseFloat(pedido.total).toLocaleString('es-CO')}</span>
-                                </div>
-                            </div>
-                        )) : (
-                            <div className="text-center py-12 sm:py-16 mb-6 sm:mb-8">
-                                <div className="inline-block p-6 sm:p-8 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl">
-                                    <p className="text-gray-400 text-base sm:text-lg">
-                                        {(() => {
-                                            if (meseraSeleccionada && fechaSeleccionada) return 'No hay pedidos para esta mesera en la fecha seleccionada.';
-                                            if (meseraSeleccionada) return 'No hay pedidos para esta mesera.';
-                                            if (fechaSeleccionada) return 'No se encontraron pedidos para la fecha seleccionada.';
-                                            return 'Seleccione una mesera o una fecha para ver los pedidos.';
-                                        })()}
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                )}
+                    ))}
+                    {pedidos.length === 0 && !loading && <p className="text-center text-gray-500 py-12">No hay resultados con los filtros aplicados.</p>}
+                </div>
             </div>
+
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                @media print {
+                    .no-print { display: none !important; }
+                    body { background: white !important; }
+                }
+            `}} />
         </div>
     );
 };

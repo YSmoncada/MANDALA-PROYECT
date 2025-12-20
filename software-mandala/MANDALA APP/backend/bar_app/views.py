@@ -11,7 +11,7 @@ from django.db.models import DecimalField, F
 from django.db.models.functions import Coalesce
 import logging
 from django.db import models
-from .models import Producto, Pedido, Movimiento, Mesa, Mesera, PedidoProducto
+from .models import Producto, Pedido, Movimiento, Mesa, Mesera, PedidoProducto, EmpresaConfig
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from django.contrib.auth.models import User
 from .serializers import (
@@ -21,7 +21,8 @@ from .serializers import (
     MesaSerializer, 
     MeseraSerializer,
     MeseraTotalPedidosSerializer,
-    UserSerializer
+    UserSerializer,
+    EmpresaConfigSerializer
 )
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -51,6 +52,16 @@ class CsrfExemptSessionAuthentication(SessionAuthentication):
 class IsSuperUser(permissions.BasePermission):
     def has_permission(self, request, view):
         return bool(request.user and (request.user.is_superuser or request.user.is_staff))
+
+class EmpresaConfigViewSet(viewsets.ModelViewSet):
+    queryset = EmpresaConfig.objects.all()
+    serializer_class = EmpresaConfigSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        if EmpresaConfig.objects.count() == 0:
+            EmpresaConfig.objects.create(nombre="MANDALA DISCO CLUB")
+        return super().get_queryset()
 
 class DebugStorageView(generics.GenericAPIView):
     def get(self, request):

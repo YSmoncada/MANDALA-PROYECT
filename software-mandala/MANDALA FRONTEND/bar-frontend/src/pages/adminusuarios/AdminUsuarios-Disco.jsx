@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Lock, Save, ArrowLeft, Users, Shield, ShieldCheck, X, GlassWater } from 'lucide-react';
+import { User, Lock, Save, ArrowLeft, Users, Shield, ShieldCheck, X, GlassWater, Settings } from 'lucide-react';
 import axios from 'axios';
 import { API_URL } from '../../apiConfig';
 import toast from 'react-hot-toast';
@@ -155,6 +155,14 @@ const AdminUsuariosDisco = () => {
                             <p className="text-[10px] text-gray-400 font-black tracking-[0.2em] uppercase">Control de Accesos</p>
                         </div>
                     </div>
+
+                    <button
+                        onClick={() => navigate('/configuracion-ticket')}
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-400 hover:bg-purple-500 hover:text-white transition-all font-bold text-xs uppercase tracking-widest"
+                    >
+                        <Settings size={16} />
+                        Configurar Ticket
+                    </button>
                 </div>
             </header>
 

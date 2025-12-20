@@ -7,7 +7,7 @@ from rest_framework.routers import DefaultRouter
 from bar_app.views import ProductoViewSet
 from bar_app import views
 from bar_app.views import MovimientoViewSet, MeseraTotalPedidosView, DebugStorageView, ReporteVentasDiariasView # Importamos la nueva vista
-from bar_app.views import PedidoViewSet, MesaViewSet, MeseraViewSet, UserViewSet
+from bar_app.views import PedidoViewSet, MesaViewSet, MeseraViewSet, UserViewSet, EmpresaConfigViewSet
 
 router = DefaultRouter()
 router.register(r'productos', ProductoViewSet)
@@ -16,6 +16,7 @@ router.register(r'pedidos', PedidoViewSet, basename='pedido')
 router.register(r'mesas', MesaViewSet, basename='mesa')
 router.register(r'meseras', MeseraViewSet, basename='mesera')
 router.register(r'usuarios', UserViewSet, basename='usuario')
+router.register(r'config', EmpresaConfigViewSet, basename='config')
 
 urlpatterns = [
     path('', views.api_root_view, name='api-root'),

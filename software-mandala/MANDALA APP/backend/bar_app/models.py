@@ -94,3 +94,12 @@ class Movimiento(models.Model):
 
     def __str__(self):
         return f"{self.tipo} - {self.producto.nombre} ({self.cantidad})"
+
+class EmpresaConfig(models.Model):
+    nombre = models.CharField(max_length=100, default="MANDALA DISCO CLUB")
+    nit = models.CharField(max_length=50, blank=True, null=True)
+    direccion = models.CharField(max_length=200, blank=True, null=True)
+    telefono = models.CharField(max_length=20, blank=True, null=True)
+    mensaje_footer = models.TextField(default="¡Gracias por su visita!")
+    moneda = models.CharField(max_length=10, default="$")
+    impuesto_porcentaje = models.DecimalField(max_digits=5, decimal_places=2, default=0) # Ejemplo: 8 para 8%
