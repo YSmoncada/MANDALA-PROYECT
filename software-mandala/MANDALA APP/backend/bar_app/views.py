@@ -1,9 +1,8 @@
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, permissions
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action, authentication_classes, permission_classes
 from rest_framework import generics
-from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet, DateFilter
@@ -507,6 +506,9 @@ def total_pedidos_mesera_hoy(request):
     return Response(list(ventas_por_mesera))
 
 @api_view(['POST'])
+@authentication_classes([CsrfExemptSessionAuthentication, BasicAuthentication])
+@permission_classes([permissions.AllowAny])
+@csrf_exempt
 def verificar_codigo_mesera(request):
     """
     Verifica si el código ingresado corresponde a la mesera seleccionada.
