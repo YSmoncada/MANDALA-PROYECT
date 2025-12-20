@@ -118,10 +118,10 @@ function HomeDisco() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white overflow-hidden relative selection:bg-purple-500/30">
-            {/* Subtle static background - no animations for night work */}
-            <div className="absolute inset-0 opacity-20">
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl"></div>
+            {/* Subtle static background */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[120px]"></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-pink-600/10 rounded-full blur-[120px]"></div>
             </div>
 
             {/* Logout Button (Top Right) */}
@@ -134,13 +134,10 @@ function HomeDisco() {
             </button>
 
             <main className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-16 sm:py-12">
-                {/* Title with subtle glow */}
+                {/* Title */}
                 <div className="text-center mb-12 sm:mb-16">
-                    <h1 className="text-6xl sm:text-8xl md:text-9xl font-black mb-3 sm:mb-4 relative inline-block">
-                        {/* Subtle glow layer */}
-                        <span className="absolute inset-0 blur-xl bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 opacity-20"></span>
-                        {/* Main text */}
-                        <span className="relative text-white drop-shadow-[0_0_15px_rgba(168,85,247,0.4)]">
+                    <h1 className="text-6xl sm:text-8xl md:text-9xl font-black mb-3 sm:mb-4 relative tracking-tighter">
+                        <span className="relative text-white drop-shadow-[0_0_30px_rgba(168,85,247,0.5)]">
                             MANDALA
                         </span>
                     </h1>
@@ -188,6 +185,11 @@ function HomeDisco() {
             opacity: 1;
             transform: translateY(0);
           }
+        }
+        .group {
+          backface-visibility: hidden;
+          transform: translateZ(0);
+          -webkit-font-smoothing: antialiased;
         }
       `}</style>
         </div>

@@ -51,7 +51,7 @@ class CsrfExemptSessionAuthentication(SessionAuthentication):
 
 class IsSuperUser(permissions.BasePermission):
     def has_permission(self, request, view):
-        return bool(request.user and request.user.is_superuser)
+        return bool(request.user and (request.user.is_superuser or request.user.is_staff))
 
 class DebugStorageView(generics.GenericAPIView):
     def get(self, request):
@@ -72,6 +72,7 @@ class DebugStorageView(generics.GenericAPIView):
 class MeseraViewSet(viewsets.ModelViewSet):
     queryset = Mesera.objects.all().order_by('-id')
     serializer_class = MeseraSerializer
+    authentication_classes = [CsrfExemptSessionAuthentication, BasicAuthentication]
     
     # La validación de código único se ha movido al MeseraSerializer.
     # El método perform_create ya no es necesario aquí para esa validación.
@@ -82,7 +83,7 @@ class MeseraViewSet(viewsets.ModelViewSet):
         Permite al administrador cambiar el PIN de una mesera.
         Solo accesible por superusuarios.
         """
-        if not request.user.is_superuser:
+        if not (request.user.is_superuser or request.user.is_staff):
             return Response({'detail': 'No tienes permiso para esta acción.'}, status=status.HTTP_403_FORBIDDEN)
             
         mesera = self.get_object()

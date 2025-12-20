@@ -183,11 +183,11 @@ const AdminUsuariosDisco = () => {
                             </div>
                         </section>
 
-                        {/* Seccion Meseras */}
+                        {/* Seccion Meseros/as */}
                         <section>
                             <h2 className="text-xs font-black tracking-[0.3em] uppercase text-pink-400 mb-6 flex items-center gap-3">
                                 <span className="w-8 h-px bg-pink-500/30"></span>
-                                Meseras
+                                Personal de Mesa (Meseros / Meseras)
                             </h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {meseras.map(mesera => (
