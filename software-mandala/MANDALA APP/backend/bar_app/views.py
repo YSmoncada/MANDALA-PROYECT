@@ -89,10 +89,16 @@ class MeseraViewSet(viewsets.ModelViewSet):
         mesera = self.get_object()
         nuevo_codigo = request.data.get('codigo')
 
-        if not nuevo_codigo or len(str(nuevo_codigo)) < 4:
+        if not nuevo_codigo:
+            return Response({'detail': 'El código es requerido.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Limpiar y asegurar que sea string de al menos 4 caracteres
+        nuevo_codigo_str = str(nuevo_codigo).strip()
+
+        if len(nuevo_codigo_str) < 4:
             return Response({'detail': 'El código debe tener al menos 4 dígitos.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        mesera.codigo = nuevo_codigo
+        mesera.codigo = nuevo_codigo_str
         mesera.save()
 
         return Response({'detail': f'Código de {mesera.nombre} actualizado correctamente.'})
@@ -513,9 +519,9 @@ def verificar_codigo_mesera(request):
 
     mesera = get_object_or_404(Mesera, pk=mesera_id)
 
-    # Comparación directa (en producción idealmente los PINs deberían estar hasheados,
-    # pero para un PIN numérico simple y este caso de uso, validación servidor es el primer paso vital)
-    if mesera.codigo == codigo:
+    # Comparación robusta (strings limpios)
+    # Convertimos ambos a string y removemos espacios para evitar fallos tontos.
+    if str(mesera.codigo).strip() == str(codigo).strip():
         return Response({'success': True})
     else:
         return Response({'success': False, 'detail': 'Código incorrecto'}, status=status.HTTP_401_UNAUTHORIZED)

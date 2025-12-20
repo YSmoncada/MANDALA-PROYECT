@@ -101,21 +101,22 @@ const AdminUsuariosDisco = () => {
     };
 
     const handleUpdateCredentials = async () => {
-        if (!newValue || newValue.length < 4) {
-            toast.error("Debe tener al menos 4 caracteres/dígitos.");
+        const cleanValue = newValue.trim();
+        const isUser = selectedItem._type === 'usuario';
+
+        if (!cleanValue || cleanValue.length < 4) {
+            toast.error("Debe tener al menos 4 caracteres.");
             return;
         }
-
-        const isUser = selectedItem._type === 'usuario';
 
         try {
             if (isUser) {
                 await axios.post(`${API_URL}/usuarios/${selectedItem.id}/cambiar-password/`, {
-                    password: newValue
+                    password: cleanValue
                 });
             } else {
                 await axios.post(`${API_URL}/meseras/${selectedItem.id}/cambiar-codigo/`, {
-                    codigo: newValue
+                    codigo: cleanValue
                 });
             }
             toast.success(`${isUser ? 'Contraseña' : 'Código'} de ${selectedItem.username || selectedItem.nombre} actualizado.`);
@@ -227,10 +228,20 @@ const AdminUsuariosDisco = () => {
                             <div className="group relative">
                                 <Lock className="absolute left-4 top-3.5 text-gray-500 group-focus-within:text-purple-400 transition-colors" size={18} />
                                 <input
-                                    type="text"
+                                    type={selectedItem?._type === 'usuario' ? "text" : "password"}
+                                    inputMode={selectedItem?._type === 'usuario' ? "text" : "numeric"}
                                     placeholder={selectedItem?._type === 'usuario' ? "Ingrese nueva clave" : "Ingrese nuevo PIN numérico"}
                                     value={newValue}
-                                    onChange={(e) => setNewValue(e.target.value)}
+                                    onChange={(e) => {
+                                        const val = e.target.value;
+                                        if (selectedItem?._type === 'mesera') {
+                                            if (/^\d*$/.test(val) && val.length <= 6) {
+                                                setNewValue(val);
+                                            }
+                                        } else {
+                                            setNewValue(val);
+                                        }
+                                    }}
                                     className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-black/40 border border-white/10 text-white focus:outline-none focus:border-purple-500 transition-all font-mono"
                                 />
                             </div>
