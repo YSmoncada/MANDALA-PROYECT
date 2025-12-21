@@ -167,24 +167,23 @@ const HistorialPedidosPageDisco = () => {
                         <input type="date" value={fechaSeleccionada} onChange={e => setFechaSeleccionada(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm focus:border-purple-500 outline-none" />
                     </div>
                     <div className="flex items-end">
-                        <button onClick={() => { setMeseraSeleccionada(''); setFechaSeleccionada(''); setPedidos([]); }} className="w-full bg-white/5 hover:bg-white/10 py-3 rounded-xl text-sm transition-all">Limpiar</button>
+                        <button onClick={() => { setMeseraSeleccionada(''); setFechaSeleccionada(''); setPedidos([]); }} className="w-full bg-white/5 hover:bg-white/10 py-3 rounded-xl text-sm transition-all font-bold">Limpiar</button>
                     </div>
+                    {isAdmin && (
+                        <div className="flex items-end">
+                            <button
+                                onClick={handleBorrarHistorial}
+                                className="w-full bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 font-bold"
+                            >
+                                <Trash2 size={16} /> Borrar Historial
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-                    <div className="bg-white/5 p-6 rounded-2xl border border-white/5 relative group/card">
-                        <div className="flex justify-between items-start mb-1">
-                            <p className="text-xs text-gray-400 font-bold uppercase">Total Ventas</p>
-                            {isAdmin && (
-                                <button
-                                    onClick={handleBorrarHistorial}
-                                    className="p-1.5 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white rounded-lg transition-all opacity-0 group-hover/card:opacity-100 border border-red-500/20"
-                                    title="Borrar este historial"
-                                >
-                                    <Trash2 size={14} />
-                                </button>
-                            )}
-                        </div>
+                    <div className="bg-white/5 p-6 rounded-2xl border border-white/5">
+                        <p className="text-xs text-gray-400 font-bold uppercase mb-1">Total Ventas</p>
                         <p className="text-3xl font-black text-green-400">${totalMostrado.toLocaleString()}</p>
                     </div>
                     <div className="bg-white/5 p-6 rounded-2xl border border-white/5">
