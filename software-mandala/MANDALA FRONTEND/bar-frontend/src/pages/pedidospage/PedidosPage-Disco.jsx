@@ -82,12 +82,18 @@ export default function PedidosPageDisco() {
         }));
 
         const pedidoData = {
-            mesera: esRolMesera ? meseraId : selectedMeseraObject?.id, // Asigna el ID de la mesera o del admin/bartender
             mesa: selectedMesaId,
             estado: "pendiente",
             productos: productosParaBackend,
-            force_append: isTableLocked // Enviar flag si estamos en modo append
+            force_append: isTableLocked
         };
+
+        // Si es mesera, enviamos mesera_id. Si es admin/bartender, enviamos usuario_id
+        if (esRolMesera) {
+            pedidoData.mesera = meseraId;
+        } else {
+            pedidoData.usuario = meseraId; // meseraId aquí contiene el user_id del sistema
+        }
 
         const result = await finalizarPedido(pedidoData);
 

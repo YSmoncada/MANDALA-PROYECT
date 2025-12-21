@@ -39,6 +39,8 @@ class Mesa(models.Model):
     capacidad = models.IntegerField(default=1)
     estado = models.CharField(max_length=20, default="disponible", choices=[("disponible", "Disponible"), ("ocupada", "Ocupada")])  # disponible, ocupada
 
+from django.contrib.auth.models import User
+
 class Pedido(models.Model):
     ESTADO_CHOICES = [
         ('pendiente', 'Pendiente'),     # El bartender aún no lo ha preparado
@@ -46,15 +48,18 @@ class Pedido(models.Model):
         ('finalizada', 'Finalizada'),   # La cuenta ha sido cerrada
         ('cancelado', 'Cancelado'),     # El pedido fue cancelado
     ]
-    mesera = models.ForeignKey(Mesera, on_delete=models.CASCADE)
+    # Ahora el pedido puede ser de una mesera O de un usuario del sistema (admin/bartender)
+    mesera = models.ForeignKey(Mesera, on_delete=models.CASCADE, null=True, blank=True)
+    usuario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    
     mesa = models.ForeignKey(Mesa, on_delete=models.CASCADE)
     fecha_hora = models.DateTimeField(auto_now_add=True)
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
- 
     def __str__(self):
-        return f"Pedido #{self.id} - {self.fecha_hora}"
+        vendedor = self.mesera.nombre if self.mesera else (self.usuario.username if self.usuario else "Desconocido")
+        return f"Pedido #{self.id} - {vendedor} - {self.fecha_hora}"
 
     class Meta:
         ordering = ['-fecha_hora']
@@ -62,6 +67,7 @@ class Pedido(models.Model):
             models.Index(fields=['fecha_hora']),
             models.Index(fields=['estado']),
             models.Index(fields=['mesera']),
+            models.Index(fields=['usuario']),
         ]
 
 class PedidoProducto(models.Model):

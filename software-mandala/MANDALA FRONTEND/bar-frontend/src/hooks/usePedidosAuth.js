@@ -104,7 +104,7 @@ export const usePedidosAuth = () => {
 
             setUserRole(finalRole);
             const sysUser = {
-                id: response.data.mesera_id, // Usar el ID real devuelto por el backend
+                id: response.data.user_id, // Usar el ID REAL del usuario de Django
                 nombre: responseUsername,
                 role: finalRole
             };

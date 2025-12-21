@@ -488,6 +488,12 @@ class LoginView(APIView):
         
         if user:
             login(request, user) # Establish session
+            
+            # Limpieza: Si existen perfiles de mesera con el mismo nombre que usuarios del sistema,
+            # los eliminamos para evitar confusiones, ya que ahora usamos el campo 'usuario'.
+            from .models import Mesera
+            Mesera.objects.filter(nombre__iexact=user.username).delete()
+
             # Determinar rol basado en grupos
             role = 'admin' # Default
             if user.groups.filter(name='Bartender').exists():
@@ -495,19 +501,11 @@ class LoginView(APIView):
             elif user.is_superuser:
                 role = 'admin'
             
-            # Buscar o crear un perfil de "Mesera" para este usuario del sistema
-            # Esto permite que aparezcan en el historial y que puedan hacer pedidos sin errores de tipo
-            from .models import Mesera
-            mesera_perfil, created = Mesera.objects.get_or_create(
-                nombre=user.username.upper(),
-                defaults={'codigo': f'user_{user.id}'}
-            )
-            
             return Response({
                 'success': True,
                 'role': role,
                 'username': user.username,
-                'mesera_id': mesera_perfil.id,
+                'user_id': user.id, # Enviamos el ID real del usuario de Django
                 'detail': f'Bienvenido {user.username}'
             })
             

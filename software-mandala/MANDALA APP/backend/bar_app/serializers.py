@@ -54,16 +54,17 @@ class PedidoProductoReadSerializer(serializers.ModelSerializer):
 class PedidoSerializer(serializers.ModelSerializer):
     productos = PedidoProductoWriteSerializer(many=True, write_only=True)
     productos_detalle = PedidoProductoReadSerializer(source='pedidoproducto_set', many=True, read_only=True)
-    mesera_nombre = serializers.CharField(source='mesera.nombre', read_only=True)
+    mesera_nombre = serializers.SerializerMethodField()
     mesa_numero = serializers.CharField(source='mesa.numero', read_only=True)
+    mesera = serializers.PrimaryKeyRelatedField(queryset=Mesera.objects.all(), required=False, allow_null=True)
     
     fecha = serializers.SerializerMethodField()
     hora = serializers.SerializerMethodField()
-
+ 
     class Meta:
         model = Pedido
         fields = [
-            'id', 'mesera', 'mesa', 'estado', 'productos',
+            'id', 'mesera', 'usuario', 'mesa', 'estado', 'productos',
             'productos_detalle', 'mesera_nombre', 'mesa_numero',
             'total', 'fecha_hora', 'fecha', 'hora'
         ]
@@ -72,6 +73,13 @@ class PedidoSerializer(serializers.ModelSerializer):
             'mesera_nombre', 'mesa_numero',
             'fecha', 'hora'
         ]
+
+    def get_mesera_nombre(self, obj):
+        if obj.mesera:
+            return obj.mesera.nombre
+        if obj.usuario:
+            return f"{obj.usuario.username.upper()} (SISTEMA)"
+        return "N/A"
 
     def get_fecha(self, obj):
         if obj.fecha_hora:
