@@ -205,24 +205,10 @@ class PedidoViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """
-        Filtra los pedidos por mesera, usuario y/o fecha.
-        Si no hay filtros, devuelve todos los pedidos.
+        Retorna el queryset base para los pedidos.
+        El filtrado real lo hace DjangoFilterBackend con PedidoFilter.
         """
-        queryset = super().get_queryset()
-        mesera_id = self.request.query_params.get('mesera')
-        usuario_id = self.request.query_params.get('usuario')
-        fecha = self.request.query_params.get('fecha')
-
-        if mesera_id:
-            queryset = queryset.filter(mesera_id=mesera_id)
-        
-        if usuario_id:
-            queryset = queryset.filter(usuario_id=usuario_id)
-
-        if fecha:
-            queryset = queryset.filter(fecha_hora__date=fecha)
-
-        return queryset.select_related('mesera', 'usuario', 'mesa').prefetch_related('pedidoproducto_set', 'pedidoproducto_set__producto')
+        return Pedido.objects.all().order_by('-fecha_hora').select_related('mesera', 'usuario', 'mesa').prefetch_related('pedidoproducto_set', 'pedidoproducto_set__producto')
 
     def perform_update(self, serializer):
         """

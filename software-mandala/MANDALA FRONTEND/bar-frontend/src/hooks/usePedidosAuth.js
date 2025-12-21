@@ -170,6 +170,7 @@ export const usePedidosAuth = () => {
         meseraId: selectedMesera?.id,
         codigoConfirmado,
         userRole, // Expose role
+        role: userRole, // Add this for compatibility
         isInitialized,
         meseras,
         handleSelectMesera,

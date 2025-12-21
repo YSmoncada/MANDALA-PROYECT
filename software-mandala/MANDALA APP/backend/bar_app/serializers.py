@@ -54,9 +54,10 @@ class PedidoProductoReadSerializer(serializers.ModelSerializer):
 class PedidoSerializer(serializers.ModelSerializer):
     productos = PedidoProductoWriteSerializer(many=True, write_only=True)
     productos_detalle = PedidoProductoReadSerializer(source='pedidoproducto_set', many=True, read_only=True)
-    mesera_nombre = serializers.SerializerMethodField()
     mesa_numero = serializers.CharField(source='mesa.numero', read_only=True)
+    mesera_nombre = serializers.SerializerMethodField()
     mesera = serializers.PrimaryKeyRelatedField(queryset=Mesera.objects.all(), required=False, allow_null=True)
+    usuario = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False, allow_null=True)
     
     fecha = serializers.SerializerMethodField()
     hora = serializers.SerializerMethodField()
