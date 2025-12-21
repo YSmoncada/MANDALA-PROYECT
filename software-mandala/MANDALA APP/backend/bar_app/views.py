@@ -495,10 +495,19 @@ class LoginView(APIView):
             elif user.is_superuser:
                 role = 'admin'
             
+            # Buscar o crear un perfil de "Mesera" para este usuario del sistema
+            # Esto permite que aparezcan en el historial y que puedan hacer pedidos sin errores de tipo
+            from .models import Mesera
+            mesera_perfil, created = Mesera.objects.get_or_create(
+                nombre=user.username.upper(),
+                defaults={'codigo': f'user_{user.id}'}
+            )
+            
             return Response({
                 'success': True,
                 'role': role,
                 'username': user.username,
+                'mesera_id': mesera_perfil.id,
                 'detail': f'Bienvenido {user.username}'
             })
             

@@ -103,7 +103,11 @@ export const usePedidosAuth = () => {
             }
 
             setUserRole(finalRole);
-            const sysUser = { id: 'sys', nombre: responseUsername, role: finalRole };
+            const sysUser = {
+                id: response.data.mesera_id, // Usar el ID real devuelto por el backend
+                nombre: responseUsername,
+                role: finalRole
+            };
             setSelectedMesera(sysUser);
             setCodigoConfirmado(true);
             sessionStorage.setItem('userRole', finalRole);

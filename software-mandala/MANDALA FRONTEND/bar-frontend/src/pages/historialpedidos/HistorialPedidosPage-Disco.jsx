@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, User, DollarSign, ShoppingBag, TrendingUp, Check, X, Clock, AlertCircle, Printer } from 'lucide-react';
+import { ArrowLeft, Calendar, User, DollarSign, ShoppingBag, TrendingUp, Check, X, Clock, AlertCircle, Printer, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { API_URL } from '../../apiConfig';
 import TicketPrinter from '../../components/TicketPrinter';
+import { usePedidosContext } from '../../context/PedidosContext';
 
 const HistorialPedidosPageDisco = () => {
     const [pedidos, setPedidos] = useState([]);
@@ -19,6 +20,9 @@ const HistorialPedidosPageDisco = () => {
     const [totalMostrado, setTotalMostrado] = useState(0);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const { auth } = usePedidosContext();
+    const { role, userRole } = auth;
+    const isAdmin = role === 'admin' || userRole === 'admin';
 
     useEffect(() => {
         const fetchConfig = async () => {
@@ -93,6 +97,26 @@ const HistorialPedidosPageDisco = () => {
         }
     };
 
+    const handleBorrarHistorial = async () => {
+        if (!window.confirm('¿Estás seguro de que deseas borrar este historial? Esta acción devolverá el stock y no se puede deshacer.')) {
+            return;
+        }
+
+        try {
+            const params = new URLSearchParams();
+            if (meseraSeleccionada) params.append('mesera', meseraSeleccionada);
+            if (fechaSeleccionada) params.append('fecha', fechaSeleccionada);
+
+            await axios.delete(`${API_URL}/pedidos/borrar_historial/?${params.toString()}`);
+            toast.success('Historial borrado correctamente');
+            setPedidos([]);
+            setTotalMostrado(0);
+        } catch (error) {
+            console.error('Error al borrar historial:', error);
+            toast.error(error.response?.data?.detail || 'No se pudo borrar el historial');
+        }
+    };
+
     const StatusSelector = ({ pedido }) => {
         const [isOpen, setIsOpen] = useState(false);
         const currentStatus = pedido.estado?.toLowerCase() || 'pendiente';
@@ -148,8 +172,19 @@ const HistorialPedidosPageDisco = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-                    <div className="bg-white/5 p-6 rounded-2xl border border-white/5">
-                        <p className="text-xs text-gray-400 font-bold uppercase mb-1">Total Ventas</p>
+                    <div className="bg-white/5 p-6 rounded-2xl border border-white/5 relative group/card">
+                        <div className="flex justify-between items-start mb-1">
+                            <p className="text-xs text-gray-400 font-bold uppercase">Total Ventas</p>
+                            {isAdmin && (
+                                <button
+                                    onClick={handleBorrarHistorial}
+                                    className="p-1.5 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white rounded-lg transition-all opacity-0 group-hover/card:opacity-100 border border-red-500/20"
+                                    title="Borrar este historial"
+                                >
+                                    <Trash2 size={14} />
+                                </button>
+                            )}
+                        </div>
                         <p className="text-3xl font-black text-green-400">${totalMostrado.toLocaleString()}</p>
                     </div>
                     <div className="bg-white/5 p-6 rounded-2xl border border-white/5">
