@@ -421,8 +421,9 @@ class MeseraTotalPedidosView(generics.ListAPIView):
             tipo=Value('mesera')
         )
 
-        # 2. Ventas por Usuarios del Sistema
-        usuarios_ventas = User.objects.filter(
+        # 2. Ventas por Usuarios del Sistema (Admin y Barra)
+        # Filtramos por superusuarios o miembros del grupo Bartender
+        usuarios_ventas_raw = User.objects.filter(
             Q(groups__name='Bartender') | Q(is_superuser=True)
         ).annotate(
             total_vendido=Coalesce(
@@ -430,15 +431,25 @@ class MeseraTotalPedidosView(generics.ListAPIView):
                 Value(0),
                 output_field=models.DecimalField()
             )
-        ).values(
-            'total_vendido',
-            mesera_id=F('id'), 
-            mesera_nombre=F('username'),
-            tipo=Value('usuario')
-        )
+        ).values('total_vendido', 'id', 'username')
+
+        usuarios_ventas = []
+        for u in usuarios_ventas_raw:
+            nombre_mostrar = u['username'].upper()
+            if u['username'].lower() == 'admin':
+                nombre_mostrar = 'ADMINISTRADOR'
+            elif u['username'].lower() == 'barra':
+                nombre_mostrar = 'BARTENDER'
+            
+            usuarios_ventas.append({
+                'total_vendido': u['total_vendido'],
+                'mesera_id': u['id'],
+                'mesera_nombre': nombre_mostrar,
+                'tipo': 'usuario'
+            })
 
         # Combinar ambos resultados
-        return list(meseras_ventas) + list(usuarios_ventas)
+        return list(meseras_ventas) + usuarios_ventas
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
