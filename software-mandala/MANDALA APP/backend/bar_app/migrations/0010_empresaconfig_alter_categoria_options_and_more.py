@@ -35,16 +35,21 @@ class Migration(migrations.Migration):
             name='producto',
             options={'ordering': ['nombre']},
         ),
-        migrations.AddIndex(
-            model_name='pedido',
-            index=models.Index(fields=['fecha_hora'], name='bar_app_ped_fecha_h_57e42d_idx'),
-        ),
-        migrations.AddIndex(
-            model_name='pedido',
-            index=models.Index(fields=['estado'], name='bar_app_ped_estado_39830c_idx'),
-        ),
-        migrations.AddIndex(
-            model_name='pedido',
-            index=models.Index(fields=['mesera'], name='bar_app_ped_mesera__da58f7_idx'),
+        migrations.SeparateDatabaseAndState(
+            state_operations=[
+                migrations.AddIndex(
+                    model_name='pedido',
+                    index=models.Index(fields=['fecha_hora'], name='bar_app_ped_fecha_h_57e42d_idx'),
+                ),
+                migrations.AddIndex(
+                    model_name='pedido',
+                    index=models.Index(fields=['estado'], name='bar_app_ped_estado_39830c_idx'),
+                ),
+                migrations.AddIndex(
+                    model_name='pedido',
+                    index=models.Index(fields=['mesera'], name='bar_app_ped_mesera__da58f7_idx'),
+                ),
+            ],
+            database_operations=[],
         ),
     ]
