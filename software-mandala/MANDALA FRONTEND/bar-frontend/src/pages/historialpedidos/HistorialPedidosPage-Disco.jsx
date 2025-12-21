@@ -14,8 +14,10 @@ const HistorialPedidosPageDisco = () => {
     const [pedidoAImprimir, setPedidoAImprimir] = useState(null);
     const [meseraSeleccionada, setMeseraSeleccionada] = useState('');
     const [fechaSeleccionada, setFechaSeleccionada] = useState(() => {
-        const today = new Date();
-        return today.toISOString().split('T')[0];
+        const d = new Date();
+        const offset = d.getTimezoneOffset();
+        const localDate = new Date(d.getTime() - (offset * 60 * 1000));
+        return localDate.toISOString().split('T')[0];
     });
     const [totalMostrado, setTotalMostrado] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -40,8 +42,8 @@ const HistorialPedidosPageDisco = () => {
                 const response = await axios.get(`${API_URL}/meseras/total-pedidos/`);
                 // Mapeamos para tener una estructura consistente y prefijo para distinguir IDs
                 const vendedores = response.data.map(v => ({
-                    id: v.tipo === 'usuario' ? `u${v.mesera_id}` : `m${v.mesera_id}`,
-                    realId: v.mesera_id,
+                    id: v.tipo === 'usuario' ? `u${v.mesera_id || v.id}` : `m${v.mesera_id || v.id}`,
+                    realId: v.mesera_id || v.id,
                     nombre: v.mesera_nombre,
                     tipo: v.tipo
                 }));

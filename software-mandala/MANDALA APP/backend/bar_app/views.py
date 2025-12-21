@@ -422,10 +422,10 @@ class MeseraTotalPedidosView(generics.ListAPIView):
         )
 
         # 2. Ventas por Usuarios del Sistema (Admin y Barra)
-        # Filtramos por superusuarios o miembros del grupo Bartender
+        # Incluimos a todos los usuarios que han realizado al menos un pedido o que son del staff/superuser
         usuarios_ventas_raw = User.objects.filter(
-            Q(groups__name='Bartender') | Q(is_superuser=True)
-        ).annotate(
+            Q(groups__name='Bartender') | Q(is_superuser=True) | Q(is_staff=True) | Q(pedido__isnull=False)
+        ).distinct().annotate(
             total_vendido=Coalesce(
                 Sum('pedido__total', filter=models.Q(pedido__fecha_hora__date=fecha_str) if fecha_str else None),
                 Value(0),
