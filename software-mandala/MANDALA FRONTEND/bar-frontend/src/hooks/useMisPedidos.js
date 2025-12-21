@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../apiConfig';
 
-export const useMisPedidos = (meseraId) => {
+export const useMisPedidos = (userId, role) => {
     const [pedidos, setPedidos] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!meseraId) {
+        if (!userId) {
             setLoading(false);
             return;
         }
@@ -15,7 +15,12 @@ export const useMisPedidos = (meseraId) => {
         const fetchMisPedidos = async () => {
             try {
                 const hoy = new Date().toISOString().split('T')[0];
-                const response = await axios.get(`${API_URL}/pedidos/?mesera=${meseraId}&fecha=${hoy}`);
+                const isSystemUser = role === 'admin' || role === 'bartender';
+
+                // Si es admin/bartender usamos el filtro 'usuario', si es mesera usamos 'mesera'
+                const filterParam = isSystemUser ? `usuario=${userId}` : `mesera=${userId}`;
+
+                const response = await axios.get(`${API_URL}/pedidos/?${filterParam}&fecha=${hoy}`);
                 const sorted = response.data.sort((a, b) => new Date(b.fecha_hora) - new Date(a.fecha_hora));
                 setPedidos(sorted);
             } catch (error) {
@@ -31,7 +36,7 @@ export const useMisPedidos = (meseraId) => {
 
         // Limpieza al desmontar el componente
         return () => clearInterval(interval);
-    }, [meseraId]); // El efecto se ejecuta si cambia el meseraId
+    }, [userId, role]);
 
     return { pedidos, loading };
 };

@@ -184,10 +184,11 @@ class MovimientoViewSet(viewsets.ModelViewSet):
 class PedidoFilter(FilterSet):
     fecha = DateFilter(field_name='fecha_hora__date')
     mesera = filters.NumberFilter(field_name='mesera_id')
+    usuario = filters.NumberFilter(field_name='usuario_id')
 
     class Meta:
         model = Pedido
-        fields = ['mesera', 'estado', 'fecha']
+        fields = ['mesera', 'usuario', 'estado', 'fecha']
 
 class PedidoViewSet(viewsets.ModelViewSet):
     queryset = Pedido.objects.all().order_by('-fecha_hora')
@@ -198,23 +199,24 @@ class PedidoViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """
-        Filtra los pedidos por mesera y/o fecha.
-        - Si se provee 'mesera', filtra por esa mesera.
-        - Si se provee 'fecha', filtra por esa fecha.
-        - Si se proveen ambos, filtra por ambos.
-        - Si no se provee 'mesera' pero sí 'fecha', devuelve todos los pedidos de esa fecha.
+        Filtra los pedidos por mesera, usuario y/o fecha.
+        Si no hay filtros, devuelve todos los pedidos.
         """
         queryset = super().get_queryset()
         mesera_id = self.request.query_params.get('mesera')
+        usuario_id = self.request.query_params.get('usuario')
         fecha = self.request.query_params.get('fecha')
 
         if mesera_id:
             queryset = queryset.filter(mesera_id=mesera_id)
+        
+        if usuario_id:
+            queryset = queryset.filter(usuario_id=usuario_id)
 
         if fecha:
             queryset = queryset.filter(fecha_hora__date=fecha)
 
-        return queryset.select_related('mesera', 'mesa').prefetch_related('pedidoproducto_set', 'pedidoproducto_set__producto')
+        return queryset.select_related('mesera', 'usuario', 'mesa').prefetch_related('pedidoproducto_set', 'pedidoproducto_set__producto')
 
     def perform_update(self, serializer):
         """

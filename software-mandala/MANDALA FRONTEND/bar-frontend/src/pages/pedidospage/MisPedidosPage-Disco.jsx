@@ -19,7 +19,7 @@ const MisPedidosPageDisco = () => {
     }, [mesera, codigoConfirmado, navigate]);
 
     // Usamos el hook para obtener los datos y el estado de carga. ¡Así de simple!
-    const { pedidos, loading } = useMisPedidos(meseraId);
+    const { pedidos, loading } = useMisPedidos(meseraId, auth.role);
 
     const handleAgregarProductos = useCallback((mesaId) => {
         setSelectedMesaId(mesaId);
