@@ -8,7 +8,7 @@ from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet, DateFilter
 from django.db.models import Sum, Value
 from django.db.models import DecimalField, F
-from django.db.models.functions import Coalesce
+from django.db.models.functions import Coalesce, Concat
 import logging
 from django.db import models
 from .models import Producto, Pedido, Movimiento, Mesa, Mesera, PedidoProducto, EmpresaConfig
@@ -185,10 +185,16 @@ class PedidoFilter(FilterSet):
     fecha = DateFilter(field_name='fecha_hora__date')
     mesera = filters.NumberFilter(field_name='mesera_id')
     usuario = filters.NumberFilter(field_name='usuario_id')
+    sistema = filters.BooleanFilter(method='filter_sistema')
 
     class Meta:
         model = Pedido
-        fields = ['mesera', 'usuario', 'estado', 'fecha']
+        fields = ['mesera', 'usuario', 'estado', 'fecha', 'sistema']
+
+    def filter_sistema(self, queryset, name, value):
+        if value:
+            return queryset.filter(mesera__isnull=True, usuario__isnull=False)
+        return queryset
 
 class PedidoViewSet(viewsets.ModelViewSet):
     queryset = Pedido.objects.all().order_by('-fecha_hora')
@@ -410,33 +416,43 @@ class MesaViewSet(viewsets.ModelViewSet):
 # --- NUEVA VISTA PARA EL REPORTE ---
 
 class MeseraTotalPedidosView(generics.ListAPIView):
-    """
-    Vista para obtener el total de pedidos por cada mesera.
-    """
     serializer_class = MeseraTotalPedidosSerializer
 
     def get_queryset(self):
-        # Obtener el parámetro de fecha de la URL, si existe
         fecha_str = self.request.query_params.get('fecha', None)
-
-        # Partimos de TODAS las meseras y calculamos sus ventas.
-        # Usamos Coalesce para asegurarnos de que si no hay ventas, el total sea 0.
-        queryset = Mesera.objects.annotate(
+        
+        # 1. Ventas por Meseras
+        meseras_ventas = Mesera.objects.annotate(
             total_vendido=Coalesce(
-                Sum(
-                    'pedido__total',
-                    # Aplicar el filtro de fecha directamente en la suma
-                    filter=models.Q(pedido__fecha_hora__date=fecha_str) if fecha_str else None
-                ),
+                Sum('pedido__total', filter=models.Q(pedido__fecha_hora__date=fecha_str) if fecha_str else None),
                 Value(0),
-                output_field=DecimalField()
+                output_field=models.DecimalField()
+            )
+        ).values(
+            'total_vendido', 
+            mesera_id=F('id'), 
+            mesera_nombre=F('nombre')
+        )
+
+        # 2. Ventas por Usuarios del Sistema
+        usuarios_ventas = User.objects.filter(pedido__isnull=False).annotate(
+            total_vendido=Coalesce(
+                Sum('pedido__total', filter=models.Q(pedido__fecha_hora__date=fecha_str) if fecha_str else None),
+                Value(0),
+                output_field=models.DecimalField()
             )
         ).values(
             'total_vendido',
-            mesera_id=F('id'), # Mapear el 'id' del modelo Mesera al campo 'mesera_id' del serializer
-            mesera_nombre=F('nombre') # Mapear el 'nombre' del modelo Mesera al campo 'mesera_nombre' del serializer
+            mesera_id=F('id'), # Usamos el ID del usuario
+            mesera_nombre=Concat(F('username'), Value(' (SISTEMA)'))
         )
-        return queryset
+
+        # Combinar ambos resultados
+        return list(meseras_ventas) + list(usuarios_ventas)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        return Response(queryset)
 
 class ReporteVentasDiariasView(generics.ListAPIView):
     """
@@ -519,11 +535,11 @@ class LoginView(APIView):
 @api_view(['GET'])
 def total_pedidos_mesera_hoy(request):
     """
-    Calcula el total de pedidos para cada mesera en el día actual.
+    Calcula el total de pedidos para cada mesera (y sistema) en el día actual.
     """
     hoy = timezone.now().date()
     
-    # Usamos Coalesce para asegurar que si una mesera no tiene pedidos, su total sea 0.
+    # 1. Ventas Meseras
     ventas_por_mesera = Mesera.objects.annotate(
         total_vendido=Coalesce(
             Sum('pedido__total', filter=Q(pedido__fecha_hora__date=hoy)),
@@ -532,7 +548,25 @@ def total_pedidos_mesera_hoy(request):
         )
     ).values('id', 'nombre', 'total_vendido')
 
-    return Response(list(ventas_por_mesera))
+    # 2. Ventas Usuarios Sistema
+    ventas_por_usuario = User.objects.filter(pedido__isnull=False).annotate(
+        total_vendido=Coalesce(
+            Sum('pedido__total', filter=Q(pedido__fecha_hora__date=hoy)),
+            Value(0),
+            output_field=DecimalField()
+        )
+    ).values('id', 'username', 'total_vendido')
+
+    # Ajustar nombres de usuario
+    resultado = list(ventas_por_mesera)
+    for u in ventas_por_usuario:
+        resultado.append({
+            'id': f"u{u['id']}",
+            'nombre': f"{u['username'].upper()} (SISTEMA)",
+            'total_vendido': u['total_vendido']
+        })
+
+    return Response(resultado)
 
 @api_view(['POST'])
 @authentication_classes([CsrfExemptSessionAuthentication, BasicAuthentication])

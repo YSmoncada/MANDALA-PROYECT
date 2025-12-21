@@ -51,7 +51,12 @@ const HistorialPedidosPageDisco = () => {
             setPedidos([]);
             try {
                 const params = new URLSearchParams();
-                if (meseraSeleccionada) params.append('mesera', meseraSeleccionada);
+                if (meseraSeleccionada === 'sistema') {
+                    params.append('sistema', 'true');
+                } else if (meseraSeleccionada) {
+                    params.append('mesera', meseraSeleccionada);
+                }
+
                 if (fechaSeleccionada) params.append('fecha', fechaSeleccionada);
                 const response = await axios.get(`${API_URL}/pedidos/?${params.toString()}`);
                 setPedidos(response.data);
@@ -70,7 +75,9 @@ const HistorialPedidosPageDisco = () => {
     useEffect(() => {
         const total = pedidos.reduce((acc, p) => {
             const estado = p.estado?.toLowerCase();
-            if (estado !== 'cancelado' && estado !== 'pendiente') {
+            // Contamos como venta todo lo que no sea cancelado
+            // (Pendiente y Despachado ya son ventas realizadas)
+            if (estado !== 'cancelado') {
                 return acc + parseFloat(p.total);
             }
             return acc;
@@ -159,6 +166,7 @@ const HistorialPedidosPageDisco = () => {
                         <label className="text-xs font-bold text-gray-400 uppercase">Mesera</label>
                         <select value={meseraSeleccionada} onChange={e => setMeseraSeleccionada(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm focus:border-purple-500 outline-none">
                             <option value="">-- Todas --</option>
+                            <option value="sistema">SISTEMA (Admin/Barra)</option>
                             {meseras.map(m => (<option key={m.id} value={m.id}>{m.nombre}</option>))}
                         </select>
                     </div>
