@@ -79,7 +79,7 @@ class PedidoSerializer(serializers.ModelSerializer):
         if obj.mesera:
             return obj.mesera.nombre
         if obj.usuario:
-            return f"{obj.usuario.username.upper()} (SISTEMA)"
+            return obj.usuario.username.upper()
         return "N/A"
 
     def get_fecha(self, obj):
@@ -131,6 +131,7 @@ class MeseraTotalPedidosSerializer(serializers.Serializer):
     mesera_id = serializers.IntegerField(read_only=True)
     mesera_nombre = serializers.CharField(read_only=True)
     total_vendido = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    tipo = serializers.CharField(read_only=True)
 
 class UserSerializer(serializers.ModelSerializer):
     role = serializers.SerializerMethodField()

@@ -417,11 +417,14 @@ class MeseraTotalPedidosView(generics.ListAPIView):
         ).values(
             'total_vendido', 
             mesera_id=F('id'), 
-            mesera_nombre=F('nombre')
+            mesera_nombre=F('nombre'),
+            tipo=Value('mesera')
         )
 
         # 2. Ventas por Usuarios del Sistema
-        usuarios_ventas = User.objects.filter(pedido__isnull=False).annotate(
+        usuarios_ventas = User.objects.filter(
+            Q(groups__name='Bartender') | Q(is_superuser=True)
+        ).annotate(
             total_vendido=Coalesce(
                 Sum('pedido__total', filter=models.Q(pedido__fecha_hora__date=fecha_str) if fecha_str else None),
                 Value(0),
@@ -429,8 +432,9 @@ class MeseraTotalPedidosView(generics.ListAPIView):
             )
         ).values(
             'total_vendido',
-            mesera_id=F('id'), # Usamos el ID del usuario
-            mesera_nombre=Concat(F('username'), Value(' (SISTEMA)'))
+            mesera_id=F('id'), 
+            mesera_nombre=F('username'),
+            tipo=Value('usuario')
         )
 
         # Combinar ambos resultados
@@ -548,7 +552,7 @@ def total_pedidos_mesera_hoy(request):
     for u in ventas_por_usuario:
         resultado.append({
             'id': f"u{u['id']}",
-            'nombre': f"{u['username'].upper()} (SISTEMA)",
+            'nombre': u['username'].upper(),
             'total_vendido': u['total_vendido']
         })
 

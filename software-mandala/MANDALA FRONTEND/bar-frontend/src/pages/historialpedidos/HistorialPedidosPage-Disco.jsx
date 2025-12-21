@@ -34,15 +34,23 @@ const HistorialPedidosPageDisco = () => {
         };
         fetchConfig();
 
-        const fetchMeseras = async () => {
+        const fetchVendedores = async () => {
             try {
-                const response = await axios.get(`${API_URL}/meseras/`);
-                setMeseras(response.data);
+                // Usamos el endpoint que trae a todos los que han vendido (meseras y sistema)
+                const response = await axios.get(`${API_URL}/meseras/total-pedidos/`);
+                // Mapeamos para tener una estructura consistente y prefijo para distinguir IDs
+                const vendedores = response.data.map(v => ({
+                    id: v.tipo === 'usuario' ? `u${v.mesera_id}` : `m${v.mesera_id}`,
+                    realId: v.mesera_id,
+                    nombre: v.mesera_nombre,
+                    tipo: v.tipo
+                }));
+                setMeseras(vendedores);
             } catch (error) {
-                console.error('Error al cargar las meseras:', error);
+                console.error('Error al cargar los vendedores:', error);
             }
         };
-        fetchMeseras();
+        fetchVendedores();
     }, []);
 
     useEffect(() => {
@@ -51,10 +59,12 @@ const HistorialPedidosPageDisco = () => {
             setPedidos([]);
             try {
                 const params = new URLSearchParams();
-                if (meseraSeleccionada === 'sistema') {
-                    params.append('sistema', 'true');
-                } else if (meseraSeleccionada) {
-                    params.append('mesera', meseraSeleccionada);
+                if (meseraSeleccionada) {
+                    if (meseraSeleccionada.startsWith('u')) {
+                        params.append('usuario', meseraSeleccionada.substring(1));
+                    } else if (meseraSeleccionada.startsWith('m')) {
+                        params.append('mesera', meseraSeleccionada.substring(1));
+                    }
                 }
 
                 if (fechaSeleccionada) params.append('fecha', fechaSeleccionada);
@@ -164,10 +174,13 @@ const HistorialPedidosPageDisco = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 bg-white/5 p-6 rounded-2xl border border-white/10">
                     <div className="space-y-2">
                         <label className="text-xs font-bold text-gray-400 uppercase">Mesera</label>
-                        <select value={meseraSeleccionada} onChange={e => setMeseraSeleccionada(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm focus:border-purple-500 outline-none">
-                            <option value="">-- Todas --</option>
-                            <option value="sistema">SISTEMA (Admin/Barra)</option>
-                            {meseras.map(m => (<option key={m.id} value={m.id}>{m.nombre}</option>))}
+                        <select value={meseraSeleccionada} onChange={e => setMeseraSeleccionada(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm focus:border-purple-500 outline-none capitalize">
+                            <option value="">-- Todos --</option>
+                            {meseras.map(v => (
+                                <option key={v.id} value={v.id}>
+                                    {v.nombre}
+                                </option>
+                            ))}
                         </select>
                     </div>
                     <div className="space-y-2">
