@@ -57,10 +57,15 @@ class EmpresaConfigViewSet(viewsets.ModelViewSet):
     queryset = EmpresaConfig.objects.all()
     serializer_class = EmpresaConfigSerializer
     permission_classes = [permissions.AllowAny]
+    authentication_classes = [CsrfExemptSessionAuthentication, BasicAuthentication]
 
     def get_queryset(self):
-        if EmpresaConfig.objects.count() == 0:
-            EmpresaConfig.objects.create(nombre="MANDALA DISCO CLUB")
+        # Usamos un try-except para evitar errores si la tabla aún no existe durante las migraciones
+        try:
+            if EmpresaConfig.objects.count() == 0:
+                EmpresaConfig.objects.create(nombre="MANDALA DISCO CLUB")
+        except Exception:
+            pass
         return super().get_queryset()
 
 class DebugStorageView(generics.GenericAPIView):
@@ -116,10 +121,12 @@ class MeseraViewSet(viewsets.ModelViewSet):
 class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all().order_by('-id')
     serializer_class = ProductoSerializer
+    authentication_classes = [CsrfExemptSessionAuthentication, BasicAuthentication]
 
 class MovimientoViewSet(viewsets.ModelViewSet):
     queryset = Movimiento.objects.all().order_by('-id')
     serializer_class = MovimientoSerializer
+    authentication_classes = [CsrfExemptSessionAuthentication, BasicAuthentication]
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -187,6 +194,7 @@ class PedidoViewSet(viewsets.ModelViewSet):
     serializer_class = PedidoSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = PedidoFilter
+    authentication_classes = [CsrfExemptSessionAuthentication, BasicAuthentication]
 
     def get_queryset(self):
         """
@@ -394,6 +402,7 @@ class PedidoViewSet(viewsets.ModelViewSet):
 class MesaViewSet(viewsets.ModelViewSet):
     queryset = Mesa.objects.all().order_by('numero')
     serializer_class = MesaSerializer
+    authentication_classes = [CsrfExemptSessionAuthentication, BasicAuthentication]
     # La validación de número único se ha movido al MesaSerializer.
 
 # --- NUEVA VISTA PARA EL REPORTE ---
