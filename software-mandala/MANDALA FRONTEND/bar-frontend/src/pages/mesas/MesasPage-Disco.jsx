@@ -123,83 +123,116 @@ const MesasPageDisco = () => {
 
 
     return (
-        <div className="relative min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-4 sm:p-8 text-white">
-            {/* Background Glows matching Home-Disco */}
+        <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white selection:bg-purple-500/30 overflow-x-hidden" style={{ WebkitOverflowScrolling: 'touch' }}>
+            {/* Background Glows matching Home-Disco and Pedidos-Disco */}
             <div className="fixed inset-0 pointer-events-none">
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl"></div>
             </div>
 
-            <button
-                onClick={() => navigate("/home-disco")}
-                className="absolute top-6 left-6 z-50 flex items-center gap-2 rounded-lg bg-[#441E73]/50 border border-[#6C3FA8] px-4 py-2 text-white hover:bg-[#441E73] transition-all backdrop-blur-md shadow-lg hover:scale-105"
-            >
-                <ArrowLeft size={18} />
-                <span className="font-medium">Volver al Home</span>
-            </button>
+            <main className="flex-1 p-3 pt-24 pb-20 sm:p-8 relative z-10">
+                <button
+                    onClick={() => navigate("/home-disco")}
+                    className="fixed top-6 left-6 z-50 flex items-center gap-2 rounded-xl bg-[#441E73]/60 backdrop-blur-xl border border-[#6C3FA8] px-4 py-2 hover:bg-[#A944FF]/20 transition-all shadow-lg hover:scale-105"
+                >
+                    <ArrowLeft size={18} />
+                    <span className="font-bold uppercase tracking-wider text-xs">Volver</span>
+                </button>
 
-            <div className="relative z-10 mx-auto max-w-6xl pt-20 sm:pt-0">
-                <div className="text-center mb-10">
-                    <h1 className="text-5xl md:text-6xl font-black mb-3 text-white drop-shadow-[0_0_15px_rgba(168,85,247,0.3)]">
-                        Gestión de Mesas y Meseros
-                    </h1>
-                    <div className="h-1 w-24 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mx-auto"></div>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                    {/* Columna de Mesas */}
-                    <div>
-                        <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><Table /> Mesas</h2>
-                        <MesaForm key="form" onSubmit={handleAddMesa} />
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-8">
-                            {mesas.map((mesa) => (
-                                <div
-                                    key={mesa.id}
-                                    className="relative bg-[#1A103C]/70 backdrop-blur-md border border-[#6C3FA8]/50 hover:border-[#A944FF] rounded-2xl p-5 text-center group transition-all duration-300 hover:scale-105 hover:bg-[#2B0D49]"
-                                >
-                                    <p className="text-xs font-medium text-purple-300/80 mb-1">Mesa</p>
-                                    <p className="text-5xl font-black text-white my-2">
-                                        {mesa.numero}
-                                    </p>
-                                    <p className="text-xs text-gray-300">Cap: {mesa.capacidad}</p>
-
-                                    <button
-                                        onClick={() => handleDeleteMesa(mesa.id)}
-                                        className="absolute top-2 right-2 p-1.5 text-red-400 bg-red-900/50 rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-red-800 hover:scale-110"
-                                    >
-                                        <Trash2 size={14} />
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                        {mesas.length === 0 && !loading && (
-                            <p className="text-center text-gray-400 mt-12 text-lg">No hay mesas registradas.</p>
-                        )}
+                <div className="max-w-6xl mx-auto">
+                    <div className="text-center mb-12">
+                        <h1 className="text-4xl sm:text-5xl font-black mb-4 text-white tracking-tight drop-shadow-[0_0_15px_rgba(168,85,247,0.3)] uppercase">
+                            Gestión de Mesas y Meseros
+                        </h1>
+                        <div className="h-1.5 w-32 bg-gradient-to-r from-[#A944FF] via-[#FF4BC1] to-transparent rounded-full mx-auto"></div>
                     </div>
 
-                    {/* Columna de Meseros */}
-                    <div>
-                        <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><Users /> Meseros</h2>
-                        <div className="space-y-3 bg-[#1A103C]/70 backdrop-blur-md border border-[#6C3FA8]/50 rounded-2xl p-6">
-                            {meseros.map(mesero => (
-                                <div key={mesero.id} className="bg-[#2B0D49]/80 hover:bg-[#2B0D49] p-4 rounded-xl flex justify-between items-center transition-colors border border-transparent hover:border-[#A944FF]/50">
-                                    <span className="font-semibold capitalize">{mesero.nombre}</span>
-                                    <button
-                                        onClick={() => handleEliminarMesero(mesero.id)}
-                                        className="text-red-400/70 hover:text-red-400 p-2 rounded-md hover:bg-red-500/20 transition-colors"
-                                        title="Eliminar mesero"
-                                    >
-                                        <Trash2 size={18} />
-                                    </button>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                        {/* Columna de Mesas */}
+                        <div className="space-y-6">
+                            <h2 className="text-xl font-bold flex items-center gap-3 uppercase tracking-wider text-white">
+                                <div className="p-2 bg-[#A944FF]/10 rounded-lg">
+                                    <Table className="text-[#A944FF]" size={20} />
                                 </div>
-                            ))}
-                            {meseros.length === 0 && !loading && (
-                                <p className="text-center text-gray-400 py-8">No hay meseros registrados.</p>
-                            )}
+                                Mesas Configuradas
+                            </h2>
+
+                            <div className="bg-[#441E73]/60 backdrop-blur-xl border border-[#6C3FA8] rounded-2xl p-6 shadow-xl">
+                                <MesaForm key="form" onSubmit={handleAddMesa} />
+
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-8">
+                                    {mesas.map((mesa) => (
+                                        <div
+                                            key={mesa.id}
+                                            className="relative bg-[#2B0D49] border border-[#6C3FA8]/30 hover:border-[#A944FF] rounded-2xl p-6 text-center group transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_20px_rgba(169,68,255,0.2)] overflow-hidden"
+                                        >
+                                            <div className="absolute top-0 right-0 w-16 h-16 bg-[#A944FF]/5 rounded-bl-full pointer-events-none"></div>
+
+                                            <p className="text-[10px] font-bold text-[#A944FF] uppercase tracking-widest mb-1">MESA</p>
+                                            <p className="text-5xl font-black text-white my-3 drop-shadow-sm">
+                                                {mesa.numero}
+                                            </p>
+                                            <div className="flex items-center justify-center gap-1.5 text-gray-400">
+                                                <Users size={12} className="text-[#C2B6D9]" />
+                                                <span className="text-xs font-medium">Cap: {mesa.capacidad}</span>
+                                            </div>
+
+                                            <button
+                                                onClick={() => handleDeleteMesa(mesa.id)}
+                                                className="absolute top-3 right-3 p-2 text-red-500 bg-red-500/10 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white shadow-lg"
+                                                title="Eliminar Mesa"
+                                            >
+                                                <Trash2 size={14} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {mesas.length === 0 && !loading && (
+                                    <div className="text-center py-12 border-2 border-dashed border-[#6C3FA8]/30 rounded-2xl bg-white/5">
+                                        <p className="text-[#C2B6D9] font-bold uppercase tracking-widest text-xs">No hay mesas</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Columna de Meseros */}
+                        <div className="space-y-6">
+                            <h2 className="text-xl font-bold flex items-center gap-3 uppercase tracking-wider text-white">
+                                <div className="p-2 bg-[#FF4BC1]/10 rounded-lg">
+                                    <Users className="text-[#FF4BC1]" size={20} />
+                                </div>
+                                Meseros Registrados
+                            </h2>
+
+                            <div className="bg-[#441E73]/60 backdrop-blur-xl border border-[#6C3FA8] rounded-2xl p-6 shadow-xl space-y-3">
+                                {meseros.map(mesero => (
+                                    <div key={mesero.id} className="bg-[#2B0D49] hover:bg-[#2B0D49]/80 p-4 rounded-xl flex justify-between items-center transition-all border border-[#6C3FA8]/30 hover:border-[#A944FF]/50 group shadow-sm">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#A944FF] to-[#FF4BC1] flex items-center justify-center font-black text-xs text-white uppercase shadow-lg">
+                                                {mesero.nombre.charAt(0)}
+                                            </div>
+                                            <span className="font-bold text-white tracking-wide uppercase text-sm">{mesero.nombre}</span>
+                                        </div>
+                                        <button
+                                            onClick={() => handleEliminarMesero(mesero.id)}
+                                            className="text-gray-500 hover:text-red-500 p-2.5 rounded-xl hover:bg-red-500/10 transition-all opacity-40 group-hover:opacity-100"
+                                            title="Eliminar mesero"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
+                                    </div>
+                                ))}
+                                {meseros.length === 0 && !loading && (
+                                    <div className="text-center py-12 border-2 border-dashed border-[#6C3FA8]/30 rounded-2xl bg-white/5">
+                                        <p className="text-[#C2B6D9] font-bold uppercase tracking-widest text-xs">No hay meseros</p>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
     );
 };

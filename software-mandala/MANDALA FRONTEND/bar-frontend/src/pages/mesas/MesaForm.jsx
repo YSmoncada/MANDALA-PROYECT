@@ -35,10 +35,10 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
     return (
         <form
             onSubmit={handleSubmit}
-            className="bg-[#1A103C]/80 backdrop-blur-md border border-[#6C3FA8]/50 rounded-2xl p-6 mb-8 flex flex-wrap items-end gap-4"
+            className="bg-[#2B0D49]/50 border border-[#6C3FA8]/30 rounded-2xl p-6 mb-8 flex flex-wrap items-end gap-6 shadow-inner"
         >
-            <div>
-                <label htmlFor="numero" className="block mb-2 text-sm font-medium text-gray-300">
+            <div className="flex-1 min-w-[140px] space-y-2">
+                <label htmlFor="numero" className="text-[10px] font-bold text-[#A944FF] uppercase tracking-widest ml-1">
                     Número de Mesa
                 </label>
                 <input
@@ -49,14 +49,14 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
                         const value = e.target.value;
                         setNumero(value.replace(/[^0-9]/g, '')); // Solo permite números
                     }}
-                    className="w-full p-3 bg-[#2B0D49] border border-[#6C3FA8]/50 rounded-lg text-white focus:ring-2 focus:ring-[#A944FF] outline-none transition-all placeholder:text-gray-500"
-                    placeholder="Ej: 1, 2, 10"
+                    className="w-full p-3.5 bg-[#2B0D49] border border-[#6C3FA8] rounded-xl text-white focus:ring-1 focus:ring-[#A944FF] focus:border-[#A944FF] outline-none transition-all placeholder:text-gray-600 text-sm"
+                    placeholder="Ej: 01"
                     required
                 />
             </div>
 
-            <div>
-                <label htmlFor="capacidad" className="block mb-2 text-sm font-medium text-gray-300">
+            <div className="flex-1 min-w-[140px] space-y-2">
+                <label htmlFor="capacidad" className="text-[10px] font-bold text-[#A944FF] uppercase tracking-widest ml-1">
                     Capacidad
                 </label>
                 <input
@@ -64,8 +64,8 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
                     id="capacidad"
                     value={capacidad}
                     onChange={(e) => setCapacidad(e.target.value)}
-                    className="w-full p-3 bg-[#2B0D49] border border-[#6C3FA8]/50 rounded-lg text-white focus:ring-2 focus:ring-[#A944FF] outline-none transition-all placeholder:text-gray-500"
-                    placeholder="Ej: 4"
+                    className="w-full p-3.5 bg-[#2B0D49] border border-[#6C3FA8] rounded-xl text-white focus:ring-1 focus:ring-[#A944FF] focus:border-[#A944FF] outline-none transition-all placeholder:text-gray-600 text-sm"
+                    placeholder="Sillas"
                     min="1"
                     required
                 />
@@ -73,9 +73,9 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
 
             <button
                 type="submit"
-                className="h-[52px] px-6 bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] text-white font-bold uppercase tracking-widest text-xs rounded-xl hover:brightness-110 transition-all shadow-lg shadow-[#A944FF]/30 hover:shadow-[#A944FF]/50 hover:scale-[1.02] active:scale-[0.98]"
+                className="h-[52px] px-8 bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] text-white font-black uppercase tracking-widest text-[10px] rounded-xl hover:brightness-110 transition-all shadow-lg shadow-[#A944FF]/20 hover:shadow-[#A944FF]/40 hover:scale-[1.02] active:scale-[0.98] mt-2 sm:mt-0"
             >
-                Guardar
+                Agregar Mesa
             </button>
         </form>
     );

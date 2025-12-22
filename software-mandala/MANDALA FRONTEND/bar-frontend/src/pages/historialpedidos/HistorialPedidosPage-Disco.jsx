@@ -163,99 +163,207 @@ const HistorialPedidosPageDisco = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 p-4 sm:p-8 text-white relative">
+        <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white selection:bg-purple-500/30 overflow-x-hidden" style={{ WebkitOverflowScrolling: 'touch' }}>
+            {/* Background Glows matching Home-Disco and Pedidos-Disco */}
+            <div className="fixed inset-0 pointer-events-none">
+                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl"></div>
+            </div>
+
             <TicketPrinter pedido={pedidoAImprimir} empresaConfig={empresaConfig} />
 
-            <button onClick={() => navigate('/')} className="fixed top-6 left-6 z-50 flex items-center gap-2 rounded-lg bg-white/5 border border-white/10 px-4 py-2 hover:bg-white/10 transition-all no-print">
-                <ArrowLeft size={18} /> <span>Volver</span>
-            </button>
+            <main className="flex-1 p-3 pt-24 pb-20 sm:p-8 relative z-10">
+                <button
+                    onClick={() => navigate('/')}
+                    className="fixed top-6 left-6 z-50 flex items-center gap-2 rounded-xl bg-[#441E73]/60 backdrop-blur-xl border border-[#6C3FA8] px-4 py-2 hover:bg-[#A944FF]/20 transition-all no-print shadow-lg hover:scale-105"
+                >
+                    <ArrowLeft size={18} /> <span className="font-bold uppercase tracking-wider text-xs">Volver</span>
+                </button>
 
-            <div className="max-w-6xl mx-auto pt-16 no-print">
-                <h1 className="text-4xl font-black mb-8 text-center text-white">Historial de Ventas</h1>
+                <div className="max-w-6xl mx-auto no-print">
+                    <h1 className="text-4xl sm:text-5xl font-black mb-12 text-center text-white tracking-tight drop-shadow-[0_0_15px_rgba(168,85,247,0.3)] uppercase">
+                        Historial de Ventas
+                    </h1>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 bg-white/5 p-6 rounded-2xl border border-white/10">
-                    <div className="space-y-2">
-                        <label className="text-xs font-bold text-gray-400 uppercase">Mesera</label>
-                        <select value={meseraSeleccionada} onChange={e => setMeseraSeleccionada(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm focus:border-purple-500 outline-none capitalize">
-                            <option value="">-- Todos --</option>
-                            {meseras.map(v => (
-                                <option key={v.id} value={v.id}>
-                                    {v.nombre}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-xs font-bold text-gray-400 uppercase">Fecha</label>
-                        <input type="date" value={fechaSeleccionada} onChange={e => setFechaSeleccionada(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm focus:border-purple-500 outline-none" />
-                    </div>
-                    <div className="flex items-end">
-                        <button onClick={() => { setMeseraSeleccionada(''); setFechaSeleccionada(''); setPedidos([]); }} className="w-full bg-white/5 hover:bg-white/10 py-3 rounded-xl text-sm transition-all font-bold">Limpiar</button>
-                    </div>
-                    {isAdmin && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12 bg-[#441E73]/60 backdrop-blur-xl p-6 rounded-2xl border border-[#6C3FA8] shadow-2xl">
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-[#A944FF] uppercase tracking-widest ml-1">Vendedor</label>
+                            <div className="relative">
+                                <select
+                                    value={meseraSeleccionada}
+                                    onChange={e => setMeseraSeleccionada(e.target.value)}
+                                    className="w-full bg-[#2B0D49] border border-[#6C3FA8] rounded-xl p-3 text-sm focus:ring-[#A944FF] focus:border-[#A944FF] outline-none capitalize appearance-none cursor-pointer hover:bg-[#2B0D49]/80 transition-all"
+                                >
+                                    <option value="">-- Todos --</option>
+                                    {meseras.map(v => (
+                                        <option key={v.id} value={v.id}>
+                                            {v.nombre}
+                                        </option>
+                                    ))}
+                                </select>
+                                <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
+                                    <svg className="w-4 h-4 text-[#8A7BAF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-[#A944FF] uppercase tracking-widest ml-1">Fecha</label>
+                            <input
+                                type="date"
+                                value={fechaSeleccionada}
+                                onChange={e => setFechaSeleccionada(e.target.value)}
+                                className="w-full bg-[#2B0D49] border border-[#6C3FA8] rounded-xl p-3 text-sm focus:ring-[#A944FF] focus:border-[#A944FF] outline-none text-white hover:bg-[#2B0D49]/80 transition-all"
+                            />
+                        </div>
                         <div className="flex items-end">
                             <button
-                                onClick={handleBorrarHistorial}
-                                className="w-full bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 font-bold"
+                                onClick={() => { setMeseraSeleccionada(''); setFechaSeleccionada(''); setPedidos([]); }}
+                                className="w-full h-[46px] bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl text-xs transition-all font-bold uppercase tracking-widest"
                             >
-                                <Trash2 size={16} /> Borrar Historial
+                                Limpiar
                             </button>
                         </div>
-                    )}
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-                    <div className="bg-white/5 p-6 rounded-2xl border border-white/5">
-                        <p className="text-xs text-gray-400 font-bold uppercase mb-1">Total Ventas</p>
-                        <p className="text-3xl font-black text-green-400">${totalMostrado.toLocaleString()}</p>
-                    </div>
-                    <div className="bg-white/5 p-6 rounded-2xl border border-white/5">
-                        <p className="text-xs text-gray-400 font-bold uppercase mb-1">Pedidos</p>
-                        <p className="text-3xl font-black">{pedidos.length}</p>
-                    </div>
-                </div>
-
-                <div className="space-y-4">
-                    {pedidos.map(pedido => (
-                        <div key={pedido.id} className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all group">
-                            <div className="flex justify-between items-start mb-4">
-                                <div className="flex items-center gap-4">
-                                    <h2 className="text-xl font-black">Pedido #{pedido.id}</h2>
-                                    <StatusSelector pedido={pedido} />
-                                </div>
-                                <button onClick={() => handlePrint(pedido)} className="p-2 rounded-lg bg-white/5 hover:bg-purple-500 text-purple-400 hover:text-white transition-all border border-white/10">
-                                    <Printer size={18} />
+                        {isAdmin && (
+                            <div className="flex items-end">
+                                <button
+                                    onClick={handleBorrarHistorial}
+                                    className="w-full h-[46px] bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 rounded-xl text-xs transition-all flex items-center justify-center gap-2 font-bold uppercase tracking-widest"
+                                >
+                                    <Trash2 size={16} /> Borrar Todo
                                 </button>
                             </div>
-                            <div className="space-y-2 text-sm text-gray-400 mb-4">
-                                <p>Mesa: <span className="text-white font-bold">{pedido.mesa_numero}</span> | Atendió: <span className="text-white">{pedido.mesera_nombre}</span></p>
-                                <p>{new Date(pedido.fecha_hora).toLocaleString()}</p>
+                        )}
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                        <div className="bg-[#441E73]/80 backdrop-blur-xl p-6 rounded-2xl border border-[#6C3FA8] shadow-xl relative overflow-hidden group">
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-green-400 to-transparent opacity-50"></div>
+                            <div className="flex items-center gap-4 mb-2">
+                                <div className="p-2 bg-green-400/10 rounded-lg">
+                                    <DollarSign className="text-green-400" size={18} />
+                                </div>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Total Ventas</p>
                             </div>
-                            <div className="space-y-1 mb-4">
-                                {pedido.productos_detalle.map((it, i) => (
-                                    <div key={i} className="flex justify-between text-sm py-1 border-b border-white/5">
-                                        <span><span className="font-bold text-purple-400">{it.cantidad}x</span> {it.producto_nombre}</span>
-                                        <span className="text-white">${(it.cantidad * it.producto_precio).toLocaleString()}</span>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="flex justify-between items-center pt-2">
-                                <span className="text-xs font-bold text-gray-500 uppercase">Total Cobrado</span>
-                                <span className="text-2xl font-black text-white">${parseFloat(pedido.total).toLocaleString()}</span>
-                            </div>
+                            <p className="text-4xl font-black text-white drop-shadow-[0_0_10px_rgba(74,222,128,0.2)]">
+                                <span className="text-green-400 text-2xl mr-1">$</span>
+                                {totalMostrado.toLocaleString()}
+                            </p>
                         </div>
-                    ))}
-                    {pedidos.length === 0 && !loading && <p className="text-center text-gray-500 py-12">No hay resultados con los filtros aplicados.</p>}
+
+                        <div className="bg-[#441E73]/80 backdrop-blur-xl p-6 rounded-2xl border border-[#6C3FA8] shadow-xl relative overflow-hidden group">
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#A944FF] to-transparent opacity-50"></div>
+                            <div className="flex items-center gap-4 mb-2">
+                                <div className="p-2 bg-[#A944FF]/10 rounded-lg">
+                                    <ShoppingBag className="text-[#A944FF]" size={18} />
+                                </div>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Pedidos Realizados</p>
+                            </div>
+                            <p className="text-4xl font-black text-white drop-shadow-[0_0_10px_rgba(169,68,255,0.2)]">
+                                {pedidos.length}
+                                <span className="text-[#A944FF] text-lg ml-2 font-bold uppercase">Uds</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="space-y-6">
+                        {pedidos.map(pedido => (
+                            <div key={pedido.id} className="bg-[#441E73]/60 backdrop-blur-xl border border-[#6C3FA8] rounded-2xl p-6 hover:bg-[#441E73]/80 transition-all group shadow-lg relative overflow-hidden">
+                                <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-[#A944FF] to-[#FF4BC1]"></div>
+
+                                <div className="flex justify-between items-start mb-6">
+                                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                                        <h2 className="text-2xl font-black tracking-tight">PEDIDO #{pedido.id}</h2>
+                                        <div className="flex items-center gap-2">
+                                            <StatusSelector pedido={pedido} />
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => handlePrint(pedido)}
+                                        className="p-3 rounded-xl bg-[#A944FF]/10 hover:bg-[#A944FF] text-[#A944FF] hover:text-white transition-all border border-[#A944FF]/20 shadow-lg"
+                                    >
+                                        <Printer size={18} />
+                                    </button>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+                                    <div className="space-y-3">
+                                        <div className="flex items-center gap-3 text-[#C2B6D9]">
+                                            <div className="p-1.5 bg-white/5 rounded-md">
+                                                <Table size={14} />
+                                            </div>
+                                            <span className="text-xs font-bold uppercase tracking-wider">Detalles de Mesa</span>
+                                        </div>
+                                        <div className="bg-[#2B0D49] border border-[#6C3FA8]/30 rounded-xl p-4 space-y-2">
+                                            <div className="flex justify-between">
+                                                <span className="text-xs text-[#C2B6D9]">Ubicación</span>
+                                                <span className="text-sm font-bold text-white">Mesa #{pedido.mesa_numero}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-xs text-[#C2B6D9]">Vendedor</span>
+                                                <span className="text-sm font-medium text-white capitalize">{pedido.mesera_nombre}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-xs text-[#C2B6D9]">Fecha y Hora</span>
+                                                <span className="text-sm text-gray-400 font-mono">{new Date(pedido.fecha_hora).toLocaleString()}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        <div className="flex items-center gap-3 text-[#C2B6D9]">
+                                            <div className="p-1.5 bg-white/5 rounded-md">
+                                                <ShoppingBag size={14} />
+                                            </div>
+                                            <span className="text-xs font-bold uppercase tracking-wider">Productos Consumidos</span>
+                                        </div>
+                                        <div className="bg-[#2B0D49] border border-[#6C3FA8]/30 rounded-xl p-4 space-y-2">
+                                            {pedido.productos_detalle.map((it, i) => (
+                                                <div key={i} className="flex justify-between text-sm py-1.5 border-b border-white/5 last:border-0 items-center">
+                                                    <div className="flex items-center gap-3">
+                                                        <span className="w-6 h-6 flex items-center justify-center bg-[#A944FF]/20 text-[#A944FF] rounded text-[10px] font-bold">{it.cantidad}x</span>
+                                                        <span className="text-gray-300 text-xs font-medium">{it.producto_nombre}</span>
+                                                    </div>
+                                                    <span className="text-white font-bold text-xs">${(it.cantidad * it.producto_precio).toLocaleString()}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-between items-center pt-6 border-t border-[#6C3FA8]/30">
+                                    <div className="flex flex-col">
+                                        <span className="text-[10px] font-bold text-[#A944FF] uppercase tracking-widest">Total del Pedido</span>
+                                        <span className="text-3xl font-black text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">
+                                            <span className="text-base text-[#A944FF] mr-1 font-bold">$</span>
+                                            {parseFloat(pedido.total).toLocaleString()}
+                                        </span>
+                                    </div>
+                                    <div className="opacity-50 group-hover:opacity-100 transition-all flex items-center gap-2 text-[10px] font-bold uppercase tracking-tighter text-[#C2B6D9]">
+                                        <TrendingUp size={12} className="text-green-400" /> Venta Confirmada
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                        {pedidos.length === 0 && !loading && (
+                            <div className="text-center py-20 bg-[#441E73]/20 rounded-3xl border border-dashed border-[#6C3FA8]/50">
+                                <div className="p-4 bg-[#A944FF]/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                                    <AlertCircle className="text-[#A944FF]" size={32} />
+                                </div>
+                                <p className="text-[#C2B6D9] font-bold uppercase tracking-widest text-sm">No hay resultados</p>
+                                <p className="text-gray-500 text-xs mt-2">Intenta ajustar los filtros de búsqueda</p>
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
+            </main>
 
             <style dangerouslySetInnerHTML={{
                 __html: `
-                @media print {
-                    .no-print { display: none !important; }
-                    body { background: white !important; }
-                }
-            `}} />
+            @media print {
+                .no-print { display: none !important; }
+                body { background: white !important; }
+            }
+        `}} />
         </div>
     );
 };
