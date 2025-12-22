@@ -91,9 +91,8 @@ const HistorialPedidosPageDisco = () => {
         }
         const total = pedidos.reduce((acc, p) => {
             const estado = p.estado?.toLowerCase();
-            // Contamos como venta todo lo que no sea cancelado
-            // (Pendiente y Despachado ya son ventas realizadas)
-            if (estado !== 'cancelado') {
+            // Contamos como venta solo lo que ya fue despachado o finalizado
+            if (estado === 'despachado' || estado === 'finalizada') {
                 return acc + parseFloat(p.total || 0);
             }
             return acc;
