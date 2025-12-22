@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, User, DollarSign, ShoppingBag, TrendingUp, Check, X, Clock, AlertCircle, Printer, Trash2 } from 'lucide-react';
+import { ArrowLeft, Calendar, User, DollarSign, ShoppingBag, TrendingUp, Check, X, Clock, AlertCircle, Printer, Trash2, Table } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { API_URL } from '../../apiConfig';
 import TicketPrinter from '../../components/TicketPrinter';
