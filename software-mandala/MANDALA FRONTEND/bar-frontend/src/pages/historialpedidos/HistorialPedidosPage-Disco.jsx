@@ -71,7 +71,7 @@ const HistorialPedidosPageDisco = () => {
 
                 if (fechaSeleccionada) params.append('fecha', fechaSeleccionada);
                 const response = await axios.get(`${API_URL}/pedidos/?${params.toString()}`);
-                setPedidos(response.data);
+                setPedidos(Array.isArray(response.data) ? response.data : []);
             } catch (error) {
                 console.error('Error al cargar los pedidos:', error);
                 setPedidos([]);
@@ -85,12 +85,16 @@ const HistorialPedidosPageDisco = () => {
     }, [meseraSeleccionada, fechaSeleccionada]);
 
     useEffect(() => {
+        if (!Array.isArray(pedidos)) {
+            setTotalMostrado(0);
+            return;
+        }
         const total = pedidos.reduce((acc, p) => {
             const estado = p.estado?.toLowerCase();
             // Contamos como venta todo lo que no sea cancelado
             // (Pendiente y Despachado ya son ventas realizadas)
             if (estado !== 'cancelado') {
-                return acc + parseFloat(p.total);
+                return acc + parseFloat(p.total || 0);
             }
             return acc;
         }, 0);
@@ -246,7 +250,7 @@ const HistorialPedidosPageDisco = () => {
                             </div>
                             <p className="text-4xl font-black text-white drop-shadow-[0_0_10px_rgba(74,222,128,0.2)]">
                                 <span className="text-green-400 text-2xl mr-1">$</span>
-                                {totalMostrado.toLocaleString()}
+                                {Number(totalMostrado || 0).toLocaleString()}
                             </p>
                         </div>
 
@@ -259,14 +263,14 @@ const HistorialPedidosPageDisco = () => {
                                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Pedidos Realizados</p>
                             </div>
                             <p className="text-4xl font-black text-white drop-shadow-[0_0_10px_rgba(169,68,255,0.2)]">
-                                {pedidos.length}
+                                {Array.isArray(pedidos) ? pedidos.length : 0}
                                 <span className="text-[#A944FF] text-lg ml-2 font-bold uppercase">Uds</span>
                             </p>
                         </div>
                     </div>
 
                     <div className="space-y-6">
-                        {pedidos.map(pedido => (
+                        {Array.isArray(pedidos) && pedidos.map(pedido => (
                             <div key={pedido.id} className="bg-[#441E73]/60 backdrop-blur-xl border border-[#6C3FA8] rounded-2xl p-6 hover:bg-[#441E73]/80 transition-all group shadow-lg relative overflow-hidden">
                                 <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-[#A944FF] to-[#FF4BC1]"></div>
 
@@ -304,7 +308,7 @@ const HistorialPedidosPageDisco = () => {
                                             </div>
                                             <div className="flex justify-between">
                                                 <span className="text-xs text-[#C2B6D9]">Fecha y Hora</span>
-                                                <span className="text-sm text-gray-400 font-mono">{new Date(pedido.fecha_hora).toLocaleString()}</span>
+                                                <span className="text-sm text-gray-400 font-mono">{pedido.fecha_hora ? new Date(pedido.fecha_hora).toLocaleString() : 'N/A'}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -317,13 +321,13 @@ const HistorialPedidosPageDisco = () => {
                                             <span className="text-xs font-bold uppercase tracking-wider">Productos Consumidos</span>
                                         </div>
                                         <div className="bg-[#2B0D49] border border-[#6C3FA8]/30 rounded-xl p-4 space-y-2">
-                                            {pedido.productos_detalle.map((it, i) => (
+                                            {Array.isArray(pedido.productos_detalle) && pedido.productos_detalle.map((it, i) => (
                                                 <div key={i} className="flex justify-between text-sm py-1.5 border-b border-white/5 last:border-0 items-center">
                                                     <div className="flex items-center gap-3">
                                                         <span className="w-6 h-6 flex items-center justify-center bg-[#A944FF]/20 text-[#A944FF] rounded text-[10px] font-bold">{it.cantidad}x</span>
                                                         <span className="text-gray-300 text-xs font-medium">{it.producto_nombre}</span>
                                                     </div>
-                                                    <span className="text-white font-bold text-xs">${(it.cantidad * it.producto_precio).toLocaleString()}</span>
+                                                    <span className="text-white font-bold text-xs">${(it.cantidad * (it.producto_precio || 0)).toLocaleString()}</span>
                                                 </div>
                                             ))}
                                         </div>
@@ -335,7 +339,7 @@ const HistorialPedidosPageDisco = () => {
                                         <span className="text-[10px] font-bold text-[#A944FF] uppercase tracking-widest">Total del Pedido</span>
                                         <span className="text-3xl font-black text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">
                                             <span className="text-base text-[#A944FF] mr-1 font-bold">$</span>
-                                            {parseFloat(pedido.total).toLocaleString()}
+                                            {parseFloat(pedido.total || 0).toLocaleString()}
                                         </span>
                                     </div>
                                     <div className="opacity-50 group-hover:opacity-100 transition-all flex items-center gap-2 text-[10px] font-bold uppercase tracking-tighter text-[#C2B6D9]">
@@ -344,7 +348,7 @@ const HistorialPedidosPageDisco = () => {
                                 </div>
                             </div>
                         ))}
-                        {pedidos.length === 0 && !loading && (
+                        {(Array.isArray(pedidos) ? pedidos.length : 0) === 0 && !loading && (
                             <div className="text-center py-20 bg-[#441E73]/20 rounded-3xl border border-dashed border-[#6C3FA8]/50">
                                 <div className="p-4 bg-[#A944FF]/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                                     <AlertCircle className="text-[#A944FF]" size={32} />
