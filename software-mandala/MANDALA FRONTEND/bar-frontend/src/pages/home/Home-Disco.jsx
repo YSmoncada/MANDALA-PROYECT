@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Package, ClipboardList, SquareKanban, History, GlassWater, DollarSign, LogOut, Users } from "lucide-react";
+import { Package, ClipboardList, SquareKanban, History, GlassWater, DollarSign, LogOut, Users, Settings } from "lucide-react";
 import { usePedidosContext } from "../../context/PedidosContext";
 
 // Componente de carga para una mejor experiencia de usuario.
