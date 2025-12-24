@@ -91,10 +91,11 @@ export default function PedidosDisco() {
     // Fake Bartender & Admin Users for UI
     const bartenderUser = { id: 'sys_bartender', nombre: 'Barra', role: 'bartender', isSystem: true };
     const adminUser = { id: 'sys_admin', nombre: 'Admin', role: 'admin', isSystem: true };
+    const pruebaUser = { id: 'sys_prueba', nombre: 'Prueba', username: 'prueba', role: 'prueba', isSystem: true };
 
     const handleProfileClick = (profile) => {
         if (profile.isSystem) {
-            // Is Bartender or Admin -> Show Password Login
+            // Is Bartender or Admin or Prueba -> Show Password Login
             setSysUsername(profile.username || (profile.role === 'admin' ? 'admin' : 'barra'));
             setShowSystemLogin(true);
             // Optionally set focus or pre-fill
@@ -102,6 +103,43 @@ export default function PedidosDisco() {
             // Is Mesera -> Show Pin Pad
             handleSelectMesera(profile);
         }
+    };
+
+    const handleProfileStyles = (profile) => {
+        if (profile.role === 'admin') {
+            return {
+                card: 'bg-rose-900/20 hover:bg-rose-900/40 border-rose-500/50 hover:border-rose-400 hover:shadow-[0_0_30px_rgba(244,63,94,0.2)]',
+                glow: 'bg-rose-500',
+                gradient: 'from-rose-900 to-rose-700 border-rose-500',
+                textPrimary: 'text-rose-100 group-hover:text-rose-300',
+                textSecondary: 'text-rose-500/70 group-hover:text-rose-400'
+            };
+        }
+        if (profile.role === 'bartender') {
+            return {
+                card: 'bg-emerald-900/20 hover:bg-emerald-900/40 border-emerald-500/50 hover:border-emerald-400 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)]',
+                glow: 'bg-emerald-500',
+                gradient: 'from-emerald-900 to-emerald-700 border-emerald-500',
+                textPrimary: 'text-emerald-100 group-hover:text-emerald-300',
+                textSecondary: 'text-emerald-500/70 group-hover:text-emerald-400'
+            };
+        }
+        if (profile.role === 'prueba') {
+            return {
+                card: 'bg-blue-900/20 hover:bg-blue-900/40 border-blue-500/50 hover:border-blue-400 hover:shadow-[0_0_30px_rgba(59,130,246,0.2)]',
+                glow: 'bg-blue-500',
+                gradient: 'from-blue-900 to-blue-700 border-blue-500',
+                textPrimary: 'text-blue-100 group-hover:text-blue-300',
+                textSecondary: 'text-blue-500/70 group-hover:text-blue-400'
+            };
+        }
+        return {
+            card: 'bg-[#6C3FA8]/20 hover:bg-[#6C3FA8]/40 border-[#6C3FA8] hover:border-[#A944FF] hover:shadow-[0_0_30px_rgba(169,68,255,0.2)]',
+            glow: 'bg-[#A944FF]',
+            gradient: 'from-[#441E73] to-[#6C3FA8] border-[#6C3FA8]',
+            textPrimary: 'text-white group-hover:text-[#FF4BC1]',
+            textSecondary: 'text-[#8A7BAF] group-hover:text-[#C2B6D9]'
+        };
     };
 
     return (
@@ -211,58 +249,42 @@ export default function PedidosDisco() {
                         </div>
                         <div className="flex flex-wrap justify-center gap-6">
 
-                            {/* Render Admin + Bartender + Meseras Combined */}
-                            {[adminUser, bartenderUser, ...meseras].map((profile) => (
-                                <button
-                                    key={profile.id}
-                                    onClick={() => handleProfileClick(profile)}
-                                    className={`group relative flex flex-col items-center gap-4 border rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm w-48 
-                                        ${profile.role === 'admin'
-                                            ? 'bg-rose-900/20 hover:bg-rose-900/40 border-rose-500/50 hover:border-rose-400 hover:shadow-[0_0_30px_rgba(244,63,94,0.2)]'
-                                            : profile.role === 'bartender'
-                                                ? 'bg-emerald-900/20 hover:bg-emerald-900/40 border-emerald-500/50 hover:border-emerald-400 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)]'
-                                                : 'bg-[#6C3FA8]/20 hover:bg-[#6C3FA8]/40 border-[#6C3FA8] hover:border-[#A944FF] hover:shadow-[0_0_30px_rgba(169,68,255,0.2)]'
-                                        }`}
-                                >
-                                    <div className="relative">
-                                        <div className={`absolute inset-0 blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-full 
-                                            ${profile.role === 'admin' ? 'bg-rose-500'
-                                                : profile.role === 'bartender' ? 'bg-emerald-500'
-                                                    : 'bg-[#A944FF]'}`}></div>
-                                        <div className={`relative w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-inner group-hover:scale-110 transition-transform duration-300 border 
-                                            ${profile.role === 'admin'
-                                                ? 'bg-gradient-to-br from-rose-900 to-rose-700 border-rose-500'
-                                                : profile.role === 'bartender'
-                                                    ? 'bg-gradient-to-br from-emerald-900 to-emerald-700 border-emerald-500'
-                                                    : 'bg-gradient-to-br from-[#441E73] to-[#6C3FA8] border-[#6C3FA8]'
-                                            }`}>
-                                            {profile.nombre ? profile.nombre.charAt(0).toUpperCase() : '?'}
+                            {/* Render Admin + Bartender + Prueba + Meseras Combined */}
+                            {[adminUser, bartenderUser, pruebaUser, ...meseras].map((profile) => {
+                                const styles = handleProfileStyles(profile);
+                                return (
+                                    <button
+                                        key={profile.id}
+                                        onClick={() => handleProfileClick(profile)}
+                                        className={`group relative flex flex-col items-center gap-4 border rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm w-48 ${styles.card}`}
+                                    >
+                                        <div className="relative">
+                                            <div className={`absolute inset-0 blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-full ${styles.glow}`}></div>
+                                            <div className={`relative w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-inner group-hover:scale-110 transition-transform duration-300 border bg-gradient-to-br ${styles.gradient}`}>
+                                                {profile.nombre ? profile.nombre.charAt(0).toUpperCase() : '?'}
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="text-center">
-                                        <span className={`text-lg font-bold block mb-1 transition-colors truncate max-w-[120px] 
-                                            ${profile.role === 'admin' ? 'text-rose-100 group-hover:text-rose-300'
-                                                : profile.role === 'bartender' ? 'text-emerald-100 group-hover:text-emerald-300'
-                                                    : 'text-white group-hover:text-[#FF4BC1]'}`}>{profile.nombre}</span>
-                                        <span className={`text-[10px] uppercase tracking-widest font-bold transition-colors 
-                                            ${profile.role === 'admin' ? 'text-rose-500/70 group-hover:text-rose-400'
-                                                : profile.role === 'bartender' ? 'text-emerald-500/70 group-hover:text-emerald-400'
-                                                    : 'text-[#8A7BAF] group-hover:text-[#C2B6D9]'}`}>
-                                            {profile.role === 'admin' ? 'Administrador' : profile.role === 'bartender' ? 'Bartender' : 'Mesera'}
-                                        </span>
-                                    </div>
-
-                                    {!profile.isSystem && (
-                                        <div
-                                            onClick={(e) => handleDeleteClick(e, profile)}
-                                            className="absolute top-2 right-2 p-1.5 text-[#8A7BAF] hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all duration-300"
-                                        >
-                                            <Trash2Icon />
+                                        <div className="text-center">
+                                            <span className={`text-lg font-bold block mb-1 transition-colors truncate max-w-[120px] ${styles.textPrimary}`}>
+                                                {profile.nombre}
+                                            </span>
+                                            <span className={`text-[10px] uppercase tracking-widest font-bold transition-colors ${styles.textSecondary}`}>
+                                                {profile.role === 'admin' ? 'Administrador' : profile.role === 'bartender' ? 'Bartender' : profile.role === 'prueba' ? 'Prueba' : 'Mesera'}
+                                            </span>
                                         </div>
-                                    )}
-                                </button>
-                            ))}
+
+                                        {!profile.isSystem && (
+                                            <div
+                                                onClick={(e) => handleDeleteClick(e, profile)}
+                                                className="absolute top-2 right-2 p-1.5 text-[#8A7BAF] hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all duration-300"
+                                            >
+                                                <Trash2Icon />
+                                            </div>
+                                        )}
+                                    </button>
+                                );
+                            })}
 
                             {/* Add New Mesera Button */}
                             <button
