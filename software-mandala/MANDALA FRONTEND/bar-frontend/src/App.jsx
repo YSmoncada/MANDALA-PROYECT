@@ -42,28 +42,28 @@ function App() {
 
             {/* Rutas Protegidas */}
             <Route path="/inventario" element={
-              <ProtectedRoute allowedRoles={['admin']}>
+              <ProtectedRoute allowedRoles={['admin', 'prueba']}>
                 <Inventario />
               </ProtectedRoute>
             } />
             <Route path="/mesas" element={
-              <ProtectedRoute allowedRoles={['admin']}>
+              <ProtectedRoute allowedRoles={['admin', 'prueba']}>
                 <MesasPageDisco />
               </ProtectedRoute>
             } />
             <Route path="/bartender" element={
-              <ProtectedRoute allowedRoles={['admin', 'bartender']}>
+              <ProtectedRoute allowedRoles={['admin', 'bartender', 'prueba']}>
                 <BartenderPageDisco />
               </ProtectedRoute>
             } />
             <Route path="/contabilidad-disco" element={
-              <ProtectedRoute allowedRoles={['admin']}><ContabilidadDisco /></ProtectedRoute>
+              <ProtectedRoute allowedRoles={['admin', 'prueba']}><ContabilidadDisco /></ProtectedRoute>
             } />
             <Route path="/usuarios-disco" element={
               <ProtectedRoute allowedRoles={['admin']}><AdminUsuariosDisco /></ProtectedRoute>
             } />
             <Route path="/configuracion-ticket" element={
-              <ProtectedRoute allowedRoles={['admin']}><ConfiguracionTicketDisco /></ProtectedRoute>
+              <ProtectedRoute allowedRoles={['admin', 'prueba']}><ConfiguracionTicketDisco /></ProtectedRoute>
             } />
             {/* Rutas de Pedidos (Contexto global ahora disponible) */}
             <Route path="/login" element={<PedidosDisco />} /> {/* Login Principal */}

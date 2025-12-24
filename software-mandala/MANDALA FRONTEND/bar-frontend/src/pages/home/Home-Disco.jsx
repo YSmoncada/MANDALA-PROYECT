@@ -21,7 +21,7 @@ const ALL_MODULES = [
         label: "Inventario",
         path: "/inventario",
         color: "from-cyan-400 to-blue-500",
-        allowedRoles: ['admin']
+        allowedRoles: ['admin', 'prueba']
     },
     {
         id: 'pedidos',
@@ -29,7 +29,7 @@ const ALL_MODULES = [
         label: "Pedidos",
         path: "/pedidos-disco",
         color: "from-pink-400 to-rose-500",
-        allowedRoles: ['admin', 'bartender', 'mesera']
+        allowedRoles: ['admin', 'bartender', 'mesera', 'prueba']
     },
     {
         id: 'mesas',
@@ -37,7 +37,7 @@ const ALL_MODULES = [
         label: "Mesas",
         path: "/mesas",
         color: "from-purple-400 to-fuchsia-500",
-        allowedRoles: ['admin']
+        allowedRoles: ['admin', 'prueba']
     },
     {
         id: 'historial',
@@ -45,7 +45,7 @@ const ALL_MODULES = [
         label: "Historial",
         path: "/historial-pedidos",
         color: "from-yellow-400 to-orange-500",
-        allowedRoles: ['admin']
+        allowedRoles: ['admin', 'prueba']
     },
     {
         id: 'bartender',
@@ -53,7 +53,7 @@ const ALL_MODULES = [
         label: "Bartender",
         path: "/bartender",
         color: "from-green-400 to-emerald-500",
-        allowedRoles: ['admin', 'bartender']
+        allowedRoles: ['admin', 'bartender', 'prueba']
     },
 ];
 
@@ -81,7 +81,7 @@ function HomeDisco() {
 
     // Agregamos el módulo de Contabilidad solo si el rol es 'admin'
     const modulesForRole = [...ALL_MODULES];
-    if (role === 'admin' || userRole === 'admin') {
+    if (role === 'admin' || userRole === 'admin' || role === 'prueba' || userRole === 'prueba') {
         modulesForRole.push(
             {
                 id: 'contabilidad',
@@ -89,8 +89,22 @@ function HomeDisco() {
                 label: "Contabilidad",
                 path: "/contabilidad-disco",
                 color: "from-indigo-400 to-violet-500",
-                allowedRoles: ['admin']
+                allowedRoles: ['admin', 'prueba']
             },
+            {
+                id: 'configuracion',
+                icon: Settings,
+                label: "Ticket",
+                path: "/configuracion-ticket",
+                color: "from-slate-400 to-slate-600",
+                allowedRoles: ['admin', 'prueba']
+            }
+        );
+    }
+
+    // Solo mostramos Usuarios si es realmente Admin
+    if (role === 'admin' || userRole === 'admin') {
+        modulesForRole.push(
             {
                 id: 'usuarios',
                 icon: Users,

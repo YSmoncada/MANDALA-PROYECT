@@ -514,11 +514,15 @@ class LoginView(APIView):
             Mesera.objects.filter(nombre__iexact=user.username).delete()
 
             # Determinar rol basado en grupos
-            role = 'admin' # Default
-            if user.groups.filter(name='Bartender').exists():
-                role = 'bartender'
-            elif user.is_superuser:
+            if user.is_superuser:
                 role = 'admin'
+            elif user.groups.filter(name='Bartender').exists():
+                role = 'bartender'
+            elif user.groups.filter(name='Prueba').exists():
+                role = 'prueba'
+            else:
+                role = 'admin' # Default fallback
+
             
             return Response({
                 'success': True,
