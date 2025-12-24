@@ -10,4 +10,4 @@ python manage.py makemigrations
 python manage.py migrate
 
 # Opcional: Crear usuarios por defecto si no existen
-# python manage.py create_default_users
+python manage.py create_default_users
