@@ -98,7 +98,7 @@ export const usePedidosAuth = () => {
             }
 
             // Validación estricta del rol final
-            if (!finalRole || !['admin', 'bartender'].includes(finalRole)) {
+            if (!finalRole || !['admin', 'bartender', 'prueba'].includes(finalRole)) {
                 return { success: false, message: 'El servidor devolvió un rol inválido o nulo.' };
             }
 
