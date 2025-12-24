@@ -24,7 +24,7 @@ const HistorialPedidosPageDisco = () => {
     const navigate = useNavigate();
     const { auth } = usePedidosContext();
     const { role, userRole } = auth;
-    const isAdmin = role === 'admin' || userRole === 'admin';
+    const isAdmin = role === 'admin' || userRole === 'admin' || role === 'prueba' || userRole === 'prueba';
 
     useEffect(() => {
         const fetchConfig = async () => {

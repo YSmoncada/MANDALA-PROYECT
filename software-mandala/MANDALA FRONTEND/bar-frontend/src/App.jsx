@@ -69,13 +69,26 @@ function App() {
             <Route path="/login" element={<PedidosDisco />} /> {/* Login Principal */}
             <Route path="/login-mesera-pedidos" element={<PedidosDisco />} /> {/* Modulo Pedidos Mesera */}
 
-            {/* Alias por compatibilidad o futuros usos */}
-            <Route path="/pedidos" element={<PedidosPageDisco />} />
-            <Route path="/login-disco" element={<PedidosDisco />} />
-            <Route path="/pedidos-disco" element={<SeleccionProductosDisco />} /> {/* Página de selección de productos */}
-
-            <Route path="/mis-pedidos-disco" element={<MisPedidosPageDisco />} />
-            <Route path="/historial-pedidos" element={<HistorialPedidosPageDisco />} />
+            <Route path="/pedidos" element={
+              <ProtectedRoute allowedRoles={['admin', 'bartender', 'mesera', 'prueba']}>
+                <PedidosPageDisco />
+              </ProtectedRoute>
+            } />
+            <Route path="/pedidos-disco" element={
+              <ProtectedRoute allowedRoles={['admin', 'bartender', 'mesera', 'prueba']}>
+                <SeleccionProductosDisco />
+              </ProtectedRoute>
+            } />
+            <Route path="/mis-pedidos-disco" element={
+              <ProtectedRoute allowedRoles={['admin', 'bartender', 'mesera', 'prueba']}>
+                <MisPedidosPageDisco />
+              </ProtectedRoute>
+            } />
+            <Route path="/historial-pedidos" element={
+              <ProtectedRoute allowedRoles={['admin', 'bartender', 'prueba']}>
+                <HistorialPedidosPageDisco />
+              </ProtectedRoute>
+            } />
 
             <Route path="*" element={<Navigate to="/login" />} /> {/* Redirect default to login */}
           </Routes>

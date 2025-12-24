@@ -40,7 +40,7 @@ export default function PedidosPageDisco() {
     } = auth;
 
     // Centralizar la lógica de roles para mayor claridad y reutilización.
-    const esRolMesera = auth.role !== 'admin' && auth.role !== 'bartender';
+    const esRolMesera = auth.role !== 'admin' && auth.role !== 'bartender' && auth.role !== 'prueba';
 
     const navigate = useNavigate();
     // const { mesas, selectedMesaId, setSelectedMesaId, isLoading, finalizarPedido } = usePedido(); // Removed local hook
@@ -125,7 +125,7 @@ export default function PedidosPageDisco() {
 
     // Renderizado condicional para evitar "flash" de contenido no autorizado.
     // No renderiza la página hasta que la inicialización esté completa Y el usuario esté autenticado.
-    const esRolAutorizado = auth.role === 'bartender' || auth.role === 'admin';
+    const esRolAutorizado = auth.role === 'bartender' || auth.role === 'admin' || auth.role === 'prueba';
     const esMeseraAutenticada = mesera && codigoConfirmado;
     const puedeRenderizar = isInitialized && (esRolAutorizado || esMeseraAutenticada);
 

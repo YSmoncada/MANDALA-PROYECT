@@ -24,7 +24,7 @@ const MisPedidosPageDisco = () => {
     const handleAgregarProductos = useCallback((mesaId) => {
         setSelectedMesaId(mesaId);
         setIsTableLocked(true);
-        navigate('/login-disco');
+        navigate('/pedidos-disco');
     }, [setSelectedMesaId, setIsTableLocked, navigate]);
 
     return (
@@ -50,7 +50,7 @@ const MisPedidosPageDisco = () => {
                         <ShoppingBag size={48} className="mx-auto text-purple-400 mb-4" />
                         <p className="text-xl font-bold mb-2">No tienes pedidos hoy</p>
                         <button
-                            onClick={() => navigate('/login-disco')}
+                            onClick={() => navigate('/pedidos-disco')}
                             className="mt-4 px-6 py-3 bg-purple-600 rounded-xl font-bold text-white hover:scale-105 transition-transform"
                         >
                             Crear Nuevo Pedido
