@@ -18,7 +18,7 @@ export const useMisPedidos = (userId, role) => {
                 const offset = d.getTimezoneOffset();
                 const localDate = new Date(d.getTime() - (offset * 60 * 1000));
                 const hoy = localDate.toISOString().split('T')[0];
-                const isSystemUser = role === 'admin' || role === 'bartender';
+                const isSystemUser = role === 'admin' || role === 'bartender' || role === 'prueba';
 
                 // Si es admin/bartender usamos el filtro 'usuario', si es mesera usamos 'mesera'
                 const filterParam = isSystemUser ? `usuario=${userId}` : `mesera=${userId}`;
