@@ -21,9 +21,14 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
     useEffect(() => {
         if (isInitialized) {
-            if (!currentRole || !allowedRoles.includes(currentRole)) {
+            // Solo actuar si NO estamos en proceso de logout (es decir, si existe un rol o se esperaba uno)
+            if (!currentRole) {
+                // Si no hay rol, redirigir al login sin mostrar error (podría ser un logout normal)
+                navigate('/login', { replace: true });
+            } else if (!allowedRoles.includes(currentRole)) {
+                // Si hay un rol pero no está permitido, entonces sí es Acceso Denegado
                 toast.error('Acceso Denegado. No tienes permiso para ver esta página.');
-                navigate('/', { replace: true }); // Redirige al home
+                navigate('/', { replace: true });
             }
         }
     }, [isInitialized, currentRole, navigate, allowedRoles]);
