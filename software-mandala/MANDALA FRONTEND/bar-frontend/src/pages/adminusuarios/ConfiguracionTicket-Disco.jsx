@@ -23,7 +23,7 @@ const ConfiguracionTicketDisco = () => {
 
     useEffect(() => {
         const currentRole = role || userRole;
-        if (currentRole !== 'admin') {
+        if (currentRole !== 'admin' && currentRole !== 'prueba') {
             navigate('/');
         }
     }, [role, userRole, navigate]);

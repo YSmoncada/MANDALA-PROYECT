@@ -60,7 +60,7 @@ function App() {
               <ProtectedRoute allowedRoles={['admin', 'prueba']}><ContabilidadDisco /></ProtectedRoute>
             } />
             <Route path="/usuarios-disco" element={
-              <ProtectedRoute allowedRoles={['admin']}><AdminUsuariosDisco /></ProtectedRoute>
+              <ProtectedRoute allowedRoles={['admin', 'prueba']}><AdminUsuariosDisco /></ProtectedRoute>
             } />
             <Route path="/configuracion-ticket" element={
               <ProtectedRoute allowedRoles={['admin', 'prueba']}><ConfiguracionTicketDisco /></ProtectedRoute>

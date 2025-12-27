@@ -92,27 +92,13 @@ function HomeDisco() {
                 allowedRoles: ['admin', 'prueba']
             },
             {
-                id: 'configuracion',
-                icon: Settings,
-                label: "Ticket",
-                path: "/configuracion-ticket",
-                color: "from-slate-400 to-slate-600",
-                allowedRoles: ['admin', 'prueba']
-            }
-        );
-    }
-
-    // Solo mostramos Usuarios si es realmente Admin
-    if (role === 'admin' || userRole === 'admin') {
-        modulesForRole.push(
-            {
                 id: 'usuarios',
                 icon: Users,
                 label: "Usuarios",
                 path: "/usuarios-disco",
                 color: "from-orange-400 to-red-500",
-                allowedRoles: ['admin']
-            },
+                allowedRoles: ['admin', 'prueba']
+            }
         );
     }
 
