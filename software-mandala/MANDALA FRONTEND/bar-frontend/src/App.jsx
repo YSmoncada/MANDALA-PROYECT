@@ -3,6 +3,7 @@ import React, { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import ProtectedRoute from "./components/ProtectedRoute";
 import Notificaciones from "./components/Notificaciones";
+import LoadingFallback from "./components/LoadingFallback";
 
 // Lazy loading de componentes para mejorar el rendimiento
 const Inventario = lazy(() => import("./pages/inventario/Inventario"));
@@ -19,15 +20,6 @@ const AdminUsuariosDisco = lazy(() => import("./pages/adminusuarios/AdminUsuario
 const ConfiguracionTicketDisco = lazy(() => import("./pages/adminusuarios/ConfiguracionTicket-Disco"));
 const PedidosLayout = lazy(() => import("./layouts/PedidosLayout"));
 
-// Componente de carga
-const LoadingFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0E0D23] to-[#511F86]">
-    <div className="text-white text-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-      <p className="text-lg">Cargando...</p>
-    </div>
-  </div>
-);
 
 import { PedidosProvider } from "./context/PedidosContext";
 

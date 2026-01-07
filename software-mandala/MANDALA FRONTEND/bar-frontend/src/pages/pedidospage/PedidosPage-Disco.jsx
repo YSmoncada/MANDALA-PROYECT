@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import HeaderPedidosDisco from "./HeaderPedidos-Disco";
 import PedidoVacio from "./PedidoVacio"; // Importar componente
 import OrderItem from "./OrderItem"; // Importar componente
+import LoadingFallback from "../../components/LoadingFallback";
 import toast from 'react-hot-toast';
 import { usePedidosContext } from "../../context/PedidosContext";
 import { ShoppingCart, CreditCard, ArrowRight } from 'lucide-react';
@@ -130,14 +131,7 @@ export default function PedidosPageDisco() {
     const puedeRenderizar = isInitialized && (esRolAutorizado || esMeseraAutenticada);
 
     if (isLoading || !puedeRenderizar) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-black">
-                <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-purple-400 font-bold tracking-widest text-xs">CARGANDO...</p>
-                </div>
-            </div>
-        );
+        return <LoadingFallback />;
     }
 
     return (

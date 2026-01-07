@@ -1,9 +1,11 @@
+
 import React, { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import HeaderPedidosDisco from "./HeaderPedidos-Disco";
 import ProductGridDisco from "../pedidosAuth/ProductGrid-Disco";
 import { usePedidosContext } from "../../context/PedidosContext";
+import LoadingFallback from "../../components/LoadingFallback";
 
 export default function SeleccionProductosDisco() {
     const { auth, addProductToOrder } = usePedidosContext();
@@ -28,14 +30,7 @@ export default function SeleccionProductosDisco() {
     }, [isInitialized, codigoConfirmado, auth.role, navigate]);
 
     if (!isInitialized) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-black">
-                <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-purple-400 font-bold tracking-widest text-xs">CARGANDO...</p>
-                </div>
-            </div>
-        );
+        return <LoadingFallback />;
     }
 
     return (
