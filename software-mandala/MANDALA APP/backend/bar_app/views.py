@@ -45,6 +45,21 @@ def api_root_view(request):
         "status": "running"
     })
 
+@api_view(['GET'])
+@permission_classes([permissions.AllowAny])
+def debug_users_view(request):
+    try:
+        users = User.objects.all().values('id', 'username', 'email', 'is_active', 'is_staff', 'is_superuser')
+        db_name = settings.DATABASES['default']['NAME']
+        return Response({
+            "database_used": str(db_name),
+            "user_count": len(users),
+            "users": list(users)
+        })
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
+
+
 class CsrfExemptSessionAuthentication(SessionAuthentication):
     def enforce_csrf(self, request):
         return  # Desactivar CSRF para permitir peticiones Vercel -> Render
