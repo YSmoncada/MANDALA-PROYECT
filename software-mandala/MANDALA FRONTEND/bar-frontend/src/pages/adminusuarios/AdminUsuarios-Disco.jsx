@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Lock, Save, ArrowLeft, Users, Shield, ShieldCheck, X, GlassWater, Settings } from 'lucide-react';
+import { User, Lock, Save, ArrowLeft, Users, Shield, ShieldCheck, X, GlassWater, Settings, Trash2 } from 'lucide-react';
 import axios from 'axios';
 import { API_URL } from '../../apiConfig';
 import toast from 'react-hot-toast';
 import { usePedidosContext } from '../../context/PedidosContext';
 
 // Componente de tarjeta reutilizable para Usuario/Mesera
-const UserCard = ({ item, type, onEdit }) => {
+const UserCard = ({ item, type, onEdit, onDelete, canDelete }) => {
     const isUser = type === 'usuario';
     const isMesera = type === 'mesera';
     const isAdmin = isUser && item.role === 'admin';
+
+    // Protect system users from deletion via UI if needed, or just let Admin do valid actions
+    const isProtected = ['admin', 'barra', 'prueba'].includes(item.username);
 
     return (
         <div
@@ -25,11 +28,22 @@ const UserCard = ({ item, type, onEdit }) => {
                     } shadow-lg shadow-black/20 transform group-hover:scale-110 transition-transform duration-500`}>
                     {isUser ? <User className="text-white" size={24} /> : <GlassWater className="text-white" size={24} />}
                 </div>
-                <div className="text-right">
+                <div className="flex flex-col items-end gap-2">
                     <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border ${isAdmin ? 'bg-rose-500/10 border-rose-500/30 text-rose-400' : (isUser ? 'bg-indigo-500/10 border-indigo-500/30 text-indigo-400' : 'bg-pink-500/10 border-pink-500/30 text-pink-400')
                         }`}>
                         {isUser ? item.role : 'Mesera'}
                     </span>
+
+                    {/* Delete Button - Only if canDelete is true and not a protected user if you prefer */}
+                    {canDelete && !isProtected && (
+                        <button
+                            onClick={(e) => { e.stopPropagation(); onDelete(); }}
+                            className="p-1.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white transition-colors"
+                            title="Eliminar usuario"
+                        >
+                            <Trash2 size={14} />
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -129,6 +143,25 @@ const AdminUsuariosDisco = () => {
         }
     };
 
+    const handleDelete = async (item, type) => {
+        if (!window.confirm(`¿Estás seguro de que deseas eliminar permanentemente a ${item.username || item.nombre}?`)) return;
+
+        try {
+            if (type === 'usuario') {
+                await axios.delete(`${API_URL}/usuarios/${item.id}/`);
+            } else {
+                await axios.delete(`${API_URL}/meseras/${item.id}/`);
+            }
+            toast.success("Eliminado correctamente.");
+            fetchData();
+        } catch (error) {
+            console.error("Error al eliminar:", error);
+            toast.error("No se pudo eliminar.");
+        }
+    };
+
+    const isCurrentUserAdmin = role === 'admin' || userRole === 'admin';
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white selection:bg-purple-500/30">
             {/* Background Glows */}
@@ -187,6 +220,8 @@ const AdminUsuariosDisco = () => {
                                         item={user}
                                         type="usuario"
                                         onEdit={() => handleOpenResetModal(user, 'usuario')}
+                                        onDelete={() => handleDelete(user, 'usuario')}
+                                        canDelete={isCurrentUserAdmin}
                                     />
                                 ))}
                             </div>
@@ -205,6 +240,8 @@ const AdminUsuariosDisco = () => {
                                         item={mesera}
                                         type="mesera"
                                         onEdit={() => handleOpenResetModal(mesera, 'mesera')}
+                                        onDelete={() => handleDelete(mesera, 'mesera')}
+                                        canDelete={isCurrentUserAdmin}
                                     />
                                 ))}
                             </div>

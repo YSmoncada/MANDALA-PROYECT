@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { User, Lock, ArrowLeft, Plus, Sparkles, Trash2Icon, ArrowLeft as ArrowLeftIcon } from "lucide-react";
+import { User, Lock, ArrowLeft, Plus, Sparkles, ArrowLeft as ArrowLeftIcon } from "lucide-react";
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import HeaderPedidosDisco from "../pedidospage/HeaderPedidos-Disco";
@@ -78,15 +78,7 @@ export default function PedidosDisco() {
         }
     };
 
-    const handleDeleteClick = async (e, meseraObj) => {
-        e.stopPropagation();
-        if (window.confirm(`¿Estás seguro de que quieres eliminar a ${meseraObj.nombre}?`)) {
-            const result = await deleteMesera(meseraObj.id);
-            if (!result.success) {
-                alert(`Error: ${result.message}`);
-            }
-        }
-    };
+
 
     // Fake Bartender & Admin Users for UI
     const bartenderUser = { id: 'sys_bartender', nombre: 'Barra', role: 'bartender', isSystem: true };
@@ -274,14 +266,7 @@ export default function PedidosDisco() {
                                             </span>
                                         </div>
 
-                                        {!profile.isSystem && (
-                                            <div
-                                                onClick={(e) => handleDeleteClick(e, profile)}
-                                                className="absolute top-2 right-2 p-1.5 text-[#8A7BAF] hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all duration-300"
-                                            >
-                                                <Trash2Icon />
-                                            </div>
-                                        )}
+
                                     </button>
                                 );
                             })}
