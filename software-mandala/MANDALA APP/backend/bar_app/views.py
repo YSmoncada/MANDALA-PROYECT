@@ -92,9 +92,18 @@ def fix_users_view(request):
             created_users.append("prueba (Reset Pass: prueba123)")
 
         # 3. Admin
+        # 3. Admin
         if not User.objects.filter(username='admin').exists():
             User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
             created_users.append("admin (PASS: admin123)")
+        else:
+            u = User.objects.get(username='admin')
+            u.set_password('admin123')
+            u.is_staff = True
+            u.is_superuser = True
+            u.save()
+            created_users.append("admin (Reset Pass: admin123)")
+
         
         # 4. Datos Iniciales (Mesas/Categorias)
         from .models import Mesa, Categoria
