@@ -18,7 +18,6 @@ const MesasPageDisco = lazy(() => import("./pages/mesas/MesasPage-Disco"));
 const BartenderPageDisco = lazy(() => import("./pages/bartender/BartenderPage-Disco"));
 const AdminUsuariosDisco = lazy(() => import("./pages/adminusuarios/AdminUsuarios-Disco"));
 const ConfiguracionTicketDisco = lazy(() => import("./pages/adminusuarios/ConfiguracionTicket-Disco"));
-const PedidosLayout = lazy(() => import("./layouts/PedidosLayout"));
 
 
 import { PedidosProvider } from "./context/PedidosContext";
