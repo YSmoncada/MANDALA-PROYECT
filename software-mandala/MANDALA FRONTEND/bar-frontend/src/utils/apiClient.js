@@ -12,6 +12,20 @@ const apiClient = axios.create({
     },
 });
 
+// Interceptor de peticiones para añadir el Token de forma automática
+apiClient.interceptors.request.use(
+    (config) => {
+        const token = sessionStorage.getItem('authToken');
+        if (token) {
+            config.headers.Authorization = `Token ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
 // Interceptor de respuestas para manejo global de errores
 apiClient.interceptors.response.use(
     // Respuestas exitosas pasan sin modificación

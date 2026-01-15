@@ -605,9 +605,13 @@ class LoginView(APIView):
                 role = 'admin' # Default fallback
 
             
+            from rest_framework.authtoken.models import Token
+            token, created = Token.objects.get_or_create(user=user)
+            
             return Response({
                 'success': True,
                 'role': role,
+                'token': token.key,
                 'username': user.username,
                 'user_id': user.id, # Enviamos el ID real del usuario de Django
                 'detail': f'Bienvenido {user.username}'

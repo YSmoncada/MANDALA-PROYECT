@@ -101,6 +101,7 @@ export const usePedidosAuth = () => {
             }
 
             setUserRole(finalRole);
+            const token = response.data.token;
             const sysUser = {
                 id: response.data.user_id, // Usar el ID REAL del usuario de Django
                 nombre: responseUsername,
@@ -111,6 +112,9 @@ export const usePedidosAuth = () => {
             sessionStorage.setItem('userRole', finalRole);
             sessionStorage.setItem('selectedMesera', JSON.stringify(sysUser));
             sessionStorage.setItem('codigoConfirmado', 'true');
+            if (token) {
+                sessionStorage.setItem('authToken', token);
+            }
             return { success: true, role: finalRole };
         } catch (error) {
             console.error("Login error:", error);
@@ -128,6 +132,7 @@ export const usePedidosAuth = () => {
         setUserRole(null);
         // Limpiar TODA la sesión para evitar conflictos de roles.
         sessionStorage.clear();
+        sessionStorage.removeItem('authToken');
     }, []);
 
     const addMesera = async (nombre, codigo) => {
