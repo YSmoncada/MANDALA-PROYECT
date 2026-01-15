@@ -12,7 +12,7 @@ from django.db.models.functions import Coalesce, Concat
 import logging
 from django.db import models
 from .models import Producto, Pedido, Movimiento, Mesa, Mesera, PedidoProducto, EmpresaConfig
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from django.contrib.auth.models import User
 from .serializers import (
     ProductoSerializer, 
@@ -125,10 +125,12 @@ def fix_users_view(request):
     except Exception as e:
         return Response({"error": str(e)}, status=500)
 
-class CsrfExemptSessionAuthentication(SessionAuthentication):
-
+class GlobalAuthentication(TokenAuthentication, SessionAuthentication, BasicAuthentication):
+    """
+    Combina Token, Session y Basic Auth con bypass de CSRF.
+    """
     def enforce_csrf(self, request):
-        return  # Desactivar CSRF para permitir peticiones Vercel -> Render
+        return
 
 class IsSuperUser(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -138,7 +140,7 @@ class EmpresaConfigViewSet(viewsets.ModelViewSet):
     queryset = EmpresaConfig.objects.all()
     serializer_class = EmpresaConfigSerializer
     permission_classes = [permissions.AllowAny]
-    authentication_classes = [CsrfExemptSessionAuthentication, BasicAuthentication]
+    authentication_classes = [GlobalAuthentication]
 
     def get_queryset(self):
         # Usamos un try-except para evitar errores si la tabla aún no existe durante las migraciones
@@ -168,7 +170,7 @@ class DebugStorageView(generics.GenericAPIView):
 class MeseraViewSet(viewsets.ModelViewSet):
     queryset = Mesera.objects.all().order_by('-id')
     serializer_class = MeseraSerializer
-    authentication_classes = [CsrfExemptSessionAuthentication, BasicAuthentication]
+    authentication_classes = [GlobalAuthentication]
     
     # La validación de código único se ha movido al MeseraSerializer.
     # El método perform_create ya no es necesario aquí para esa validación.
@@ -202,12 +204,12 @@ class MeseraViewSet(viewsets.ModelViewSet):
 class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all().order_by('-id')
     serializer_class = ProductoSerializer
-    authentication_classes = [CsrfExemptSessionAuthentication, BasicAuthentication]
+    authentication_classes = [GlobalAuthentication]
 
 class MovimientoViewSet(viewsets.ModelViewSet):
     queryset = Movimiento.objects.all().order_by('-id')
     serializer_class = MovimientoSerializer
-    authentication_classes = [CsrfExemptSessionAuthentication, BasicAuthentication]
+    authentication_classes = [GlobalAuthentication]
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -282,7 +284,7 @@ class PedidoViewSet(viewsets.ModelViewSet):
     serializer_class = PedidoSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = PedidoFilter
-    authentication_classes = [CsrfExemptSessionAuthentication, BasicAuthentication]
+    authentication_classes = [GlobalAuthentication]
 
     def get_queryset(self):
         """
@@ -573,7 +575,7 @@ from django.contrib.auth import authenticate
 
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginView(APIView):
-    authentication_classes = [CsrfExemptSessionAuthentication, BasicAuthentication]
+    authentication_classes = [GlobalAuthentication]
     """
     Vista personalizada para login de Administrativos y Bartenders.
     Las Meseras siguen usando su código PIN (validado en frontend por ahora).
@@ -659,7 +661,7 @@ def total_pedidos_mesera_hoy(request):
     return Response(resultado)
 
 @api_view(['POST'])
-@authentication_classes([CsrfExemptSessionAuthentication, BasicAuthentication])
+@authentication_classes([GlobalAuthentication])
 @permission_classes([permissions.AllowAny])
 @csrf_exempt
 def verificar_codigo_mesera(request):
@@ -689,7 +691,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('username')
     serializer_class = UserSerializer
     permission_classes = [IsSuperUser]
-    authentication_classes = [CsrfExemptSessionAuthentication, BasicAuthentication]
+    authentication_classes = [GlobalAuthentication]
 
     @action(detail=True, methods=['post'], url_path='cambiar-password')
     def cambiar_password(self, request, pk=None):
