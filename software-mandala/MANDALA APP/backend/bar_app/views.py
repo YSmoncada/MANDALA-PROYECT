@@ -479,7 +479,7 @@ class PedidoViewSet(viewsets.ModelViewSet):
 class MesaViewSet(viewsets.ModelViewSet):
     queryset = Mesa.objects.all().order_by('numero')
     serializer_class = MesaSerializer
-    authentication_classes = [CsrfExemptSessionAuthentication, BasicAuthentication]
+    authentication_classes = [GlobalAuthentication]
     # La validación de número único se ha movido al MesaSerializer.
 
 # --- NUEVA VISTA PARA EL REPORTE ---
