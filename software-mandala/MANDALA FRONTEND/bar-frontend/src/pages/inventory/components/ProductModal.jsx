@@ -24,7 +24,7 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
   };
 
   return (
-    <div className={`fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 ${UI_CLASSES.fadeIn}`} onClick={onClose}>
+    <div className={`fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[100] p-4 ${UI_CLASSES.fadeIn}`} onClick={onClose}>
       <div className={`${UI_CLASSES.glassCard} bg-[#1A103C] w-full max-w-2xl relative max-h-[90vh] overflow-y-auto ${UI_CLASSES.scaleIn}`} onClick={handleContentClick}>
 
         <button

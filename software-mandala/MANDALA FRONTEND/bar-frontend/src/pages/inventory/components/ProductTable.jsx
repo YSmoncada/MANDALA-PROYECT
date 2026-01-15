@@ -3,6 +3,37 @@ import { Edit2, Trash2, PlusCircle, LayoutGrid, List } from "lucide-react";
 import MovementModal from "./MovementModal";
 import { UI_CLASSES } from "../../../constants/ui";
 
+const StockStatus = ({ stock, min, max }) => {
+    let status = { label: 'Óptimo', color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' };
+    const availability = max > 0 ? Math.min(100, (stock / max) * 100) : 0;
+
+    if (stock === 0) {
+        status = { label: 'Agotado', color: 'text-rose-500', bg: 'bg-rose-500/10', border: 'border-rose-500/20' };
+    } else if (stock <= min) {
+        status = { label: 'Bajo Stock', color: 'text-orange-400', bg: 'bg-orange-500/10', border: 'border-orange-500/20' };
+    } else if (max > 0 && stock >= max) {
+        status = { label: 'Stock Alto', color: 'text-cyan-400', bg: 'bg-cyan-500/10', border: 'border-cyan-500/20' };
+    }
+
+    return (
+        <div className="flex flex-col items-center gap-1">
+            <div className="flex items-center gap-2">
+                <span className={`text-xl font-black ${status.color}`}>{stock}</span>
+                <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold uppercase border ${status.bg} ${status.color} ${status.border}`}>
+                    {status.label}
+                </span>
+            </div>
+            <div className="w-20 h-1 bg-white/10 rounded-full overflow-hidden">
+                <div 
+                    className={`h-full transition-all duration-500 ${status.color.replace('text', 'bg')}`}
+                    style={{ width: `${availability}%` }}
+                />
+            </div>
+            <span className="text-[9px] text-gray-500 font-medium">{Math.round(availability)}% Disponibilidad</span>
+        </div>
+    );
+};
+
 const ProductTable = ({ productos, onEdit, onDelete, onMovimiento }) => {
     const [movimientoModalOpen, setMovimientoModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -14,7 +45,9 @@ const ProductTable = ({ productos, onEdit, onDelete, onMovimiento }) => {
     };
 
     const handleMovimientoSubmit = async (payload) => {
-        await onMovimiento(payload);
+        if (typeof onMovimiento === 'function') {
+            await onMovimiento(payload);
+        }
     };
 
     return (
@@ -44,7 +77,7 @@ const ProductTable = ({ productos, onEdit, onDelete, onMovimiento }) => {
                             <tr>
                                 <th className="px-6 py-4">Producto</th>
                                 <th className="px-6 py-4">Categoría</th>
-                                <th className="px-6 py-4 text-center">Stock</th>
+                                <th className="px-6 py-4 text-center">Disponibilidad / Stock</th>
                                 <th className="px-6 py-4 text-center">Precio</th>
                                 <th className="px-6 py-4 text-right">Acciones</th>
                             </tr>
@@ -58,7 +91,7 @@ const ProductTable = ({ productos, onEdit, onDelete, onMovimiento }) => {
                                                 <img src={producto.imagen} alt={producto.nombre} className="w-10 h-10 rounded-lg object-cover border border-white/10" />
                                             ) : (
                                                 <div className="w-10 h-10 rounded-lg bg-purple-900/40 flex items-center justify-center border border-purple-500/20">
-                                                    <span className="text-purple-400 font-bold">{producto.nombre.charAt(0)}</span>
+                                                    <span className="text-purple-400 font-bold">{producto.nombre?.charAt(0)}</span>
                                                 </div>
                                             )}
                                             <span className="font-bold text-white group-hover:text-purple-400 transition-colors uppercase">{producto.nombre}</span>
@@ -69,18 +102,15 @@ const ProductTable = ({ productos, onEdit, onDelete, onMovimiento }) => {
                                             {producto.categoria}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-center">
-                                        <div className="flex flex-col items-center">
-                                            <span className={`text-lg font-black ${producto.stock <= producto.stock_minimo ? 'text-rose-500' : 'text-emerald-400'}`}>
-                                                {producto.stock}
-                                            </span>
-                                            {producto.stock <= producto.stock_minimo && (
-                                                <span className="text-[10px] text-rose-400 font-bold uppercase animate-pulse">Bajo Stock</span>
-                                            )}
-                                        </div>
+                                    <td className="px-6 py-4">
+                                        <StockStatus 
+                                            stock={producto.stock} 
+                                            min={producto.stock_minimo} 
+                                            max={producto.stock_maximo} 
+                                        />
                                     </td>
-                                    <td className="px-6 py-4 text-center font-bold text-white">
-                                        ${parseFloat(producto.precio).toFixed(2)}
+                                    <td className="px-6 py-4 text-center font-bold text-white text-lg">
+                                        ${Number(producto.precio).toLocaleString('es-CO', { maximumFractionDigits: 0 })}
                                     </td>
                                     <td className="px-6 py-4">
                                         <div className="flex items-center justify-end gap-2">
@@ -122,7 +152,7 @@ const ProductTable = ({ productos, onEdit, onDelete, onMovimiento }) => {
                                         <img src={producto.imagen} alt={producto.nombre} className="w-12 h-12 rounded-xl object-cover border border-white/10" />
                                     ) : (
                                         <div className="w-12 h-12 rounded-xl bg-purple-900/40 flex items-center justify-center border border-purple-500/20">
-                                            <span className="text-purple-400 font-bold text-xl">{producto.nombre.charAt(0)}</span>
+                                            <span className="text-purple-400 font-bold text-xl">{producto.nombre?.charAt(0)}</span>
                                         </div>
                                     )}
                                     <div>
@@ -131,15 +161,16 @@ const ProductTable = ({ productos, onEdit, onDelete, onMovimiento }) => {
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <div className={`text-xl font-black ${producto.stock <= producto.stock_minimo ? 'text-rose-500' : 'text-emerald-400'}`}>
-                                        {producto.stock}
-                                    </div>
-                                    <div className="text-[10px] text-gray-400 font-bold uppercase">Stock</div>
+                                    <StockStatus 
+                                        stock={producto.stock} 
+                                        min={producto.stock_minimo} 
+                                        max={producto.stock_maximo} 
+                                    />
                                 </div>
                             </div>
                             
                             <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/5">
-                                <span className="text-lg font-bold text-white">${parseFloat(producto.precio).toFixed(2)}</span>
+                                <span className="text-xl font-bold text-white">${Number(producto.precio).toLocaleString('es-CO', { maximumFractionDigits: 0 })}</span>
                                 <div className="flex gap-2">
                                     <button
                                         onClick={() => openMovimiento(producto)}
