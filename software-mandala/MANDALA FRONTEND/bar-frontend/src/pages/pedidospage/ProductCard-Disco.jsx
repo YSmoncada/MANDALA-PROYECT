@@ -26,10 +26,10 @@ export default function ProductCardDisco({ producto, onAgregarPedido }) {
     }
 
     return (
-        <div className="group relative bg-[#1A103C]/80 hover:bg-[#2B0D49] rounded-2xl p-4 sm:p-5 transition-all duration-300 flex flex-col h-full hover:-translate-y-2 hover:shadow-[0_0_25px_rgba(169,68,255,0.2)] transform-gpu">
+        <div className="group relative bg-[#1A103C]/80 hover:bg-[#2B0D49] rounded-2xl p-4 sm:p-5 transition-all duration-300 flex flex-col h-full items-center text-center sm:items-stretch sm:text-left hover:-translate-y-2 hover:shadow-[0_0_25px_rgba(169,68,255,0.2)] transform-gpu">
 
             {/* Image Container */}
-            <div className="relative aspect-square mb-4 sm:mb-5 overflow-hidden rounded-xl bg-white p-2 flex items-center justify-center">
+            <div className="relative aspect-square w-full mb-4 sm:mb-5 overflow-hidden rounded-xl bg-white p-2 flex items-center justify-center">
                 <img
                     src={producto.imagen}
                     alt={producto.nombre}
@@ -38,7 +38,7 @@ export default function ProductCardDisco({ producto, onAgregarPedido }) {
             </div>
 
             {/* Content */}
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col w-full">
                 <div className="mb-2">
                     <span className="text-[9px] sm:text-[10px] font-bold text-[#A944FF] uppercase tracking-widest border border-[#A944FF]/30 bg-[#A944FF]/10 px-2 py-1 rounded-lg">
                         {producto.unidad}
@@ -55,10 +55,10 @@ export default function ProductCardDisco({ producto, onAgregarPedido }) {
                             ${parseFloat(producto.precio).toLocaleString("es-CO")}
                         </p>
 
-                        <div className="flex items-center justify-between gap-1">
-                            <span className="hidden xs:block text-[9px] font-black text-[#8A7BAF] uppercase tracking-tighter">Cant.</span>
+                        <div className="flex flex-col xs:flex-row items-center justify-between gap-2">
+                            <span className="text-[9px] font-black text-[#8A7BAF] uppercase tracking-tighter">Cant.</span>
                             {/* Compact Controls */}
-                            <div className="flex items-center bg-[#0E0D23] rounded-lg border border-[#6C3FA8]/50 p-0.5 ml-auto">
+                            <div className="flex items-center bg-[#0E0D23] rounded-lg border border-[#6C3FA8]/50 p-0.5 mx-auto sm:mr-0">
                                 <button
                                     onClick={disminuir}
                                     className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-[#8A7BAF] hover:text-white hover:bg-[#441E73] rounded-md transition-colors"
