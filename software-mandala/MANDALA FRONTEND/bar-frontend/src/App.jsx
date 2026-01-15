@@ -3,7 +3,7 @@ import React, { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import ProtectedRoute from "./components/ProtectedRoute";
 import Notificaciones from "./components/Notificaciones";
-import LoadingFallback from "./components/LoadingFallback";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 // Lazy loading de componentes para mejorar el rendimiento
 const Inventario = lazy(() => import("./pages/inventario/Inventario"));
@@ -27,7 +27,7 @@ function App() {
     <BrowserRouter>
       <PedidosProvider>
         <Notificaciones />
-        <Suspense fallback={<LoadingFallback />}>
+        <Suspense fallback={<LoadingSpinner />}>
           <Routes>
             <Route path="/" element={<Home />} />
 
