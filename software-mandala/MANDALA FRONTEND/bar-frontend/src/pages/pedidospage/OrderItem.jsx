@@ -36,7 +36,7 @@ const OrderItem = memo(({ item, onUpdateCantidad, onRemoveItem }) => {
                 </p>
             </div>
             <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto">
-                <div className="relative flex items-center justify-center w-full sm:w-auto pr-10 sm:pr-0">
+                <div className="relative flex items-center justify-center w-full sm:w-auto">
                     <div className="flex items-center bg-[#0E0D23] rounded-lg p-1 border border-[#6C3FA8]/50">
                         <button onClick={handleDecrease} className="w-7 h-7 flex items-center justify-center text-[#8A7BAF] hover:text-white hover:bg-[#441E73] rounded-md transition-colors">
                             <Minus size={16} />
@@ -46,7 +46,7 @@ const OrderItem = memo(({ item, onUpdateCantidad, onRemoveItem }) => {
                             <Plus size={16} />
                         </button>
                     </div>
-                    <button onClick={handleRemove} className="absolute right-0 p-2 text-[#8A7BAF] hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors sm:hidden flex-shrink-0">
+                    <button onClick={handleRemove} className="absolute right-0 sm:static p-2 text-[#8A7BAF] hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors sm:hidden">
                         <Trash2 size={20} />
                     </button>
                 </div>
