@@ -1,5 +1,9 @@
 import { Package, ClipboardList, SquareKanban, History, GlassWater, DollarSign, Users } from "lucide-react";
 
+/**
+ * Configuración maestra de los módulos de la aplicación.
+ * Define el icono, etiqueta, ruta, colores y permisos para cada módulo.
+ */
 export const ALL_MODULES = [
     {
         id: 'inventario',

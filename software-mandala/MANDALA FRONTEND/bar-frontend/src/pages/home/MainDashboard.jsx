@@ -1,10 +1,12 @@
-import React, { useMemo } from "react";
-import { LogOut } from "lucide-react";
-import { usePedidosContext } from "../../context/PedidosContext";
-import { ALL_MODULES } from "./listaDeBotones";
-import VerificadorDeAcceso from "./VerificadorDeAcceso";
+import React from "react";
+import { useUserModules } from "../../hooks/useUserModules";
+import AccessVerifier from "./AccessVerifier";
 import ModuleCard from "./ModuleCard";
+import { LogOut } from "lucide-react";
 
+/**
+ * Visual background effects for the dashboard.
+ */
 const BackgroundEffects = () => (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[120px]"></div>
@@ -18,7 +20,7 @@ const LogoutButton = ({ onLogout }) => (
         className="absolute top-6 right-6 z-50 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-red-500/20 hover:border-red-500/50 hover:text-white text-gray-400 transition-all backdrop-blur-sm shadow-lg group"
     >
         <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
-        <span className="text-sm font-bold uppercase tracking-wider">Salir</span>
+        <span className="text-sm font-bold uppercase tracking-wider">Log out</span>
     </button>
 );
 
@@ -33,19 +35,12 @@ const DashboardHeader = () => (
     </div>
 );
 
-function PanelPrincipal() {
-    const { auth } = usePedidosContext();
-    const { codigoConfirmado, userRole, role, handleLogout } = auth;
-
-    // Filtramos los módulos visibles basándonos en el rol del usuario
-    const visibleModules = useMemo(() => {
-        const currentRole = role || userRole || (codigoConfirmado ? 'mesera' : null);
-        if (!currentRole) return [];
-        return ALL_MODULES.filter(m => m.allowedRoles.includes(currentRole));
-    }, [role, userRole, codigoConfirmado]);
+function MainDashboard() {
+    // Using the hook to fetch modules and auth logic
+    const { visibleModules, handleLogout, auth } = useUserModules();
 
     return (
-        <VerificadorDeAcceso auth={auth}>
+        <AccessVerifier auth={auth}>
             <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white overflow-hidden relative selection:bg-purple-500/30">
                 <BackgroundEffects />
                 <LogoutButton onLogout={handleLogout} />
@@ -64,8 +59,8 @@ function PanelPrincipal() {
                     </div>
                 </main>
             </div>
-        </VerificadorDeAcceso>
+        </AccessVerifier>
     );
 }
 
-export default PanelPrincipal;
+export default MainDashboard;

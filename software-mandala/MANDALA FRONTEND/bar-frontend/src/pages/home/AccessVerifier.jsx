@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
 /**
- * VerificadorDeAcceso se encarga de proteger la ruta principal.
- * Si el usuario no tiene permisos, lo redirige al login.
+ * AccessVerifier handles root route protection.
+ * If the user has no permissions, it redirects them to login.
  */
-const VerificadorDeAcceso = ({ auth, children }) => {
+const AccessVerifier = ({ auth, children }) => {
     const { isInitialized, role, userRole, codigoConfirmado } = auth;
     const navigate = useNavigate();
 
@@ -20,10 +20,10 @@ const VerificadorDeAcceso = ({ auth, children }) => {
     }, [shouldRedirect, navigate]);
 
     if (!isInitialized || shouldRedirect) {
-        return <LoadingSpinner message="Verificando sesión..." />;
+        return <LoadingSpinner message="Verifying session..." />;
     }
 
     return children;
 };
 
-export default VerificadorDeAcceso;
+export default AccessVerifier;

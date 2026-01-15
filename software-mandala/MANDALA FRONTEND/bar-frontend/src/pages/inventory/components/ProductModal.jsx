@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import ImageUploader from "../../components/ImageUploader";
-import ProductFormFields from "../../components/ProductFormFields";
-import { Loader2 } from "lucide-react";
-import { UI_CLASSES } from "../../constants/ui";
+import ImageUploader from "../../../components/ImageUploader";
+import ProductFormFields from "../../../components/ProductFormFields";
+import { Loader2, X } from "lucide-react";
+import { UI_CLASSES } from "../../../constants/ui";
 
 function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImageChange, imagePreview, originalImageUrl }) {
   if (!open) return null;
@@ -31,10 +31,10 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors z-10"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          <X size={24} />
         </button>
 
-        <div className="p-6">
+        <div className="p-2">
           <h2 className="text-2xl font-bold text-white mb-6 text-center">
             {editId ? "Editar Producto" : "Agregar Nuevo Producto"}
           </h2>
@@ -48,7 +48,7 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
               />
             </div>
 
-            {/* Campos del Formulario */}
+            {/* Form Fields */}
             <div className="w-full max-w-md">
                 <ProductFormFields
                 form={form}
@@ -57,7 +57,7 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
               />
             </div>
 
-            {/* Botones de Acción */}
+            {/* Action Buttons */}
             <div className="w-full max-w-md mt-4 flex flex-col-reverse sm:flex-row justify-end gap-3">
               <button type="button" onClick={onClose} className={UI_CLASSES.buttonSecondary}>
                 Cancelar
