@@ -49,9 +49,10 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
 
             {/* Campos del Formulario */}
             <div className="w-full max-w-md">
-              <ProductFormFields
+                <ProductFormFields
                 form={form}
                 onChange={onChange}
+                isEditing={!!editId}
               />
             </div>
 

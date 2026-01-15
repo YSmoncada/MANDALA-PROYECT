@@ -161,6 +161,13 @@ export const useInventario = () => {
             delete payload.imagen;
         }
 
+        // --- SEGURIDAD DE STOCK EN EDICIÓN ---
+        if (editId) {
+            // Si estamos editando, NO enviamos el stock para evitar que valores antiguos
+            // sobrescriban ventas o movimientos que ocurrieron mientras el modal estaba abierto.
+            delete payload.stock;
+        }
+
         // DEBUG: Ver qué se está enviando
         console.log('🔍 DEBUG - Datos a enviar:');
         console.log('editId:', editId);
