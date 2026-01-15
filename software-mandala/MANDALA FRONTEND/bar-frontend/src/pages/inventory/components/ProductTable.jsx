@@ -20,7 +20,7 @@ const StockStatus = memo(({ stock, min, max }) => {
     return (
         <div className="flex flex-col items-center gap-1">
             <span className={`text-2xl font-black ${status.color}`}>{stock}</span>
-            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase border ${status.bg} ${status.color} ${status.border} shadow-lg backdrop-blur-sm`}>
+            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase border ${status.bg} ${status.color} ${status.border} shadow-lg backdrop-blur-sm text-center whitespace-nowrap`}>
                 {status.label}
             </span>
         </div>
@@ -126,11 +126,13 @@ const ProductTable = memo(({ productos, onEdit, onDelete, onMovimiento }) => {
                                         </span>
                                     </td>
                                     <td className="px-3 md:px-6 py-3">
-                                        <StockStatus 
-                                            stock={producto.stock} 
-                                            min={producto.stock_minimo} 
-                                            max={producto.stock_maximo} 
-                                        />
+                                        <div className="flex justify-center">
+                                            <StockStatus 
+                                                stock={producto.stock} 
+                                                min={producto.stock_minimo} 
+                                                max={producto.stock_maximo} 
+                                            />
+                                        </div>
                                     </td>
                                     <td className="px-3 md:px-6 py-3 text-center font-bold text-white text-sm md:text-lg">
                                         ${Number(producto.precio).toLocaleString('es-CO', { maximumFractionDigits: 0 })}
@@ -161,7 +163,7 @@ const ProductTable = memo(({ productos, onEdit, onDelete, onMovimiento }) => {
                                         <span className="text-[10px] text-blue-400 font-bold uppercase">{producto.categoria}</span>
                                     </div>
                                 </div>
-                                <div className="text-right">
+                                <div className="flex flex-col items-center min-w-[80px]">
                                     <StockStatus 
                                         stock={producto.stock} 
                                         min={producto.stock_minimo} 
