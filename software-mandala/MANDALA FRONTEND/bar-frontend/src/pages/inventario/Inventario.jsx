@@ -6,6 +6,7 @@ import ProductTableWithModal from "./ProductTable";
 import ProductModal from "./ProductModal";
 import FiltersSummary from "./FiltersSummary";
 import { useInventario } from "../../hooks/useInventario";
+import ConfirmModal from "../../components/ConfirmModal";
 
 const Header = () => (
     <div className="text-center mb-10">
@@ -40,6 +41,10 @@ function InventarioDisco() {
         handleImageChange,
         handleMovimiento,
         fetchProductos,
+        deleteConfirmOpen, 
+        setDeleteConfirmOpen, 
+        productToDelete, 
+        confirmDelete
     } = useInventario();
     const navigate = useNavigate();
 
@@ -96,6 +101,17 @@ function InventarioDisco() {
                 imagePreview={imagePreview}
                 originalImageUrl={originalImageUrl}
                 editId={editId}
+            />
+
+            <ConfirmModal
+                open={deleteConfirmOpen}
+                onClose={() => setDeleteConfirmOpen(false)}
+                onConfirm={confirmDelete}
+                title="¿Eliminar Producto?"
+                message={`¿Estás seguro de que quieres eliminar "${productToDelete?.nombre}"? Esta acción no se puede deshacer y el producto desaparecerá del inventario.`}
+                confirmText="Sí, Eliminar"
+                cancelText="No, Mantener"
+                type="danger"
             />
         </div>
     );

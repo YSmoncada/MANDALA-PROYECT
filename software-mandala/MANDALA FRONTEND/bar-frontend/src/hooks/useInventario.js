@@ -28,6 +28,8 @@ export const useInventario = () => {
     const [imageFile, setImageFile] = useState(null); // Estado para el archivo de imagen
     const [originalImageUrl, setOriginalImageUrl] = useState(null);
     const [isUploading, setIsUploading] = useState(false); // Estado para el feedback de subida
+    const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+    const [productToDelete, setProductToDelete] = useState(null);
 
     const fetchProductos = async () => {
         const data = await inventarioService.getProductos();
@@ -71,10 +73,20 @@ export const useInventario = () => {
         setModalOpen(true);
     };
 
-    const handleDelete = async (id) => {
-        if (window.confirm("¿Estás seguro de que quieres eliminar este producto?")) {
-            await inventarioService.deleteProducto(id);
-            fetchProductos();
+    const handleDelete = (producto) => {
+        setProductToDelete(producto);
+        setDeleteConfirmOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!productToDelete) return;
+        try {
+            await inventarioService.deleteProducto(productToDelete.id);
+            await fetchProductos();
+            setDeleteConfirmOpen(false);
+            setProductToDelete(null);
+        } catch (error) {
+            console.error("Error al eliminar producto:", error);
         }
     };
 
@@ -118,7 +130,7 @@ export const useInventario = () => {
         const productoExistente = productos.find(p => p.nombre.trim().toLowerCase() === nombreActual);
 
         // Si el producto existe y (estamos creando uno nuevo O estamos editando y el ID es diferente)
-        if (productoExistente && (!editId || productoExistente.id !== editId)) {
+        if (productoExistente && (!editId || String(productoExistente.id) !== String(editId))) {
             toast.error("Ya existe un producto con este nombre.");
             return; // Detiene el envío del formulario
         }
@@ -207,5 +219,7 @@ export const useInventario = () => {
         imagePreview, originalImageUrl, isUploading, setModalOpen, setQuery, setCategoria, handleAdd,
         handleEdit, handleDelete, handleSubmit, handleChange, handleImageChange, handleMovimiento,
         fetchProductos,
+        // Nuevos campos para el modal de confirmación
+        deleteConfirmOpen, setDeleteConfirmOpen, productToDelete, confirmDelete
     };
 };

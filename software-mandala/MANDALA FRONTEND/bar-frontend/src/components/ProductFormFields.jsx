@@ -93,7 +93,6 @@ export default function ProductFormFields({ form, onChange }) {
                     value={form.stock}
                     onChange={onChange}
                     className={commonInputClasses}
-                    min={parseInt(form.stock_minimo, 10) || 0}
                     required
                 />
             </div>
@@ -124,7 +123,6 @@ export default function ProductFormFields({ form, onChange }) {
                     value={form.stock_maximo || ""}
                     onChange={onChange}
                     className={commonInputClasses}
-                    min={parseInt(form.stock_minimo || 0, 10) + 1}
                     required
                 />
             </div>

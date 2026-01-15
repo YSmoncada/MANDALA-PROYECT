@@ -40,7 +40,7 @@ export const saveProducto = async (id, payload, imageFile = null) => {
             formData.append('imagen', imageFile);
 
             if (id) {
-                response = await apiClient.put(`/productos/${id}/`, formData, {
+                response = await apiClient.patch(`/productos/${id}/`, formData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
                 toast.success("Producto actualizado con éxito.");
@@ -53,7 +53,7 @@ export const saveProducto = async (id, payload, imageFile = null) => {
         } else {
             // Si no hay imagen, enviamos JSON normal
             if (id) {
-                response = await apiClient.put(`/productos/${id}/`, payload);
+                response = await apiClient.patch(`/productos/${id}/`, payload);
                 toast.success("Producto actualizado con éxito.");
             } else {
                 response = await apiClient.post("/productos/", payload);
