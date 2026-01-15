@@ -25,13 +25,14 @@ function HomeDisco() {
     // Fallback: if role is null (but codigoConfirmado is true, likely Mesera legacy), default to mesera role
     const currentRole = role || userRole || (codigoConfirmado ? 'mesera' : null);
 
-
-
     const visibleModules = currentRole ? ALL_MODULES.filter(m => m.allowedRoles.includes(currentRole)) : [];
 
+    // Lógica para determinar si debemos redirigir (Debe coincidir con la del useEffect)
+    const shouldRedirect = isInitialized && !role && !userRole && !codigoConfirmado;
 
-    // Muestra un spinner de carga mientras se inicializa la autenticación.
-    if (!isInitialized) return <LoadingSpinner message="Verificando sesión..." />;
+    // Si no está inicializado O sabemos que vamos a redirigir, mostramos el spinner.
+    // Esto evita que se renderice el contenido "MANDALA" por una fracción de segundo antes del navigate.
+    if (!isInitialized || shouldRedirect) return <LoadingSpinner message="Verificando sesión..." />;
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white overflow-hidden relative selection:bg-purple-500/30">
