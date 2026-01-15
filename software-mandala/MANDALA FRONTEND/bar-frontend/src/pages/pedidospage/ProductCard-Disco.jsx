@@ -4,7 +4,7 @@ import { Plus, Minus } from 'lucide-react';
 
 /**
  * Individual product card for the menu.
- * Memoized to prevent re-renders when other products change.
+ * Optimized for performance and organized for both mobile and desktop.
  */
 function ProductCardDisco({ producto, onAgregarPedido }) {
     const [cantidad, setCantidad] = useState(1);
@@ -30,39 +30,44 @@ function ProductCardDisco({ producto, onAgregarPedido }) {
     }, [cantidad, producto, onAgregarPedido]);
 
     return (
-        <div className="group relative bg-[#1A103C]/80 hover:bg-[#2B0D49] rounded-2xl p-4 sm:p-5 transition-all duration-300 flex flex-col h-full items-center text-center sm:items-stretch sm:text-left hover:-translate-y-2 hover:shadow-[0_0_25px_rgba(169,68,255,0.2)] transform-gpu">
+        <div className="group relative bg-[#1A103C]/80 hover:bg-[#2B0D49] rounded-2xl p-4 sm:p-5 transition-all duration-300 flex flex-col h-full hover:shadow-[0_0_25px_rgba(169,68,255,0.2)] transform-gpu border border-white/5 hover:border-[#A944FF]/30">
 
             {/* Image Container */}
-            <div className="relative aspect-square w-full mb-4 sm:mb-5 overflow-hidden rounded-xl bg-white p-2 flex items-center justify-center">
+            <div className="relative aspect-square w-full mb-3 sm:mb-4 overflow-hidden rounded-xl bg-white p-2 flex items-center justify-center shadow-inner">
                 <img
                     src={producto.imagen}
                     alt={producto.nombre}
-                    className="w-full h-full object-contain drop-shadow-xl scale-110"
+                    className="w-full h-full object-contain drop-shadow-xl scale-100 group-hover:scale-110 transition-transform duration-500"
                     loading="lazy"
                 />
             </div>
 
             {/* Content */}
-            <div className="flex-1 flex flex-col w-full">
-                <div className="mb-2">
+            <div className="flex-1 flex flex-col">
+                <div className="mb-1.5 flex justify-center sm:justify-start">
                     <span className="text-[9px] sm:text-[10px] font-bold text-[#A944FF] uppercase tracking-widest border border-[#A944FF]/30 bg-[#A944FF]/10 px-2 py-1 rounded-lg">
                         {producto.unidad}
                     </span>
                 </div>
 
-                <h3 className="font-bold text-sm sm:text-lg text-white leading-tight mb-3 sm:mb-4 line-clamp-2 group-hover:text-[#FF4BC1] transition-colors capitalize">
+                <h3 className="font-bold text-sm sm:text-lg text-white leading-tight mb-2 sm:mb-4 line-clamp-2 transition-colors capitalize text-center sm:text-left h-10 sm:h-12 flex items-center justify-center sm:justify-start">
                     {producto.nombre}
                 </h3>
 
-                <div className="mt-auto pt-3 sm:pt-4 border-t border-[#6C3FA8]/30 space-y-3 sm:space-y-4">
-                    <div className="flex flex-col gap-2 sm:gap-3">
-                        <p className="text-xl sm:text-2xl font-black text-green-400 tracking-tight">
-                            ${parseFloat(producto.precio).toLocaleString("es-CO")}
-                        </p>
+                <div className="mt-auto pt-3 border-t border-[#6C3FA8]/30 space-y-3">
+                    <div className="flex flex-col gap-2">
+                        {/* Price Row */}
+                        <div className="flex items-center justify-between px-1">
+                            <span className="text-[9px] font-bold text-[#8A7BAF] uppercase tracking-tighter">Precio</span>
+                            <p className="text-lg sm:text-xl font-black text-green-400 tracking-tight">
+                                ${parseFloat(producto.precio).toLocaleString("es-CO")}
+                            </p>
+                        </div>
 
-                        <div className="flex flex-col xs:flex-row items-center justify-between gap-2">
-                            <span className="text-[9px] font-black text-[#8A7BAF] uppercase tracking-tighter">Cant.</span>
-                            <div className="flex items-center bg-[#0E0D23] rounded-lg border border-[#6C3FA8]/50 p-0.5 mx-auto sm:mr-0">
+                        {/* Quantity Row */}
+                        <div className="flex items-center justify-between px-1">
+                            <span className="text-[9px] font-bold text-[#8A7BAF] uppercase tracking-tighter">Cantidad</span>
+                            <div className="flex items-center bg-[#0E0D23] rounded-lg border border-[#6C3FA8]/50 p-0.5">
                                 <button
                                     onClick={disminuir}
                                     className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-[#8A7BAF] hover:text-white hover:bg-[#441E73] rounded-md transition-colors"
