@@ -5,7 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import HeaderPedidosDisco from "./HeaderPedidos-Disco";
 import ProductGridDisco from "../pedidosAuth/ProductGrid-Disco";
 import { usePedidosContext } from "../../context/PedidosContext";
-import LoadingFallback from "../../components/LoadingFallback";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function SeleccionProductosDisco() {
     const { auth, addProductToOrder } = usePedidosContext();
@@ -30,7 +30,7 @@ export default function SeleccionProductosDisco() {
     }, [isInitialized, codigoConfirmado, auth.role, navigate]);
 
     if (!isInitialized) {
-        return <LoadingFallback />;
+        return <LoadingSpinner />;
     }
 
     return (
