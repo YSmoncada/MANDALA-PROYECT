@@ -254,10 +254,12 @@ const MovimientoModal = ({
           <button
             onClick={handleSubmit}
             disabled={!isValid || loading}
-            className={`flex items-center justify-center gap-2 px-6 py-2 rounded-lg text-white font-bold transition-all min-w-[180px] shadow-lg ${
+            className={`flex items-center justify-center gap-2 px-6 py-2 rounded-lg text-white font-bold transition-all min-w-[200px] shadow-lg ${
               isValid
-                ? 'bg-[#6C3FA8] hover:bg-[#5A328E] active:scale-95'
-                : 'bg-[#6C3FA8]/50 cursor-not-allowed'
+                ? (tipo === 'entrada' 
+                    ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-900/20 active:scale-95' 
+                    : 'bg-rose-600 hover:bg-rose-500 shadow-rose-900/20 active:scale-95')
+                : 'bg-gray-600/30 cursor-not-allowed opacity-50'
             }`}
           >
             {loading ? 'Guardando...' : <><RegisterIcon /> Registrar {tipo === 'entrada' ? 'Entrada' : 'Salida'}</>}
