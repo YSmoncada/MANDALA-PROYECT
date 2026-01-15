@@ -1,38 +1,42 @@
-// src/hooks/usePedido.js
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import apiClient from '../utils/apiClient';
 
+/**
+ * Hook to manage mesa selection and order finalization.
+ */
 export const usePedido = () => {
     const [mesas, setMesas] = useState([]);
     const [selectedMesaId, setSelectedMesaId] = useState('');
     const [isTableLocked, setIsTableLocked] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingMesas, setIsLoadingMesas] = useState(true);
+
+    const fetchMesas = useCallback(async () => {
+        try {
+            setIsLoadingMesas(true);
+            const response = await apiClient.get('/mesas/');
+            setMesas(response.data);
+            if (response.data.length > 0 && !selectedMesaId) {
+                setSelectedMesaId(response.data[0].id);
+            }
+        } catch (error) {
+            console.error("Error loading mesas:", error);
+        } finally {
+            setIsLoadingMesas(false);
+        }
+    }, [selectedMesaId]);
 
     useEffect(() => {
-        const fetchMesas = async () => {
-            try {
-                const response = await apiClient.get('/mesas/');
-                setMesas(response.data);
-                if (response.data.length > 0) {
-                    setSelectedMesaId(response.data[0].id);
-                }
-            } catch (error) {
-                console.error("Error al cargar las mesas:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
         fetchMesas();
-    }, []);
+    }, [fetchMesas]);
 
-    const finalizarPedido = async (pedidoData) => {
+    const finalizarPedido = useCallback(async (pedidoData) => {
         try {
             await apiClient.post('/pedidos/', pedidoData);
             return { success: true, message: "¡Pedido finalizado y guardado con éxito!" };
         } catch (error) {
-            console.error("Error al finalizar el pedido:", error.response?.data || error.message);
+            console.error("Error finalizing order:", error.response?.data || error.message);
             let errorMessage = "Hubo un error al guardar el pedido. Por favor, inténtalo de nuevo.";
-            if (error.response && typeof error.response.data === 'object') {
+            if (error.response?.data && typeof error.response.data === 'object') {
                 errorMessage = Object.entries(error.response.data)
                     .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`)
                     .join('\n');
@@ -41,7 +45,16 @@ export const usePedido = () => {
             }
             return { success: false, message: `Error al guardar pedido:\n${errorMessage}` };
         }
-    };
+    }, []);
 
-    return { mesas, selectedMesaId, setSelectedMesaId, isLoading, finalizarPedido, isTableLocked, setIsTableLocked };
+    return { 
+        mesas, 
+        selectedMesaId, 
+        setSelectedMesaId, 
+        isLoadingMesas, 
+        finalizarPedido, 
+        isTableLocked, 
+        setIsTableLocked,
+        refreshMesas: fetchMesas
+    };
 };

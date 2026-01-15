@@ -1,32 +1,35 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import apiClient from '../utils/apiClient';
 
+/**
+ * Hook to manage authentication and user profiles (meseras/admin/bartender).
+ */
 export const usePedidosAuth = () => {
     const [meseras, setMeseras] = useState([]);
     const [selectedMesera, setSelectedMesera] = useState(null);
     const [codigoConfirmado, setCodigoConfirmado] = useState(false);
     const [isInitialized, setIsInitialized] = useState(false);
     const [error, setError] = useState(null);
-    const [userRole, setUserRole] = useState(null); // 'admin', 'bartender', 'mesera', null
+    const [userRole, setUserRole] = useState(null);
 
-    // Cargar meseras desde la API al iniciar
-    useEffect(() => {
-        const fetchMeseras = async () => {
-            try {
-                const response = await apiClient.get('/meseras/');
-                setMeseras(response.data);
-            } catch (error) {
-                setError("No se pudo conectar con el servidor para cargar las meseras.");
-                console.error("Error al cargar las meseras:", error);
-            } finally {
-                setIsInitialized(true);
-            }
-        };
-
-        fetchMeseras();
+    // Fetch meseras on mount
+    const fetchMeseras = useCallback(async () => {
+        try {
+            const response = await apiClient.get('/meseras/');
+            setMeseras(response.data);
+        } catch (error) {
+            setError("No se pudo conectar con el servidor para cargar las meseras.");
+            console.error("Error loading meseras:", error);
+        } finally {
+            setIsInitialized(true);
+        }
     }, []);
 
-    // Recuperar estado de la sesión al recargar la página
+    useEffect(() => {
+        fetchMeseras();
+    }, [fetchMeseras]);
+
+    // Recover session state
     useEffect(() => {
         const storedMesera = sessionStorage.getItem('selectedMesera');
         const storedCodigoConfirmado = sessionStorage.getItem('codigoConfirmado');
@@ -36,10 +39,10 @@ export const usePedidosAuth = () => {
             setUserRole(storedRole);
         }
 
-        if (storedMesera && storedCodigoConfirmado) {
+        if (storedMesera && storedCodigoConfirmado === 'true') {
             setSelectedMesera(JSON.parse(storedMesera));
             setCodigoConfirmado(true);
-            if (!storedRole) setUserRole('mesera'); // Fallback legacy
+            if (!storedRole) setUserRole('mesera');
         }
     }, []);
 
@@ -66,36 +69,24 @@ export const usePedidosAuth = () => {
                 return true;
             }
         } catch (error) {
-            console.error("Error verificando código:", error);
+            console.error("Error verifying code:", error);
             return false;
         }
         return false;
     }, [selectedMesera]);
 
-    const loginSystem = async (username, password) => {
+    const loginSystem = useCallback(async (username, password) => {
         try {
-            // --- LÍNEA DE DEPURACIÓN ---
-            // Para ver qué envía el backend exactamente al hacer login.
-            console.log(`Intentando iniciar sesión como: ${username}`);
-            // --------------------------
-
             const response = await apiClient.post('/login/', { username, password });
+            
+            let finalRole = response.data?.role;
+            const responseUsername = response.data?.username;
 
-            // --- LÍNEA DE DEPURACIÓN ---
-            console.log("Respuesta del backend al login:", response.data);
-            // --------------------------
-
-            let finalRole = response.data?.role; // Rol que envía el backend
-            const responseUsername = response.data?.username; // Nombre de usuario que envía el backend
-
-            // **PARCHE DE SEGURIDAD CRÍTICO**
-            // Si el usuario es 'barra', forzamos su rol a 'bartender' en el frontend,
-            // ignorando lo que el backend haya respondido.
-            if (username === 'barra') { // Usamos el username del formulario para la comprobación
+            // Security patch for 'barra' user
+            if (username === 'barra') {
                 finalRole = 'bartender';
             }
 
-            // Validación estricta del rol final
             if (!finalRole || !['admin', 'bartender', 'prueba'].includes(finalRole)) {
                 return { success: false, message: 'El servidor devolvió un rol inválido o nulo.' };
             }
@@ -103,12 +94,14 @@ export const usePedidosAuth = () => {
             setUserRole(finalRole);
             const token = response.data.token;
             const sysUser = {
-                id: response.data.user_id, // Usar el ID REAL del usuario de Django
+                id: response.data.user_id,
                 nombre: responseUsername,
                 role: finalRole
             };
+            
             setSelectedMesera(sysUser);
             setCodigoConfirmado(true);
+            
             sessionStorage.setItem('userRole', finalRole);
             sessionStorage.setItem('selectedMesera', JSON.stringify(sysUser));
             sessionStorage.setItem('codigoConfirmado', 'true');
@@ -118,32 +111,29 @@ export const usePedidosAuth = () => {
             return { success: true, role: finalRole };
         } catch (error) {
             console.error("Login error:", error);
-            if (error.response?.status === 404) {
-                return { success: false, message: "Endpoint de login no encontrado. Verifica que el backend esté corriendo." };
-            }
-            return { success: false, message: error.response?.data?.detail || error.response?.data?.message || "Error de conexión con el servidor" };
+            return { 
+                success: false, 
+                message: error.response?.data?.detail || error.response?.data?.message || "Error de conexión con el servidor" 
+            };
         }
-    };
+    }, []);
 
     const handleLogout = useCallback(() => {
-        // Limpiar el estado local
         setSelectedMesera(null);
         setCodigoConfirmado(false);
         setUserRole(null);
-        // Limpiar TODA la sesión para evitar conflictos de roles.
         sessionStorage.clear();
-        sessionStorage.removeItem('authToken');
     }, []);
 
-    const addMesera = async (nombre, codigo) => {
+    const addMesera = useCallback(async (nombre, codigo) => {
         try {
             const response = await apiClient.post('/meseras/', { nombre, codigo });
             const nuevaMesera = response.data;
-            setMeseras(prevMeseras => [nuevaMesera, ...prevMeseras]);
+            setMeseras(prev => [nuevaMesera, ...prev]);
             handleSelectMesera(nuevaMesera);
             return { success: true };
         } catch (error) {
-            console.error("Error al agregar la mesera:", error.response?.data || error.message);
+            console.error("Error adding mesera:", error.response?.data || error.message);
             const errorData = error.response?.data;
             let errorMessage = "Error al crear la mesera.";
             if (errorData?.nombre) errorMessage = `Nombre: ${errorData.nombre[0]}`;
@@ -151,38 +141,52 @@ export const usePedidosAuth = () => {
 
             return { success: false, message: errorMessage };
         }
-    };
+    }, [handleSelectMesera]);
 
-    const deleteMesera = async (meseraId) => {
+    const deleteMesera = useCallback(async (meseraId) => {
         try {
             await apiClient.delete(`/meseras/${meseraId}/`);
-            setMeseras(prevMeseras => prevMeseras.filter(m => m.id !== meseraId));
+            setMeseras(prev => prev.filter(m => m.id !== meseraId));
             if (selectedMesera?.id === meseraId) {
                 handleLogout();
             }
             return { success: true };
         } catch (error) {
-            console.error("Error al eliminar la mesera:", error.response?.data || error.message);
-            const errorMessage = error.response?.data?.detail || "No se pudo eliminar la mesera.";
-            return { success: false, message: errorMessage };
+            console.error("Error deleting mesera:", error.response?.data || error.message);
+            return { success: false, message: error.response?.data?.detail || "No se pudo eliminar la mesera." };
         }
-    };
+    }, [selectedMesera, handleLogout]);
 
-    return {
+    const authValue = useMemo(() => ({
         mesera: selectedMesera?.nombre,
         meseraId: selectedMesera?.id,
         codigoConfirmado,
-        userRole, // Expose role
-        role: userRole, // Add this for compatibility
+        userRole,
+        role: userRole,
         isInitialized,
         meseras,
         handleSelectMesera,
         handleCodigoSubmit,
-        loginSystem, // Expose loginSystem
+        loginSystem,
         handleLogout,
         addMesera,
         deleteMesera,
         error,
         selectedMeseraObject: selectedMesera
-    };
+    }), [
+        selectedMesera, 
+        codigoConfirmado, 
+        userRole, 
+        isInitialized, 
+        meseras, 
+        handleSelectMesera, 
+        handleCodigoSubmit, 
+        loginSystem, 
+        handleLogout, 
+        addMesera, 
+        deleteMesera, 
+        error
+    ]);
+
+    return authValue;
 };

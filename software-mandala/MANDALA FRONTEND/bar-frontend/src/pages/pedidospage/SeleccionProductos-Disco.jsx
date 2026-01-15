@@ -1,5 +1,4 @@
-
-import React, { useEffect } from 'react';
+import React, { useEffect, memo } from 'react';
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import HeaderPedidosDisco from "./HeaderPedidos-Disco";
@@ -7,27 +6,32 @@ import ProductGridDisco from "../pedidosAuth/ProductGrid-Disco";
 import { usePedidosContext } from "../../context/PedidosContext";
 import LoadingSpinner from "../../components/LoadingSpinner";
 
-export default function SeleccionProductosDisco() {
+/**
+ * Page for selecting products and adding them to the order.
+ * Optimized with memo to prevent unnecessary re-renders.
+ */
+function SeleccionProductosDisco() {
     const { auth, addProductToOrder } = usePedidosContext();
     const {
         mesera,
         codigoConfirmado,
         isInitialized,
         handleLogout,
+        role
     } = auth;
 
     const navigate = useNavigate();
 
-    // Redirect to login if not authenticated
+    // Redirection logic
     useEffect(() => {
         if (!isInitialized) return;
 
-        const esRolMesera = auth.role !== 'admin' && auth.role !== 'bartender' && auth.role !== 'prueba';
+        const esRolMesera = role !== 'admin' && role !== 'bartender' && role !== 'prueba';
 
         if (esRolMesera && !codigoConfirmado) {
             navigate('/login-disco', { replace: true });
         }
-    }, [isInitialized, codigoConfirmado, auth.role, navigate]);
+    }, [isInitialized, codigoConfirmado, role, navigate]);
 
     if (!isInitialized) {
         return <LoadingSpinner />;
@@ -44,7 +48,7 @@ export default function SeleccionProductosDisco() {
             <HeaderPedidosDisco mesera={mesera} onLogout={handleLogout} codigoConfirmado={codigoConfirmado} />
 
             <main className="flex-1 p-4 sm:p-8 relative z-10 max-w-7xl mx-auto w-full pt-12">
-                {/* Botón para Volver al Home (Reubicado para mejor compatibilidad) */}
+                {/* Navigation Action */}
                 <div className="mb-6">
                     <button
                         onClick={() => navigate('/')}
@@ -54,18 +58,20 @@ export default function SeleccionProductosDisco() {
                         <span className="font-medium">Volver</span>
                     </button>
                 </div>
-                <div className="text-center mb-8">
-                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 tracking-tight drop-shadow-[0_0_25px_rgba(169,68,255,0.4)]">
-                        MENÚ PRINCIPAL
+
+                <div className="text-center mb-10">
+                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 tracking-tight drop-shadow-[0_0_25px_rgba(169,68,255,0.4)] uppercase">
+                        Menú Principal
                     </h1>
-                    <p className="text-lg text-[#C2B6D9] font-light">Selecciona los productos para tu pedido</p>
+                    <p className="text-lg text-[#C2B6D9] font-light italic">Selecciona los productos para tu pedido</p>
                 </div>
 
                 <ProductGridDisco
-                    mesera={mesera}
                     onProductAdd={addProductToOrder}
                 />
             </main>
         </div>
     );
 }
+
+export default memo(SeleccionProductosDisco);

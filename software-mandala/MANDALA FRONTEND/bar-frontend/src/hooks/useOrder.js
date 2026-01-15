@@ -1,11 +1,14 @@
-// src/hooks/useOrder.js
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import apiClient from '../utils/apiClient';
 
+/**
+ * Hook to manage order items (the cart).
+ */
 export const useOrder = () => {
     const [productos, setProductos] = useState([]);
+    const [isLoadingProducts, setIsLoadingProducts] = useState(false);
 
-    // Cargar orderItems desde localStorage al iniciar
+    // Initial state from localStorage
     const [orderItems, setOrderItems] = useState(() => {
         try {
             const savedOrder = localStorage.getItem('currentOrder');
@@ -16,7 +19,7 @@ export const useOrder = () => {
         }
     });
 
-    // Guardar orderItems en localStorage cada vez que cambien
+    // Persistent storage effect
     useEffect(() => {
         try {
             localStorage.setItem('currentOrder', JSON.stringify(orderItems));
@@ -25,54 +28,63 @@ export const useOrder = () => {
         }
     }, [orderItems]);
 
+    // Fetch products list
     useEffect(() => {
         const fetchProductos = async () => {
             try {
+                setIsLoadingProducts(true);
                 const response = await apiClient.get('/productos/');
                 setProductos(response.data);
             } catch (error) {
-                console.error("Error al cargar los productos:", error);
+                console.error("Error loading products:", error);
+            } finally {
+                setIsLoadingProducts(false);
             }
         };
         fetchProductos();
     }, []);
 
-    const addProductToOrder = (producto, cantidad) => {
-        const existingItem = orderItems.find(item => item.producto.id === producto.id);
-        if (existingItem) {
-            const updatedItems = orderItems.map(item =>
-                item.producto.id === producto.id
-                    ? { ...item, cantidad: item.cantidad + cantidad }
-                    : item
-            );
-            setOrderItems(updatedItems);
-        } else {
-            setOrderItems([...orderItems, { producto, cantidad }]);
-        }
-    };
+    // Memoized actions
+    const addProductToOrder = useCallback((producto, cantidad) => {
+        setOrderItems(prevItems => {
+            const existingItem = prevItems.find(item => item.producto.id === producto.id);
+            if (existingItem) {
+                return prevItems.map(item =>
+                    item.producto.id === producto.id
+                        ? { ...item, cantidad: item.cantidad + cantidad }
+                        : item
+                );
+            }
+            return [...prevItems, { producto, cantidad }];
+        });
+    }, []);
 
-    const clearOrder = () => {
+    const clearOrder = useCallback(() => {
         setOrderItems([]);
         localStorage.removeItem('currentOrder');
-    };
+    }, []);
 
-    const updateProductQuantity = (productId, newQuantity) => {
-        const updatedItems = orderItems.map(item =>
+    const updateProductQuantity = useCallback((productId, newQuantity) => {
+        setOrderItems(prevItems => prevItems.map(item =>
             item.producto.id === productId
                 ? { ...item, cantidad: newQuantity }
                 : item
-        );
-        setOrderItems(updatedItems);
-    };
+        ));
+    }, []);
 
-    const removeProductFromOrder = (productId) => {
-        const updatedItems = orderItems.filter(item => item.producto.id !== productId);
-        setOrderItems(updatedItems);
-    };
+    const removeProductFromOrder = useCallback((productId) => {
+        setOrderItems(prevItems => prevItems.filter(item => item.producto.id !== productId));
+    }, []);
+
+    const totalOrder = useMemo(() => 
+        orderItems.reduce((total, item) => total + item.producto.precio * item.cantidad, 0),
+    [orderItems]);
 
     return {
         productos,
         orderItems,
+        isLoadingProducts,
+        totalOrder,
         addProductToOrder,
         clearOrder,
         updateProductQuantity,

@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useState, memo, useCallback } from "react";
 import toast from 'react-hot-toast';
 import { Plus, Minus } from 'lucide-react';
 
-export default function ProductCardDisco({ producto, onAgregarPedido }) {
+/**
+ * Individual product card for the menu.
+ * Memoized to prevent re-renders when other products change.
+ */
+function ProductCardDisco({ producto, onAgregarPedido }) {
     const [cantidad, setCantidad] = useState(1);
 
-    const aumentar = () => setCantidad(cantidad + 1);
-    const disminuir = () => setCantidad(cantidad > 1 ? cantidad - 1 : 1);
+    const aumentar = useCallback(() => setCantidad(prev => prev + 1), []);
+    const disminuir = useCallback(() => setCantidad(prev => prev > 1 ? prev - 1 : 1), []);
 
-    const agregarPedido = () => {
+    const agregarPedido = useCallback(() => {
         onAgregarPedido(producto, cantidad);
         const nombreProducto = cantidad > 1 ? `${producto.nombre}s` : producto.nombre;
         toast.success(`Agregado: ${cantidad} ${nombreProducto}`, {
@@ -23,7 +27,7 @@ export default function ProductCardDisco({ producto, onAgregarPedido }) {
             },
         });
         setCantidad(1);
-    }
+    }, [cantidad, producto, onAgregarPedido]);
 
     return (
         <div className="group relative bg-[#1A103C]/80 hover:bg-[#2B0D49] rounded-2xl p-4 sm:p-5 transition-all duration-300 flex flex-col h-full items-center text-center sm:items-stretch sm:text-left hover:-translate-y-2 hover:shadow-[0_0_25px_rgba(169,68,255,0.2)] transform-gpu">
@@ -34,6 +38,7 @@ export default function ProductCardDisco({ producto, onAgregarPedido }) {
                     src={producto.imagen}
                     alt={producto.nombre}
                     className="w-full h-full object-contain drop-shadow-xl scale-110"
+                    loading="lazy"
                 />
             </div>
 
@@ -57,7 +62,6 @@ export default function ProductCardDisco({ producto, onAgregarPedido }) {
 
                         <div className="flex flex-col xs:flex-row items-center justify-between gap-2">
                             <span className="text-[9px] font-black text-[#8A7BAF] uppercase tracking-tighter">Cant.</span>
-                            {/* Compact Controls */}
                             <div className="flex items-center bg-[#0E0D23] rounded-lg border border-[#6C3FA8]/50 p-0.5 mx-auto sm:mr-0">
                                 <button
                                     onClick={disminuir}
@@ -87,3 +91,5 @@ export default function ProductCardDisco({ producto, onAgregarPedido }) {
         </div>
     );
 }
+
+export default memo(ProductCardDisco);

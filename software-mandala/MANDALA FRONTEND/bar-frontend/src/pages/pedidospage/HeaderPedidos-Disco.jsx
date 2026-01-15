@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, LogOut, ShoppingCart, Clock, Home as HomeIcon, DollarSign } from 'lucide-react';
+import { Menu, X, LogOut, ShoppingCart, Clock, Home as HomeIcon } from 'lucide-react';
 
-export default function HeaderPedidosDisco({ mesera, onLogout, codigoConfirmado }) {
+/**
+ * Header component for the pedidos section.
+ * Memoized to prevent unnecessary re-renders.
+ */
+function HeaderPedidosDisco({ mesera, onLogout, codigoConfirmado }) {
     const location = useLocation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -13,14 +17,12 @@ export default function HeaderPedidosDisco({ mesera, onLogout, codigoConfirmado 
         setIsMenuOpen(false);
     };
 
-    // Enhanced Original Style Matching
-    // Gradient accents from Pedidos.jsx
     const activeClasses = "bg-[#441E73] text-white border border-[#A944FF]/50 shadow-[0_0_15px_rgba(169,68,255,0.3)]";
     const inactiveClasses = "text-[#C2B6D9] hover:text-white hover:bg-[#441E73]/50";
 
     const navLinks = [
-        { href: "/pedidos-disco", label: "Menú", icon: <HomeIcon size={18} /> }, // Selección de productos
-        { href: "/pedidos", label: "Pedido", icon: <ShoppingCart size={18} /> }, // Resumen/Carrito
+        { href: "/pedidos-disco", label: "Menú", icon: <HomeIcon size={18} /> },
+        { href: "/pedidos", label: "Pedido", icon: <ShoppingCart size={18} /> },
         { href: "/mis-pedidos-disco", label: "Mis Pedidos", icon: <Clock size={18} /> },
     ];
 
@@ -44,7 +46,7 @@ export default function HeaderPedidosDisco({ mesera, onLogout, codigoConfirmado 
                         {/* RIGHT CORNER: Navigation & User Profile */}
                         <div className="flex items-center gap-6">
 
-                            {/* Desktop Nav - Moved to right side */}
+                            {/* Desktop Nav */}
                             <nav className="hidden md:flex items-center gap-2">
                                 {navLinks.map(link => {
                                     const isEnabled = mesera && (link.href === '/' || codigoConfirmado);
@@ -61,7 +63,7 @@ export default function HeaderPedidosDisco({ mesera, onLogout, codigoConfirmado 
                                 })}
                             </nav>
 
-                            {/* User Profile - Simplified to just Logout */}
+                            {/* User Profile */}
                             <div className="hidden md:flex items-center gap-4">
                                 {mesera && (
                                     <>
@@ -139,3 +141,5 @@ export default function HeaderPedidosDisco({ mesera, onLogout, codigoConfirmado 
         </>
     );
 }
+
+export default memo(HeaderPedidosDisco);
