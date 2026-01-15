@@ -4,32 +4,22 @@ import MovementModal from "./MovementModal";
 import { UI_CLASSES } from "../../../constants/ui";
 
 const StockStatus = ({ stock, min, max }) => {
-    let status = { label: 'Óptimo', color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' };
-    const availability = max > 0 ? Math.min(100, (stock / max) * 100) : 0;
+    let status = { label: 'Óptimo', color: 'text-emerald-400', bg: 'bg-emerald-500/20', border: 'border-emerald-500/40' };
 
     if (stock === 0) {
-        status = { label: 'Agotado', color: 'text-rose-500', bg: 'bg-rose-500/10', border: 'border-rose-500/20' };
+        status = { label: 'Agotado', color: 'text-rose-500', bg: 'bg-rose-500/20', border: 'border-rose-500/40' };
     } else if (stock <= min) {
-        status = { label: 'Bajo Stock', color: 'text-orange-400', bg: 'bg-orange-500/10', border: 'border-orange-500/20' };
+        status = { label: 'Bajo Stock', color: 'text-orange-400', bg: 'bg-orange-500/20', border: 'border-orange-500/40' };
     } else if (max > 0 && stock >= max) {
-        status = { label: 'Stock Alto', color: 'text-cyan-400', bg: 'bg-cyan-500/10', border: 'border-cyan-500/20' };
+        status = { label: 'Stock Alto', color: 'text-cyan-400', bg: 'bg-cyan-500/20', border: 'border-cyan-500/40' };
     }
 
     return (
         <div className="flex flex-col items-center gap-1">
-            <div className="flex items-center gap-2">
-                <span className={`text-xl font-black ${status.color}`}>{stock}</span>
-                <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold uppercase border ${status.bg} ${status.color} ${status.border}`}>
-                    {status.label}
-                </span>
-            </div>
-            <div className="w-20 h-1 bg-white/10 rounded-full overflow-hidden">
-                <div 
-                    className={`h-full transition-all duration-500 ${status.color.replace('text', 'bg')}`}
-                    style={{ width: `${availability}%` }}
-                />
-            </div>
-            <span className="text-[9px] text-gray-500 font-medium">{Math.round(availability)}% Disponibilidad</span>
+            <span className={`text-2xl font-black ${status.color}`}>{stock}</span>
+            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase border ${status.bg} ${status.color} ${status.border} shadow-lg backdrop-blur-sm`}>
+                {status.label}
+            </span>
         </div>
     );
 };
