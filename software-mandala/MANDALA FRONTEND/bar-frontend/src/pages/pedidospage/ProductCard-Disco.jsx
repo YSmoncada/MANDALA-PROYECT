@@ -26,7 +26,7 @@ export default function ProductCardDisco({ producto, onAgregarPedido }) {
     }
 
     return (
-        <div className="group relative bg-[#1A103C]/80 hover:bg-[#2B0D49] rounded-2xl p-5 transition-all duration-300 flex flex-col h-full hover:-translate-y-2 hover:shadow-[0_0_25px_rgba(169,68,255,0.2)]">
+        <div className="group relative bg-[#1A103C]/80 hover:bg-[#2B0D49] rounded-2xl p-5 transition-all duration-300 flex flex-col h-full hover:-translate-y-2 hover:shadow-[0_0_25px_rgba(169,68,255,0.2)] transform-gpu">
 
             {/* Image Container */}
             <div className="relative aspect-square mb-5 overflow-hidden rounded-xl bg-white p-2 flex items-center justify-center">

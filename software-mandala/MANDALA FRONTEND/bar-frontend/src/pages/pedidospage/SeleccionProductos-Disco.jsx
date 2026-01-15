@@ -48,7 +48,7 @@ export default function SeleccionProductosDisco() {
                 <div className="mb-6">
                     <button
                         onClick={() => navigate('/')}
-                        className="flex items-center gap-2 rounded-lg bg-[#441E73]/50 border border-[#6C3FA8] px-4 py-2 text-white hover:bg-[#441E73] transition-all backdrop-blur-md shadow-lg hover:scale-105"
+                        className="flex items-center gap-2 rounded-lg bg-[#441E73]/50 border border-[#6C3FA8] px-4 py-2 text-white hover:bg-[#441E73] hover:border-[#A944FF] transition-all backdrop-blur-md shadow-lg transform-gpu active:scale-95"
                     >
                         <ArrowLeft size={18} />
                         <span className="font-medium">Volver</span>
