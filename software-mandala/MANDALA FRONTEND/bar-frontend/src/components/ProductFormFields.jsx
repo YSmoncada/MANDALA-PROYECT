@@ -1,6 +1,5 @@
 import React from "react";
-
-const commonInputClasses = "w-full p-3 bg-[#2B0D49] border border-[#6C3FA8]/50 rounded-lg text-white focus:ring-2 focus:ring-[#A944FF] outline-none transition-all placeholder:text-gray-500 selection:bg-purple-500/30 autofill:shadow-[0_0_0_30px_#2B0D49_inset] autofill:text-fill-white";
+import { UI_CLASSES } from "../constants/ui";
 
 export default function ProductFormFields({ form, onChange, isEditing }) {
     // Función auxiliar para manejar valores de texto y evitar "undefined" o campos en blanco erróneos
@@ -20,7 +19,7 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
                         // No prevenir ninguna tecla
                         e.stopPropagation();
                     }}
-                    className={commonInputClasses}
+                    className={UI_CLASSES.input}
                     autoComplete="off"
                     spellCheck="false"
                     inputMode="text"
@@ -35,7 +34,7 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
                     name="categoria"
                     value={getValue(form.categoria)}
                     onChange={onChange}
-                    className={`${commonInputClasses} appearance-none [&>option]:bg-[#1A103C] [&>option]:text-white`}
+                    className={`${UI_CLASSES.select} appearance-none`}
                     required
                 >
                     <option value="">Seleccione una categoría</option>
@@ -54,7 +53,7 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
                     name="unidad"
                     value={getValue(form.unidad)}
                     onChange={onChange}
-                    className={`${commonInputClasses} appearance-none [&>option]:bg-[#1A103C] [&>option]:text-white`}
+                    className={`${UI_CLASSES.select} appearance-none`}
                     required
                 >
                     <option value="">Seleccione una opción</option>
@@ -75,7 +74,7 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
                     name="precio"
                     value={form.precio ?? ""}
                     onChange={onChange}
-                    className={commonInputClasses}
+                    className={UI_CLASSES.input}
                     placeholder="0.00"
                     step="0.01"
                     required
@@ -91,7 +90,7 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
                         name="stock"
                         value={form.stock ?? ""}
                         onChange={onChange}
-                        className={`${commonInputClasses} ${isEditing ? 'opacity-50 cursor-not-allowed bg-black/20 text-gray-400' : ''}`}
+                        className={`${UI_CLASSES.input} ${isEditing ? 'opacity-50 cursor-not-allowed bg-black/20 text-gray-400' : ''}`}
                         placeholder="0"
                         readOnly={isEditing}
                         title={isEditing ? "El stock se ajusta mediante Movimientos (Botón + en la tabla)" : ""}
@@ -116,7 +115,7 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
                     name="stock_minimo"
                     value={form.stock_minimo ?? ""}
                     onChange={onChange}
-                    className={commonInputClasses}
+                    className={UI_CLASSES.input}
                     placeholder="0"
                     required
                 />
@@ -130,7 +129,7 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
                     name="stock_maximo"
                     value={form.stock_maximo ?? ""}
                     onChange={onChange}
-                    className={commonInputClasses}
+                    className={UI_CLASSES.input}
                     placeholder="0"
                     required
                 />
@@ -148,7 +147,7 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
                     placeholder="Nombre del proveedor"
                     value={getValue(form.proveedor)}
                     onChange={onChange}
-                    className={commonInputClasses}
+                    className={UI_CLASSES.input}
                 />
             </div>
 
@@ -161,7 +160,7 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
                     placeholder="Ej: Estante A1, Refrigerador B"
                     value={getValue(form.ubicacion)}
                     onChange={onChange}
-                    className={commonInputClasses}
+                    className={UI_CLASSES.input}
                 />
             </div>
         </div >

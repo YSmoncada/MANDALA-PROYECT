@@ -1,7 +1,8 @@
 // src/components/MovimientoModal.jsx
 import React, { useState, useMemo } from 'react';
 import axios from 'axios';
-import { API_URL } from '../../apiConfig'; // ajusta si tu config es distinta
+import { API_URL } from '../../apiConfig'; 
+import { UI_CLASSES } from '../../constants/ui';
 
 // Iconos SVG personalizados para el estilo del modal
 const ChartUpIcon = () => (
@@ -134,8 +135,8 @@ const MovimientoModal = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-fadeIn" onClick={onClose}>
-      <div className="bg-[#1A103C] border border-[#6C3FA8] rounded-2xl shadow-2xl w-full max-w-lg mx-auto p-6 relative max-h-[90vh] overflow-y-auto transform transition-all animate-scaleIn" onClick={handleContentClick}>
+    <div className={`fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 ${UI_CLASSES.fadeIn}`} onClick={onClose}>
+      <div className={`${UI_CLASSES.glassCard} bg-[#1A103C] w-full max-w-lg mx-auto relative max-h-[90vh] overflow-y-auto ${UI_CLASSES.scaleIn}`} onClick={handleContentClick}>
 
         {/* Encabezado del Modal */}
         <div className="flex justify-between items-center pb-4 border-b border-[#6C3FA8]/30">
@@ -191,7 +192,7 @@ const MovimientoModal = ({
               type="number"
               value={cantidad}
               onChange={(e) => setCantidad(e.target.value)}
-              className="w-full p-3 bg-[#2B0D49] border border-[#6C3FA8]/50 rounded-lg text-white focus:ring-2 focus:ring-[#A944FF] outline-none transition-all placeholder:text-gray-500"
+              className={UI_CLASSES.input}
               placeholder="Ingrese la cantidad"
               required
             />
@@ -200,54 +201,52 @@ const MovimientoModal = ({
           {/* Motivo */}
           <div className="grid gap-2">
             <label className="text-xs font-bold text-gray-300 uppercase mb-1">Motivo del Movimiento *</label>
-            <select
-              value={motivo}
-              onChange={(e) => setMotivo(e.target.value)}
-              className="w-full p-3 bg-[#2B0D49] border border-[#6C3FA8]/50 rounded-lg text-white focus:ring-2 focus:ring-[#A944FF] outline-none transition-all appearance-none [&>option]:bg-[#1A103C]"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2394A3B8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e")`,
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right 0.75rem center',
-                backgroundSize: '1rem',
-              }}
-              required
-            >
-              <option value="" disabled>Seleccionar motivo</option>
-              {tipo === 'entrada'
-                ? motivosEntrada.map(m => <option key={m} value={m}>{m}</option>)
-                : motivosSalida.map(m => <option key={m} value={m}>{m}</option>)
-              }
-            </select>
+            <div className="relative">
+              <select
+                value={motivo}
+                onChange={(e) => setMotivo(e.target.value)}
+                className={UI_CLASSES.select}
+                required
+              >
+                <option value="" disabled>Seleccionar motivo</option>
+                {tipo === 'entrada'
+                  ? motivosEntrada.map(m => <option key={m} value={m}>{m}</option>)
+                  : motivosSalida.map(m => <option key={m} value={m}>{m}</option>)
+                }
+              </select>
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+              </div>
+            </div>
           </div>
 
           {/* Usuario Responsable */}
           <div className="grid gap-2">
             <label className="text-xs font-bold text-gray-300 uppercase mb-1">Usuario Responsable</label>
-            <select
-              value={usuario}
-              onChange={(e) => setUsuario(e.target.value)}
-              className="w-full p-3 bg-[#2B0D49] border border-[#6C3FA8]/50 rounded-lg text-white focus:ring-2 focus:ring-[#A944FF] outline-none transition-all appearance-none [&>option]:bg-[#1A103C]"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2394A3B8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e")`,
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right 0.75rem center',
-                backgroundSize: '1rem',
-              }}
-            >
-              <option value="Administrador">Administrador</option>
-              <option value="Trabajador">Trabajador</option>
-            </select>
+            <div className="relative">
+              <select
+                value={usuario}
+                onChange={(e) => setUsuario(e.target.value)}
+                className={UI_CLASSES.select}
+              >
+                <option value="Administrador">Administrador</option>
+                <option value="Trabajador">Trabajador</option>
+              </select>
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+              </div>
+            </div>
           </div>
 
           {/* Error Message */}
-          {error && <div className="text-rose-500 text-sm mt-2 font-medium bg-rose-500/10 p-2 rounded-lg border border-rose-500/20">{error}</div>}
+          {error && <div className={`${UI_CLASSES.fadeIn} text-rose-500 text-sm mt-2 font-medium bg-rose-500/10 p-3 rounded-xl border border-rose-500/20`}>{error}</div>}
         </div>
 
         {/* Acciones */}
         <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-[#6C3FA8]/30">
           <button
             onClick={onClose}
-            className="px-6 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all font-bold"
+            className={UI_CLASSES.buttonSecondary}
           >
             Cancelar
           </button>
@@ -257,8 +256,8 @@ const MovimientoModal = ({
             className={`flex items-center justify-center gap-2 px-6 py-2 rounded-lg text-white font-bold transition-all min-w-[200px] shadow-lg ${
               isValid
                 ? (tipo === 'entrada' 
-                    ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-900/20 active:scale-95' 
-                    : 'bg-rose-600 hover:bg-rose-500 shadow-rose-900/20 active:scale-95')
+                    ? UI_CLASSES.buttonSuccess 
+                    : UI_CLASSES.buttonDanger)
                 : 'bg-gray-600/30 cursor-not-allowed opacity-50'
             }`}
           >

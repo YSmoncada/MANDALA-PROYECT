@@ -1,5 +1,6 @@
 import React from 'react';
 import { AlertTriangle, Trash2, X } from 'lucide-react';
+import { UI_CLASSES } from '../constants/ui';
 
 const ConfirmModal = ({ open, onClose, onConfirm, title, message, confirmText = "Eliminar", cancelText = "Cancelar", type = "danger" }) => {
     if (!open) return null;
@@ -7,9 +8,9 @@ const ConfirmModal = ({ open, onClose, onConfirm, title, message, confirmText = 
     const isDanger = type === "danger";
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
+        <div className={`fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm ${UI_CLASSES.fadeIn}`}>
             <div 
-                className="relative w-full max-w-sm bg-[#1A103C] border border-[#6C3FA8] rounded-2xl shadow-2xl overflow-hidden transform transition-all animate-scaleIn"
+                className={`${UI_CLASSES.glassCard} relative w-full max-w-sm bg-[#1A103C] p-0 overflow-hidden transform transition-all ${UI_CLASSES.scaleIn}`}
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header/Banner decorative */}
@@ -35,17 +36,13 @@ const ConfirmModal = ({ open, onClose, onConfirm, title, message, confirmText = 
                     <div className="flex flex-col sm:flex-row gap-3 w-full">
                         <button
                             onClick={onClose}
-                            className="flex-1 px-6 py-3 bg-white/5 hover:bg-white/10 text-white font-semibold rounded-xl transition-all"
+                            className={UI_CLASSES.buttonSecondary}
                         >
                             {cancelText}
                         </button>
                         <button
                             onClick={onConfirm}
-                            className={`flex-1 px-6 py-3 font-bold rounded-xl text-white transition-all shadow-lg ${
-                                isDanger 
-                                ? 'bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 shadow-rose-900/40' 
-                                : 'bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] hover:brightness-110 shadow-purple-900/20'
-                            }`}
+                            className={`flex-1 ${isDanger ? UI_CLASSES.buttonDanger : UI_CLASSES.buttonPrimary}`}
                         >
                             {confirmText}
                         </button>

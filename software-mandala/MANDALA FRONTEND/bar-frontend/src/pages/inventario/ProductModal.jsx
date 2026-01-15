@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ImageUploader from "../../components/ImageUploader";
 import ProductFormFields from "../../components/ProductFormFields";
 import { Loader2 } from "lucide-react";
+import { UI_CLASSES } from "../../constants/ui";
 
 function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImageChange, imagePreview, originalImageUrl }) {
   if (!open) return null;
@@ -23,8 +24,8 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn" onClick={onClose}>
-      <div className="bg-[#1A103C] border border-[#6C3FA8] rounded-2xl shadow-2xl w-full max-w-2xl relative max-h-[90vh] overflow-y-auto" onClick={handleContentClick}>
+    <div className={`fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 ${UI_CLASSES.fadeIn}`} onClick={onClose}>
+      <div className={`${UI_CLASSES.glassCard} bg-[#1A103C] w-full max-w-2xl relative max-h-[90vh] overflow-y-auto ${UI_CLASSES.scaleIn}`} onClick={handleContentClick}>
 
         <button
           onClick={onClose}
@@ -57,14 +58,14 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
             </div>
 
             {/* Botones de Acción */}
-            <div className="w-full max-w-md mt-4 flex flex-col-reverse sm:flex-row justify-end gap-4">
-              <button type="button" onClick={onClose} className="px-6 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors">
+            <div className="w-full max-w-md mt-4 flex flex-col-reverse sm:flex-row justify-end gap-3">
+              <button type="button" onClick={onClose} className={UI_CLASSES.buttonSecondary}>
                 Cancelar
               </button>
               <button
                 type="submit"
                 disabled={isSaving}
-                className="px-6 py-2 bg-[#6C3FA8] text-white font-bold rounded-lg hover:bg-[#5A328E] transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed min-w-[180px]"
+                className={UI_CLASSES.buttonPrimary}
               >
                 {isSaving && <Loader2 size={16} className="animate-spin" />}
                 {isSaving ? 'Guardando...' : (editId ? "Guardar Cambios" : "Guardar Producto")}
