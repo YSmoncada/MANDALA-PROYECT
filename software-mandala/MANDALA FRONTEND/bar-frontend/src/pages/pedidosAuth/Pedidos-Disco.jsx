@@ -134,6 +134,23 @@ export default function PedidosDisco() {
         };
     };
 
+    const handleBackFromSystemLogin = () => {
+        setShowSystemLogin(false);
+        setSysUsername("");
+        setSysPassword("");
+    };
+
+    const handleBackFromAddMesera = () => {
+        setShowAddForm(false);
+        setNewMeseraName("");
+        setNewMeseraCode("");
+    };
+
+    const handleBackFromPin = () => {
+        handleLogout(); // Esto limpia la mesera seleccionada
+        setSysPassword(""); // Por si acaso
+    };
+
     return (
         // Unified Background: Matches Home-Disco and Inventario-Disco
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white selection:bg-purple-500/30">
@@ -178,7 +195,7 @@ export default function PedidosDisco() {
                                 />
                             </div>
                             <div className="flex gap-3 mt-6">
-                                <button type="button" onClick={() => setShowSystemLogin(false)} className="flex-1 bg-white/5 hover:bg-white/10 text-[#C2B6D9] py-3 rounded-xl font-bold transition-all text-sm tracking-wide border border-white/5">VOLVER</button>
+                                <button type="button" onClick={handleBackFromSystemLogin} className="flex-1 bg-white/5 hover:bg-white/10 text-[#C2B6D9] py-3 rounded-xl font-bold transition-all text-sm tracking-wide border border-white/5">VOLVER</button>
                                 <button type="submit" className="flex-1 bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] hover:brightness-110 text-white py-3 rounded-xl font-bold shadow-lg shadow-[#A944FF]/30 transition-all transform hover:scale-[1.02] text-sm tracking-wide">INGRESAR</button>
                             </div>
                         </form>
@@ -223,7 +240,7 @@ export default function PedidosDisco() {
                                 />
                             </div>
                             <div className="flex gap-3 mt-6">
-                                <button type="button" onClick={() => setShowAddForm(false)} className="flex-1 bg-white/5 hover:bg-white/10 text-[#C2B6D9] py-3 rounded-xl font-bold transition-all text-sm tracking-wide border border-white/5">CANCELAR</button>
+                                <button type="button" onClick={handleBackFromAddMesera} className="flex-1 bg-white/5 hover:bg-white/10 text-[#C2B6D9] py-3 rounded-xl font-bold transition-all text-sm tracking-wide border border-white/5">CANCELAR</button>
                                 <button type="submit" className="flex-1 bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] hover:brightness-110 text-white py-3 rounded-xl font-bold shadow-lg shadow-[#A944FF]/30 transition-all transform hover:scale-[1.02] text-sm tracking-wide">GUARDAR</button>
                             </div>
                         </form>
@@ -290,7 +307,7 @@ export default function PedidosDisco() {
                     <div className="w-full max-w-md animate-fadeIn flex justify-center">
                         <CodeInputDisco
                             mesera={mesera}
-                            onBack={handleLogout}
+                            onBack={handleBackFromPin}
                             onSubmit={async (code) => {
                                 const success = await handleCodigoSubmit(code);
                                 if (!success) {
