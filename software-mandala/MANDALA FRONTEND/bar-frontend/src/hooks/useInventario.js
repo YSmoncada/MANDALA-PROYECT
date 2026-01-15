@@ -1,10 +1,10 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { validateImageFile, createImagePreview } from "../utils/imageUtils";
 import toast from 'react-hot-toast';
 import * as inventarioService from "../services/inventarioService";
 import { useMovimientos } from "./useMovimientos";
 
-const initialForm = {
+const INITIAL_FORM = {
     nombre: "",
     categoria: "",
     stock: 0,
@@ -14,71 +14,101 @@ const initialForm = {
     unidad: "",
     proveedor: "",
     ubicacion: "",
-    imagen: "", // Ahora será una URL (string)
+    imagen: "", 
 };
 
+/**
+ * Hook to manage inventory state and operations.
+ * Optimized for performance and readability.
+ */
 export const useInventario = () => {
+    // --- Data State ---
     const [productos, setProductos] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    
+    // --- UI/Modal States ---
     const [modalOpen, setModalOpen] = useState(false);
-    const [form, setForm] = useState(initialForm);
+    const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+    
+    // --- Form & Edit State ---
+    const [form, setForm] = useState(INITIAL_FORM);
     const [editId, setEditId] = useState(null);
+    const [productToDelete, setProductToDelete] = useState(null);
+    
+    // --- Image States ---
+    const [imagePreview, setImagePreview] = useState(null);
+    const [imageFile, setImageFile] = useState(null);
+    const [originalImageUrl, setOriginalImageUrl] = useState(null);
+    
+    // --- Search & Filtering States ---
     const [query, setQuery] = useState("");
     const [categoria, setCategoria] = useState("all");
-    const [imagePreview, setImagePreview] = useState(null);
-    const [imageFile, setImageFile] = useState(null); // Estado para el archivo de imagen
-    const [originalImageUrl, setOriginalImageUrl] = useState(null);
-    const [isUploading, setIsUploading] = useState(false); // Estado para el feedback de subida
-    const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-    const [productToDelete, setProductToDelete] = useState(null);
 
-    const fetchProductos = async () => {
-        const data = await inventarioService.getProductos();
-        setProductos(data);
-    };
+    // --- Actions ---
+    
+    const fetchProductos = useCallback(async () => {
+        try {
+            setIsLoading(true);
+            const data = await inventarioService.getProductos();
+            setProductos(data);
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
 
     useEffect(() => {
         fetchProductos();
-    }, []);
+    }, [fetchProductos]);
 
+    // --- Derived State (Memoized) ---
     const filtered = useMemo(() => {
-        return productos.filter((producto) => {
-            const matchesQuery = producto.nombre.toLowerCase().includes(query.toLowerCase());
-            const matchesCategoria = !categoria || categoria === "all" || producto.categoria === categoria;
+        const q = query.toLowerCase().trim();
+        return productos.filter((p) => {
+            const matchesQuery = p.nombre.toLowerCase().includes(q);
+            const matchesCategoria = !categoria || categoria === "all" || p.categoria === categoria;
             return matchesQuery && matchesCategoria;
         });
     }, [productos, query, categoria]);
 
     const categorias = useMemo(() => {
-        const categoriasUnicas = [...new Set(productos.map((p) => p.categoria).filter(Boolean))];
-        return ["all", ...categoriasUnicas];
+        const unique = [...new Set(productos.map((p) => p.categoria).filter(Boolean))];
+        return ["all", ...unique];
     }, [productos]);
-    const totalProductos = filtered.length;
-    const totalUnidades = filtered.reduce((sum, p) => sum + p.stock, 0);
 
-    const handleAdd = () => {
-        setForm(initialForm);
+    const stats = useMemo(() => ({
+        totalProductos: filtered.length,
+        totalUnidades: filtered.reduce((sum, p) => sum + p.stock, 0)
+    }), [filtered]);
+
+    // --- Handlers (Memoized) ---
+    
+    const handleAdd = useCallback(() => {
+        setForm(INITIAL_FORM);
         setEditId(null);
         setImagePreview(null);
         setImageFile(null);
         setOriginalImageUrl(null);
         setModalOpen(true);
-    };
+    }, []);
 
-    const handleEdit = (producto) => {
-        setForm(producto); // Carga el producto completo, incluyendo la URL de la imagen
+    const handleEdit = useCallback((producto) => {
+        setForm(producto);
         setEditId(producto.id);
-        setImageFile(null); // No hay archivo nuevo aún
-        setImagePreview(producto.imagen); // Mostrar la imagen existente
-        setOriginalImageUrl(producto.imagen); // Guardar la URL original
+        setImageFile(null);
+        setImagePreview(producto.imagen);
+        setOriginalImageUrl(producto.imagen);
         setModalOpen(true);
-    };
+    }, []);
 
-    const handleDelete = (producto) => {
+    const handleDelete = useCallback((producto) => {
         setProductToDelete(producto);
         setDeleteConfirmOpen(true);
-    };
+    }, []);
 
-    const confirmDelete = async () => {
+    const confirmDelete = useCallback(async () => {
         if (!productToDelete) return;
         try {
             await inventarioService.deleteProducto(productToDelete.id);
@@ -86,147 +116,109 @@ export const useInventario = () => {
             setDeleteConfirmOpen(false);
             setProductToDelete(null);
         } catch (error) {
-            console.error("Error al eliminar producto:", error);
+            console.error("Error deleting product:", error);
         }
-    };
+    }, [productToDelete, fetchProductos]);
 
-    const handleChange = (e) => {
+    const handleChange = useCallback((e) => {
         const { name, value } = e.target;
-        setForm({ ...form, [name]: value });
-    };
+        setForm(prev => ({ ...prev, [name]: value }));
+    }, []);
 
-    const handleImageChange = async (e) => {
+    const handleImageChange = useCallback(async (e) => {
         const file = e.target.files[0];
-
-        // Si no hay archivo (usuario eliminó la imagen o canceló)
         if (!file) {
-            setImageFile(null); // Limpiar el archivo nuevo
-
-            // Si estamos editando, restaurar la imagen original
-            if (editId && originalImageUrl) {
-                setImagePreview(originalImageUrl);
-            } else {
-                // Si es nuevo producto, limpiar el preview
-                setImagePreview(null);
-            }
+            setImageFile(null);
+            setImagePreview(editId ? originalImageUrl : null);
             return;
         }
 
         try {
             validateImageFile(file);
             const preview = await createImagePreview(file);
-            setImagePreview(preview); // Muestra la previsualización
-            setImageFile(file); // Guarda el archivo para subirlo al guardar
+            setImagePreview(preview);
+            setImageFile(file);
         } catch (error) {
             toast.error(error.message);
         }
-    };
+    }, [editId, originalImageUrl]);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
 
-        // --- VALIDACIÓN DE NOMBRE ÚNICO ---
+        // Unique Name Validation
         const nombreActual = form.nombre.trim().toLowerCase();
-        const productoExistente = productos.find(p => p.nombre.trim().toLowerCase() === nombreActual);
-
-        // Si el producto existe y (estamos creando uno nuevo O estamos editando y el ID es diferente)
-        if (productoExistente && (!editId || String(productoExistente.id) !== String(editId))) {
+        const exists = productos.find(p => p.nombre.trim().toLowerCase() === nombreActual);
+        if (exists && (!editId || String(exists.id) !== String(editId))) {
             toast.error("Ya existe un producto con este nombre.");
-            return; // Detiene el envío del formulario
+            return;
         }
 
-        // --- VALIDACIONES ---
-        const stockActual = parseInt(form.stock, 10);
-        const stockMinimo = parseInt(form.stock_minimo, 10) || 0;
-        const stockMaximo = parseInt(form.stock_maximo, 10) || 0;
-
-        // Validar solo si ambos valores son números válidos y mayores que cero
-        if (stockMaximo > 0 && stockMinimo > 0 && stockMaximo <= stockMinimo) {
+        // Stock Validation
+        const min = parseInt(form.stock_minimo, 10) || 0;
+        const max = parseInt(form.stock_maximo, 10) || 0;
+        if (max > 0 && min > 0 && max <= min) {
             toast.error("El stock máximo debe ser mayor que el stock mínimo.");
-            return; // Detiene el envío del formulario
+            return;
         }
 
-        // Prepara el payload para tu backend
-        const payload = {
-            ...form,
-        };
-
-        // Manejo de la imagen en el payload
-        if (imageFile) {
-            // Si hay un archivo nuevo, se enviará con FormData (no incluir en payload JSON)
-            delete payload.imagen;
-        } else {
-            // Si no hay archivo nuevo (tanto al crear como al editar), NO enviar el campo imagen
-            // El backend mantendrá la imagen existente si estamos editando
-            delete payload.imagen;
-        }
-
-        // --- SEGURIDAD DE STOCK EN EDICIÓN ---
-        if (editId) {
-            // Si estamos editando, NO enviamos el stock para evitar que valores antiguos
-            // sobrescriban ventas o movimientos que ocurrieron mientras el modal estaba abierto.
-            delete payload.stock;
-        }
-
-        // DEBUG: Ver qué se está enviando
-        console.log('🔍 DEBUG - Datos a enviar:');
-        console.log('editId:', editId);
-        console.log('imageFile:', imageFile);
-        console.log('originalImageUrl:', originalImageUrl);
-        console.log('form.imagen:', form.imagen);
-        console.log('payload.imagen:', payload.imagen);
-        console.log('payload completo:', payload);
+        const payload = { ...form };
+        delete payload.imagen; // Let backend/service handle image logic
+        
+        if (editId) delete payload.stock; // Safety for stock in edit mode
 
         try {
             setIsUploading(true);
-
-            // Enviar el archivo de imagen directamente al backend
-            if (imageFile) {
-                const uploadToast = toast.loading('Guardando producto y subiendo imagen...');
-                try {
-                    await inventarioService.saveProducto(editId, payload, imageFile);
-                    toast.success('Producto guardado con éxito.', { id: uploadToast });
-                } catch (error) {
-                    toast.error('Error al guardar el producto.', { id: uploadToast });
-                    console.error("Error al guardar producto:", error);
-                    console.error("Respuesta del servidor:", error.response?.data);
-                    return;
-                } finally {
-                    setIsUploading(false);
-                }
-            } else {
-                // Si no hay imagen nueva, guardar solo los datos (con la imagen original si existe)
-                console.log('📤 Enviando sin archivo de imagen...');
-                try {
-                    await inventarioService.saveProducto(editId, payload);
-                    toast.success(editId ? 'Producto actualizado con éxito.' : 'Producto creado con éxito.');
-                } catch (error) {
-                    console.error("❌ Error al guardar producto:", error);
-                    console.error("Respuesta del servidor:", error.response?.data);
-                    toast.error(error.response?.data?.detail || 'Error al guardar el producto.');
-                    return;
-                }
-            }
-
-            fetchProductos();
+            await inventarioService.saveProducto(editId, payload, imageFile);
+            await fetchProductos();
             setModalOpen(false);
         } catch (error) {
-            console.error("Error al guardar el producto:", error);
+            console.error("Error saving product:", error);
+            toast.error(error.response?.data?.detail || 'Error al guardar el producto.');
         } finally {
             setIsUploading(false);
         }
-    };
+    }, [form, editId, productos, imageFile, fetchProductos]);
 
-    // Usar el hook de movimientos
     const { handleMovimiento } = useMovimientos(fetchProductos);
 
     return {
-        filtered, modalOpen, form, editId, query, categorias, totalProductos, totalUnidades,
-        categoria, // Exportamos el estado de la categoría seleccionada
-        imagePreview, originalImageUrl, isUploading, setModalOpen, setQuery, setCategoria, handleAdd,
-        handleEdit, handleDelete, handleSubmit, handleChange, handleImageChange, handleMovimiento,
-        fetchProductos,
-        // Nuevos campos para el modal de confirmación
-        deleteConfirmOpen, setDeleteConfirmOpen, productToDelete, confirmDelete
+        // Data
+        filtered,
+        productos,
+        isLoading,
+        
+        // UI State
+        modalOpen,
+        deleteConfirmOpen,
+        isUploading,
+        
+        // Form/Edit State
+        form,
+        editId,
+        productToDelete,
+        imagePreview,
+        originalImageUrl,
+        
+        // Filters
+        query,
+        categoria,
+        categorias,
+        ...stats,
+        
+        // Actions
+        setModalOpen,
+        setDeleteConfirmOpen,
+        setQuery,
+        setCategoria,
+        handleAdd,
+        handleEdit,
+        handleDelete,
+        confirmDelete,
+        handleSubmit,
+        handleChange,
+        handleImageChange,
+        handleMovimiento,
+        fetchProductos
     };
 };

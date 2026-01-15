@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import PageLayout from "../../components/PageLayout";
 import InventoryCard from "./components/InventoryCard";
 import ProductTable from "./components/ProductTable";
@@ -10,42 +10,56 @@ import { UI_CLASSES } from "../../constants/ui";
 
 /**
  * InventoryPage handles the complete inventory management UI.
+ * Refactored for better performance, scalability and readability.
  */
 function InventoryPage() {
     const {
+        // Data
         filtered,
+        isLoading,
+        
+        // UI State
         modalOpen,
+        deleteConfirmOpen,
+        isUploading,
+        
+        // Form/Edit State
         form,
         editId,
-        query,
-        categorias,
-        categoria,
-        totalProductos,
-        totalUnidades,
+        productToDelete,
         imagePreview,
         originalImageUrl,
+        
+        // Filters
+        query,
+        categoria,
+        categorias,
+        totalProductos,
+        totalUnidades,
+        
+        // Actions
         setModalOpen,
+        setDeleteConfirmOpen,
         setQuery,
         setCategoria,
         handleAdd,
         handleEdit,
         handleDelete,
+        confirmDelete,
         handleSubmit,
         handleChange,
         handleImageChange,
-        handleMovimiento,
-        deleteConfirmOpen, 
-        setDeleteConfirmOpen, 
-        productToDelete, 
-        confirmDelete
+        handleMovimiento
     } = useInventario();
 
     return (
         <PageLayout title="Gestión de Inventario">
             {/* Main Content Area */}
-            <div className={UI_CLASSES.glassCard}>
+            <div className={`${UI_CLASSES.glassCard} p-4 md:p-8`}>
+                {/* Header Actions */}
                 <InventoryCard onAdd={handleAdd} />
 
+                {/* Filters and Statistics */}
                 <FiltersSummary
                     query={query}
                     onQueryChange={setQuery}
@@ -56,12 +70,20 @@ function InventoryPage() {
                     totalUnidades={totalUnidades}
                 />
 
-                <ProductTable
-                    productos={filtered}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
-                    onMovimiento={handleMovimiento}
-                />
+                {/* Product List (Table/Grid) */}
+                {isLoading && filtered.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-20">
+                        <div className="w-12 h-12 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin mb-4"></div>
+                        <p className="text-purple-400 font-bold text-xs tracking-widest uppercase">Cargando inventario...</p>
+                    </div>
+                ) : (
+                    <ProductTable
+                        productos={filtered}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                        onMovimiento={handleMovimiento}
+                    />
+                )}
             </div>
 
             {/* Modals and Overlays */}
@@ -91,4 +113,4 @@ function InventoryPage() {
     );
 }
 
-export default InventoryPage;
+export default memo(InventoryPage);

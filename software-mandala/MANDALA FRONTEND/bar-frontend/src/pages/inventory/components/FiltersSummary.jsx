@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Search, Filter, Package, Database } from 'lucide-react';
 import { UI_CLASSES } from '../../../constants/ui';
 
-const FiltersSummary = ({
+const FiltersSummary = memo(({
   query,
   onQueryChange,
   categorias,
@@ -72,6 +72,6 @@ const FiltersSummary = ({
       </div>
     </div>
   );
-};
+});
 
 export default FiltersSummary;

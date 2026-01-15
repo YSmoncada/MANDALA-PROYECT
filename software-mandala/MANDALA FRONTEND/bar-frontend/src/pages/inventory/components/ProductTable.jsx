@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, memo, useCallback } from "react";
 import { Edit2, Trash2, PlusCircle, LayoutGrid, List } from "lucide-react";
 import MovementModal from "./MovementModal";
 import { UI_CLASSES } from "../../../constants/ui";
 
-const StockStatus = ({ stock, min, max }) => {
+/**
+ * Visual indicator for stock levels.
+ */
+const StockStatus = memo(({ stock, min, max }) => {
     let status = { label: 'Óptimo', color: 'text-emerald-500', bg: 'bg-emerald-500/20', border: 'border-emerald-500/40' };
 
     if (stock === 0) {
@@ -22,23 +25,53 @@ const StockStatus = ({ stock, min, max }) => {
             </span>
         </div>
     );
-};
+});
 
-const ProductTable = ({ productos, onEdit, onDelete, onMovimiento }) => {
+/**
+ * Table/Grid view for products.
+ * Optimized with memoization to prevent unnecessary re-renders.
+ */
+const ProductTable = memo(({ productos, onEdit, onDelete, onMovimiento }) => {
     const [movimientoModalOpen, setMovimientoModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [viewMode, setViewMode] = useState('table'); // 'table' or 'grid'
 
-    const openMovimiento = (producto) => {
+    const openMovimiento = useCallback((producto) => {
         setSelectedProduct(producto);
         setMovimientoModalOpen(true);
-    };
+    }, []);
 
-    const handleMovimientoSubmit = async (payload) => {
+    const handleMovimientoSubmit = useCallback(async (payload) => {
         if (typeof onMovimiento === 'function') {
             await onMovimiento(payload);
         }
-    };
+    }, [onMovimiento]);
+
+    const renderActionButtons = useCallback((producto, size = 14) => (
+        <div className="flex items-center justify-end gap-1 md:gap-2">
+            <button
+                onClick={() => openMovimiento(producto)}
+                className="p-1.5 md:p-2 bg-emerald-600/20 text-emerald-400 rounded-lg hover:bg-emerald-600 hover:text-white transition-all shadow-lg border border-emerald-500/20"
+                title="Registrar Movimiento"
+            >
+                <PlusCircle size={size} className="md:w-[18px] md:h-[18px]" />
+            </button>
+            <button
+                onClick={() => onEdit(producto)}
+                className="p-1.5 md:p-2 bg-blue-600/20 text-blue-400 rounded-lg hover:bg-blue-600 hover:text-white transition-all shadow-lg border border-blue-500/20"
+                title="Editar Producto"
+            >
+                <Edit2 size={size} className="md:w-[18px] md:h-[18px]" />
+            </button>
+            <button
+                onClick={() => onDelete(producto)}
+                className="p-1.5 md:p-2 bg-rose-600/20 text-rose-400 rounded-lg hover:bg-rose-600 hover:text-white transition-all shadow-lg border border-rose-500/20"
+                title="Eliminar Producto"
+            >
+                <Trash2 size={size} className="md:w-[18px] md:h-[18px]" />
+            </button>
+        </div>
+    ), [onEdit, onDelete, openMovimiento]);
 
     return (
         <div className="space-y-4">
@@ -103,29 +136,7 @@ const ProductTable = ({ productos, onEdit, onDelete, onMovimiento }) => {
                                         ${Number(producto.precio).toLocaleString('es-CO', { maximumFractionDigits: 0 })}
                                     </td>
                                     <td className="px-3 md:px-6 py-3">
-                                        <div className="flex items-center justify-end gap-1 md:gap-2">
-                                            <button
-                                                onClick={() => openMovimiento(producto)}
-                                                className="p-1.5 md:p-2 bg-emerald-600/20 text-emerald-400 rounded-lg hover:bg-emerald-600 hover:text-white transition-all shadow-lg border border-emerald-500/20"
-                                                title="Registrar Movimiento"
-                                            >
-                                                <PlusCircle size={14} className="md:w-[18px] md:h-[18px]" />
-                                            </button>
-                                            <button
-                                                onClick={() => onEdit(producto)}
-                                                className="p-1.5 md:p-2 bg-blue-600/20 text-blue-400 rounded-lg hover:bg-blue-600 hover:text-white transition-all shadow-lg border border-blue-500/20"
-                                                title="Editar Producto"
-                                            >
-                                                <Edit2 size={14} className="md:w-[18px] md:h-[18px]" />
-                                            </button>
-                                            <button
-                                                onClick={() => onDelete(producto)}
-                                                className="p-1.5 md:p-2 bg-rose-600/20 text-rose-400 rounded-lg hover:bg-rose-600 hover:text-white transition-all shadow-lg border border-rose-500/20"
-                                                title="Eliminar Producto"
-                                            >
-                                                <Trash2 size={14} className="md:w-[18px] md:h-[18px]" />
-                                            </button>
-                                        </div>
+                                        {renderActionButtons(producto)}
                                     </td>
                                 </tr>
                             ))}
@@ -161,26 +172,7 @@ const ProductTable = ({ productos, onEdit, onDelete, onMovimiento }) => {
                             
                             <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/5">
                                 <span className="text-xl font-bold text-white">${Number(producto.precio).toLocaleString('es-CO', { maximumFractionDigits: 0 })}</span>
-                                <div className="flex gap-2">
-                                    <button
-                                        onClick={() => openMovimiento(producto)}
-                                        className="p-2 bg-emerald-600/20 text-emerald-400 rounded-lg hover:bg-emerald-600 hover:text-white transition-all"
-                                    >
-                                        <PlusCircle size={18} />
-                                    </button>
-                                    <button
-                                        onClick={() => onEdit(producto)}
-                                        className="p-2 bg-blue-600/20 text-blue-400 rounded-lg hover:bg-blue-600 hover:text-white transition-all"
-                                    >
-                                        <Edit2 size={18} />
-                                    </button>
-                                    <button
-                                        onClick={() => onDelete(producto)}
-                                        className="p-2 bg-rose-600/20 text-rose-400 rounded-lg hover:bg-rose-600 hover:text-white transition-all"
-                                    >
-                                        <Trash2 size={18} />
-                                    </button>
-                                </div>
+                                {renderActionButtons(producto, 18)}
                             </div>
                         </div>
                     ))}
@@ -199,6 +191,6 @@ const ProductTable = ({ productos, onEdit, onDelete, onMovimiento }) => {
             )}
         </div>
     );
-};
+});
 
 export default ProductTable;
