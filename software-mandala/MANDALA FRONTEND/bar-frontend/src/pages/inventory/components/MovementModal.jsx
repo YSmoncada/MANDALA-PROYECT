@@ -75,8 +75,8 @@ const MovementModal = ({
   };
 
   return (
-    <div className={`fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 ${UI_CLASSES.fadeIn}`} onClick={onClose}>
-      <div className={`${UI_CLASSES.glassCard} bg-[#1A103C] w-full max-w-lg mx-auto relative max-h-[90vh] overflow-y-auto ${UI_CLASSES.scaleIn}`} onClick={(e) => e.stopPropagation()}>
+    <div className={`fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 md:p-10 ${UI_CLASSES.fadeIn}`} onClick={onClose}>
+      <div className={`${UI_CLASSES.glassCard} bg-[#1A103C] w-full max-w-lg mx-auto relative max-h-[85vh] overflow-y-auto ${UI_CLASSES.scaleIn} shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-white/20`} onClick={(e) => e.stopPropagation()}>
 
         {/* Modal Header */}
         <div className="flex justify-between items-center pb-4 border-b border-[#6C3FA8]/30">

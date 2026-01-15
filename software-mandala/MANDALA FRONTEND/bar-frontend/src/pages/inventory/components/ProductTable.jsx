@@ -4,14 +4,14 @@ import MovementModal from "./MovementModal";
 import { UI_CLASSES } from "../../../constants/ui";
 
 const StockStatus = ({ stock, min, max }) => {
-    let status = { label: 'Óptimo', color: 'text-emerald-400', bg: 'bg-emerald-500/20', border: 'border-emerald-500/40' };
+    let status = { label: 'Óptimo', color: 'text-emerald-500', bg: 'bg-emerald-500/20', border: 'border-emerald-500/40' };
 
     if (stock === 0) {
-        status = { label: 'Agotado', color: 'text-rose-500', bg: 'bg-rose-500/20', border: 'border-rose-500/40' };
+        status = { label: 'Agotado', color: 'text-rose-600', bg: 'bg-rose-600/20', border: 'border-rose-600/40' };
     } else if (stock <= min) {
-        status = { label: 'Bajo Stock', color: 'text-orange-400', bg: 'bg-orange-500/20', border: 'border-orange-500/40' };
+        status = { label: 'Bajo Stock', color: 'text-yellow-200/80', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20' };
     } else if (max > 0 && stock >= max) {
-        status = { label: 'Stock Alto', color: 'text-cyan-400', bg: 'bg-cyan-500/20', border: 'border-cyan-500/40' };
+        status = { label: 'Stock Alto', color: 'text-rose-500', bg: 'bg-rose-500/20', border: 'border-rose-500/40' };
     }
 
     return (

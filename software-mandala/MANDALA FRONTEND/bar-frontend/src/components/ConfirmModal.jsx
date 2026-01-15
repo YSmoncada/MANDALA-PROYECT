@@ -8,9 +8,9 @@ const ConfirmModal = ({ open, onClose, onConfirm, title, message, confirmText = 
     const isDanger = type === "danger";
 
     return (
-        <div className={`fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm ${UI_CLASSES.fadeIn}`}>
+        <div className={`fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10 bg-black/80 backdrop-blur-md ${UI_CLASSES.fadeIn}`}>
             <div 
-                className={`${UI_CLASSES.glassCard} relative w-full max-w-sm bg-[#1A103C] p-0 overflow-hidden transform transition-all ${UI_CLASSES.scaleIn}`}
+                className={`${UI_CLASSES.glassCard} relative w-full max-w-sm bg-[#1A103C] p-0 overflow-hidden transform transition-all ${UI_CLASSES.scaleIn} shadow-[0_20px_60px_rgba(0,0,0,0.7)] border-white/20`}
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header/Banner decorative */}
