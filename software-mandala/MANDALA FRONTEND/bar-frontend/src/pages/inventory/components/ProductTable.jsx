@@ -63,67 +63,67 @@ const ProductTable = ({ productos, onEdit, onDelete, onMovimiento }) => {
             {viewMode === 'table' ? (
                 <div className="overflow-x-auto rounded-xl border border-white/10 shadow-2xl">
                     <table className="w-full text-left text-sm">
-                        <thead className="bg-[#2B0D49] text-gray-300 font-bold uppercase tracking-wider text-xs">
+                        <thead className="bg-[#2B0D49] text-gray-300 font-bold uppercase tracking-wider text-[10px]">
                             <tr>
-                                <th className="px-6 py-4">Producto</th>
-                                <th className="px-6 py-4">Categoría</th>
-                                <th className="px-6 py-4 text-center">Disponibilidad / Stock</th>
-                                <th className="px-6 py-4 text-center">Precio</th>
-                                <th className="px-6 py-4 text-right">Acciones</th>
+                                <th className="px-3 md:px-6 py-4">Producto</th>
+                                <th className="px-3 md:px-6 py-4">Categoría</th>
+                                <th className="px-3 md:px-6 py-4 text-center">Stock / Estado</th>
+                                <th className="px-3 md:px-6 py-4 text-center">Precio</th>
+                                <th className="px-3 md:px-6 py-4 text-right">Acciones</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
                             {productos.map((producto) => (
                                 <tr key={producto.id} className="hover:bg-white/5 transition-colors group">
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center gap-3">
+                                    <td className="px-3 md:px-6 py-3">
+                                        <div className="flex items-center gap-2 md:gap-3">
                                             {producto.imagen ? (
-                                                <img src={producto.imagen} alt={producto.nombre} className="w-10 h-10 rounded-lg object-cover border border-white/10" />
+                                                <img src={producto.imagen} alt={producto.nombre} className="w-8 h-8 md:w-10 md:h-10 rounded-lg object-cover border border-white/10" />
                                             ) : (
-                                                <div className="w-10 h-10 rounded-lg bg-purple-900/40 flex items-center justify-center border border-purple-500/20">
-                                                    <span className="text-purple-400 font-bold">{producto.nombre?.charAt(0)}</span>
+                                                <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-purple-900/40 flex items-center justify-center border border-purple-500/20 shrink-0">
+                                                    <span className="text-purple-400 font-bold text-xs md:text-base">{producto.nombre?.charAt(0)}</span>
                                                 </div>
                                             )}
-                                            <span className="font-bold text-white group-hover:text-purple-400 transition-colors uppercase">{producto.nombre}</span>
+                                            <span className="font-bold text-white group-hover:text-purple-400 transition-colors uppercase text-xs md:text-sm">{producto.nombre}</span>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4">
-                                        <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-[10px] font-bold uppercase border border-blue-500/20">
+                                    <td className="px-3 md:px-6 py-3">
+                                        <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-[9px] md:text-[10px] font-bold uppercase border border-blue-500/20 whitespace-nowrap">
                                             {producto.categoria}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td className="px-3 md:px-6 py-3">
                                         <StockStatus 
                                             stock={producto.stock} 
                                             min={producto.stock_minimo} 
                                             max={producto.stock_maximo} 
                                         />
                                     </td>
-                                    <td className="px-6 py-4 text-center font-bold text-white text-lg">
+                                    <td className="px-3 md:px-6 py-3 text-center font-bold text-white text-sm md:text-lg">
                                         ${Number(producto.precio).toLocaleString('es-CO', { maximumFractionDigits: 0 })}
                                     </td>
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center justify-end gap-2">
+                                    <td className="px-3 md:px-6 py-3">
+                                        <div className="flex items-center justify-end gap-1 md:gap-2">
                                             <button
                                                 onClick={() => openMovimiento(producto)}
-                                                className="p-2 bg-emerald-600/20 text-emerald-400 rounded-lg hover:bg-emerald-600 hover:text-white transition-all shadow-lg border border-emerald-500/20"
+                                                className="p-1.5 md:p-2 bg-emerald-600/20 text-emerald-400 rounded-lg hover:bg-emerald-600 hover:text-white transition-all shadow-lg border border-emerald-500/20"
                                                 title="Registrar Movimiento"
                                             >
-                                                <PlusCircle size={18} />
+                                                <PlusCircle size={14} className="md:w-[18px] md:h-[18px]" />
                                             </button>
                                             <button
                                                 onClick={() => onEdit(producto)}
-                                                className="p-2 bg-blue-600/20 text-blue-400 rounded-lg hover:bg-blue-600 hover:text-white transition-all shadow-lg border border-blue-500/20"
+                                                className="p-1.5 md:p-2 bg-blue-600/20 text-blue-400 rounded-lg hover:bg-blue-600 hover:text-white transition-all shadow-lg border border-blue-500/20"
                                                 title="Editar Producto"
                                             >
-                                                <Edit2 size={18} />
+                                                <Edit2 size={14} className="md:w-[18px] md:h-[18px]" />
                                             </button>
                                             <button
                                                 onClick={() => onDelete(producto)}
-                                                className="p-2 bg-rose-600/20 text-rose-400 rounded-lg hover:bg-rose-600 hover:text-white transition-all shadow-lg border border-rose-500/20"
+                                                className="p-1.5 md:p-2 bg-rose-600/20 text-rose-400 rounded-lg hover:bg-rose-600 hover:text-white transition-all shadow-lg border border-rose-500/20"
                                                 title="Eliminar Producto"
                                             >
-                                                <Trash2 size={18} />
+                                                <Trash2 size={14} className="md:w-[18px] md:h-[18px]" />
                                             </button>
                                         </div>
                                     </td>
