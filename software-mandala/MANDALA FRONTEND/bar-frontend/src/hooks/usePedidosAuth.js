@@ -1,7 +1,5 @@
-// src/hooks/usePedidosAuth.js
 import { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
-import { API_URL } from '../apiConfig';
+import apiClient from '../utils/apiClient';
 
 export const usePedidosAuth = () => {
     const [meseras, setMeseras] = useState([]);
@@ -15,7 +13,7 @@ export const usePedidosAuth = () => {
     useEffect(() => {
         const fetchMeseras = async () => {
             try {
-                const response = await axios.get(`${API_URL}/meseras/`);
+                const response = await apiClient.get('/meseras/');
                 setMeseras(response.data);
             } catch (error) {
                 setError("No se pudo conectar con el servidor para cargar las meseras.");
@@ -53,7 +51,7 @@ export const usePedidosAuth = () => {
         if (!selectedMesera) return false;
 
         try {
-            const response = await axios.post(`${API_URL}/verificar-codigo-mesera/`, {
+            const response = await apiClient.post('/verificar-codigo-mesera/', {
                 mesera_id: selectedMesera.id,
                 codigo: codigo
             });
@@ -81,7 +79,7 @@ export const usePedidosAuth = () => {
             console.log(`Intentando iniciar sesión como: ${username}`);
             // --------------------------
 
-            const response = await axios.post(`${API_URL}/login/`, { username, password });
+            const response = await apiClient.post('/login/', { username, password });
 
             // --- LÍNEA DE DEPURACIÓN ---
             console.log("Respuesta del backend al login:", response.data);
@@ -134,7 +132,7 @@ export const usePedidosAuth = () => {
 
     const addMesera = async (nombre, codigo) => {
         try {
-            const response = await axios.post(`${API_URL}/meseras/`, { nombre, codigo });
+            const response = await apiClient.post('/meseras/', { nombre, codigo });
             const nuevaMesera = response.data;
             setMeseras(prevMeseras => [nuevaMesera, ...prevMeseras]);
             handleSelectMesera(nuevaMesera);
@@ -152,7 +150,7 @@ export const usePedidosAuth = () => {
 
     const deleteMesera = async (meseraId) => {
         try {
-            await axios.delete(`${API_URL}/meseras/${meseraId}/`);
+            await apiClient.delete(`/meseras/${meseraId}/`);
             setMeseras(prevMeseras => prevMeseras.filter(m => m.id !== meseraId));
             if (selectedMesera?.id === meseraId) {
                 handleLogout();

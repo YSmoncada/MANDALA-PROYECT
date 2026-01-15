@@ -1,24 +1,23 @@
 // src/hooks/usePedido.js
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { API_URL } from '../apiConfig'; // Importar la URL centralizada
+import apiClient from '../utils/apiClient';
 
 export const usePedido = () => {
     const [mesas, setMesas] = useState([]);
     const [selectedMesaId, setSelectedMesaId] = useState('');
     const [isTableLocked, setIsTableLocked] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+
     useEffect(() => {
         const fetchMesas = async () => {
             try {
-                const response = await axios.get(`${API_URL}/mesas/`);
+                const response = await apiClient.get('/mesas/');
                 setMesas(response.data);
                 if (response.data.length > 0) {
                     setSelectedMesaId(response.data[0].id);
                 }
             } catch (error) {
                 console.error("Error al cargar las mesas:", error);
-                alert("No se pudieron cargar las mesas. Asegúrate de que el servidor backend esté funcionando.");
             } finally {
                 setIsLoading(false);
             }
@@ -28,7 +27,7 @@ export const usePedido = () => {
 
     const finalizarPedido = async (pedidoData) => {
         try {
-            await axios.post(`${API_URL}/pedidos/`, pedidoData);
+            await apiClient.post('/pedidos/', pedidoData);
             return { success: true, message: "¡Pedido finalizado y guardado con éxito!" };
         } catch (error) {
             console.error("Error al finalizar el pedido:", error.response?.data || error.message);

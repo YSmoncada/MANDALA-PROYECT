@@ -1,7 +1,6 @@
 // src/hooks/useOrder.js
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { API_URL } from '../apiConfig'; // Importar la URL centralizada
+import apiClient from '../utils/apiClient';
 
 export const useOrder = () => {
     const [productos, setProductos] = useState([]);
@@ -29,7 +28,7 @@ export const useOrder = () => {
     useEffect(() => {
         const fetchProductos = async () => {
             try {
-                const response = await axios.get(`${API_URL}/productos/`);
+                const response = await apiClient.get('/productos/');
                 setProductos(response.data);
             } catch (error) {
                 console.error("Error al cargar los productos:", error);
