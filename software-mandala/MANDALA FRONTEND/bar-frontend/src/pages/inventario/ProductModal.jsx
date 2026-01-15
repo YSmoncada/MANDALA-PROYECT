@@ -63,10 +63,10 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
               <button
                 type="submit"
                 disabled={isSaving}
-                className="px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-black rounded-xl hover:scale-105 hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed min-w-[200px] shadow-lg shadow-blue-900/40 uppercase tracking-tighter"
+                className="px-8 py-3 bg-gradient-to-r from-[#A855F7] to-[#6366F1] text-white font-black rounded-xl hover:scale-105 hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed min-w-[220px] shadow-lg shadow-purple-900/40 uppercase tracking-widest text-sm border border-white/10"
               >
                 {isSaving && <Loader2 size={18} className="animate-spin" />}
-                {isSaving ? 'Guardando...' : (editId ? "Confirmar Cambios" : "Agregar Producto")}
+                {isSaving ? 'PROCESANDO...' : (editId ? "CONFIRMAR CAMBIOS" : "AGREGAR PRODUCTO")}
               </button>
             </div>
           </form>

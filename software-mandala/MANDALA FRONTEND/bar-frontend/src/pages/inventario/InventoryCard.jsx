@@ -11,10 +11,10 @@ export default function InventoryCard({ onAdd }) {
       </div>
       <button
         onClick={onAdd}
-        className="w-full md:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-black py-3 px-6 rounded-xl hover:scale-105 hover:shadow-cyan-500/25 transition-all duration-300 shadow-xl shadow-cyan-900/20 group"
+        className="w-full md:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-[#A855F7] to-[#6366F1] text-white font-black py-3 px-6 rounded-xl hover:scale-105 hover:shadow-purple-500/30 transition-all duration-300 shadow-xl shadow-purple-900/40 group border border-white/10"
       >
         <Plus size={22} className="group-hover:rotate-90 transition-transform duration-300" />
-        <span className="tracking-wide">AGREGAR PRODUCTO</span>
+        <span className="tracking-widest text-sm">AGREGAR PRODUCTO</span>
       </button>
     </div>
   );
