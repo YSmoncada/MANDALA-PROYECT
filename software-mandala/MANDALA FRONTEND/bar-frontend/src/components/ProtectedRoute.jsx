@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { usePedidosContext } from '../context/PedidosContext';
 
-import LoadingFallback from './LoadingFallback';
+import LoadingSpinner from './LoadingSpinner';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
     const { auth } = usePedidosContext();
@@ -27,7 +27,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     }, [isInitialized, currentRole, navigate, allowedRoles]);
 
     if (!isInitialized) {
-        return <LoadingFallback message="Verificando permisos..." />;
+        return <LoadingSpinner message="Verificando permisos..." />;
     }
 
     // Si el rol es válido, renderiza el componente hijo (la página)
@@ -35,8 +35,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
         return children;
     }
 
-    // Mientras se redirige, muestra el loader para evitar parpadeos
-    return <LoadingFallback message="Redirigiendo..." />;
+    return <LoadingSpinner message="Redirigiendo..." />;
 };
 
 export default ProtectedRoute;

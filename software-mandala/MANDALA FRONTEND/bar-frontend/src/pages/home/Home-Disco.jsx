@@ -2,8 +2,10 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Package, ClipboardList, SquareKanban, History, GlassWater, DollarSign, LogOut, Users } from "lucide-react";
 import { usePedidosContext } from "../../context/PedidosContext";
-import LoadingFallback from "../../components/LoadingFallback";
 
+
+
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 // Definimos los módulos fuera del componente para mayor claridad y rendimiento.
 const ALL_MODULES = [
@@ -90,7 +92,7 @@ function HomeDisco() {
 
 
     // Muestra un spinner de carga mientras se inicializa la autenticación.
-    if (!isInitialized) return <LoadingFallback message="Verificando sesión..." />;
+    if (!isInitialized) return <LoadingSpinner message="Verificando sesión..." />;
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white overflow-hidden relative selection:bg-purple-500/30">
