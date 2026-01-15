@@ -13,7 +13,7 @@ const ConfirmModal = ({ open, onClose, onConfirm, title, message, confirmText = 
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header/Banner decorative */}
-                <div className={`h-2 w-full ${isDanger ? 'bg-red-500' : 'bg-blue-500'}`} />
+                <div className={`h-2 w-full ${isDanger ? 'bg-rose-600' : 'bg-blue-500'}`} />
                 
                 <button 
                     onClick={onClose}
@@ -23,7 +23,7 @@ const ConfirmModal = ({ open, onClose, onConfirm, title, message, confirmText = 
                 </button>
 
                 <div className="p-8 flex flex-col items-center text-center">
-                    <div className={`mb-4 p-4 rounded-full ${isDanger ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>
+                    <div className={`mb-4 p-4 rounded-full ${isDanger ? 'bg-rose-500/10 text-rose-500' : 'bg-blue-500/10 text-blue-500'}`}>
                         {isDanger ? <AlertTriangle size={40} /> : <Trash2 size={40} />}
                     </div>
 
@@ -41,9 +41,9 @@ const ConfirmModal = ({ open, onClose, onConfirm, title, message, confirmText = 
                         </button>
                         <button
                             onClick={onConfirm}
-                            className={`flex-1 px-6 py-3 font-semibold rounded-xl text-white transition-all shadow-lg ${
+                            className={`flex-1 px-6 py-3 font-bold rounded-xl text-white transition-all shadow-lg ${
                                 isDanger 
-                                ? 'bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 shadow-red-900/20' 
+                                ? 'bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 shadow-rose-900/40' 
                                 : 'bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] hover:brightness-110 shadow-purple-900/20'
                             }`}
                         >

@@ -119,7 +119,7 @@ function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
                           </button>
                           <button
                             onClick={() => onDelete && onDelete(prod)}
-                            className="p-1.5 rounded-full text-red-500 hover:bg-red-500/20 hover:text-red-400 transition"
+                            className="p-1.5 rounded-full text-rose-500 hover:bg-rose-500/10 hover:text-rose-400 transition-all duration-300"
                             title="Eliminar Producto"
                             aria-label={`Eliminar ${prod.nombre}`}
                           >
@@ -204,7 +204,7 @@ function ProductTableWithModal({ productos, onEdit, onDelete, onMovimiento }) {
                       </button>
                       <button
                         onClick={() => onDelete && onDelete(prod)}
-                        className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition"
+                        className="p-2 rounded-lg bg-rose-500/10 text-rose-500 hover:bg-rose-500/20 transition-all duration-300"
                       >
                         <Trash2 size={20} />
                       </button>
