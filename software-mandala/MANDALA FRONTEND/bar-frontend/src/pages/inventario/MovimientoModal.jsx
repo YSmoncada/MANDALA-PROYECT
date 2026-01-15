@@ -186,13 +186,14 @@ const MovimientoModal = ({
 
           {/* Cantidad */}
           <div className="grid gap-2">
-            <label className="text-sm text-slate-300">Cantidad (750)</label>
+            <label className="text-sm text-slate-300 font-bold uppercase tracking-wider">Cantidad *</label>
             <input
               type="number"
-              min={1}
               value={cantidad}
-              onChange={(e) => setCantidad(Number(e.target.value))}
-              className="w-full py-2.5 px-4 rounded-lg bg-slate-850 text-white border border-slate-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+              onChange={(e) => setCantidad(e.target.value)}
+              className="w-full py-3 px-4 rounded-lg bg-slate-800 text-white border border-slate-700 outline-none focus:ring-2 focus:ring-purple-500 transition-all font-medium"
+              placeholder="Ingrese la cantidad"
+              required
             />
           </div>
 

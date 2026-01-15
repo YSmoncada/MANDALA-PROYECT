@@ -74,10 +74,7 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
                     type="number"
                     name="precio"
                     value={form.precio ?? ""}
-                    onChange={(e) => {
-                        const val = e.target.value === "" ? "" : Math.max(0, parseFloat(e.target.value));
-                        onChange({ target: { name: 'precio', value: val } });
-                    }}
+                    onChange={onChange}
                     className={commonInputClasses}
                     placeholder="0.00"
                     step="0.01"
@@ -93,11 +90,7 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
                         type="number"
                         name="stock"
                         value={form.stock ?? ""}
-                        onChange={(e) => {
-                            if (isEditing) return;
-                            const val = e.target.value === "" ? "" : Math.max(0, parseInt(e.target.value, 10));
-                            onChange({ target: { name: 'stock', value: val } });
-                        }}
+                        onChange={onChange}
                         className={`${commonInputClasses} ${isEditing ? 'opacity-50 cursor-not-allowed bg-black/20 text-gray-400' : ''}`}
                         placeholder="0"
                         readOnly={isEditing}
@@ -122,10 +115,7 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
                     type="number"
                     name="stock_minimo"
                     value={form.stock_minimo ?? ""}
-                    onChange={(e) => {
-                        const val = e.target.value === "" ? "" : Math.max(0, parseInt(e.target.value, 10));
-                        onChange({ target: { name: 'stock_minimo', value: val } });
-                    }}
+                    onChange={onChange}
                     className={commonInputClasses}
                     placeholder="0"
                     required
@@ -139,10 +129,7 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
                     type="number"
                     name="stock_maximo"
                     value={form.stock_maximo ?? ""}
-                    onChange={(e) => {
-                        const val = e.target.value === "" ? "" : Math.max(0, parseInt(e.target.value, 10));
-                        onChange({ target: { name: 'stock_maximo', value: val } });
-                    }}
+                    onChange={onChange}
                     className={commonInputClasses}
                     placeholder="0"
                     required
