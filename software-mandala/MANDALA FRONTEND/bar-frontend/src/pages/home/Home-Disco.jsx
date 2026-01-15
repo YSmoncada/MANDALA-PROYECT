@@ -1,71 +1,10 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Package, ClipboardList, SquareKanban, History, GlassWater, DollarSign, LogOut, Users } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { usePedidosContext } from "../../context/PedidosContext";
-
-
-
 import LoadingSpinner from "../../components/LoadingSpinner";
+import { ALL_MODULES } from "./modulesConfig";
 
-// Definimos los módulos fuera del componente para mayor claridad y rendimiento.
-const ALL_MODULES = [
-    {
-        id: 'inventario',
-        icon: Package,
-        label: "Inventario",
-        path: "/inventario",
-        color: "from-cyan-400 to-blue-500",
-        allowedRoles: ['admin', 'prueba']
-    },
-    {
-        id: 'pedidos',
-        icon: ClipboardList,
-        label: "Pedidos",
-        path: "/pedidos-disco",
-        color: "from-pink-400 to-rose-500",
-        allowedRoles: ['admin', 'bartender', 'mesera', 'prueba']
-    },
-    {
-        id: 'mesas',
-        icon: SquareKanban,
-        label: "Mesas",
-        path: "/mesas",
-        color: "from-purple-400 to-fuchsia-500",
-        allowedRoles: ['admin', 'prueba']
-    },
-    {
-        id: 'historial',
-        icon: History,
-        label: "Historial",
-        path: "/historial-pedidos",
-        color: "from-yellow-400 to-orange-500",
-        allowedRoles: ['admin', 'prueba']
-    },
-    {
-        id: 'bartender',
-        icon: GlassWater,
-        label: "Bartender",
-        path: "/bartender",
-        color: "from-green-400 to-emerald-500",
-        allowedRoles: ['admin', 'bartender', 'prueba']
-    },
-    {
-        id: 'contabilidad',
-        icon: DollarSign,
-        label: "Contabilidad",
-        path: "/contabilidad-disco",
-        color: "from-indigo-400 to-violet-500",
-        allowedRoles: ['admin', 'prueba']
-    },
-    {
-        id: 'usuarios',
-        icon: Users,
-        label: "Usuarios",
-        path: "/usuarios-disco",
-        color: "from-orange-400 to-red-500",
-        allowedRoles: ['admin', 'prueba']
-    },
-];
 
 function HomeDisco() {
     const navigate = useNavigate();
@@ -127,9 +66,9 @@ function HomeDisco() {
                         <button
                             key={item.path}
                             onClick={() => navigate(item.path)}
-                            className="group relative w-full h-40 sm:w-64 sm:h-64"
+                            className="group relative w-full h-40 sm:w-64 sm:h-64 animate-fade-in opacity-0"
                             style={{
-                                animation: `fadeIn 0.5s ease-out ${index * 0.08}s both`
+                                animationDelay: `${index * 0.1}s`
                             }}
                         >
                             {/* Glow on hover */}
@@ -152,24 +91,7 @@ function HomeDisco() {
                 </div>
             </main>
 
-            {/* Simple CSS Animations */}
-            <style>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .group {
-          backface-visibility: hidden;
-          transform: translateZ(0);
-          -webkit-font-smoothing: antialiased;
-        }
-      `}</style>
+
         </div>
     );
 }
