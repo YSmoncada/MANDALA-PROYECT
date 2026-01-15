@@ -6,7 +6,6 @@ const Notificaciones = () => {
         <Toaster
             position="bottom-right"
             toastOptions={{
-                // Estilos para el toast
                 className: '',
                 style: {
                     background: '#2B0D49',

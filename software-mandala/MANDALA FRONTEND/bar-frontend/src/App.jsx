@@ -11,9 +11,9 @@ const Home = lazy(() => import("./pages/home/Home-Disco"));
 const HistorialPedidosPageDisco = lazy(() => import("./pages/historialpedidos/HistorialPedidosPage-Disco"));
 const PedidosDisco = lazy(() => import("./pages/pedidosAuth/Pedidos-Disco"));
 const PedidosPageDisco = lazy(() => import("./pages/pedidospage/PedidosPage-Disco"));
-const SeleccionProductosDisco = lazy(() => import("./pages/pedidospage/SeleccionProductos-Disco")); // Página de selección de productos
-const MisPedidosPageDisco = lazy(() => import("./pages/pedidospage/MisPedidosPage-Disco")); // 🎨 Disco Mis Pedidos
-const ContabilidadDisco = lazy(() => import("./pages/contabilidad/Contabilidad-Disco")); // 🎨 Disco Contabilidad
+const SeleccionProductosDisco = lazy(() => import("./pages/pedidospage/SeleccionProductos-Disco")); 
+const MisPedidosPageDisco = lazy(() => import("./pages/pedidospage/MisPedidosPage-Disco")); 
+const ContabilidadDisco = lazy(() => import("./pages/contabilidad/Contabilidad-Disco"));
 const MesasPageDisco = lazy(() => import("./pages/mesas/MesasPage-Disco"));
 const BartenderPageDisco = lazy(() => import("./pages/bartender/BartenderPage-Disco"));
 const AdminUsuariosDisco = lazy(() => import("./pages/adminusuarios/AdminUsuarios-Disco"));

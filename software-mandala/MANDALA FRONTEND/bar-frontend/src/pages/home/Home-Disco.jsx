@@ -1,17 +1,9 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Package, ClipboardList, SquareKanban, History, GlassWater, DollarSign, LogOut, Users, Settings } from "lucide-react";
+import { Package, ClipboardList, SquareKanban, History, GlassWater, DollarSign, LogOut, Users } from "lucide-react";
 import { usePedidosContext } from "../../context/PedidosContext";
+import LoadingFallback from "../../components/LoadingFallback";
 
-// Componente de carga para una mejor experiencia de usuario.
-const LoadingSpinner = () => (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-black">
-        <div className="text-white text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-            <p className="text-lg">Verificando sesión...</p>
-        </div>
-    </div>
-);
 
 // Definimos los módulos fuera del componente para mayor claridad y rendimiento.
 const ALL_MODULES = [
@@ -55,66 +47,50 @@ const ALL_MODULES = [
         color: "from-green-400 to-emerald-500",
         allowedRoles: ['admin', 'bartender', 'prueba']
     },
+    {
+        id: 'contabilidad',
+        icon: DollarSign,
+        label: "Contabilidad",
+        path: "/contabilidad-disco",
+        color: "from-indigo-400 to-violet-500",
+        allowedRoles: ['admin', 'prueba']
+    },
+    {
+        id: 'usuarios',
+        icon: Users,
+        label: "Usuarios",
+        path: "/usuarios-disco",
+        color: "from-orange-400 to-red-500",
+        allowedRoles: ['admin', 'prueba']
+    },
 ];
 
 function HomeDisco() {
     const navigate = useNavigate();
     const { auth } = usePedidosContext();
     // Unificamos la obtención de todas las propiedades necesarias del contexto
-    const { isInitialized, codigoConfirmado, userRole, role, handleLogout, mesera } = auth;
+    const { isInitialized, codigoConfirmado, userRole, role, handleLogout } = auth;
 
-    // Redirección mejorada: solo redirige si no hay un rol de admin/bartender
-    // Y TAMPOCO hay un código de mesera confirmado.
     useEffect(() => {
-        // --- LÍNEA DE DEPURACIÓN ---
-        // Esta línea nos ayudará a ver qué datos de usuario llegan del backend en CADA render.
-        // Revisa la consola del navegador (F12) después de iniciar sesión como 'barra'.
-        console.log("DEBUG: Auth object from context:", JSON.stringify(auth, null, 2));
-        // --------------------------
 
         if (isInitialized && !role && !userRole && !codigoConfirmado) {
-            // Si no hay rol de Django Y no hay código de mesera, entonces sí redirigir.
-            // Esto permite que admin y bartender (que tienen auth.role) puedan entrar.
             navigate('/login', { replace: true });
         }
     }, [isInitialized, role, userRole, codigoConfirmado, navigate]);
 
-    // Agregamos el módulo de Contabilidad solo si el rol es 'admin'
-    const modulesForRole = [...ALL_MODULES];
-    if (role === 'admin' || userRole === 'admin' || role === 'prueba' || userRole === 'prueba') {
-        modulesForRole.push(
-            {
-                id: 'contabilidad',
-                icon: DollarSign,
-                label: "Contabilidad",
-                path: "/contabilidad-disco",
-                color: "from-indigo-400 to-violet-500",
-                allowedRoles: ['admin', 'prueba']
-            },
-            {
-                id: 'usuarios',
-                icon: Users,
-                label: "Usuarios",
-                path: "/usuarios-disco",
-                color: "from-orange-400 to-red-500",
-                allowedRoles: ['admin', 'prueba']
-            }
-        );
-    }
+
 
     // Filter modules based on role
     // Fallback: if role is null (but codigoConfirmado is true, likely Mesera legacy), default to mesera role
     const currentRole = role || userRole || (codigoConfirmado ? 'mesera' : null);
 
-    // --- LÍNEA DE DEPURACIÓN CLAVE ---
-    console.log(`DEBUG: El rol actual calculado es: ${currentRole}`);
-    // ---------------------------------
 
-    const visibleModules = currentRole ? modulesForRole.filter(m => m.allowedRoles.includes(currentRole)) : [];
+
+    const visibleModules = currentRole ? ALL_MODULES.filter(m => m.allowedRoles.includes(currentRole)) : [];
 
 
     // Muestra un spinner de carga mientras se inicializa la autenticación.
-    if (!isInitialized) return <LoadingSpinner />;
+    if (!isInitialized) return <LoadingFallback message="Verificando sesión..." />;
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white overflow-hidden relative selection:bg-purple-500/30">
