@@ -1,8 +1,10 @@
 import React from "react";
 
-const commonInputClasses = "w-full p-3 bg-[#2B0D49] border border-[#6C3FA8]/50 rounded-lg text-white focus:ring-2 focus:ring-[#A944FF] outline-none transition-all placeholder:text-gray-500";
+const commonInputClasses = "w-full p-3 bg-[#2B0D49] border border-[#6C3FA8]/50 rounded-lg text-white focus:ring-2 focus:ring-[#A944FF] outline-none transition-all placeholder:text-gray-500 selection:bg-purple-500/30 autofill:shadow-[0_0_0_30px_#2B0D49_inset] autofill:text-fill-white";
 
 export default function ProductFormFields({ form, onChange }) {
+    // Función auxiliar para manejar valores de texto y evitar "undefined" o campos en blanco erróneos
+    const getValue = (val) => val ?? "";
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Nombre */}
@@ -12,12 +14,8 @@ export default function ProductFormFields({ form, onChange }) {
                     type="text"
                     name="nombre"
                     placeholder="Ej: Aguardiente, cerveza, vino, destilado, coctel, etc."
-                    value={form.nombre || ""}
-                    onChange={(e) => {
-                        // Capturar el valor directamente sin procesamiento
-                        const newValue = e.target.value;
-                        onChange({ target: { name: 'nombre', value: newValue } });
-                    }}
+                    value={getValue(form.nombre)}
+                    onChange={onChange}
                     onKeyDown={(e) => {
                         // No prevenir ninguna tecla
                         e.stopPropagation();
@@ -35,9 +33,9 @@ export default function ProductFormFields({ form, onChange }) {
                 <label className="text-xs font-bold text-gray-300 uppercase mb-1 block">Categoría *</label>
                 <select
                     name="categoria"
-                    value={form.categoria}
+                    value={getValue(form.categoria)}
                     onChange={onChange}
-                    className={`${commonInputClasses} appearance-none`}
+                    className={`${commonInputClasses} appearance-none [&>option]:bg-[#1A103C] [&>option]:text-white`}
                     required
                 >
                     <option value="">Seleccione una categoría</option>
@@ -54,9 +52,9 @@ export default function ProductFormFields({ form, onChange }) {
                 <label className="text-xs font-bold text-gray-300 uppercase mb-1 block">Unidad de Medida *</label>
                 <select
                     name="unidad"
-                    value={form.unidad || ""}
+                    value={getValue(form.unidad)}
                     onChange={onChange}
-                    className={`${commonInputClasses} appearance-none`}
+                    className={`${commonInputClasses} appearance-none [&>option]:bg-[#1A103C] [&>option]:text-white`}
                     required
                 >
                     <option value="">Seleccione una opción</option>
@@ -75,10 +73,13 @@ export default function ProductFormFields({ form, onChange }) {
                 <input
                     type="number"
                     name="precio"
-                    value={form.precio}
-                    onChange={onChange}
+                    value={form.precio ?? ""}
+                    onChange={(e) => {
+                        const val = e.target.value === "" ? "" : Math.max(0, parseFloat(e.target.value));
+                        onChange({ target: { name: 'precio', value: val } });
+                    }}
                     className={commonInputClasses}
-                    min="0"
+                    placeholder="0.00"
                     step="0.01"
                     required
                 />
@@ -90,9 +91,13 @@ export default function ProductFormFields({ form, onChange }) {
                 <input
                     type="number"
                     name="stock"
-                    value={form.stock}
-                    onChange={onChange}
+                    value={form.stock ?? ""}
+                    onChange={(e) => {
+                        const val = e.target.value === "" ? "" : Math.max(0, parseInt(e.target.value, 10));
+                        onChange({ target: { name: 'stock', value: val } });
+                    }}
                     className={commonInputClasses}
+                    placeholder="0"
                     required
                 />
             </div>
@@ -106,10 +111,13 @@ export default function ProductFormFields({ form, onChange }) {
                 <input
                     type="number"
                     name="stock_minimo"
-                    value={form.stock_minimo || ""}
-                    onChange={onChange}
+                    value={form.stock_minimo ?? ""}
+                    onChange={(e) => {
+                        const val = e.target.value === "" ? "" : Math.max(0, parseInt(e.target.value, 10));
+                        onChange({ target: { name: 'stock_minimo', value: val } });
+                    }}
                     className={commonInputClasses}
-                    min="0"
+                    placeholder="0"
                     required
                 />
             </div>
@@ -120,9 +128,13 @@ export default function ProductFormFields({ form, onChange }) {
                 <input
                     type="number"
                     name="stock_maximo"
-                    value={form.stock_maximo || ""}
-                    onChange={onChange}
+                    value={form.stock_maximo ?? ""}
+                    onChange={(e) => {
+                        const val = e.target.value === "" ? "" : Math.max(0, parseInt(e.target.value, 10));
+                        onChange({ target: { name: 'stock_maximo', value: val } });
+                    }}
                     className={commonInputClasses}
+                    placeholder="0"
                     required
                 />
             </div>
@@ -137,7 +149,7 @@ export default function ProductFormFields({ form, onChange }) {
                     type="text"
                     name="proveedor"
                     placeholder="Nombre del proveedor"
-                    value={form.proveedor || ""}
+                    value={getValue(form.proveedor)}
                     onChange={onChange}
                     className={commonInputClasses}
                 />
@@ -150,7 +162,7 @@ export default function ProductFormFields({ form, onChange }) {
                     type="text"
                     name="ubicacion"
                     placeholder="Ej: Estante A1, Refrigerador B"
-                    value={form.ubicacion || ""}
+                    value={getValue(form.ubicacion)}
                     onChange={onChange}
                     className={commonInputClasses}
                 />
