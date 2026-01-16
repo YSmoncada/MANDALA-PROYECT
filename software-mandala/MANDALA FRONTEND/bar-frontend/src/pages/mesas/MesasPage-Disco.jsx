@@ -22,7 +22,7 @@ const MesasPageDisco = () => {
         handleAddMesa, 
         handleDeleteMesa, 
         handleDeleteStaff 
-    } = useMesasManagement(auth.token);
+    } = useMesasManagement();
 
     // Custom deletion confirmation using toast
     const confirmDeleteStaff = (personId) => {

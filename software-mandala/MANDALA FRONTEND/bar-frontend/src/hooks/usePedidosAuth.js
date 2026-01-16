@@ -187,6 +187,8 @@ export const usePedidosAuth = () => {
         deleteProfile,
         deleteMesera: deleteProfile, // Deprecated alias
         
+        token: sessionStorage.getItem('authToken'),
+        authToken: sessionStorage.getItem('authToken'),
         error,
         selectedProfileObject: selectedProfile
     }), [
