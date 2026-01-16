@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import apiClient from '../utils/apiClient';
 import toast from 'react-hot-toast';
 
@@ -31,9 +31,6 @@ export const useHistorialPedidos = () => {
 
     const fetchVendedores = useCallback(async () => {
         try {
-            const response = await apiClient.get('/meseras/total-pedidos text-white/');
-            // Endpoint fix: The slash at the end might be needed or not depending on URLs
-            // Let's use the standard one from the original code
             const res = await apiClient.get('/meseras/total-pedidos/');
             const mapped = res.data.map(v => ({
                 id: v.tipo === 'usuario' ? `u${v.mesera_id || v.id}` : `m${v.mesera_id || v.id}`,
