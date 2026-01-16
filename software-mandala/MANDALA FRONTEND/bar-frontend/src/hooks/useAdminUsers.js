@@ -13,15 +13,26 @@ export const useAdminUsers = () => {
     const fetchData = useCallback(async () => {
         setLoading(true);
         try {
-            const [usersRes, meserasRes] = await Promise.all([
-                apiClient.get('/usuarios/'),
-                apiClient.get('/meseras/')
-            ]);
-            setUsuarios(usersRes.data);
-            setMeseras(meserasRes.data);
-        } catch (error) {
-            console.error("Error al cargar datos de administración:", error);
-            // Error handling is partly handled by apiClient interceptor
+            // Fetch meseras first (usually allowed for more roles or handled separately)
+            try {
+                const meserasRes = await apiClient.get('/meseras/');
+                setMeseras(meserasRes.data);
+            } catch (err) {
+                console.error("Error loading meseras:", err);
+            }
+
+            // Fetch system users (requires superuser/staff)
+            try {
+                const usersRes = await apiClient.get('/usuarios/');
+                setUsuarios(usersRes.data);
+            } catch (err) {
+                // If it's a 403, we just don't show system users, but don't break the whole page
+                if (err.response?.status === 403) {
+                    console.log("Acceso restringido a usuarios del sistema.");
+                } else {
+                    console.error("Error loading system users:", err);
+                }
+            }
         } finally {
             setLoading(false);
         }
