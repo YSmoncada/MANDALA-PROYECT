@@ -2,36 +2,37 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import apiClient from '../utils/apiClient';
 
 /**
- * Hook to manage authentication and user profiles (meseras/admin/bartender).
+ * Hook to manage authentication and user profiles (staff/admin/bartender).
+ * Refactored to be generic (not just meseras).
  */
 export const usePedidosAuth = () => {
-    const [meseras, setMeseras] = useState([]);
-    const [selectedMesera, setSelectedMesera] = useState(null);
+    const [profiles, setProfiles] = useState([]);
+    const [selectedProfile, setSelectedProfile] = useState(null);
     const [codigoConfirmado, setCodigoConfirmado] = useState(false);
     const [isInitialized, setIsInitialized] = useState(false);
     const [error, setError] = useState(null);
     const [userRole, setUserRole] = useState(null);
 
-    // Fetch meseras on mount
-    const fetchMeseras = useCallback(async () => {
+    // Fetch staff profiles on mount
+    const fetchProfiles = useCallback(async () => {
         try {
-            const response = await apiClient.get('/meseras/');
-            setMeseras(response.data);
+            const response = await apiClient.get('/meseras/'); // Still using /meseras/ endpoint from backend
+            setProfiles(response.data);
         } catch (error) {
-            setError("No se pudo conectar con el servidor para cargar las meseras.");
-            console.error("Error loading meseras:", error);
+            setError("No se pudo conectar con el servidor para cargar los perfiles.");
+            console.error("Error loading profiles:", error);
         } finally {
             setIsInitialized(true);
         }
     }, []);
 
     useEffect(() => {
-        fetchMeseras();
-    }, [fetchMeseras]);
+        fetchProfiles();
+    }, [fetchProfiles]);
 
     // Recover session state
     useEffect(() => {
-        const storedMesera = sessionStorage.getItem('selectedMesera');
+        const storedProfile = sessionStorage.getItem('selectedProfile') || sessionStorage.getItem('selectedMesera');
         const storedCodigoConfirmado = sessionStorage.getItem('codigoConfirmado');
         const storedRole = sessionStorage.getItem('userRole');
 
@@ -39,33 +40,35 @@ export const usePedidosAuth = () => {
             setUserRole(storedRole);
         }
 
-        if (storedMesera && storedCodigoConfirmado === 'true') {
-            setSelectedMesera(JSON.parse(storedMesera));
+        if (storedProfile && storedCodigoConfirmado === 'true') {
+            setSelectedProfile(JSON.parse(storedProfile));
             setCodigoConfirmado(true);
             if (!storedRole) setUserRole('mesera');
         }
     }, []);
 
-    const handleSelectMesera = useCallback((meseraSeleccionada) => {
-        setSelectedMesera(meseraSeleccionada);
+    const handleSelectProfile = useCallback((profile) => {
+        setSelectedProfile(profile);
     }, []);
 
     const handleCodigoSubmit = useCallback(async (codigo) => {
-        if (!selectedMesera) return false;
+        if (!selectedProfile) return false;
 
         try {
             const response = await apiClient.post('/verificar-codigo-mesera/', {
-                mesera_id: selectedMesera.id,
+                mesera_id: selectedProfile.id,
                 codigo: codigo
             });
 
             if (response.data.success) {
                 setCodigoConfirmado(true);
-                setUserRole('mesera');
+                // Keep 'mesera' as the internal role for permission compatibility
+                const role = 'mesera'; 
+                setUserRole(role);
 
-                sessionStorage.setItem('selectedMesera', JSON.stringify(selectedMesera));
+                sessionStorage.setItem('selectedProfile', JSON.stringify(selectedProfile));
                 sessionStorage.setItem('codigoConfirmado', 'true');
-                sessionStorage.setItem('userRole', 'mesera');
+                sessionStorage.setItem('userRole', role);
                 return true;
             }
         } catch (error) {
@@ -73,7 +76,7 @@ export const usePedidosAuth = () => {
             return false;
         }
         return false;
-    }, [selectedMesera]);
+    }, [selectedProfile]);
 
     const loginSystem = useCallback(async (username, password) => {
         try {
@@ -82,7 +85,6 @@ export const usePedidosAuth = () => {
             let finalRole = response.data?.role;
             const responseUsername = response.data?.username;
 
-            // Security patch for 'barra' user
             if (username === 'barra') {
                 finalRole = 'bartender';
             }
@@ -99,11 +101,11 @@ export const usePedidosAuth = () => {
                 role: finalRole
             };
             
-            setSelectedMesera(sysUser);
+            setSelectedProfile(sysUser);
             setCodigoConfirmado(true);
             
             sessionStorage.setItem('userRole', finalRole);
-            sessionStorage.setItem('selectedMesera', JSON.stringify(sysUser));
+            sessionStorage.setItem('selectedProfile', JSON.stringify(sysUser));
             sessionStorage.setItem('codigoConfirmado', 'true');
             if (token) {
                 sessionStorage.setItem('authToken', token);
@@ -119,72 +121,86 @@ export const usePedidosAuth = () => {
     }, []);
 
     const handleLogout = useCallback(() => {
-        setSelectedMesera(null);
+        setSelectedProfile(null);
         setCodigoConfirmado(false);
         setUserRole(null);
         sessionStorage.clear();
     }, []);
 
-    const addMesera = useCallback(async (nombre, codigo) => {
+    const addProfile = useCallback(async (nombre, codigo) => {
         try {
             const response = await apiClient.post('/meseras/', { nombre, codigo });
-            const nuevaMesera = response.data;
-            setMeseras(prev => [nuevaMesera, ...prev]);
-            handleSelectMesera(nuevaMesera);
+            const nuevoPerfil = response.data;
+            setProfiles(prev => [nuevoPerfil, ...prev]);
+            handleSelectProfile(nuevoPerfil);
             return { success: true };
         } catch (error) {
-            console.error("Error adding mesera:", error.response?.data || error.message);
+            console.error("Error adding profile:", error.response?.data || error.message);
             const errorData = error.response?.data;
-            let errorMessage = "Error al crear la mesera.";
+            let errorMessage = "Error al crear el perfil.";
             if (errorData?.nombre) errorMessage = `Nombre: ${errorData.nombre[0]}`;
             else if (errorData?.codigo) errorMessage = `Código: ${errorData.codigo[0]}`;
 
             return { success: false, message: errorMessage };
         }
-    }, [handleSelectMesera]);
+    }, [handleSelectProfile]);
 
-    const deleteMesera = useCallback(async (meseraId) => {
+    const deleteProfile = useCallback(async (profileId) => {
         try {
-            await apiClient.delete(`/meseras/${meseraId}/`);
-            setMeseras(prev => prev.filter(m => m.id !== meseraId));
-            if (selectedMesera?.id === meseraId) {
+            await apiClient.delete(`/meseras/${profileId}/`);
+            setProfiles(prev => prev.filter(p => p.id !== profileId));
+            if (selectedProfile?.id === profileId) {
                 handleLogout();
             }
             return { success: true };
         } catch (error) {
-            console.error("Error deleting mesera:", error.response?.data || error.message);
-            return { success: false, message: error.response?.data?.detail || "No se pudo eliminar la mesera." };
+            console.error("Error deleting profile:", error.response?.data || error.message);
+            return { success: false, message: error.response?.data?.detail || "No se pudo eliminar el perfil." };
         }
-    }, [selectedMesera, handleLogout]);
+    }, [selectedProfile, handleLogout]);
 
     const authValue = useMemo(() => ({
-        mesera: selectedMesera?.nombre,
-        meseraId: selectedMesera?.id,
+        // Maintain 'mesera' related keys for backward compatibility but add generic ones
+        userName: selectedProfile?.nombre,
+        userId: selectedProfile?.id,
+        mesera: selectedProfile?.nombre, // Deprecated alias
+        meseraId: selectedProfile?.id,   // Deprecated alias
+        
         codigoConfirmado,
         userRole,
         role: userRole,
         isInitialized,
-        meseras,
-        handleSelectMesera,
+        
+        profiles,
+        meseras: profiles, // Deprecated alias
+        
+        handleSelectProfile,
+        handleSelectMesera: handleSelectProfile, // Deprecated alias
+        
         handleCodigoSubmit,
         loginSystem,
         handleLogout,
-        addMesera,
-        deleteMesera,
+        
+        addProfile,
+        addMesera: addProfile, // Deprecated alias
+        
+        deleteProfile,
+        deleteMesera: deleteProfile, // Deprecated alias
+        
         error,
-        selectedMeseraObject: selectedMesera
+        selectedProfileObject: selectedProfile
     }), [
-        selectedMesera, 
+        selectedProfile, 
         codigoConfirmado, 
         userRole, 
         isInitialized, 
-        meseras, 
-        handleSelectMesera, 
+        profiles, 
+        handleSelectProfile, 
         handleCodigoSubmit, 
         loginSystem, 
         handleLogout, 
-        addMesera, 
-        deleteMesera, 
+        addProfile, 
+        deleteProfile, 
         error
     ]);
 

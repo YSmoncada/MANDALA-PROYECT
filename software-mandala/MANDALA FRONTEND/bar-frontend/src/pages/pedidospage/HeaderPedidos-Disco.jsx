@@ -6,7 +6,7 @@ import { Menu, X, LogOut, ShoppingCart, Clock, Home as HomeIcon } from 'lucide-r
  * Header component for the pedidos section.
  * Memoized to prevent unnecessary re-renders.
  */
-function HeaderPedidosDisco({ mesera, onLogout, codigoConfirmado }) {
+function HeaderPedidosDisco({ user, onLogout, codigoConfirmado }) {
     const location = useLocation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -49,7 +49,7 @@ function HeaderPedidosDisco({ mesera, onLogout, codigoConfirmado }) {
                             {/* Desktop Nav */}
                             <nav className="hidden md:flex items-center gap-2">
                                 {navLinks.map(link => {
-                                    const isEnabled = mesera && (link.href === '/' || codigoConfirmado);
+                                    const isEnabled = user && (link.href === '/' || codigoConfirmado);
                                     return isEnabled ? (
                                         <Link
                                             key={link.href}
@@ -65,18 +65,18 @@ function HeaderPedidosDisco({ mesera, onLogout, codigoConfirmado }) {
 
                             {/* User Profile */}
                             <div className="hidden md:flex items-center gap-4">
-                                {mesera && (
+                                {user && (
                                     <>
                                         <div className="flex items-center gap-3 mr-2 border-r border-[#6C3FA8]/30 pr-6">
                                             <div className="flex flex-col items-end">
-                                                <span className="text-white font-bold text-sm leading-tight capitalize">{mesera}</span>
+                                                <span className="text-white font-bold text-sm leading-tight capitalize">{user}</span>
                                                 <div className="flex items-center gap-1.5">
                                                     <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
                                                     <span className="text-[10px] text-green-400 font-bold tracking-wider uppercase">En turno</span>
                                                 </div>
                                             </div>
                                             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#441E73] to-[#6C3FA8] border border-[#A944FF]/50 flex items-center justify-center text-white font-bold shadow-[0_0_10px_rgba(169,68,255,0.3)]">
-                                                {mesera.charAt(0).toUpperCase()}
+                                                {user.charAt(0).toUpperCase()}
                                             </div>
                                         </div>
                                         <button
@@ -107,7 +107,7 @@ function HeaderPedidosDisco({ mesera, onLogout, codigoConfirmado }) {
                 {isMenuOpen && (
                     <div className="md:hidden bg-[#0E0D23]/95 border-b border-[#6C3FA8]/30 absolute w-full shadow-2xl backdrop-blur-xl">
                         <div className="px-4 pt-4 pb-6 space-y-2">
-                            {mesera && (
+                            {user && (
                                 <div className="mb-6 pb-6 border-b border-[#6C3FA8]/30 flex items-center justify-end">
                                     <button
                                         onClick={handleLogoutClick}
@@ -119,7 +119,7 @@ function HeaderPedidosDisco({ mesera, onLogout, codigoConfirmado }) {
                             )}
 
                             {navLinks.map(link => {
-                                const isEnabled = mesera && (link.href === '/' || codigoConfirmado);
+                                const isEnabled = user && (link.href === '/' || codigoConfirmado);
                                 return isEnabled ? (
                                     <Link
                                         key={link.href}

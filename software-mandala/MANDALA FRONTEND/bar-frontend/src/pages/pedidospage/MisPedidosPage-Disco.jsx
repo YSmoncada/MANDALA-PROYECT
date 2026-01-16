@@ -3,23 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
 import { usePedidosContext } from '../../context/PedidosContext';
 import HeaderPedidosDisco from '../pedidospage/HeaderPedidos-Disco';
-import { useMisPedidos } from '../../hooks/useMisPedidos'; // Importamos el nuevo Hook
-import PedidoCard from './PedidoCard'; // Importar componente
+import { useMisPedidos } from '../../hooks/useMisPedidos';
 
 const MisPedidosPageDisco = () => {
     const { auth, setSelectedMesaId, setIsTableLocked } = usePedidosContext();
-    const { mesera, meseraId, codigoConfirmado, handleLogout } = auth;
+    const { userName, userId, role, codigoConfirmado, handleLogout } = auth;
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!mesera || !codigoConfirmado) {
-            navigate('/login-disco');
+        if (!userName || !codigoConfirmado) {
+            navigate('/login');
             return;
         }
-    }, [mesera, codigoConfirmado, navigate]);
+    }, [userName, codigoConfirmado, navigate]);
 
-    // Usamos el hook para obtener los datos y el estado de carga. ¡Así de simple!
-    const { pedidos, loading } = useMisPedidos(meseraId, auth.role);
+    const { pedidos, loading } = useMisPedidos(userId, role);
 
     const handleAgregarProductos = useCallback((mesaId) => {
         setSelectedMesaId(mesaId);
@@ -29,7 +27,7 @@ const MisPedidosPageDisco = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white">
-            <HeaderPedidosDisco mesera={mesera} onLogout={handleLogout} codigoConfirmado={codigoConfirmado} />
+            <HeaderPedidosDisco user={userName} onLogout={handleLogout} codigoConfirmado={codigoConfirmado} />
 
             <div className="relative z-10 max-w-7xl mx-auto p-4 sm:p-8 pt-24">
                 <div className="text-center mb-10">

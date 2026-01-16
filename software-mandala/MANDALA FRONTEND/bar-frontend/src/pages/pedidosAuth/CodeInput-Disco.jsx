@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Lock, ArrowLeft, CheckCircle2 } from "lucide-react";
 
-export default function CodeInputDisco({ mesera, onBack, onSubmit }) {
+export default function CodeInputDisco({ nombre, onBack, onSubmit }) {
     const [codigo, setCodigo] = useState(["", "", "", ""]);
     const inputRefs = useRef([]);
 
@@ -82,7 +82,7 @@ export default function CodeInputDisco({ mesera, onBack, onSubmit }) {
             <div className="mb-10">
                 <h2 className="text-3xl font-bold text-white mb-2">CÓDIGO DE ACCESO</h2>
                 <p className="text-[#C2B6D9]">
-                    Hola <span className="font-bold text-white">{mesera}</span>, ingresa tu clave
+                    Hola <span className="font-bold text-white">{nombre}</span>, ingresa tu clave
                 </p>
             </div>
 

@@ -21,7 +21,7 @@ function PedidosPageDisco() {
         isTableLocked,
         isLoadingMesas,
         puedeRenderizar,
-        mesera,
+        userName,
         codigoConfirmado,
         setSelectedMesaId,
         onUpdateCantidad,
@@ -44,7 +44,7 @@ function PedidosPageDisco() {
             </div>
 
             <HeaderPedidosDisco 
-                mesera={mesera} 
+                user={userName} 
                 onLogout={handleLogout} 
                 codigoConfirmado={codigoConfirmado} 
             />

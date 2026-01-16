@@ -26,23 +26,24 @@ export const usePedidosPage = () => {
     const navigate = useNavigate();
 
     const {
-        mesera,
-        meseraId,
+        userName,
+        userId,
         codigoConfirmado,
         isInitialized,
         handleLogout,
         role
     } = auth;
 
-    const esRolMesera = role !== 'admin' && role !== 'bartender' && role !== 'prueba';
+    const esRolMesera = role === 'mesera';
 
     // Auth redirection
     useEffect(() => {
         if (!isInitialized) return;
-        if (esRolMesera && (!mesera || !codigoConfirmado)) {
-            navigate('/login-disco', { replace: true });
+        // If it's a staff profile (mesera role) and not confirmed, redirect to login
+        if (esRolMesera && (!userName || !codigoConfirmado)) {
+            navigate('/login', { replace: true });
         }
-    }, [isInitialized, mesera, codigoConfirmado, navigate, role, esRolMesera]);
+    }, [isInitialized, userName, codigoConfirmado, navigate, role, esRolMesera]);
 
     const onClearOrder = useCallback(() => {
         onClearOrderContext();
@@ -55,7 +56,7 @@ export const usePedidosPage = () => {
             return;
         }
 
-        if (esRolMesera && !meseraId) {
+        if (esRolMesera && !userId) {
             toast.error("Error de autenticación. Inicie sesión nuevamente.");
             return;
         }
@@ -75,10 +76,11 @@ export const usePedidosPage = () => {
             force_append: isTableLocked
         };
 
+        // Attach user info based on role
         if (esRolMesera) {
-            pedidoData.mesera = meseraId;
+            pedidoData.mesera = userId;
         } else {
-            pedidoData.usuario = meseraId;
+            pedidoData.usuario = userId;
         }
 
         const result = await finalizarPedido(pedidoData);
@@ -98,10 +100,10 @@ export const usePedidosPage = () => {
         } else {
             toast.error(result.message);
         }
-    }, [orderItems, role, meseraId, selectedMesaId, isTableLocked, finalizarPedido, esRolMesera, onClearOrder, navigate]);
+    }, [orderItems, role, userId, selectedMesaId, isTableLocked, finalizarPedido, esRolMesera, onClearOrder, navigate]);
 
     const esRolAutorizado = ['bartender', 'admin', 'prueba'].includes(role);
-    const esMeseraAutenticada = mesera && codigoConfirmado;
+    const esMeseraAutenticada = userName && codigoConfirmado;
     const puedeRenderizar = isInitialized && (esRolAutorizado || esMeseraAutenticada);
 
     return {
@@ -113,7 +115,7 @@ export const usePedidosPage = () => {
         isTableLocked,
         isLoadingMesas,
         puedeRenderizar,
-        mesera,
+        userName,
         
         // Actions
         setSelectedMesaId,

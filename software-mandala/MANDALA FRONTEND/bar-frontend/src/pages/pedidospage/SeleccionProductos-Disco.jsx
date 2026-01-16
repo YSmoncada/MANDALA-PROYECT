@@ -2,7 +2,7 @@ import React, { useEffect, memo } from 'react';
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import HeaderPedidosDisco from "./HeaderPedidos-Disco";
-import ProductGridDisco from "../pedidosAuth/ProductGrid-Disco";
+import ProductGridDisco from "./ProductGrid-Disco";
 import { usePedidosContext } from "../../context/PedidosContext";
 import LoadingSpinner from "../../components/LoadingSpinner";
 
@@ -13,7 +13,7 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 function SeleccionProductosDisco() {
     const { auth, addProductToOrder } = usePedidosContext();
     const {
-        mesera,
+        userName,
         codigoConfirmado,
         isInitialized,
         handleLogout,
@@ -26,10 +26,11 @@ function SeleccionProductosDisco() {
     useEffect(() => {
         if (!isInitialized) return;
 
-        const esRolMesera = role !== 'admin' && role !== 'bartender' && role !== 'prueba';
+        // If it's a staff profile (mesera role) and code is not confirmed, redirect to login
+        const esRolStaff = role === 'mesera';
 
-        if (esRolMesera && !codigoConfirmado) {
-            navigate('/login-disco', { replace: true });
+        if (esRolStaff && !codigoConfirmado) {
+            navigate('/login', { replace: true });
         }
     }, [isInitialized, codigoConfirmado, role, navigate]);
 
@@ -45,7 +46,7 @@ function SeleccionProductosDisco() {
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl"></div>
             </div>
 
-            <HeaderPedidosDisco mesera={mesera} onLogout={handleLogout} codigoConfirmado={codigoConfirmado} />
+            <HeaderPedidosDisco user={userName} onLogout={handleLogout} codigoConfirmado={codigoConfirmado} />
 
             <main className="flex-1 p-4 sm:p-8 relative z-10 max-w-7xl mx-auto w-full pt-12">
                 {/* Navigation Action */}
