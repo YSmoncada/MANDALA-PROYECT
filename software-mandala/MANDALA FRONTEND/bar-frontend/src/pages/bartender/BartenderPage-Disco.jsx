@@ -52,6 +52,24 @@ const BartenderPageDisco = () => {
 
     const handleUpdateEstado = async (pedidoId, nuevoEstado) => {
         try {
+            // Si se cancela el pedido, devolvemos los productos al inventario
+            if (nuevoEstado === 'cancelado') {
+                const pedidoACancelar = pedidos.find(p => p.id === pedidoId);
+                if (pedidoACancelar && pedidoACancelar.productos_detalle) {
+                    const devoluciones = pedidoACancelar.productos_detalle.map(item => {
+                        // Intentamos obtener el ID del producto (puede venir como objeto o ID directo)
+                        const productoId = item.producto?.id || item.producto || item.producto_id;
+                        if (!productoId) return null;
+
+                        return apiClient.put(`/productos/${productoId}/stock`, {
+                            cantidad: item.cantidad,
+                            accion: 'sumar' // 'sumar' devuelve el stock
+                        });
+                    });
+                    await Promise.all(devoluciones);
+                }
+            }
+
             await apiClient.patch(`/pedidos/${pedidoId}/`, { estado: nuevoEstado });
             let mensaje = '';
             switch (nuevoEstado) {
@@ -88,7 +106,7 @@ const BartenderPageDisco = () => {
             <div className="max-w-7xl mx-auto pb-20 no-print">
                 {/* Header Actions */}
                 <div className="flex justify-end mb-8 gap-4 px-4 sm:px-0">
-                     <button
+                    <button
                         onClick={() => fetchPedidosPendientes(true)}
                         className="flex items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white transition-all shadow-lg active:scale-95"
                         title="Actualizar pedidos"
@@ -135,7 +153,7 @@ const BartenderPageDisco = () => {
                                             <Clock size={10} /> {new Date(pedido.fecha_hora).toLocaleTimeString()}
                                         </p>
                                     </div>
-                                    
+
                                     <div className="space-y-3 mb-6 bg-black/20 p-4 rounded-xl border border-white/5">
                                         {pedido.productos_detalle.map((item, index) => (
                                             <div key={index} className="flex justify-between items-start group">
