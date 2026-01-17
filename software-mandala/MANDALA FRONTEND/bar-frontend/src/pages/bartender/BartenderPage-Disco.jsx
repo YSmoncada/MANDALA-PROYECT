@@ -58,12 +58,18 @@ const BartenderPageDisco = () => {
                 if (pedidoACancelar && pedidoACancelar.productos_detalle) {
                     const devoluciones = pedidoACancelar.productos_detalle.map(item => {
                         // Intentamos obtener el ID del producto (puede venir como objeto o ID directo)
-                        const productoId = item.producto?.id || item.producto || item.producto_id;
+                        let productoId = item.producto?.id || item.producto?._id;
+                        if (!productoId && typeof item.producto !== 'object') {
+                            productoId = item.producto;
+                        }
+                        if (!productoId) productoId = item.producto_id;
+
                         if (!productoId) return null;
 
-                        return apiClient.put(`/productos/${productoId}/stock`, {
-                            cantidad: item.cantidad,
-                            accion: 'sumar' // 'sumar' devuelve el stock
+                        // Agregamos el '/' al final de la URL, crucial para muchos backends
+                        return apiClient.put(`/productos/${productoId}/stock/`, {
+                            cantidad: Number(item.cantidad),
+                            accion: 'sumar'
                         });
                     });
                     await Promise.all(devoluciones);
