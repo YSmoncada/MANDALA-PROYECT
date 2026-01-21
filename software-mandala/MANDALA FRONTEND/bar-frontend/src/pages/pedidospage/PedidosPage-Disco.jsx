@@ -29,7 +29,8 @@ function PedidosPageDisco() {
         handleLogout,
         onClearOrder,
         handleFinalizarPedido,
-        currentFormattedId
+        currentFormattedId,
+        role
     } = usePedidosPage();
 
     if (isLoadingMesas || !puedeRenderizar) {
@@ -110,6 +111,7 @@ function PedidosPageDisco() {
                                             <option value="">-- Seleccionar Mesa --</option>
                                             {mesas.map((mesa) => {
                                                 const isOccupied = mesa.ocupada_por_id && mesa.ocupada_por_id !== currentFormattedId;
+                                                const isAdminOverride = role === 'admin';
                                                 const label = isOccupied 
                                                     ? `Mesa #${mesa.numero} (Ocupada - ${mesa.ocupada_por})` 
                                                     : `Mesa #${mesa.numero} (${mesa.capacidad} pers.)`;
@@ -118,10 +120,10 @@ function PedidosPageDisco() {
                                                     <option 
                                                         key={mesa.id} 
                                                         value={mesa.id} 
-                                                        disabled={isOccupied}
+                                                        disabled={isOccupied && !isAdminOverride}
                                                         className={isOccupied ? 'text-red-400 bg-gray-800' : ''}
                                                     >
-                                                        {label}
+                                                        {label} {isOccupied && isAdminOverride ? '(Admin Override)' : ''}
                                                     </option>
                                                 );
                                             })}
