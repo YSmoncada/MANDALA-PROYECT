@@ -200,7 +200,7 @@ const AdminUsuariosDisco = () => {
 
             {/* Credential Reset Modal */}
             {showModal && (
-                <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-fadeIn" onClick={() => setShowModal(false)}>
+                <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/90 animate-fadeIn" onClick={() => setShowModal(false)}>
                     <div className={`${UI_CLASSES.glassCard} bg-[#12071f] w-full max-w-md relative shadow-[0_0_100px_rgba(0,0,0,0.8)] border-white/10 transform animate-scaleIn`} onClick={e => e.stopPropagation()}>
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
                         
@@ -282,7 +282,7 @@ const AdminUsuariosDisco = () => {
             />
             {/* Add Profile Modal Form (Reused Component) */}
             {showAddForm && (
-                <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-fadeIn">
+                <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/90 animate-fadeIn">
                     <div className="relative w-full max-w-md" onClick={e => e.stopPropagation()}>
                          {/* Close Button on top-right of the modal area roughly, or let the form handle back. 
                              AddProfileForm has onBack which calls setShowAddForm(false). 
