@@ -282,18 +282,26 @@ const AdminUsuariosDisco = () => {
             />
             {/* Add Profile Modal Form (Reused Component) */}
             {showAddForm && (
-                <AddProfileForm
-                    name={newProfileName}
-                    code={newProfileCode}
-                    onNameChange={setNewProfileName}
-                    onCodeChange={setNewProfileCode}
-                    onSubmit={handleAddProfileSubmit}
-                    onBack={() => {
-                        setShowAddForm(false);
-                        setNewProfileName("");
-                        setNewProfileCode("");
-                    }}
-                />
+                <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-fadeIn">
+                    <div className="relative w-full max-w-md" onClick={e => e.stopPropagation()}>
+                         {/* Close Button on top-right of the modal area roughly, or let the form handle back. 
+                             AddProfileForm has onBack which calls setShowAddForm(false). 
+                             But visually we want it centered.
+                          */}
+                        <AddProfileForm
+                            name={newProfileName}
+                            code={newProfileCode}
+                            onNameChange={setNewProfileName}
+                            onCodeChange={setNewProfileCode}
+                            onSubmit={handleAddProfileSubmit}
+                            onBack={() => {
+                                setShowAddForm(false);
+                                setNewProfileName("");
+                                setNewProfileCode("");
+                            }}
+                        />
+                    </div>
+                </div>
             )}
         </PageLayout>
     );
