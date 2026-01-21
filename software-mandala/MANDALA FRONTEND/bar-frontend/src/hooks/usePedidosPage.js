@@ -124,6 +124,9 @@ export const usePedidosPage = () => {
         handleLogout,
         onClearOrder,
         handleFinalizarPedido,
-        codigoConfirmado
+        onClearOrder,
+        handleFinalizarPedido,
+        codigoConfirmado,
+        currentFormattedId: role === 'mesera' ? `m${userId}` : `u${userId}`
     };
 };

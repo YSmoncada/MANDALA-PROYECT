@@ -28,7 +28,8 @@ function PedidosPageDisco() {
         onRemoveItem,
         handleLogout,
         onClearOrder,
-        handleFinalizarPedido
+        handleFinalizarPedido,
+        currentFormattedId
     } = usePedidosPage();
 
     if (isLoadingMesas || !puedeRenderizar) {
@@ -107,11 +108,23 @@ function PedidosPageDisco() {
                                             disabled={mesas.length === 0 || isTableLocked}
                                         >
                                             <option value="">-- Seleccionar Mesa --</option>
-                                            {mesas.map((mesa) => (
-                                                <option key={mesa.id} value={mesa.id}>
-                                                    Mesa #{mesa.numero} ({mesa.capacidad} pers.)
-                                                </option>
-                                            ))}
+                                            {mesas.map((mesa) => {
+                                                const isOccupied = mesa.ocupada_por_id && mesa.ocupada_por_id !== currentFormattedId;
+                                                const label = isOccupied 
+                                                    ? `Mesa #${mesa.numero} (Ocupada - ${mesa.ocupada_por})` 
+                                                    : `Mesa #${mesa.numero} (${mesa.capacidad} pers.)`;
+                                                
+                                                return (
+                                                    <option 
+                                                        key={mesa.id} 
+                                                        value={mesa.id} 
+                                                        disabled={isOccupied}
+                                                        className={isOccupied ? 'text-red-400 bg-gray-800' : ''}
+                                                    >
+                                                        {label}
+                                                    </option>
+                                                );
+                                            })}
                                         </select>
                                         <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
                                             <svg className="w-4 h-4 text-[#8A7BAF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">

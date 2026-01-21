@@ -118,9 +118,46 @@ class PedidoSerializer(serializers.ModelSerializer):
         return pedido
 
 class MesaSerializer(serializers.ModelSerializer):
+    ocupada_por = serializers.SerializerMethodField()
+    ocupada_por_id = serializers.SerializerMethodField()
+    ocupada_por_tipo = serializers.SerializerMethodField()
+
     class Meta:
         model = Mesa
-        fields = '__all__'
+        fields = ['id', 'numero', 'capacidad', 'estado', 'ocupada_por', 'ocupada_por_id', 'ocupada_por_tipo']
+
+    def get_active_order(self, obj):
+        # Helper: Busca el primer pedido activo (no finalizado ni cancelado)
+        return obj.pedido_set.filter(
+            estado__in=['pendiente', 'despachado', 'en_proceso']
+        ).first()
+
+    def get_ocupada_por(self, obj):
+        order = self.get_active_order(obj)
+        if order:
+            if order.mesera:
+                return order.mesera.nombre
+            elif order.usuario:
+                return order.usuario.username.upper()
+        return None
+
+    def get_ocupada_por_id(self, obj):
+        order = self.get_active_order(obj)
+        if order:
+            if order.mesera:
+                return f"m{order.mesera.id}"
+            elif order.usuario:
+                return f"u{order.usuario.id}"
+        return None
+
+    def get_ocupada_por_tipo(self, obj):
+        order = self.get_active_order(obj)
+        if order:
+            if order.mesera:
+                return 'mesera'
+            elif order.usuario:
+                return 'usuario'
+        return None
 
     def validate_numero(self, value):
         if Mesa.objects.filter(numero=value).exclude(pk=getattr(self.instance, 'pk', None)).exists():
