@@ -30,8 +30,24 @@ function PedidosPageDisco() {
         onClearOrder,
         handleFinalizarPedido,
         currentFormattedId,
-        role
+        role,
+        setIsTableLocked
     } = usePedidosPage();
+
+    const handleMesaChange = (e) => {
+        const newMesaId = e.target.value;
+        setSelectedMesaId(newMesaId);
+        
+        // Find selected mesa to check if it's occupied (Active Order)
+        const selectedMesa = mesas.find(m => m.id.toString() === newMesaId);
+        if (selectedMesa && selectedMesa.ocupada_por_id) {
+            // If occupied, we are appending to the existing order
+            setIsTableLocked(true);
+        } else {
+            // If free, we are creating a new order
+            setIsTableLocked(false);
+        }
+    };
 
     if (isLoadingMesas || !puedeRenderizar) {
         return <LoadingSpinner />;
@@ -104,9 +120,9 @@ function PedidosPageDisco() {
                                         <select
                                             id="mesa-select"
                                             value={selectedMesaId}
-                                            onChange={(e) => setSelectedMesaId(e.target.value)}
-                                            className={`${PAGE_STYLES.select} ${isTableLocked ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                            disabled={mesas.length === 0 || isTableLocked}
+                                            onChange={handleMesaChange}
+                                            className={`${PAGE_STYLES.select} ${isTableLocked ? 'border-amber-500/50 text-amber-100' : ''}`}
+                                            disabled={mesas.length === 0}
                                         >
                                             <option value="">-- Seleccionar Mesa --</option>
                                             {mesas.map((mesa) => {

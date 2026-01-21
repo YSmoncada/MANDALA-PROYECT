@@ -124,9 +124,6 @@ export const usePedidosPage = () => {
         handleLogout,
         onClearOrder,
         handleFinalizarPedido,
-        onClearOrder,
-        handleFinalizarPedido,
-        codigoConfirmado,
         codigoConfirmado,
         currentFormattedId: role === 'mesera' ? `m${userId}` : `u${userId}`,
         role
