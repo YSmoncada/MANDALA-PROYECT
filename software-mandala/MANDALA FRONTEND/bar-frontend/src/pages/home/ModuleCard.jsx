@@ -16,7 +16,7 @@ const ModuleCard = ({ item, index }) => {
             <div className={`absolute inset-0 bg-gradient-to-r ${item.color} opacity-0 group-hover:opacity-40 blur-2xl transition-all duration-300 rounded-2xl`}></div>
 
             {/* Main Content */}
-            <div className="relative h-full bg-white/5 backdrop-blur-md border border-white/10 group-hover:border-white/20 rounded-2xl transition-all duration-300 flex flex-col items-center justify-center gap-3 sm:gap-6 group-hover:scale-105 group-hover:bg-white/10 shadow-xl">
+            <div className="relative h-full bg-gray-900/40 border border-white/10 group-hover:border-white/20 rounded-2xl transition-all duration-300 flex flex-col items-center justify-center gap-3 sm:gap-6 group-hover:scale-105 group-hover:bg-gray-900/60 shadow-xl">
                 <div className={`p-4 sm:p-6 rounded-2xl bg-gradient-to-br ${item.color} shadow-lg group-hover:shadow-2xl transition-all duration-300 transform group-hover:-translate-y-2`}>
                     <item.icon className="w-10 h-10 sm:w-14 sm:h-14 text-white" />
                 </div>
