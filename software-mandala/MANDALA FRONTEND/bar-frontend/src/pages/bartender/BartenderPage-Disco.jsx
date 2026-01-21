@@ -52,12 +52,16 @@ const BartenderPageDisco = () => {
 
     const handleUpdateEstado = async (pedidoId, nuevoEstado) => {
         try {
-            // Si se cancela el pedido, devolvemos los productos al inventario
+            // Si se cancela el pedido, solo devolvemos los productos que ya habían sido descontados (despachados)
             if (nuevoEstado === 'cancelado') {
                 const pedidoACancelar = pedidos.find(p => p.id === pedidoId);
                 if (pedidoACancelar && pedidoACancelar.productos_detalle) {
                     const devoluciones = pedidoACancelar.productos_detalle.map(item => {
-                        // Intentamos obtener el ID del producto (puede venir como objeto o ID directo)
+                        // Solo devolvemos lo que se haya descontado previamente
+                        const cantidadARetornar = item.cantidad_despachada || 0;
+                        if (cantidadARetornar <= 0) return null;
+
+                        // Intentamos obtener el ID del producto
                         let productoId = item.producto?.id || item.producto?._id;
                         if (!productoId && typeof item.producto !== 'object') {
                             productoId = item.producto;
@@ -66,17 +70,17 @@ const BartenderPageDisco = () => {
 
                         if (!productoId) return null;
 
-                        // Agregamos el '/' al final de la URL, crucial para muchos backends
                         return apiClient.put(`/productos/${productoId}/stock/`, {
-                            cantidad: Number(item.cantidad),
+                            cantidad: Number(cantidadARetornar),
                             accion: 'sumar'
                         });
                     });
-                    await Promise.all(devoluciones);
+                    await Promise.all(devoluciones.filter(p => p !== null));
                 }
             }
-
+            
             await apiClient.patch(`/pedidos/${pedidoId}/`, { estado: nuevoEstado });
+
             let mensaje = '';
             switch (nuevoEstado) {
                 case 'despachado': mensaje = 'despachado'; break;

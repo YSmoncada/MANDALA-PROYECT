@@ -101,10 +101,10 @@ class PedidoSerializer(serializers.ModelSerializer):
             producto = item['producto']
             cantidad = item['cantidad']
             total += producto.precio * cantidad
-            if producto.stock < cantidad:
-                raise serializers.ValidationError(f"❌ Stock insuficiente para el producto {producto.nombre}.")
-            producto.stock -= cantidad
-            producto.save()
+            # if producto.stock < cantidad:
+            #     raise serializers.ValidationError(f"❌ Stock insuficiente para el producto {producto.nombre}.")
+            # producto.stock -= cantidad
+            # producto.save()
 
         validated_data['total'] = total
         pedido = Pedido.objects.create(**validated_data)

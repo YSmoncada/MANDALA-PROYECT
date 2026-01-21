@@ -295,18 +295,26 @@ class PedidoViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         """
-        Si el pedido se marca como 'despachado', actualizamos todos sus items
-        para que cantidad_despachada = cantidad.
+        Si el pedido se marca como 'despachado', actualizamos el stock de los items
+        pendientes de despacho y actualizamos cantidad_despachada.
         """
         instance = serializer.save()
         
         if instance.estado == 'despachado':
             with transaction.atomic():
-                # Actualizar cada item para que esté totalmente despachado
-                # Usamos F() para evitar condiciones de carrera, aunque en update simple está bien.
-                # Lo hacemos directo:
+                # Actualizar cada item para que esté totalmente despachado y DESCONTAR STOCK
                 for item in instance.pedidoproducto_set.all():
-                    if item.cantidad_despachada < item.cantidad:
+                    pendiente_de_despacho = item.cantidad - item.cantidad_despachada
+                    
+                    if pendiente_de_despacho > 0:
+                        # Descontar del inventario REALIZANDO EL MOVIMIENTO
+                        producto = item.producto
+                        # Opcional: Validar stock de nuevo? 
+                        # Si se permite negativo, simplemente restamos.
+                        producto.stock -= pendiente_de_despacho
+                        producto.save()
+                        
+                        # Actualizar item
                         item.cantidad_despachada = item.cantidad
                         item.save()
 
@@ -356,16 +364,16 @@ class PedidoViewSet(viewsets.ModelViewSet):
 
                             producto = Producto.objects.select_for_update().get(pk=producto_id)
                             
-                            # Verificar stock
-                            if producto.stock < cantidad:
-                                return Response(
-                                    {"detail": f"Stock insuficiente para {producto.nombre}"}, 
-                                    status=status.HTTP_400_BAD_REQUEST
-                                )
+                            # Verificar stock (Opcional, si queremos permitir venta sin stock comentar esto tambien)
+                            # if producto.stock < cantidad:
+                            #     return Response(
+                            #         {"detail": f"Stock insuficiente para {producto.nombre}"}, 
+                            #         status=status.HTTP_400_BAD_REQUEST
+                            #     )
 
-                            # Actualizar stock
-                            producto.stock -= cantidad
-                            producto.save()
+                            # Actualizar stock - YA NO SE DESCUENTA AQUÍ
+                            # producto.stock -= cantidad
+                            # producto.save()
 
                             # Buscar si el producto ya está en el pedido
                             pedido_producto, created = PedidoProducto.objects.get_or_create(
