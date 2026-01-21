@@ -295,28 +295,41 @@ class PedidoViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         """
-        Si el pedido se marca como 'despachado', actualizamos el stock de los items
-        pendientes de despacho y actualizamos cantidad_despachada.
+        Maneja actualizaciones de estado:
+        1. Si pasa a 'despachado': Descuenta stock de lo pendiente.
+        2. Si pasa a 'cancelado': Devuelve stock de lo que se había despachado.
         """
+        # Capturamos el estado anterior antes de guardar
+        previous_estado = serializer.instance.estado
         instance = serializer.save()
         
-        if instance.estado == 'despachado':
-            with transaction.atomic():
+        with transaction.atomic():
+            # CASO 1: COMPLETAR / DESPACHAR
+            if instance.estado == 'despachado' and previous_estado != 'despachado':
                 # Actualizar cada item para que esté totalmente despachado y DESCONTAR STOCK
                 for item in instance.pedidoproducto_set.all():
                     pendiente_de_despacho = item.cantidad - item.cantidad_despachada
                     
                     if pendiente_de_despacho > 0:
-                        # Descontar del inventario REALIZANDO EL MOVIMIENTO
                         producto = item.producto
-                        # Opcional: Validar stock de nuevo? 
-                        # Si se permite negativo, simplemente restamos.
                         producto.stock -= pendiente_de_despacho
                         producto.save()
                         
-                        # Actualizar item
                         item.cantidad_despachada = item.cantidad
                         item.save()
+
+            # CASO 2: CANCELAR
+            elif instance.estado == 'cancelado' and previous_estado != 'cancelado':
+                # Devolver al inventario SOLO lo que se había despachado/descontado
+                for item in instance.pedidoproducto_set.all():
+                    if item.cantidad_despachada > 0:
+                        producto = item.producto
+                        producto.stock += item.cantidad_despachada
+                        producto.save()
+                        
+                        # Opcional: Resetear contador, aunque el pedido ya murió
+                        # item.cantidad_despachada = 0
+                        # item.save()
 
     def create(self, request, *args, **kwargs):
         """
