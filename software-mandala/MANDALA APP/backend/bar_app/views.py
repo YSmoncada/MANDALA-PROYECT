@@ -327,9 +327,9 @@ class PedidoViewSet(viewsets.ModelViewSet):
                         producto.stock += item.cantidad_despachada
                         producto.save()
                         
-                        # Opcional: Resetear contador, aunque el pedido ya murió
-                        # item.cantidad_despachada = 0
-                        # item.save()
+                        # Resetear contador para evitar doble devolución si se borra el historial después
+                        item.cantidad_despachada = 0
+                        item.save()
 
     def create(self, request, *args, **kwargs):
         """
@@ -449,11 +449,12 @@ class PedidoViewSet(viewsets.ModelViewSet):
                 count = len(pedidos_a_eliminar)
 
                 for pedido in pedidos_a_eliminar:
-                    # Por cada pedido, devolvemos el stock de sus productos
+                    # Por cada pedido, devolvemos el stock SOLO de lo que se haya despachado
                     for item in pedido.pedidoproducto_set.all():
-                        producto = item.producto
-                        producto.stock += item.cantidad
-                        producto.save()
+                        if item.cantidad_despachada > 0:
+                            producto = item.producto
+                            producto.stock += item.cantidad_despachada
+                            producto.save()
                 
                 # Después de revertir el stock, eliminamos los pedidos.
                 queryset.delete()
@@ -480,6 +481,12 @@ class PedidoViewSet(viewsets.ModelViewSet):
         except PedidoProducto.DoesNotExist:
             return Response({"detail": "Producto no encontrado en este pedido"}, status=status.HTTP_404_NOT_FOUND)
             
+        # Descontar stock del item si aún falta por despachar
+        pendiente = item.cantidad - item.cantidad_despachada
+        if pendiente > 0:
+            item.producto.stock -= pendiente
+            item.producto.save()
+
         # Actualizar cantidad despachada
         item.cantidad_despachada = item.cantidad
         item.save()
