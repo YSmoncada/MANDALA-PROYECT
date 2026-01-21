@@ -392,7 +392,10 @@ class PedidoViewSet(viewsets.ModelViewSet):
                             pedido_producto, created = PedidoProducto.objects.get_or_create(
                                 pedido=pedido,
                                 producto=producto,
-                                defaults={'cantidad': 0}
+                                defaults={
+                                    'cantidad': 0,
+                                    'precio_unitario': producto.precio
+                                }
                             )
                             
                             # Actualizar cantidad en el pedido
