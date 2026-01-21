@@ -1,12 +1,13 @@
 import React, { useState, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, ShieldCheck, X, Settings, RefreshCw } from 'lucide-react';
+import { Lock, ShieldCheck, X, Settings, RefreshCw, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { usePedidosContext } from '../../context/PedidosContext';
 import { useAdminUsers } from '../../hooks/useAdminUsers';
 import UserCard from './components/UserCard';
 import PageLayout from '../../components/PageLayout';
 import ConfirmModal from '../../components/ConfirmModal';
+import AddProfileForm from '../pedidosAuth/components/AddProfileForm';
 import { UI_CLASSES } from '../../constants/ui';
 
 /**
@@ -32,6 +33,32 @@ const AdminUsuariosDisco = () => {
     const [showModal, setShowModal] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
+
+    // Add Profile State
+    const [showAddForm, setShowAddForm] = useState(false);
+    const [newProfileName, setNewProfileName] = useState("");
+    const [newProfileCode, setNewProfileCode] = useState("");
+
+    const handleAddProfileSubmit = async (e) => {
+        e.preventDefault();
+        if (newProfileName.trim() === "" || newProfileCode.length !== 4) {
+            toast.error("Por favor, complete el nombre y un código de 4 dígitos.");
+            return;
+        }
+        
+        // Use auth.addProfile from context
+        const result = await auth.addProfile(newProfileName, newProfileCode);
+        
+        if (!result.success) {
+            toast.error(`Error: ${result.message}`);
+        } else {
+            setShowAddForm(false);
+            setNewProfileName("");
+            setNewProfileCode("");
+            toast.success("Perfil añadido correctamente");
+            refresh(); // Refresh the list in this view
+        }
+    };
 
     const handleOpenResetModal = (item, type) => {
         setSelectedItem({ ...item, _type: type });
@@ -80,6 +107,14 @@ const AdminUsuariosDisco = () => {
                         title="Refrescar datos"
                     >
                         <RefreshCw size={18} className={`${loading ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} />
+                    </button>
+                    
+                    <button
+                        onClick={() => setShowAddForm(true)}
+                        className="flex items-center gap-2 px-4 py-3 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 hover:bg-emerald-500 hover:text-white transition-all font-black text-xs uppercase tracking-widest shadow-xl active:scale-95"
+                    >
+                        <Plus size={18} />
+                        Nuevo Personal
                     </button>
                     <button
                         onClick={() => navigate('/configuracion-ticket')}
@@ -245,6 +280,21 @@ const AdminUsuariosDisco = () => {
                 cancelText="Mantener"
                 type="danger"
             />
+            {/* Add Profile Modal Form (Reused Component) */}
+            {showAddForm && (
+                <AddProfileForm
+                    name={newProfileName}
+                    code={newProfileCode}
+                    onNameChange={setNewProfileName}
+                    onCodeChange={setNewProfileCode}
+                    onSubmit={handleAddProfileSubmit}
+                    onBack={() => {
+                        setShowAddForm(false);
+                        setNewProfileName("");
+                        setNewProfileCode("");
+                    }}
+                />
+            )}
         </PageLayout>
     );
 };

@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import CodeInputDisco from "./CodeInput-Disco";
 import ProfileCard from "./components/ProfileCard";
 import SystemLoginForm from "./components/SystemLoginForm";
-import AddProfileForm from "./components/AddProfileForm";
 import { usePedidosContext } from "../../context/PedidosContext";
 
 export default function PedidosDisco() {
@@ -21,13 +20,10 @@ export default function PedidosDisco() {
         handleCodigoSubmit,
         loginSystem,
         handleLogout,
-        addProfile,
     } = auth;
 
     const [showAddForm, setShowAddForm] = useState(false);
     const [showSystemLogin, setShowSystemLogin] = useState(false);
-    const [newProfileName, setNewProfileName] = useState("");
-    const [newProfileCode, setNewProfileCode] = useState("");
 
     const [sysUsername, setSysUsername] = useState("");
     const [sysPassword, setSysPassword] = useState("");
@@ -51,22 +47,7 @@ export default function PedidosDisco() {
         );
     }
 
-    const handleAddProfileSubmit = async (e) => {
-        e.preventDefault();
-        if (newProfileName.trim() === "" || newProfileCode.length !== 4) {
-            toast.error("Por favor, complete el nombre y un código de 4 dígitos.");
-            return;
-        }
-        const result = await addProfile(newProfileName, newProfileCode);
-        if (!result.success) {
-            toast.error(`Error: ${result.message}`);
-        } else {
-            setShowAddForm(false);
-            setNewProfileName("");
-            setNewProfileCode("");
-            toast.success("Perfil añadido correctamente");
-        }
-    };
+
 
     const handleSystemLoginSubmit = async (e) => {
         e.preventDefault();
@@ -95,11 +76,7 @@ export default function PedidosDisco() {
         setSysPassword("");
     };
 
-    const handleBackFromAddProfile = () => {
-        setShowAddForm(false);
-        setNewProfileName("");
-        setNewProfileCode("");
-    };
+
 
     const handleBackFromPin = () => {
         handleLogout();
@@ -128,20 +105,10 @@ export default function PedidosDisco() {
                     />
                 )}
 
-                {/* Add New Profile Form */}
-                {showAddForm && !showSystemLogin && !userName && (
-                    <AddProfileForm 
-                        name={newProfileName}
-                        code={newProfileCode}
-                        onNameChange={setNewProfileName}
-                        onCodeChange={setNewProfileCode}
-                        onSubmit={handleAddProfileSubmit}
-                        onBack={handleBackFromAddProfile}
-                    />
-                )}
+
 
                 {/* Profile Selection Step */}
-                {!userName && !codigoConfirmado && !showAddForm && !showSystemLogin && (
+                {!userName && !codigoConfirmado && !showSystemLogin && (
                     <div className="w-full max-w-6xl mx-auto -mt-16 relative">
                         <div className="text-center mb-12 mt-16 sm:mt-2">
                             <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight drop-shadow-[0_0_25px_rgba(169,68,255,0.4)]">
@@ -158,16 +125,7 @@ export default function PedidosDisco() {
                                 />
                             ))}
 
-                            {/* Add New Profile Button */}
-                            <button
-                                onClick={() => setShowAddForm(true)}
-                                className="flex flex-col items-center justify-center gap-3 min-h-[180px] border-2 border-dashed border-[#6C3FA8] hover:border-[#A944FF] hover:bg-[#441E73]/20 rounded-2xl text-[#8A7BAF] hover:text-white transition-all duration-300 group w-48"
-                            >
-                                <div className="w-12 h-12 rounded-full bg-[#441E73]/30 flex items-center justify-center group-hover:bg-[#A944FF]/20 transition-all duration-300">
-                                    <Plus size={20} className="group-hover:text-[#A944FF] transition-colors" />
-                                </div>
-                                <span className="font-bold text-xs tracking-widest uppercase">Nuevo Perfil</span>
-                            </button>
+
                         </div>
                     </div>
                 )}
