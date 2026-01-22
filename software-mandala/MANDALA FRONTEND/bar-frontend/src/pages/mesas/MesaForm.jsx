@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Table, Users, PlusCircle } from 'lucide-react';
+import { Table, Users, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { UI_CLASSES } from '../../constants/ui';
 

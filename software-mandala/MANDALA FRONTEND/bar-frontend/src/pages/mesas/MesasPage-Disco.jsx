@@ -6,7 +6,6 @@ import toast from 'react-hot-toast';
 import { usePedidosContext } from '../../context/PedidosContext';
 import { useMesasManagement } from '../../hooks/useMesasManagement';
 import MesaCard from './components/MesaCard';
-import StaffListItem from './components/StaffListItem';
 import { UI_CLASSES } from '../../constants/ui';
 
 /**
@@ -67,7 +66,7 @@ const MesasPageDisco = () => {
                         
                         <MesaForm key="form" onSubmit={handleAddMesa} />
 
-                        <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 mt-8">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mt-8">
                             {mesas.map((mesa) => (
                                 <MesaCard 
                                     key={mesa.id} 
