@@ -33,6 +33,7 @@ export const UI_CLASSES = {
     buttonSecondary: "px-6 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all font-bold",
     buttonDanger: "px-6 py-2 bg-rose-600 text-white font-bold rounded-lg hover:bg-rose-500 active:scale-95 transition-all shadow-lg shadow-rose-900/20",
     buttonSuccess: "px-6 py-2 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-500 active:scale-95 transition-all shadow-lg shadow-emerald-900/20",
+    buttonBack: "flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-4 py-2 text-gray-300 hover:bg-purple-600 hover:text-white transition-all backdrop-blur-md shadow-lg hover:scale-105 active:scale-95 group",
     
     // Animations
     fadeIn: "animate-fadeIn",

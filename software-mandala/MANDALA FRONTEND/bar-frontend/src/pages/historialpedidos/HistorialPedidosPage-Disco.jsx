@@ -4,6 +4,7 @@ import { ArrowLeft, AlertCircle, Loader2 } from 'lucide-react';
 import TicketPrinter from '../../components/TicketPrinter';
 import { usePedidosContext } from '../../context/PedidosContext';
 import { useHistorialPedidos } from '../../hooks/useHistorialPedidos';
+import { UI_CLASSES } from '../../constants/ui';
 
 // Sub-components
 import StatsCards from './components/StatsCards';
@@ -54,7 +55,7 @@ const HistorialPedidosPageDisco = () => {
                 {/* Back Button */}
                 <button
                     onClick={() => navigate('/')}
-                    className="fixed top-6 left-6 z-50 flex items-center gap-2 rounded-xl bg-[#441E73]/60 backdrop-blur-xl border border-[#6C3FA8] px-4 py-2 hover:bg-[#A944FF]/20 transition-all no-print shadow-lg hover:scale-105 active:scale-95 group"
+                    className={`fixed top-6 left-6 z-50 ${UI_CLASSES.buttonBack} backdrop-blur-xl no-print shadow-lg`}
                 >
                     <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" /> 
                     <span className="font-bold uppercase tracking-wider text-xs">Volver</span>

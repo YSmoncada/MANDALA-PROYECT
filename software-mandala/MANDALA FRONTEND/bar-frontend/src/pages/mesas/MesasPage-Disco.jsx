@@ -7,6 +7,7 @@ import { usePedidosContext } from '../../context/PedidosContext';
 import { useMesasManagement } from '../../hooks/useMesasManagement';
 import MesaCard from './components/MesaCard';
 import StaffListItem from './components/StaffListItem';
+import { UI_CLASSES } from '../../constants/ui';
 
 /**
  * Premium Management Page for Mesas and Staff Profiles.
@@ -80,7 +81,7 @@ const MesasPageDisco = () => {
                 {/* Back Navigation */}
                 <button
                     onClick={() => navigate("/home-disco")}
-                    className="fixed top-6 left-6 z-50 flex items-center gap-2 rounded-xl bg-[#441E73]/60 backdrop-blur-xl border border-[#6C3FA8] px-4 py-2 hover:bg-[#A944FF]/20 transition-all shadow-lg hover:scale-105 active:scale-95 group"
+                    className={`fixed top-6 left-6 z-50 ${UI_CLASSES.buttonBack} backdrop-blur-xl shadow-lg`}
                 >
                     <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
                     <span className="font-bold uppercase tracking-wider text-xs">Volver</span>

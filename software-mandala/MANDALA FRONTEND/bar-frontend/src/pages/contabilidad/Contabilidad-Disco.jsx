@@ -7,6 +7,7 @@ import { DollarSign, TrendingUp, TrendingDown, Calendar, FileText, PieChart, Arr
 import toast from 'react-hot-toast';
 import PUCDisco from './components/PUC-Disco';
 import { API_URL } from '../../apiConfig';
+import { UI_CLASSES } from '../../constants/ui';
 
 export default function ContabilidadDisco() {
     const { auth } = usePedidosContext();
@@ -87,13 +88,15 @@ export default function ContabilidadDisco() {
             </div>
 
             {/* Back Button */}
-            <button
-                onClick={() => navigate("/")}
-                className="absolute top-6 left-6 z-50 flex items-center gap-2 rounded-lg bg-[#441E73]/50 border border-[#6C3FA8] px-4 py-2 text-white hover:bg-[#441E73] transition-all backdrop-blur-md shadow-lg hover:scale-105"
-            >
-                <ArrowLeft size={18} />
-                <span className="font-medium">Volver</span>
-            </button>
+            <div className="absolute top-6 left-6 z-50">
+                <button
+                    onClick={() => navigate("/")}
+                    className={UI_CLASSES.buttonBack}
+                >
+                    <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+                    <span className="font-bold uppercase tracking-wider text-xs">Volver</span>
+                </button>
+            </div>
 
             <div className="flex-1 p-8 pt-20 relative z-10 max-w-7xl mx-auto w-full">
                 <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">

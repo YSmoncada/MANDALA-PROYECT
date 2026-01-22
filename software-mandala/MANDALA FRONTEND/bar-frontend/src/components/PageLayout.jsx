@@ -21,7 +21,7 @@ const PageLayout = ({ children, title, showBackButton = true }) => {
                 {showBackButton && (
                     <button
                         onClick={() => navigate("/")}
-                        className="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-4 py-2 text-gray-300 hover:bg-purple-600 hover:text-white transition-all backdrop-blur-md shadow-lg hover:scale-105 active:scale-95 group mb-6"
+                        className={`${UI_CLASSES.buttonBack} mb-6`}
                     >
                         <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
                         <span className="font-bold uppercase tracking-wider text-xs">Volver al Inicio</span>

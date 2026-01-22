@@ -5,6 +5,7 @@ import HeaderPedidosDisco from "./HeaderPedidos-Disco";
 import ProductGridDisco from "./ProductGrid-Disco";
 import { usePedidosContext } from "../../context/PedidosContext";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import { UI_CLASSES } from "../../constants/ui";
 
 /**
  * Page for selecting products and adding them to the order.
@@ -53,10 +54,10 @@ function SeleccionProductosDisco() {
                 <div className="mb-6">
                     <button
                         onClick={() => navigate('/')}
-                        className="flex items-center gap-2 rounded-lg bg-[#441E73]/50 border border-[#6C3FA8] px-4 py-2 text-white hover:bg-[#441E73] hover:border-[#A944FF] transition-all backdrop-blur-md shadow-lg transform-gpu active:scale-95"
+                        className={UI_CLASSES.backButton || UI_CLASSES.buttonBack}
                     >
-                        <ArrowLeft size={18} />
-                        <span className="font-medium">Volver</span>
+                        <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+                        <span className="font-bold uppercase tracking-wider text-xs">Volver</span>
                     </button>
                 </div>
 
