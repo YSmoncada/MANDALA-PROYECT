@@ -14,6 +14,7 @@ from django.db import models
 from .models import Producto, Pedido, Movimiento, Mesa, Mesera, PedidoProducto, EmpresaConfig
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password, check_password
 from .serializers import (
     ProductoSerializer, 
     MovimientoSerializer, 
@@ -37,6 +38,10 @@ from django.core.files.storage import default_storage
 from django.conf import settings
 
 logger = logging.getLogger(__name__)
+
+class IsSuperUser(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.user and (request.user.is_superuser or request.user.is_staff))
 
 @api_view(['GET'])
 def api_root_view(request):
@@ -133,9 +138,6 @@ class GlobalAuthentication(TokenAuthentication, SessionAuthentication, BasicAuth
     def enforce_csrf(self, request):
         return
 
-class IsSuperUser(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return bool(request.user and (request.user.is_superuser or request.user.is_staff))
 
 class EmpresaConfigViewSet(viewsets.ModelViewSet):
     queryset = EmpresaConfig.objects.all()
@@ -195,12 +197,13 @@ class MeseraViewSet(viewsets.ModelViewSet):
         nuevo_codigo_str = str(nuevo_codigo).strip()
 
         if len(nuevo_codigo_str) < 4:
-            return Response({'detail': 'El código debe tener al menos 4 dígitos.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'El código debe tener al menos 4 caracteres.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        mesera.codigo = nuevo_codigo_str
+        # Hash the password before saving for security
+        mesera.codigo = make_password(nuevo_codigo_str)
         mesera.save()
 
-        return Response({'detail': f'Código de {mesera.nombre} actualizado correctamente.'})
+        return Response({'detail': f'Código de {mesera.nombre} actualizado y encriptado correctamente.'})
 
 class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all().order_by('-id')
@@ -699,6 +702,7 @@ def total_pedidos_mesera_hoy(request):
 def verificar_codigo_mesera(request):
     """
     Verifica si el código ingresado corresponde a la mesera seleccionada.
+    Soporta migración automática de texto plano a hash.
     """
     mesera_id = request.data.get('mesera_id')
     codigo = request.data.get('codigo')
@@ -707,13 +711,21 @@ def verificar_codigo_mesera(request):
         return Response({'detail': 'Faltan datos'}, status=status.HTTP_400_BAD_REQUEST)
 
     mesera = get_object_or_404(Mesera, pk=mesera_id)
-
-    # Comparación robusta (strings limpios)
-    # Convertimos ambos a string y removemos espacios para evitar fallos tontos.
-    if str(mesera.codigo).strip() == str(codigo).strip():
+    codigo_input = str(codigo).strip()
+    
+    # 1. Intentar validar como Hash (Seguro)
+    if check_password(codigo_input, mesera.codigo):
         return Response({'success': True})
-    else:
-        return Response({'success': False, 'detail': 'Código incorrecto'}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    # 2. Fallback: Intentar validar como Texto Plano (Legacy)
+    # Si coincide, actualizamos a Hash inmediatamente para que la próxima vez sea seguro.
+    if str(mesera.codigo).strip() == codigo_input:
+        logger.info(f"Migrando contraseña de mesera {mesera.nombre} a hash seguro.")
+        mesera.codigo = make_password(codigo_input)
+        mesera.save()
+        return Response({'success': True})
+        
+    return Response({'success': False, 'detail': 'Código incorrecto'}, status=status.HTTP_401_UNAUTHORIZED)
 
 @method_decorator(csrf_exempt, name='dispatch')
 class UserViewSet(viewsets.ModelViewSet):

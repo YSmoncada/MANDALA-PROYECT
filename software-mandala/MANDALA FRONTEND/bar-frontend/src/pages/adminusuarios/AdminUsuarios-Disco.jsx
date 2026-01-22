@@ -41,8 +41,8 @@ const AdminUsuariosDisco = () => {
 
     const handleAddProfileSubmit = async (e) => {
         e.preventDefault();
-        if (newProfileName.trim() === "" || newProfileCode.length !== 4) {
-            toast.error("Por favor, complete el nombre y un código de 4 dígitos.");
+        if (newProfileName.trim() === "" || newProfileCode.length < 4) {
+            toast.error("El nombre y la contraseña (min 4 caracteres) son obligatorios.");
             return;
         }
         
@@ -229,18 +229,13 @@ const AdminUsuariosDisco = () => {
                                     <Lock size={18} />
                                 </div>
                                 <input
-                                    type={selectedItem?._type === 'usuario' ? "text" : "password"}
-                                    inputMode={selectedItem?._type === 'usuario' ? "text" : "numeric"}
-                                    placeholder={selectedItem?._type === 'usuario' ? "Nueva contraseña" : "Nuevo PIN numérico"}
+                                    type={selectedItem?._type === 'usuario' ? "text" : "text"}
+                                    inputMode="text"
+                                    placeholder={selectedItem?._type === 'usuario' ? "Nueva contraseña" : "Nueva contraseña"}
                                     value={newValue}
                                     autoFocus
                                     onChange={(e) => {
-                                        const val = e.target.value;
-                                        if (selectedItem?._type === 'mesera') {
-                                            if (/^\d*$/.test(val) && val.length <= 6) setNewValue(val);
-                                        } else {
-                                            setNewValue(val);
-                                        }
+                                        setNewValue(e.target.value);
                                     }}
                                     onKeyPress={(e) => e.key === 'Enter' && handleUpdateCredentials()}
                                     className={`${UI_CLASSES.input} pl-12 font-mono text-center text-xl tracking-[0.4em] py-5 border-white/5 focus:border-purple-500/50 bg-black/40`}

@@ -32,7 +32,7 @@ class Producto(models.Model):
 
 class Mesera(models.Model):
     nombre = models.CharField(max_length=100)
-    codigo = models.CharField(max_length=10, unique=True)
+    codigo = models.CharField(max_length=128, unique=True)
 
 class Mesa(models.Model):
     numero = models.CharField(max_length=10)

@@ -35,11 +35,9 @@ export default function AddProfileForm({
                     <Lock className="absolute left-4 top-3.5 text-[#8A7BAF] group-focus-within:text-[#A944FF] transition-colors" size={18} />
                     <input
                         type="password"
-                        inputMode="numeric"
-                        placeholder="Código de 4 dígitos"
+                        placeholder="Contraseña de acceso"
                         value={code}
-                        onChange={(e) => /^\d{0,4}$/.test(e.target.value) && onCodeChange(e.target.value)}
-                        maxLength={4}
+                        onChange={(e) => onCodeChange(e.target.value)}
                         className="w-full pl-12 pr-4 py-3 rounded-xl bg-[#2B0D49] border border-[#6C3FA8]/30 text-white placeholder-[#8A7BAF] focus:outline-none focus:bg-[#2B0D49]/80 focus:border-[#A944FF] focus:ring-1 focus:ring-[#A944FF] transition-all tracking-widest"
                     />
                 </div>

@@ -1,23 +1,26 @@
-import React, { memo } from "react";
-import { Lock, ArrowLeft, CheckCircle2 } from "lucide-react";
-import { usePinInput } from "../../hooks/usePinInput";
-
-const PIN_LENGTH = 4;
+import React, { memo, useState, useRef, useEffect } from "react";
+import { Lock, ArrowLeft, CheckCircle2, Eye, EyeOff } from "lucide-react";
 
 /**
- * Premium PIN Input component for profile authentication.
- * Refactored to use usePinInput hook for better organization and scalability.
+ * Premium Password Input component for profile authentication.
+ * Now supports standard complex alphanumeric passwords.
  */
 function CodeInputDisco({ nombre, onBack, onSubmit }) {
-    const {
-        values,
-        inputRefs,
-        handleChange,
-        handleKeyDown,
-        handlePaste,
-        isComplete,
-        fullPin
-    } = usePinInput(PIN_LENGTH, onSubmit);
+    const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, []);
+
+    const handleSubmit = () => {
+        if (password.length > 0) {
+            onSubmit(password);
+        }
+    };
 
     return (
         <div className="bg-[#441E73]/80 backdrop-blur-xl border border-[#6C3FA8] p-10 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.4)] w-full max-w-md text-center animate-fadeIn relative overflow-hidden">
@@ -46,59 +49,57 @@ function CodeInputDisco({ nombre, onBack, onSubmit }) {
                     Acceso Seguro
                 </h2>
                 <p className="text-[#C2B6D9] text-sm font-medium tracking-wide">
-                    Hola <span className="text-[#FF4BC1] font-bold">{nombre}</span>, por favor ingresa tu clave personal para continuar.
+                    Hola <span className="text-[#FF4BC1] font-bold">{nombre}</span>, ingresa tu contraseña.
                 </p>
             </div>
 
-            {/* OTP Grid */}
-            <div className="flex justify-center gap-3 sm:gap-4 mb-10">
-                {values.map((digit, index) => (
-                    <input
-                        key={index}
-                        ref={el => inputRefs.current[index] = el}
-                        type="text"
-                        inputMode="numeric"
-                        pattern="\d*"
-                        maxLength={1}
-                        value={digit}
-                        onChange={(e) => handleChange(index, e.target.value)}
-                        onKeyDown={(e) => handleKeyDown(index, e)}
-                        onPaste={handlePaste}
-                        autoComplete="one-time-code"
-                        className={`w-14 h-20 sm:w-16 sm:h-24 text-center text-4xl font-black rounded-2xl border-2 transition-all duration-500 outline-none
-                            ${digit
-                                ? "bg-gradient-to-b from-[#A944FF] to-[#6C3FA8] text-white border-[#FF4BC1] shadow-[0_0_25px_rgba(169,68,255,0.4)] scale-105"
-                                : "bg-[#2B0D49]/60 border-[#6C3FA8]/40 text-white placeholder-[#8A7BAF] focus:border-[#A944FF] focus:bg-[#2B0D49]/80 focus:shadow-[0_0_15px_rgba(169,68,255,0.2)]"
-                            }
-                        `}
-                    />
-                ))}
+            {/* Password Input */}
+            <div className="relative mb-10 group">
+                <div className="absolute left-5 top-1/2 -translate-y-1/2 text-[#A944FF] pointer-events-none transition-colors group-focus-within:text-[#FF4BC1]">
+                    <Lock size={20} />
+                </div>
+                <input
+                    ref={inputRef}
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+                    placeholder="Contraseña..."
+                    className="w-full bg-[#2B0D49]/60 border-2 border-[#6C3FA8]/40 text-white placeholder-[#8A7BAF] text-center text-xl font-bold py-6 pl-12 pr-12 rounded-2xl focus:border-[#A944FF] focus:bg-[#2B0D49]/80 focus:shadow-[0_0_20px_rgba(169,68,255,0.2)] outline-none transition-all duration-300 tracking-widest"
+                />
+                <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-5 top-1/2 -translate-y-1/2 text-[#8A7BAF] hover:text-white transition-colors"
+                >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
             </div>
 
             {/* Footer Action */}
             <button
-                onClick={() => onSubmit(fullPin)}
-                disabled={!isComplete}
+                onClick={handleSubmit}
+                disabled={password.length === 0}
                 className={`w-full py-5 rounded-2xl font-black tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-3 text-xs uppercase
-                    ${isComplete
-                        ? "bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] hover:brightness-110 text-white shadow-xl shadow-[#A944FF]/30 translate-y-0 active:scale-95"
+                    ${password.length > 0
+                        ? "bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] hover:brightness-110 text-white shadow-xl shadow-[#A944FF]/30 translate-y-0 active:scale-95 cursor-pointer"
                         : "bg-[#2B0D49] text-[#8A7BAF] cursor-not-allowed border border-[#6C3FA8]/20 opacity-50"
                     }
                 `}
             >
-                {isComplete ? (
+                {password.length > 0 ? (
                     <>
                         <CheckCircle2 size={18} />
-                        Verificar Código
+                        Ingresar
                     </>
                 ) : (
-                    `Ingresa ${PIN_LENGTH} dígitos`
+                    "Ingresa tu contraseña"
                 )}
             </button>
 
             {/* Help Text */}
             <p className="mt-8 text-[10px] text-[#8A7BAF] uppercase tracking-[0.3em] font-bold opacity-60">
-                Mandala Security System v2.0
+                Sistema Protegido v2.1
             </p>
         </div>
     );
