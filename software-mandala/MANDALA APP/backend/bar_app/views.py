@@ -46,7 +46,7 @@ def api_root_view(request):
     })
 
 @api_view(['GET'])
-@permission_classes([permissions.AllowAny])
+@permission_classes([IsSuperUser])
 def debug_users_view(request):
     try:
         users = User.objects.all().values('id', 'username', 'email', 'is_active', 'is_staff', 'is_superuser')
@@ -57,10 +57,11 @@ def debug_users_view(request):
             "users": list(users)
         })
     except Exception as e:
-        return Response({"error": str(e)}, status=500)
+        logger.error(f"Error in debug_users_view: {e}")
+        return Response({"error": "Error interno del servidor"}, status=500)
 
 @api_view(['GET'])
-@permission_classes([permissions.AllowAny])
+@permission_classes([IsSuperUser])
 def fix_users_view(request):
     try:
         from django.contrib.auth.models import User, Group
