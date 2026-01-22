@@ -20,7 +20,7 @@ const LogoutButton = ({ onLogout }) => (
         className="absolute top-6 right-6 z-50 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-red-500/20 hover:border-red-500/50 hover:text-white text-gray-400 transition-all backdrop-blur-sm shadow-lg group"
     >
         <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
-        <span className="text-sm font-bold uppercase tracking-wider">Log out</span>
+        <span className="text-sm font-bold uppercase tracking-wider">Cerrar Sesión</span>
     </button>
 );
 
