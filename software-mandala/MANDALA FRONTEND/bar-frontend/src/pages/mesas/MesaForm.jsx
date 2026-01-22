@@ -86,9 +86,9 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
 
             <button
                 type="submit"
-                className={`${UI_CLASSES.buttonPrimary} h-[52px] px-8 bg-gradient-to-br from-[#A944FF] to-[#6C3FA8] hover:brightness-110 shadow-[#A944FF]/20 mt-2 sm:mt-0`}
+                className={`${UI_CLASSES.buttonPrimary} mt-2 sm:mt-0 shadow-lg shadow-purple-900/20`}
             >
-                <PlusCircle size={18} />
+                <Plus size={18} />
                 <span>Agregar Mesa</span>
             </button>
         </form>

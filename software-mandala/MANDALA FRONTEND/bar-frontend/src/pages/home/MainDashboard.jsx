@@ -17,7 +17,7 @@ const BackgroundEffects = () => (
 const LogoutButton = ({ onLogout }) => (
     <button
         onClick={onLogout}
-        className="absolute top-6 right-6 z-50 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-red-500/20 hover:border-red-500/50 hover:text-white text-gray-400 transition-all backdrop-blur-sm shadow-lg group"
+        className="sm:absolute sm:top-6 sm:right-6 mb-8 sm:mb-0 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-red-500/20 hover:border-red-500/50 hover:text-white text-gray-400 transition-all backdrop-blur-sm shadow-lg group z-50"
     >
         <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
         <span className="text-sm font-bold uppercase tracking-wider">Cerrar Sesión</span>
@@ -43,10 +43,9 @@ function MainDashboard() {
         <AccessVerifier auth={auth}>
             <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white overflow-hidden relative selection:bg-purple-500/30">
                 <BackgroundEffects />
-                <LogoutButton onLogout={handleLogout} />
-
                 <main className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-16 sm:py-12">
                     <DashboardHeader />
+                    <LogoutButton onLogout={handleLogout} />
 
                     <div className="flex flex-wrap justify-center items-center gap-6 w-full max-w-7xl px-4">
                         {visibleModules.map((item, index) => (
