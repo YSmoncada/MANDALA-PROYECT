@@ -34,7 +34,18 @@ const StockStatus = memo(({ stock, min, max }) => {
 const ProductTable = memo(({ productos, onEdit, onDelete, onMovimiento }) => {
     const [movimientoModalOpen, setMovimientoModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
-    const [viewMode, setViewMode] = useState('table'); // 'table' or 'grid'
+    const [viewMode, setViewMode] = useState(window.innerWidth < 768 ? 'grid' : 'table');
+
+    // Handle responsive view mode
+    React.useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 768 && viewMode === 'table') {
+                setViewMode('grid');
+            }
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [viewMode]);
 
     const openMovimiento = useCallback((producto) => {
         setSelectedProduct(producto);
@@ -75,8 +86,8 @@ const ProductTable = memo(({ productos, onEdit, onDelete, onMovimiento }) => {
 
     return (
         <div className="space-y-4">
-            {/* View Toggle */}
-            <div className="flex justify-end mb-2">
+            {/* View Toggle - Hidden on mobile as grid is required */}
+            <div className="hidden md:flex justify-end mb-2">
                 <div className="bg-white/5 p-1 rounded-lg border border-white/10 flex gap-1">
                     <button 
                         onClick={() => setViewMode('table')}
