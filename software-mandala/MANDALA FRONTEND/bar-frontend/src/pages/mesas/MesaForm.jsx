@@ -1,6 +1,7 @@
 import React, { useState, useEffect, memo } from 'react';
 import { Table, Users, PlusCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { UI_CLASSES } from '../../constants/ui';
 
 /**
  * Form to add or edit Mesa configuration.
@@ -39,7 +40,7 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
     return (
         <form
             onSubmit={handleSubmit}
-            className="bg-[#2B0D49]/40 border border-[#6C3FA8]/20 rounded-2xl p-6 mb-8 flex flex-wrap items-end gap-6 shadow-xl relative overflow-hidden group"
+            className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-8 flex flex-wrap items-end gap-6 shadow-xl relative overflow-hidden group"
         >
             <div className="absolute inset-y-0 left-0 w-1 bg-[#A944FF] opacity-50 group-hover:opacity-100 transition-opacity"></div>
 
@@ -57,7 +58,7 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
                             const value = e.target.value;
                             setNumero(value.replace(/[^0-9]/g, ''));
                         }}
-                        className="w-full p-4 bg-[#210931] border border-[#6C3FA8]/40 rounded-xl text-white focus:ring-2 focus:ring-[#A944FF]/50 focus:border-[#A944FF] outline-none transition-all placeholder:text-gray-700 font-bold text-sm shadow-inner"
+                        className={UI_CLASSES.input}
                         placeholder="Ej: 01"
                         required
                     />
@@ -75,7 +76,7 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
                         id="capacidad"
                         value={capacidad}
                         onChange={(e) => setCapacidad(e.target.value)}
-                        className="w-full p-4 bg-[#210931] border border-[#6C3FA8]/40 rounded-xl text-white focus:ring-2 focus:ring-[#A944FF]/50 focus:border-[#A944FF] outline-none transition-all placeholder:text-gray-700 font-bold text-sm shadow-inner"
+                        className={UI_CLASSES.input}
                         placeholder="Sillas"
                         min="1"
                         required
@@ -85,10 +86,10 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
 
             <button
                 type="submit"
-                className="h-[56px] px-8 bg-gradient-to-br from-[#A944FF] to-[#6C3FA8] text-white font-black uppercase tracking-[0.1em] text-[10px] rounded-xl hover:brightness-125 transition-all shadow-lg shadow-[#A944FF]/20 hover:shadow-[#A944FF]/40 hover:scale-[1.02] active:scale-[0.95] mt-2 sm:mt-0 flex items-center justify-center gap-2 border border-[#A944FF]/30"
+                className={`${UI_CLASSES.buttonPrimary} h-[52px] px-8 bg-gradient-to-br from-[#A944FF] to-[#6C3FA8] hover:brightness-110 shadow-[#A944FF]/20 mt-2 sm:mt-0`}
             >
-                <PlusCircle size={16} />
-                Agregar Mesa
+                <PlusCircle size={18} />
+                <span>Agregar Mesa</span>
             </button>
         </form>
     );

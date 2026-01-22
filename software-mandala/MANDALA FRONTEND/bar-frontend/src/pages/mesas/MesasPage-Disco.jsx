@@ -77,7 +77,7 @@ const MesasPageDisco = () => {
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl"></div>
             </div>
 
-            <main className="flex-1 p-3 pt-24 pb-20 sm:p-8 relative z-10">
+            <main className="flex-1 p-4 pt-24 pb-20 sm:p-8 relative z-10 max-w-7xl mx-auto w-full">
                 {/* Back Navigation */}
                 <button
                     onClick={() => navigate("/home-disco")}
@@ -87,76 +87,74 @@ const MesasPageDisco = () => {
                     <span className="font-bold uppercase tracking-wider text-xs">Volver</span>
                 </button>
 
-                <div className="max-w-6xl mx-auto">
-                    {/* Page Header */}
-                    <div className="text-center mb-12">
-                        <h1 className="text-4xl sm:text-5xl font-black mb-4 text-white tracking-tight drop-shadow-[0_0_15px_rgba(168,85,247,0.3)] uppercase">
-                            Gestión de Mesas y Personal
-                        </h1>
-                        <div className="h-1.5 w-32 bg-gradient-to-r from-[#A944FF] via-[#FF4BC1] to-transparent rounded-full mx-auto shadow-[0_0_10px_rgba(169,68,255,0.5)]"></div>
-                    </div>
+                <div className="text-center mb-12">
+                    <h1 className="text-4xl sm:text-5xl font-black mb-4 text-white tracking-tight drop-shadow-[0_0_15px_rgba(168,85,247,0.3)] uppercase">
+                        Configuración de Salón
+                    </h1>
+                    <p className="text-lg text-[#C2B6D9] font-light italic">Gestiona las mesas y perfiles del personal</p>
+                    <div className="h-1.5 w-32 bg-gradient-to-r from-[#A944FF] via-[#FF4BC1] to-transparent rounded-full mx-auto mt-4 shadow-[0_0_10px_rgba(169,68,255,0.5)]"></div>
+                </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-                        {/* Column 1: Mesas Management */}
-                        <div className="space-y-6">
-                            <h2 className="text-xl font-bold flex items-center gap-3 uppercase tracking-wider text-white">
-                                <div className="p-2 bg-[#A944FF]/10 rounded-lg">
-                                    <Table className="text-[#A944FF]" size={20} />
-                                </div>
-                                Mesas Configuradas
-                            </h2>
-
-                            <div className="bg-[#441E73]/60 backdrop-blur-xl border border-[#6C3FA8] rounded-3xl p-6 shadow-2xl relative overflow-hidden group">
-                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#A944FF] to-transparent"></div>
-                                
-                                <MesaForm key="form" onSubmit={handleAddMesa} />
-
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-8">
-                                    {mesas.map((mesa) => (
-                                        <MesaCard 
-                                            key={mesa.id} 
-                                            mesa={mesa} 
-                                            onDelete={handleDeleteMesa} 
-                                        />
-                                    ))}
-                                </div>
-
-                                {mesas.length === 0 && (
-                                    <div className="text-center py-20 border-2 border-dashed border-[#6C3FA8]/30 rounded-2xl bg-[#2B0D49]/30">
-                                        <p className="text-[#8A7BAF] font-bold uppercase tracking-[0.2em] text-[10px]">No hay mesas configuradas</p>
-                                    </div>
-                                )}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {/* Column 1: Mesas Management */}
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-3 px-2">
+                            <div className="p-2 bg-[#A944FF]/10 rounded-lg">
+                                <Table className="text-[#A944FF]" size={20} />
                             </div>
+                            <h2 className="text-xl font-bold uppercase tracking-wider text-white">Mesas Configuradas</h2>
                         </div>
 
-                        {/* Column 2: Staff Management */}
-                        <div className="space-y-6">
-                            <h2 className="text-xl font-bold flex items-center gap-3 uppercase tracking-wider text-white">
-                                <div className="p-2 bg-[#FF4BC1]/10 rounded-lg">
-                                    <Users className="text-[#FF4BC1]" size={20} />
-                                </div>
-                                Personal Registrado
-                            </h2>
+                        <div className={`${UI_CLASSES.glassCard} p-6 shadow-2xl relative overflow-hidden group`}>
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#A944FF] to-transparent"></div>
+                            
+                            <MesaForm key="form" onSubmit={handleAddMesa} />
 
-                            <div className="bg-[#441E73]/60 backdrop-blur-xl border border-[#6C3FA8] rounded-3xl p-6 shadow-2xl relative overflow-hidden">
-                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#FF4BC1] to-transparent"></div>
-                                
-                                <div className="space-y-3">
-                                    {staff.map(person => (
-                                        <StaffListItem 
-                                            key={person.id} 
-                                            staff={person} 
-                                            onDelete={confirmDeleteStaff} 
-                                        />
-                                    ))}
-                                </div>
-
-                                {staff.length === 0 && (
-                                    <div className="text-center py-20 border-2 border-dashed border-[#6C3FA8]/30 rounded-2xl bg-[#2B0D49]/30">
-                                        <p className="text-[#8A7BAF] font-bold uppercase tracking-[0.2em] text-[10px]">No hay personal registrado</p>
-                                    </div>
-                                )}
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-8">
+                                {mesas.map((mesa) => (
+                                    <MesaCard 
+                                        key={mesa.id} 
+                                        mesa={mesa} 
+                                        onDelete={handleDeleteMesa} 
+                                    />
+                                ))}
                             </div>
+
+                            {mesas.length === 0 && (
+                                <div className="text-center py-20 border-2 border-dashed border-[#6C3FA8]/30 rounded-2xl bg-black/20">
+                                    <p className="text-[#8A7BAF] font-bold uppercase tracking-[0.2em] text-[10px]">No hay mesas configuradas</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Column 2: Staff Management */}
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-3 px-2">
+                            <div className="p-2 bg-[#FF4BC1]/10 rounded-lg">
+                                <Users className="text-[#FF4BC1]" size={20} />
+                            </div>
+                            <h2 className="text-xl font-bold uppercase tracking-wider text-white">Personal Registrado</h2>
+                        </div>
+
+                        <div className={`${UI_CLASSES.glassCard} p-6 shadow-2xl relative overflow-hidden`}>
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#FF4BC1] to-transparent"></div>
+                            
+                            <div className="space-y-3">
+                                {staff.map(person => (
+                                    <StaffListItem 
+                                        key={person.id} 
+                                        staff={person} 
+                                        onDelete={confirmDeleteStaff} 
+                                    />
+                                ))}
+                            </div>
+
+                            {staff.length === 0 && (
+                                <div className="text-center py-20 border-2 border-dashed border-[#6C3FA8]/30 rounded-2xl bg-black/20">
+                                    <p className="text-[#8A7BAF] font-bold uppercase tracking-[0.2em] text-[10px]">No hay personal registrado</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
