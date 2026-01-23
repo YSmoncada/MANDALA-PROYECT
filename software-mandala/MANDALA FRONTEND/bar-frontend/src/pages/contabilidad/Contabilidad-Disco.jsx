@@ -4,7 +4,7 @@ import axios from 'axios';
 import HeaderPedidosDisco from '../pedidospage/HeaderPedidos-Disco';
 import { usePedidosContext } from '../../context/PedidosContext';
 import { DollarSign, TrendingUp, TrendingDown, Calendar, FileText, PieChart, ArrowLeft, Receipt, ExternalLink, Copy } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import PUCDisco from './components/PUC-Disco';
 import { API_URL } from '../../apiConfig';
 import { UI_CLASSES } from '../../constants/ui';

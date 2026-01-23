@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo } from 'react';
 import { Table, Users, Plus } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { UI_CLASSES } from '../../constants/ui';
 
 /**

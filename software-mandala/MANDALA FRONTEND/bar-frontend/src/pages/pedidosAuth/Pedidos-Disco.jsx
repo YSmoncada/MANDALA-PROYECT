@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { useNavigate } from "react-router-dom";
 import CodeInputDisco from "./CodeInput-Disco";
 import ProfileCard from "./components/ProfileCard";
@@ -140,17 +140,7 @@ export default function PedidosDisco() {
                                 const success = await handleCodigoSubmit(code);
                                 if (!success) {
                                     toast.error("Clave incorrecta", {
-                                        style: {
-                                            background: "rgba(220, 38, 38, 0.9)",
-                                            color: "white",
-                                            border: "1px solid #991B1B",
-                                            fontWeight: "bold",
-                                            backdropFilter: "blur(10px)",
-                                        },
-                                        iconTheme: {
-                                            primary: "white",
-                                            secondary: "#DC2626"
-                                        }
+                                        description: "El código ingresado no es válido para este perfil."
                                     });
                                 }
                             }}

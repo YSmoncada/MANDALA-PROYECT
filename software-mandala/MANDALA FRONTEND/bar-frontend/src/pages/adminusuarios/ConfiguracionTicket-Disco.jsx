@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Settings, Save, ArrowLeft, Building2, Phone, MapPin, Hash, MessageSquare, DollarSign, Percent } from 'lucide-react';
 import axios from 'axios';
 import { API_URL } from '../../apiConfig';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { usePedidosContext } from '../../context/PedidosContext';
 
 const ConfiguracionTicketDisco = () => {

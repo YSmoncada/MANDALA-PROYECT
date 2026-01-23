@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import apiClient from '../utils/apiClient';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 
 /**
  * Hook to manage administration of users and profiles (staff).

@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 
 /**
  * Custom hook to handle the logic of a single Product Card.
@@ -29,17 +29,7 @@ export const useProductCard = (producto, onAgregarPedido) => {
         onAgregarPedido(producto, cantidad);
         
         const nombreProducto = cantidad > 1 ? `${producto.nombre}s` : producto.nombre;
-        toast.success(`Agregado: ${cantidad} ${nombreProducto}`, {
-            style: {
-                background: '#0E0D23',
-                color: '#fff',
-                border: '1px solid #A944FF',
-            },
-            iconTheme: {
-                primary: '#A944FF',
-                secondary: '#fff',
-            },
-        });
+        toast.success(`Agregado: ${cantidad} ${nombreProducto}`);
         
         resetCantidad();
     }, [cantidad, producto, onAgregarPedido, resetCantidad]);
