@@ -255,7 +255,7 @@ const AdminUsuariosDisco = () => {
                                 </button>
                                 <button
                                     onClick={handleUpdateCredentials}
-                                    className="flex-1 px-6 py-5 bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] text-white rounded-2xl hover:brightness-110 hover:scale-[1.02] transition-all font-black uppercase text-[11px] tracking-[0.2em] shadow-[0_0_30px_rgba(169,68,255,0.4)] active:scale-95 border border-white/20"
+                                    className="flex-1 px-6 py-5 bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 hover:bg-emerald-500 hover:text-white transition-all font-black uppercase text-[11px] tracking-[0.2em] shadow-xl active:scale-95 shadow-emerald-900/20 rounded-2xl"
                                 >
                                     Confirmar Cambio
                                 </button>
