@@ -171,15 +171,15 @@ function PedidosPageDisco() {
                                     <button
                                         onClick={handleFinalizarPedido}
                                         disabled={orderItems.length === 0}
-                                        className={PAGE_STYLES.confirmBtn}
+                                        className="w-full px-4 py-3 bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 rounded-xl hover:bg-emerald-500 hover:text-white transition-all font-black uppercase text-[11px] tracking-[0.2em] shadow-xl active:scale-95 shadow-emerald-900/20 flex items-center justify-center gap-2"
                                     >
                                         Confirmar Pedido <ArrowRight size={16} />
                                     </button>
                                     <button
                                         onClick={onClearOrder}
-                                        className={PAGE_STYLES.cancelBtn}
+                                        className="w-full px-4 py-3 bg-rose-500/10 border border-rose-500/30 text-rose-400 rounded-xl hover:bg-rose-500 hover:text-white transition-all font-black uppercase text-[11px] tracking-[0.2em] active:scale-95"
                                     >
-                                        Cancelar Todo
+                                        Cancelar
                                     </button>
                                 </div>
                             </div>
