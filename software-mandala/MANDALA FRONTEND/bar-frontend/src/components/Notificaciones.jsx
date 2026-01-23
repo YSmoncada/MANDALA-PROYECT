@@ -8,7 +8,7 @@ import { Toaster } from 'react-hot-toast';
 const Notificaciones = () => {
     return (
         <Toaster
-            position="top-right"
+            position="top-center"
             toastOptions={{
                 className: '',
                 style: {
