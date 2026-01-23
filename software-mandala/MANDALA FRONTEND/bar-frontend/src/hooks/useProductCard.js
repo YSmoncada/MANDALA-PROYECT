@@ -30,6 +30,7 @@ export const useProductCard = (producto, onAgregarPedido) => {
         
         const nombreProducto = cantidad > 1 ? `${producto.nombre}s` : producto.nombre;
         toast.success(`Agregado: ${cantidad} ${nombreProducto}`, {
+            position: 'bottom-right',
             style: {
                 background: '#0E0D23',
                 color: '#fff',

@@ -87,6 +87,7 @@ export const usePedidosPage = () => {
 
         if (result.success) {
             toast.success(result.message, {
+                position: 'bottom-right',
                 style: { background: '#0E0D23', color: '#fff', border: '1px solid #A944FF' },
                 iconTheme: { primary: '#A944FF', secondary: '#fff' },
             });
