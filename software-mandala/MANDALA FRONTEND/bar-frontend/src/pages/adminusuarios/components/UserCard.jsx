@@ -57,7 +57,7 @@ const UserCard = ({ item, type, onEdit, onDelete, canDelete }) => {
 
             <button
                 onClick={onEdit}
-                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border font-black text-[10px] uppercase tracking-[0.2em] transition-all active:scale-[0.98] bg-[#12071F] border-[#6C3FA8]/40 text-purple-400 hover:bg-[#6C3FA8] hover:text-white shadow-lg shadow-black/50 hover:shadow-purple-500/20"
+                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border border-white/20 font-black text-[10px] uppercase tracking-[0.2em] transition-all active:scale-[0.98] bg-[#6C3FA8] text-white shadow-lg shadow-purple-900/30 hover:brightness-110 hover:shadow-purple-500/40"
             >
                 <Lock size={14} />
                 Cambiar {isUser ? 'Clave' : 'PIN'}
