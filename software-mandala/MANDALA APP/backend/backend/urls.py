@@ -8,7 +8,6 @@ from bar_app.views import ProductoViewSet
 from bar_app import views
 from bar_app.views import MovimientoViewSet, MeseraTotalPedidosView, DebugStorageView, ReporteVentasDiariasView # Importamos la nueva vista
 from bar_app.views import PedidoViewSet, MesaViewSet, MeseraViewSet, UserViewSet, EmpresaConfigViewSet
-from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 router = DefaultRouter()
 router.register(r'productos', ProductoViewSet)
@@ -23,9 +22,6 @@ urlpatterns = [
     path('', views.api_root_view, name='api-root'),
     path('admin/', admin.site.urls),
     # Documentation
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
     
     path('api/debug-storage/', DebugStorageView.as_view(), name='debug-storage'), # URL de debug
     path('api/debug-users/', views.debug_users_view, name='debug-users'),
