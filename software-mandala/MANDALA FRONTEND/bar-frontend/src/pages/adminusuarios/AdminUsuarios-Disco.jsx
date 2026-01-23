@@ -246,18 +246,18 @@ const AdminUsuariosDisco = () => {
                                 Los cambios se aplicarán de forma inmediata y el usuario deberá usar sus nuevas credenciales en el siguiente inicio de sesión.
                             </p>
 
-                            <div className="flex gap-4 pt-8">
+                            <div className="flex gap-4 pt-6">
                                 <button
                                     onClick={() => setShowModal(false)}
-                                    className="flex-1 px-6 py-5 bg-white/5 border border-white/10 text-gray-400 rounded-2xl hover:bg-white/10 hover:text-white transition-all font-black uppercase text-[11px] tracking-[0.2em]"
+                                    className="flex-1 px-4 py-3 bg-rose-500/10 border border-rose-500/30 text-rose-400 rounded-xl hover:bg-rose-500 hover:text-white transition-all font-black uppercase text-[11px] tracking-[0.2em] active:scale-95"
                                 >
                                     Cancelar
                                 </button>
                                 <button
                                     onClick={handleUpdateCredentials}
-                                    className="flex-1 px-6 py-5 bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 hover:bg-emerald-500 hover:text-white transition-all font-black uppercase text-[11px] tracking-[0.2em] shadow-xl active:scale-95 shadow-emerald-900/20 rounded-2xl"
+                                    className="flex-1 px-4 py-3 bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 rounded-xl hover:bg-emerald-500 hover:text-white transition-all font-black uppercase text-[11px] tracking-[0.2em] shadow-xl active:scale-95 shadow-emerald-900/20"
                                 >
-                                    Confirmar Cambio
+                                    Confirmar
                                 </button>
                             </div>
                         </div>
