@@ -1,7 +1,7 @@
 import React, { useState, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, ShieldCheck, X, Settings, RefreshCw, Plus } from 'lucide-react';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import { usePedidosContext } from '../../context/PedidosContext';
 import { useAdminUsers } from '../../hooks/useAdminUsers';
 import UserCard from './components/UserCard';

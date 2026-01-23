@@ -5,7 +5,7 @@ import TicketPrinter from '../../components/TicketPrinter';
 import PageLayout from '../../components/PageLayout';
 import { UI_CLASSES } from '../../constants/ui';
 import { useBartenderOrders } from '../../hooks/useBartenderOrders';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 
 const BartenderPageDisco = () => {
     const {

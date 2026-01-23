@@ -1,5 +1,5 @@
 import apiClient from "../utils/apiClient";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
 /**
  * Obtiene todos los productos del backend.

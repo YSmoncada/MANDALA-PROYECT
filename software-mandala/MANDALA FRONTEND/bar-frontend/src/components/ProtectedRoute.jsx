@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import { usePedidosContext } from '../context/PedidosContext';
 
 import LoadingSpinner from './LoadingSpinner';

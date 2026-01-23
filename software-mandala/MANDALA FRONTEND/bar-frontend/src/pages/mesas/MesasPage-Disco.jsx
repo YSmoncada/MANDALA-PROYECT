@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Trash2, Users, Table } from 'lucide-react';
 import MesaForm from './MesaForm';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import { usePedidosContext } from '../../context/PedidosContext';
 import { useMesasManagement } from '../../hooks/useMesasManagement';
 import MesaCard from './components/MesaCard';

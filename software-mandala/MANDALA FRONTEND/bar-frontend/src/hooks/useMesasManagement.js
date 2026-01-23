@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import apiClient from '../utils/apiClient';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 
 /**
  * Hook to manage mesas and staff data and actions using apiClient for auto-auth.

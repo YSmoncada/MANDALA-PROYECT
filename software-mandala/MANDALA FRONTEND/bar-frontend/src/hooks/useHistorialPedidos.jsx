@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import apiClient from '../utils/apiClient';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 
 /**
  * Hook to manage order history logic, filtering, and printing.
@@ -103,33 +103,45 @@ export const useHistorialPedidos = () => {
     }, []);
 
     const handleBorrarHistorial = useCallback(async () => {
-        toast.warning('¿Borrar Historial?', {
-            description: 'Esta acción devolverá el stock y NO se puede deshacer.',
-            action: {
-                label: 'Borrar todo',
-                onClick: async () => {
-                    try {
-                        const params = new URLSearchParams();
-                        if (vendedorSeleccionado) {
-                            if (vendedorSeleccionado.startsWith('u')) params.append('usuario', vendedorSeleccionado.substring(1));
-                            else params.append('mesera', vendedorSeleccionado.substring(1));
-                        }
-                        if (fechaSeleccionada) params.append('fecha', fechaSeleccionada);
+        toast((t) => (
+            <div className="bg-[#1A103C] text-white p-5 rounded-xl shadow-lg border border-purple-700/50 max-w-sm">
+                <p className="font-bold text-lg mb-2 capitalize">Borrar Historial</p>
+                <p className="text-sm text-gray-300 mb-4">
+                    ¿Estás seguro de que deseas borrar este historial? Esta acción devolverá el stock y <span className="text-pink-400 font-bold">no se puede deshacer</span>.
+                </p>
+                <div className="flex gap-3">
+                    <button
+                        onClick={async () => {
+                            toast.dismiss(t.id);
+                            try {
+                                const params = new URLSearchParams();
+                                if (vendedorSeleccionado) {
+                                    if (vendedorSeleccionado.startsWith('u')) params.append('usuario', vendedorSeleccionado.substring(1));
+                                    else params.append('mesera', vendedorSeleccionado.substring(1));
+                                }
+                                if (fechaSeleccionada) params.append('fecha', fechaSeleccionada);
 
-                        await apiClient.delete(`/pedidos/borrar_historial/?${params.toString()}`);
-                        toast.success('Historial eliminado y stock restaurado.');
-                        setPedidos([]);
-                    } catch (error) {
-                        console.error('Error clearing history:', error);
-                        toast.error('Error al intentar borrar el historial.');
-                    }
-                }
-            },
-            cancel: {
-                label: 'Cancelar'
-            },
-            duration: 10000
-        });
+                                await apiClient.delete(`/pedidos/borrar_historial/?${params.toString()}`);
+                                toast.success('Historial eliminado y stock restaurado.');
+                                setPedidos([]);
+                            } catch (error) {
+                                console.error('Error clearing history:', error);
+                                toast.error('Error al intentar borrar el historial.');
+                            }
+                        }}
+                        className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition text-xs uppercase"
+                    >
+                        Sí, borrar
+                    </button>
+                    <button
+                        onClick={() => toast.dismiss(t.id)}
+                        className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition text-xs uppercase"
+                    >
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        ), { duration: 6000 });
     }, [vendedorSeleccionado, fechaSeleccionada]);
 
     const totalVentas = (Array.isArray(pedidos) ? pedidos : []).reduce((acc, p) => {

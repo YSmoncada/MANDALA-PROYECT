@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import { usePedidosContext } from "../context/PedidosContext";
 
 /**
@@ -86,8 +86,9 @@ export const usePedidosPage = () => {
         const result = await finalizarPedido(pedidoData);
 
         if (result.success) {
-            toast.success("Pedido finalizado", {
-                description: result.message
+            toast.success(result.message, {
+                style: { background: '#0E0D23', color: '#fff', border: '1px solid #A944FF' },
+                iconTheme: { primary: '#A944FF', secondary: '#fff' },
             });
             onClearOrder();
             
