@@ -100,10 +100,10 @@ const AdminUsuariosDisco = () => {
             <div className="max-w-7xl mx-auto space-y-12 pb-20">
                 
                 {/* Global Actions */}
-                <div className="flex justify-end gap-3 px-4 sm:px-0">
+                <div className="flex justify-end gap-4 px-4 sm:px-0">
                     <button
                         onClick={refresh}
-                        className={UI_CLASSES.buttonSecondary + " px-4"}
+                        className="flex items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white transition-all shadow-lg active:scale-95 group"
                         title="Refrescar datos"
                     >
                         <RefreshCw size={18} className={`${loading ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} />
@@ -111,42 +111,42 @@ const AdminUsuariosDisco = () => {
                     
                     <button
                         onClick={() => setShowAddForm(true)}
-                        className={UI_CLASSES.buttonSuccess}
+                        className="flex items-center gap-2 px-4 py-3 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 hover:bg-emerald-500 hover:text-white transition-all font-black text-xs uppercase tracking-widest shadow-xl active:scale-95"
                     >
                         <Plus size={18} />
                         Nuevo Personal
                     </button>
                     <button
                         onClick={() => navigate('/configuracion-ticket')}
-                        className={UI_CLASSES.buttonPrimary}
+                        className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#6C3FA8]/20 border border-[#6C3FA8]/50 text-purple-400 hover:bg-[#6C3FA8] hover:text-white transition-all font-black text-xs uppercase tracking-widest shadow-xl active:scale-95"
                     >
                         <Settings size={18} />
-                        Ticket
+                        Configurar Ticket
                     </button>
                 </div>
 
                 {loading && usuarios.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-40 animate-fadeIn">
-                        <div className="relative w-16 h-16 mb-8">
-                            <div className="absolute inset-0 border-4 border-[#A944FF]/10 rounded-full"></div>
-                            <div className="absolute inset-0 border-4 border-t-[#A944FF] rounded-full animate-spin"></div>
+                    <div className="flex flex-col items-center justify-center py-32 animate-fadeIn">
+                        <div className="relative">
+                            <div className="w-16 h-16 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin mb-6 shadow-[0_0_30px_rgba(168,85,247,0.3)]"></div>
+                            <div className="absolute inset-0 bg-purple-500/10 blur-2xl rounded-full"></div>
                         </div>
-                        <p className="text-[#A944FF] font-black tracking-[0.4em] text-[10px] animate-pulse uppercase">Sincronizando base de datos...</p>
+                        <p className="text-purple-400 font-black tracking-[0.4em] text-[10px] animate-pulse uppercase">Cargando base de datos...</p>
                     </div>
                 ) : (
-                    <div className="space-y-20 animate-fadeIn">
+                    <div className="space-y-16 animate-fadeIn">
                         {/* System Users Section */}
                         <section className="px-4 sm:px-0">
-                            <div className="flex items-center gap-6 mb-10">
-                                <h2 className={UI_CLASSES.titleSection}>
-                                    <ShieldCheck className="text-[#A944FF]" size={20} />
-                                    <span>Usuarios Sistema</span>
+                            <div className="flex items-center gap-4 mb-8">
+                                <div className="h-px w-8 bg-purple-500"></div>
+                                <h2 className="text-sm font-black tracking-[0.4em] uppercase text-purple-400">
+                                    Usuarios del Sistema
                                 </h2>
-                                <div className="h-[1px] flex-grow bg-white/5"></div>
-                                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{usuarios.length} activos</span>
+                                <div className="h-px flex-grow bg-gradient-to-r from-purple-500/50 to-transparent"></div>
+                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{usuarios.length} activos</span>
                             </div>
                             
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {usuarios.map(user => (
                                     <UserCard
                                         key={`u-${user.id}`}
@@ -158,8 +158,8 @@ const AdminUsuariosDisco = () => {
                                     />
                                 ))}
                                 {usuarios.length === 0 && !loading && (
-                                    <div className="col-span-full py-20 text-center bg-white/[0.02] rounded-[2.5rem] border border-dashed border-white/5">
-                                        <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">No hay usuarios registrados</p>
+                                    <div className="col-span-full py-16 text-center bg-white/5 rounded-3xl border border-dashed border-white/10">
+                                        <p className="text-gray-500 font-bold uppercase tracking-widest text-xs">No se encontraron usuarios del sistema.</p>
                                     </div>
                                 )}
                             </div>
@@ -167,16 +167,16 @@ const AdminUsuariosDisco = () => {
 
                         {/* Staff Profiles Section */}
                         <section className="px-4 sm:px-0">
-                            <div className="flex items-center gap-6 mb-10">
-                                <h2 className={UI_CLASSES.titleSection}>
-                                    <Lock className="text-[#A944FF]" size={20} />
-                                    <span>Personal Operación</span>
+                            <div className="flex items-center gap-4 mb-8">
+                                <div className="h-px w-8 bg-pink-500"></div>
+                                <h2 className="text-sm font-black tracking-[0.4em] uppercase text-pink-400">
+                                    Personal de Operación
                                 </h2>
-                                <div className="h-[1px] flex-grow bg-white/5"></div>
-                                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{meseras.length} perfiles</span>
+                                <div className="h-px flex-grow bg-gradient-to-r from-pink-500/50 to-transparent"></div>
+                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{meseras.length} perfiles</span>
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {meseras.map(mesera => (
                                     <UserCard
                                         key={`m-${mesera.id}`}
@@ -188,8 +188,8 @@ const AdminUsuariosDisco = () => {
                                     />
                                 ))}
                                 {meseras.length === 0 && !loading && (
-                                    <div className="col-span-full py-20 text-center bg-white/[0.02] rounded-[2.5rem] border border-dashed border-white/5">
-                                        <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">No hay personal registrado</p>
+                                    <div className="col-span-full py-16 text-center bg-white/5 rounded-3xl border border-dashed border-white/10">
+                                        <p className="text-gray-500 font-bold uppercase tracking-widest text-xs">No se encontró personal registrado.</p>
                                     </div>
                                 )}
                             </div>
@@ -200,49 +200,65 @@ const AdminUsuariosDisco = () => {
 
             {/* Credential Reset Modal */}
             {showModal && (
-                <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-fadeIn" onClick={() => setShowModal(false)}>
-                    <div className={`${UI_CLASSES.glassCard} bg-[#120F25] w-full max-w-sm relative shadow-2xl border-white/10 transform animate-scaleIn overflow-visible`} onClick={e => e.stopPropagation()}>
+                <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/90 animate-fadeIn" onClick={() => setShowModal(false)}>
+                    <div className={`${UI_CLASSES.glassCard} bg-[#12071f] w-full max-w-md relative shadow-[0_0_100px_rgba(0,0,0,0.8)] border-white/10 transform animate-scaleIn`} onClick={e => e.stopPropagation()}>
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
                         
-                        <div className="text-center p-8">
-                            <div className="w-20 h-20 bg-[#A944FF]/10 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-inner">
-                                <ShieldCheck className="text-[#A944FF]" size={36} />
+                        <button
+                            onClick={() => setShowModal(false)}
+                            className="absolute top-6 right-6 p-2 text-gray-500 hover:text-white transition-colors bg-white/5 rounded-xl hover:bg-white/10"
+                        >
+                            <X size={20} />
+                        </button>
+
+                        <div className="text-center mb-10 pt-4">
+                            <div className="w-20 h-20 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-purple-500/30 shadow-[0_0_40px_rgba(168,85,247,0.1)]">
+                                <ShieldCheck className="text-purple-400" size={40} />
                             </div>
-                            <h2 className="text-2xl font-black uppercase tracking-tight text-white mb-2">
-                                Seguridad
+                            <h2 className="text-2xl font-black uppercase tracking-tight text-white">
+                                Actualizar Acceso
                             </h2>
-                            <p className="text-slate-500 text-[10px] uppercase tracking-[0.2em] font-black mb-8">
-                                Reset: {selectedItem?.username || selectedItem?.nombre}
+                            <p className="text-gray-400 text-[10px] mt-3 uppercase tracking-[0.2em] font-bold">
+                                Perfil: <span className="text-purple-400">{selectedItem?.username || selectedItem?.nombre}</span>
+                            </p>
+                        </div>
+
+                        <div className="space-y-6">
+                            <div className="group relative">
+                                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-purple-400 transition-colors z-10">
+                                    <Lock size={18} />
+                                </div>
+                                <input
+                                    type={selectedItem?._type === 'usuario' ? "text" : "text"}
+                                    inputMode="text"
+                                    placeholder={selectedItem?._type === 'usuario' ? "Nueva contraseña" : "Nueva contraseña"}
+                                    value={newValue}
+                                    autoFocus
+                                    onChange={(e) => {
+                                        setNewValue(e.target.value);
+                                    }}
+                                    onKeyPress={(e) => e.key === 'Enter' && handleUpdateCredentials()}
+                                    className={`${UI_CLASSES.input} pl-12 font-mono text-center text-xl tracking-[0.4em] py-5 border-white/5 focus:border-purple-500/50 bg-black/40`}
+                                />
+                            </div>
+
+                            <p className="text-[9px] text-gray-500 text-center uppercase tracking-widest leading-relaxed">
+                                Los cambios se aplicarán de forma inmediata y el usuario deberá usar sus nuevas credenciales en el siguiente inicio de sesión.
                             </p>
 
-                            <div className="space-y-6">
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        placeholder="NUEVA CLAVE"
-                                        value={newValue}
-                                        autoFocus
-                                        onChange={(e) => {
-                                            setNewValue(e.target.value);
-                                        }}
-                                        onKeyPress={(e) => e.key === 'Enter' && handleUpdateCredentials()}
-                                        className={UI_CLASSES.input + " text-center font-mono tracking-[0.3em] uppercase text-lg"}
-                                    />
-                                </div>
-
-                                <div className="flex flex-col gap-3">
-                                    <button
-                                        onClick={handleUpdateCredentials}
-                                        className={UI_CLASSES.buttonSuccess + " w-full py-4"}
-                                    >
-                                        Confirmar
-                                    </button>
-                                    <button
-                                        onClick={() => setShowModal(false)}
-                                        className="w-full py-4 text-slate-500 hover:text-white transition-all font-black uppercase text-[10px] tracking-[0.2em]"
-                                    >
-                                        Cerrar
-                                    </button>
-                                </div>
+                            <div className="flex gap-4 pt-6">
+                                <button
+                                    onClick={() => setShowModal(false)}
+                                    className="flex-1 px-4 py-3 bg-rose-500/10 border border-rose-500/30 text-rose-400 rounded-xl hover:bg-rose-500 hover:text-white transition-all font-black uppercase text-[11px] tracking-[0.2em] active:scale-95"
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    onClick={handleUpdateCredentials}
+                                    className="flex-1 px-4 py-3 bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 rounded-xl hover:bg-emerald-500 hover:text-white transition-all font-black uppercase text-[11px] tracking-[0.2em] shadow-xl active:scale-95 shadow-emerald-900/20"
+                                >
+                                    Confirmar
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -11,37 +11,34 @@ const PageLayout = ({ children, title, showBackButton = true }) => {
 
     return (
         <div className={UI_CLASSES.pageContainer}>
-            {/* Premium Background Ambiance */}
-            <div className="fixed inset-0 pointer-events-none overflow-hidden">
-                <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-[#A944FF]/10 rounded-full blur-[120px]"></div>
-                <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-[#FF4BC1]/5 rounded-full blur-[120px]"></div>
+            {/* Subtle background effects */}
+            <div className="absolute inset-0 opacity-20 pointer-events-none">
+                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
             </div>
 
-            <div className="relative mb-12 flex flex-col items-center md:items-start">
+            <div className="relative mb-8 text-center md:text-left">
                 {showBackButton && (
                     <button
                         onClick={() => navigate("/")}
-                        className={`${UI_CLASSES.buttonBack} mb-10 self-start`}
+                        className={`${UI_CLASSES.buttonBack} mb-6`}
                     >
-                        <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-                        <span>Volver al Inicio</span>
+                        <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+                        <span className="font-bold uppercase tracking-wider text-xs">Volver al Inicio</span>
                     </button>
                 )}
                 
                 {title && (
-                    <div className="w-full text-center md:text-left">
-                        <h1 className={UI_CLASSES.titleMain}>
+                    <div className="text-center">
+                        <h1 className="text-5xl md:text-6xl font-black mb-3 text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
                             {title}
                         </h1>
-                        <div className="mt-4 flex items-center gap-3">
-                            <div className="h-1 w-20 bg-gradient-to-r from-[#A944FF] to-transparent rounded-full"></div>
-                            <div className="h-1 w-2 bg-[#A944FF] rounded-full animate-pulse"></div>
-                        </div>
+                        <div className="h-1.5 w-24 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full mx-auto blur-[1px]"></div>
                     </div>
                 )}
             </div>
 
-            <main className="relative z-10">
+            <main className="relative max-w-6xl mx-auto">
                 {children}
             </main>
         </div>

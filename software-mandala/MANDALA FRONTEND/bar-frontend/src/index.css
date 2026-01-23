@@ -1,46 +1,9 @@
 @import "tailwindcss";
 
-:root {
-  --mandala-primary: #a944ff;
-  --mandala-bg: #0a0910;
-}
-
-body {
-  background-color: var(--mandala-bg);
-  color: #f1f5f9;
-  margin: 0;
-  font-family:
-    "Inter",
-    system-ui,
-    -apple-system,
-    sans-serif;
-  overflow-x: hidden;
-}
-
-/* Custom Premium Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #0a0910;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #2b0d49;
-  border-radius: 10px;
-  border: 2px solid #0a0910;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a944ff;
-}
-
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -51,7 +14,7 @@ body {
 @keyframes scaleIn {
   from {
     opacity: 0;
-    transform: scale(0.98);
+    transform: scale(0.95);
   }
   to {
     opacity: 1;
@@ -60,16 +23,13 @@ body {
 }
 
 .animate-fadeIn {
-  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
 }
 
 .animate-scaleIn {
-  animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* Glassmorphism utility */
-.glass-effect {
-  background: rgba(18, 15, 37, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: scaleIn 0.2s ease-out forwards;
 }

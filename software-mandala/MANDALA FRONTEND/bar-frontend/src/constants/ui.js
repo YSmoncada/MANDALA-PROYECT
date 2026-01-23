@@ -1,48 +1,39 @@
 /**
- * Definitive Design System for Mandala Disco
- * Premium, Modern, Dark Aesthetic.
+ * Design system tokens for Mandala
+ * Centralizing these styles ensures consistency and easy maintenance.
  */
 
 export const THEME = {
     colors: {
-        bg: "#0A0910",          // Ultra dark background
-        card: "#120F25",        // Deep purple card
-        primary: "#A944FF",     // Electric Purple (Brand)
-        secondary: "#FF4BC1",   // Cyber Pink
-        emerald: "#10B981",     // Deep Emerald (Success)
-        rose: "#E11D48",        // Deep Rose (Danger)
-        text: "#F1F5F9",        // Slate 100
-        muted: "#94A3B8",       // Slate 400
+        primary: "#6C3FA8",
+        primaryHover: "#5A328E",
+        bgDark: "#1A103C",
+        bgInput: "#2B0D49",
+        accent: "#A944FF",
+        rose: "#E11D48", // rose-600
+        emerald: "#10B981", // emerald-600
     },
-    shadows: {
-        glow: "0 0 20px rgba(169, 68, 255, 0.4)",
-        glowSuccess: "0 0 20px rgba(16, 185, 129, 0.3)",
-        glowDanger: "0 0 20px rgba(225, 29, 72, 0.3)",
+    glass: {
+        card: "bg-[#1A103C] border border-[#6C3FA8] backdrop-blur-md shadow-2xl",
+        input: "bg-[#2B0D49] border border-[#6C3FA8]/50 focus:ring-2 focus:ring-[#A944FF] outline-none",
     }
 };
 
 export const UI_CLASSES = {
     // Layouts
-    pageContainer: "min-h-screen bg-[#0A0910] text-slate-100 p-4 md:p-8 relative selection:bg-purple-500/30 overflow-x-hidden font-sans",
-    glassCard: "bg-[#120F25]/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl relative overflow-hidden",
+    pageContainer: "min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-4 md:p-8 relative selection:bg-purple-500/30",
+    glassCard: "bg-gray-900/80 border border-purple-500/30 rounded-2xl shadow-2xl p-4 md:p-8",
     
     // Inputs (Mandala Style)
-    input: "w-full p-4 bg-[#0A0910]/60 border border-white/5 rounded-2xl text-white focus:border-[#A944FF]/50 focus:ring-1 focus:ring-[#A944FF]/30 outline-none transition-all placeholder:text-slate-600 font-medium",
-    select: "w-full p-4 bg-[#0A0910]/60 border border-white/5 rounded-2xl text-white focus:border-[#A944FF]/50 focus:ring-1 focus:ring-[#A944FF]/30 outline-none transition-all appearance-none cursor-pointer",
+    input: "w-full p-3 bg-[#2B0D49] border border-[#6C3FA8]/50 rounded-lg text-white focus:ring-2 focus:ring-[#A944FF] outline-none transition-all placeholder:text-gray-500 selection:bg-purple-500/30 autofill:shadow-[0_0_0_30px_#2B0D49_inset] autofill:text-fill-white",
+    select: "w-full p-3 bg-[#2B0D49] border border-[#6C3FA8]/50 rounded-lg text-white focus:ring-2 focus:ring-[#A944FF] outline-none transition-all appearance-none [&>option]:bg-[#1A103C]",
     
-    // Premium Buttons
-    buttonPrimary: "px-6 py-3 bg-gradient-to-r from-[#A944FF] to-[#7928CA] text-white font-black rounded-2xl hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-purple-900/20 uppercase text-xs tracking-[0.2em] flex items-center justify-center gap-2",
-    buttonSuccess: "px-6 py-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-black rounded-2xl hover:bg-emerald-500 hover:text-white transition-all shadow-lg shadow-emerald-900/10 uppercase text-xs tracking-[0.2em] active:scale-95 flex items-center justify-center gap-2",
-    buttonDanger: "px-6 py-3 bg-rose-500/10 border border-rose-500/30 text-rose-400 font-black rounded-2xl hover:bg-rose-500 hover:text-white transition-all shadow-lg shadow-rose-900/10 uppercase text-xs tracking-[0.2em] active:scale-95 flex items-center justify-center gap-2",
-    buttonSecondary: "px-6 py-3 bg-white/5 border border-white/10 text-slate-400 font-black rounded-2xl hover:bg-white/10 hover:text-white transition-all uppercase text-xs tracking-[0.2em] active:scale-95 flex items-center justify-center gap-2",
-    buttonBack: "flex items-center gap-3 px-5 py-3 rounded-2xl bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all font-black uppercase text-[11px] tracking-[0.2em] backdrop-blur-md active:scale-95 group",
-    
-    // Typography
-    titleMain: "text-4xl md:text-6xl font-black text-white tracking-tighter uppercase drop-shadow-[0_0_15px_rgba(169,68,255,0.4)]",
-    titleSection: "text-sm font-black tracking-[0.4em] uppercase text-[#A944FF] flex items-center gap-4",
-    
-    // Components
-    badge: "px-3 py-1.5 rounded-xl bg-[#A944FF]/10 border border-[#A944FF]/20 text-[#A944FF] text-[10px] font-black uppercase tracking-widest",
+    // Buttons
+    buttonPrimary: "px-6 py-2 bg-[#6C3FA8] text-white font-bold rounded-lg hover:bg-[#5A328E] transition-all flex items-center justify-center gap-2",
+    buttonSecondary: "px-6 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all font-bold",
+    buttonDanger: "px-6 py-2 bg-rose-600 text-white font-bold rounded-lg hover:bg-rose-500 active:scale-95 transition-all shadow-lg shadow-rose-900/20",
+    buttonSuccess: "px-6 py-2 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-500 active:scale-95 transition-all shadow-lg shadow-emerald-900/20",
+    buttonBack: "flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-4 py-2 text-gray-300 hover:bg-purple-600 hover:text-white transition-all backdrop-blur-md shadow-lg hover:scale-105 active:scale-95 group",
     
     // Animations
     fadeIn: "animate-fadeIn",
