@@ -76,6 +76,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters',
+    'axes',
+    'drf_spectacular',
     'bar_app',
 ]
 
@@ -98,7 +100,8 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'anon': '200/hour',
         'user': '1000/hour'
-    }
+    },
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 MIDDLEWARE = [
@@ -110,7 +113,8 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware', 
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -243,3 +247,21 @@ print(f"STORAGES: {STORAGES}")
 print(f"CLOUDINARY_CLOUD_NAME: {os.environ.get('CLOUDINARY_CLOUD_NAME')}")
 print("----------------------------------------------------")
 
+# Axes Configuration
+AXES_FAILURE_LIMIT = 5
+AXES_COOLOFF_TIME = 1  # Hour
+AXES_RESET_ON_SUCCESS = True
+AXES_LOCKOUT_TEMPLATE = None # Can be a custom template
+AXES_HANDLER = 'axes.handlers.database.DatabaseHandler'
+
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Mandala Disco API',
+    'DESCRIPTION': 'API para el sistema de gestión de Mandala Disco',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}

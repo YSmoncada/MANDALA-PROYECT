@@ -1,97 +1,92 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../utils/apiClient';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 
 /**
- * Hook to manage bartender order fulfillment logic.
+ * Hook optimized with React Query to manage bartender order fulfillment logic.
  */
 export const useBartenderOrders = () => {
-    const [pedidos, setPedidos] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [empresaConfig, setEmpresaConfig] = useState(null);
-    const [pedidoAImprimir, setPedidoAImprimir] = useState(null);
+    const queryClient = useQueryClient();
 
-    const fetchConfig = useCallback(async () => {
-        try {
-            const res = await apiClient.get('/config/');
-            if (res.data && res.data.length > 0) setEmpresaConfig(res.data[0]);
-            else if (res.data && res.data.id) setEmpresaConfig(res.data);
-        } catch (error) {
-            console.error("Error loading company config:", error);
-        }
-    }, []);
-
-    const fetchPedidosPendientes = useCallback(async (showLoading = true) => {
-        try {
-            if (showLoading) setLoading(true);
+    // Query for pending orders
+    const { 
+        data: pedidos = [], 
+        isLoading: loading,
+        refetch: refresh
+    } = useQuery({
+        queryKey: ['pedidos', 'pendiente'],
+        queryFn: async () => {
             const response = await apiClient.get('/pedidos/?estado=pendiente');
-            setPedidos(response.data);
-        } catch (error) {
-            console.error("Error loading pending orders:", error);
-            toast.error("Error al sincronizar pedidos.");
-        } finally {
-            if (showLoading) setLoading(false);
-        }
-    }, []);
+            return response.data;
+        },
+        refetchInterval: 30000, // Auto-refresh every 30 seconds
+    });
 
-    useEffect(() => {
-        fetchPedidosPendientes();
-        fetchConfig();
-        
-        // Polling for new orders every 30 seconds
-        const interval = setInterval(() => fetchPedidosPendientes(false), 30000);
-        return () => clearInterval(interval);
-    }, [fetchPedidosPendientes, fetchConfig]);
+    // Query for company config
+    const { data: empresaConfig } = useQuery({
+        queryKey: ['config'],
+        queryFn: async () => {
+            const res = await apiClient.get('/config/');
+            if (res.data && res.data.length > 0) return res.data[0];
+            return res.data;
+        },
+        staleTime: 1000 * 60 * 60, // Cache for 1 hour
+    });
 
-    const handlePrint = (pedido) => {
-        setPedidoAImprimir(pedido);
-        setTimeout(() => {
-            window.print();
-        }, 500);
-    };
-
-    const updateOrderStatus = async (pedidoId, nuevoEstado) => {
-        try {
-            await apiClient.patch(`/pedidos/${pedidoId}/`, { estado: nuevoEstado });
-            
+    // Mutation to update order status (despachado, cancelado, etc.)
+    const updateStatusMutation = useMutation({
+        mutationFn: async ({ pedidoId, nuevoEstado }) => {
+            const response = await apiClient.patch(`/pedidos/${pedidoId}/`, { estado: nuevoEstado });
+            return { pedidoId, nuevoEstado, data: response.data };
+        },
+        onSuccess: ({ pedidoId, nuevoEstado }) => {
             let actionLabel = nuevoEstado === 'despachado' ? 'completado' : nuevoEstado;
             if (nuevoEstado === 'cancelado') actionLabel = 'cancelado';
             
             toast.success(`Pedido #${pedidoId} ${actionLabel}.`);
-            // Optimistic update
-            setPedidos(prev => prev.filter(p => p.id !== pedidoId));
-        } catch (error) {
+            
+            // Invalidate queries to refresh data
+            queryClient.invalidateQueries({ queryKey: ['pedidos', 'pendiente'] });
+        },
+        onError: (error, { pedidoId }) => {
             console.error(`Error updating order ${pedidoId}:`, error);
-            toast.error("No se pudo actualizar el estado.");
+            toast.error("No se pudo actualizar el estado del pedido.");
         }
-    };
+    });
 
-    const dispatchProduct = async (pedidoId, itemId) => {
-        try {
+    // Mutation to dispatch a single product
+    const dispatchProductMutation = useMutation({
+        mutationFn: async ({ pedidoId, itemId }) => {
             const response = await apiClient.post(`/pedidos/${pedidoId}/despachar_producto/`, { item_id: itemId });
+            return { pedidoId, data: response.data };
+        },
+        onSuccess: ({ data }) => {
             toast.success("Producto marcado como listo");
             
-            // If the whole order is now dispatched, remove it from list
-            if (response.data.pedido_estado === 'despachado') {
-                setPedidos(prev => prev.filter(p => p.id !== pedidoId));
-            } else {
-                // Refresh data to update progress
-                fetchPedidosPendientes(false);
-            }
-        } catch (error) {
+            // If the whole order is now dispatched, invalidate queries
+            // Otherwise, we could optimistically update but refreshing is safer
+            queryClient.invalidateQueries({ queryKey: ['pedidos', 'pendiente'] });
+        },
+        onError: (error) => {
             console.error("Error dispatching product:", error);
-            toast.error("Error al marcar producto.");
+            toast.error("Error al marcar producto como listo.");
         }
+    });
+
+    const handlePrint = (pedido) => {
+        // We handle printing state locally in the component if needed, 
+        // or just trigger the print window.
+        window.print();
     };
 
     return {
         pedidos,
         loading,
         empresaConfig,
-        pedidoAImprimir,
-        refresh: () => fetchPedidosPendientes(true),
+        refresh,
         handlePrint,
-        updateOrderStatus,
-        dispatchProduct
+        updateOrderStatus: (pedidoId, nuevoEstado) => updateStatusMutation.mutate({ pedidoId, nuevoEstado }),
+        dispatchProduct: (pedidoId, itemId) => dispatchProductMutation.mutate({ pedidoId, itemId }),
+        isUpdating: updateStatusMutation.isPending || dispatchProductMutation.isPending
     };
 };

@@ -1,47 +1,25 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import apiClient from '../../utils/apiClient';
-import toast from 'react-hot-toast';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, Clock, X, Loader2, Printer, RefreshCw } from 'lucide-react';
+import { Check, Clock, X, Printer, RefreshCw } from 'lucide-react';
 import TicketPrinter from '../../components/TicketPrinter';
 import PageLayout from '../../components/PageLayout';
 import { UI_CLASSES } from '../../constants/ui';
+import { useBartenderOrders } from '../../hooks/useBartenderOrders';
+import { toast } from 'sonner';
 
 const BartenderPageDisco = () => {
-    const [pedidos, setPedidos] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [empresaConfig, setEmpresaConfig] = useState(null);
-    const [pedidoAImprimir, setPedidoAImprimir] = useState(null);
+    const {
+        pedidos,
+        loading,
+        empresaConfig,
+        refresh,
+        updateOrderStatus,
+        dispatchProduct,
+        isUpdating
+    } = useBartenderOrders();
+
+    const [pedidoAImprimir, setPedidoAImprimir] = React.useState(null);
     const navigate = useNavigate();
-
-    const fetchConfig = async () => {
-        try {
-            const res = await apiClient.get('/config/');
-            if (res.data && res.data.length > 0) setEmpresaConfig(res.data[0]);
-            else if (res.data && res.data.id) setEmpresaConfig(res.data);
-        } catch (error) {
-            console.error("Error al cargar config empresa:", error);
-        }
-    };
-
-    const fetchPedidosPendientes = useCallback(async (showLoading = true) => {
-        try {
-            if (showLoading) setLoading(true);
-            const response = await apiClient.get('/pedidos/?estado=pendiente');
-            setPedidos(response.data);
-        } catch (error) {
-            console.error("Error al cargar los pedidos pendientes:", error);
-        } finally {
-            if (showLoading) setLoading(false);
-        }
-    }, []);
-
-    useEffect(() => {
-        fetchPedidosPendientes();
-        fetchConfig();
-        const interval = setInterval(() => fetchPedidosPendientes(false), 30000);
-        return () => clearInterval(interval);
-    }, [fetchPedidosPendientes]);
 
     const handlePrint = (pedido) => {
         setPedidoAImprimir(pedido);
@@ -50,39 +28,12 @@ const BartenderPageDisco = () => {
         }, 500);
     };
 
-    const handleUpdateEstado = async (pedidoId, nuevoEstado) => {
-        try {
-            // La lógica de inventario (descontar al despachar / devolver al cancelar) 
-            // ahora se maneja completamente en el backend (views.py -> perform_update)
-            
-            await apiClient.patch(`/pedidos/${pedidoId}/`, { estado: nuevoEstado });
-
-            let mensaje = '';
-            switch (nuevoEstado) {
-                case 'despachado': mensaje = 'despachado'; break;
-                case 'cancelado': mensaje = 'cancelado'; break;
-                case 'en_proceso': mensaje = 'en preparación'; break;
-                default: mensaje = 'actualizado';
-            }
-            toast.success(`Pedido #${pedidoId} ${mensaje}.`);
-            setPedidos(prevPedidos => prevPedidos.filter(p => p.id !== pedidoId));
-        } catch (error) {
-            console.error(`Error al actualizar el pedido ${pedidoId}:`, error);
-        }
+    const handleUpdateEstado = (pedidoId, nuevoEstado) => {
+        updateOrderStatus(pedidoId, nuevoEstado);
     };
 
-    const handleDespacharProducto = async (pedidoId, itemId) => {
-        try {
-            const response = await apiClient.post(`/pedidos/${pedidoId}/despachar_producto/`, { item_id: itemId });
-            toast.success("Producto marcado como listo");
-            if (response.data.pedido_estado === 'despachado') {
-                setPedidos(prev => prev.filter(p => p.id !== pedidoId));
-            } else {
-                fetchPedidosPendientes(false);
-            }
-        } catch (error) {
-            console.error("Error al despachar producto:", error);
-        }
+    const handleDespacharProducto = (pedidoId, itemId) => {
+        dispatchProduct(pedidoId, itemId);
     };
 
     return (

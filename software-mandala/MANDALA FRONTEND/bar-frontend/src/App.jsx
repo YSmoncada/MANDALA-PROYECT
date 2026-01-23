@@ -2,7 +2,6 @@
 import React, { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import ProtectedRoute from "./components/ProtectedRoute";
-import Notificaciones from "./components/Notificaciones";
 import LoadingSpinner from "./components/LoadingSpinner";
 
 // Lazy loading de componentes para mejorar el rendimiento
@@ -21,12 +20,17 @@ const ConfiguracionTicketDisco = lazy(() => import("./pages/adminusuarios/Config
 
 
 import { PedidosProvider } from "./context/PedidosContext";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from 'sonner';
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <Toaster richColors position="top-right" />
+      <BrowserRouter>
       <PedidosProvider>
-        <Notificaciones />
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -86,6 +90,7 @@ function App() {
         </Suspense>
       </PedidosProvider>
     </BrowserRouter>
+    </QueryClientProvider>
   );
 }
 
