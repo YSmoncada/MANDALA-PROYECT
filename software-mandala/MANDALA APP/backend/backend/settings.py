@@ -76,8 +76,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters',
-    'axes',
-    'drf_spectacular',
     'bar_app',
 ]
 
@@ -101,7 +99,6 @@ REST_FRAMEWORK = {
         'anon': '200/hour',
         'user': '1000/hour'
     },
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 MIDDLEWARE = [
