@@ -58,17 +58,21 @@ function ProductModal({ open, onClose, onSubmit, form, onChange, editId, onImage
             </div>
 
             {/* Action Buttons */}
-            <div className="w-full max-w-md mt-4 flex flex-col-reverse sm:flex-row justify-end gap-3">
-              <button type="button" onClick={onClose} className={UI_CLASSES.buttonSecondary}>
+            <div className="w-full max-w-md mt-6 flex gap-4">
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 px-4 py-3 bg-rose-500/10 border border-rose-500/30 text-rose-400 rounded-xl hover:bg-rose-500 hover:text-white transition-all font-black uppercase text-[11px] tracking-[0.2em] active:scale-95"
+              >
                 Cancelar
               </button>
               <button
                 type="submit"
                 disabled={isSaving}
-                className={UI_CLASSES.buttonPrimary}
+                className="flex-1 px-4 py-3 bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 rounded-xl hover:bg-emerald-500 hover:text-white transition-all font-black uppercase text-[11px] tracking-[0.2em] shadow-xl active:scale-95 shadow-emerald-900/20 flex items-center justify-center gap-2"
               >
                 {isSaving && <Loader2 size={16} className="animate-spin" />}
-                {isSaving ? 'Guardando...' : (editId ? "Guardar Cambios" : "Guardar Producto")}
+                <span>{isSaving ? 'Guardando...' : (editId ? "Guardar" : "Guardar")}</span>
               </button>
             </div>
           </form>
