@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import * as movimientoService from '../services/movimientoService';
 
 /**

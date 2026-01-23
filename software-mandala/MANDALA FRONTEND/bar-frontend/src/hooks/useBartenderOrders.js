@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../utils/apiClient';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 
 /**
  * Hook optimized with React Query to manage bartender order fulfillment logic.

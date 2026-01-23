@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import { API_URL } from '../apiConfig';
 
 // Crear instancia de Axios con configuración base

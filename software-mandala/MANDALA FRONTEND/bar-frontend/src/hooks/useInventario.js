@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { validateImageFile, createImagePreview } from "../utils/imageUtils";
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import * as inventarioService from "../services/inventarioService";
 import { useMovimientos } from "./useMovimientos";
 
