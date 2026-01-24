@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Lock, ChevronRight, Activity } from 'lucide-react';
+import { Lock, Mail, Eye } from 'lucide-react';
 
 export default function SystemLoginForm({ 
     username, 
@@ -7,73 +7,54 @@ export default function SystemLoginForm({
     onUsernameChange, 
     onPasswordChange, 
     onSubmit, 
-    onBack 
 }) {
     return (
-        <div className="bg-black/60 backdrop-blur-2xl border border-white/5 p-10 rounded-[2.5rem] shadow-[0_0_100px_rgba(0,0,0,0.8)] w-full max-w-md text-center animate-fadeIn relative overflow-hidden group">
-            {/* Ambient Top Glow */}
-            <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-64 h-64 bg-purple-600/20 rounded-full blur-[80px] pointer-events-none"></div>
-            
-            {/* Animated Loading Bar */}
-            <div className="absolute top-0 left-0 w-full h-[2px] bg-white/5">
-                <div className="h-full bg-gradient-to-r from-transparent via-[#A944FF] to-transparent w-1/2 animate-shimmer"></div>
-            </div>
-
-            <div className="relative z-10">
-                <div className="w-20 h-20 bg-gradient-to-tr from-black via-zinc-900 to-zinc-800 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-2xl border border-white/10 group-hover:rotate-6 transition-transform duration-500">
-                    <Activity size={32} className="text-[#A944FF] animate-pulse" />
-                </div>
-                
-                <h2 className="text-4xl font-black text-white mb-2 tracking-tighter uppercase">
-                    Core <span className="text-[#A944FF]">Access</span>
-                </h2>
-                <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em] mb-10">Terminal Auth v4.0</p>
-
-                <form onSubmit={onSubmit} className="flex flex-col gap-5">
-                    <div className="relative group/input">
-                        <User className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within/input:text-[#A944FF] transition-colors" size={18} />
+        <div className="w-full max-w-md bg-zinc-950/50 border border-zinc-900 p-8 rounded-xl shadow-2xl animate-fadeIn backdrop-blur-sm">
+            <form onSubmit={onSubmit} className="flex flex-col gap-6">
+                <div className="space-y-4">
+                    <div className="relative group">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-emerald-500 transition-colors" size={18} />
                         <input
                             type="text"
-                            placeholder="OPERATOR ID"
+                            placeholder="usuario@correo.com"
                             value={username}
                             onChange={(e) => onUsernameChange(e.target.value)}
-                            className="w-full pl-14 pr-6 py-5 rounded-2xl bg-zinc-900/50 border border-white/5 text-white placeholder-zinc-700 focus:outline-none focus:bg-black focus:border-[#A944FF]/50 focus:ring-1 focus:ring-[#A944FF]/20 transition-all font-black text-xs tracking-widest uppercase"
+                            className="w-full pl-12 pr-4 py-3.5 bg-black/40 border border-zinc-800 rounded-lg text-zinc-300 placeholder-zinc-700 focus:outline-none focus:border-zinc-700 transition-all font-light"
                         />
                     </div>
                     
-                    <div className="relative group/input">
-                        <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within/input:text-[#FF4BC1] transition-colors" size={18} />
+                    <div className="relative group">
+                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-emerald-500 transition-colors" size={18} />
                         <input
                             type="password"
-                            placeholder="SECURITY PIN"
+                            placeholder="••••••••••"
                             value={password}
                             onChange={(e) => onPasswordChange(e.target.value)}
-                            className="w-full pl-14 pr-6 py-5 rounded-2xl bg-zinc-900/50 border border-white/5 text-white placeholder-zinc-700 focus:outline-none focus:bg-black focus:border-[#FF4BC1]/50 focus:ring-1 focus:ring-[#FF4BC1]/20 transition-all font-black text-xs tracking-widest"
+                            className="w-full pl-12 pr-12 py-3.5 bg-black/40 border border-zinc-800 rounded-lg text-zinc-300 placeholder-zinc-700 focus:outline-none focus:border-zinc-700 transition-all font-light"
                         />
+                        <Eye className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-zinc-400 cursor-pointer" size={18} />
                     </div>
+                </div>
 
-                    <div className="flex flex-col gap-3 mt-8">
-                        <button 
-                            type="submit" 
-                            className="w-full bg-white text-black py-5 rounded-2xl font-black shadow-xl hover:bg-zinc-200 transition-all transform hover:scale-[1.02] active:scale-95 text-xs tracking-[0.3em] flex items-center justify-center gap-2 group/btn"
-                        >
-                            INITIALIZE SYSTEM
-                            <ChevronRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
-                        </button>
-                        
-                        <button 
-                            type="button" 
-                            onClick={onBack} 
-                            className="w-full bg-transparent hover:bg-white/5 text-zinc-500 hover:text-white py-4 rounded-xl font-black transition-all text-[9px] tracking-[0.4em] uppercase"
-                        >
-                            Cancel Request
-                        </button>
-                    </div>
-                </form>
-            </div>
-            
-            {/* Background Texture */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+                <div className="flex justify-end -mt-2">
+                    <button type="button" className="text-[11px] text-emerald-500/60 hover:text-emerald-500 transition-colors">
+                        ¿Olvidaste tu contraseña?
+                    </button>
+                </div>
+
+                <button 
+                    type="submit" 
+                    className="w-full bg-gradient-to-r from-emerald-950/80 via-emerald-900/40 to-emerald-950/80 hover:from-emerald-900 hover:to-emerald-900 text-zinc-300 py-3.5 rounded-lg font-medium transition-all shadow-lg border border-emerald-500/10 active:scale-[0.98]"
+                >
+                    Iniciar Sesión
+                </button>
+
+                <div className="text-center">
+                    <p className="text-xs text-zinc-600">
+                        ¿No tienes cuenta? <span className="text-emerald-500/80 hover:text-emerald-500 cursor-pointer font-medium transition-colors">Registrate</span>
+                    </p>
+                </div>
+            </form>
         </div>
     );
 }

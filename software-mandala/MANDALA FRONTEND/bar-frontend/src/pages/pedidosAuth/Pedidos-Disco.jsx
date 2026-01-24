@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Plus, ShieldCheck, Zap } from "lucide-react";
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import CodeInputDisco from "./CodeInput-Disco";
 import ProfileCard from "./components/ProfileCard";
 import SystemLoginForm from "./components/SystemLoginForm";
 import { usePedidosContext } from "../../context/PedidosContext";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function PedidosDisco() {
     const { auth } = usePedidosContext();
@@ -22,7 +22,7 @@ export default function PedidosDisco() {
         handleLogout,
     } = auth;
 
-    const [showSystemLogin, setShowSystemLogin] = useState(false);
+    const [showSystemLogin, setShowSystemLogin] = useState(true);
     const [sysUsername, setSysUsername] = useState("");
     const [sysPassword, setSysPassword] = useState("");
 
@@ -34,16 +34,7 @@ export default function PedidosDisco() {
         }
     }, [isInitialized, codigoConfirmado, userRole, navigate]);
 
-    if (!isInitialized) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-black">
-                <div className="text-center">
-                    <div className="w-16 h-16 border-2 border-white/5 border-t-white rounded-full animate-spin mx-auto mb-6"></div>
-                    <p className="text-white font-black tracking-[0.5em] text-[10px] uppercase animate-pulse">Initializing Security...</p>
-                </div>
-            </div>
-        );
-    }
+    if (!isInitialized) return <LoadingSpinner />;
 
     const handleSystemLoginSubmit = async (e) => {
         e.preventDefault();
@@ -53,23 +44,16 @@ export default function PedidosDisco() {
         }
     };
 
-    const bartenderUser = { id: 'sys_bartender', nombre: 'Barra', role: 'bartender', isSystem: true };
-    const adminUser = { id: 'sys_admin', nombre: 'Admin', role: 'admin', isSystem: true };
-    const pruebaUser = { id: 'sys_prueba', nombre: 'Prueba', username: 'prueba', role: 'prueba', isSystem: true };
+    const bartenderUser = { id: 'sys_bartender', nombre: 'Bartender', role: 'bartender', isSystem: true };
+    const adminUser = { id: 'sys_admin', nombre: 'Administrador', role: 'admin', isSystem: true };
 
     const handleProfileClick = (profile) => {
         if (profile.isSystem) {
             setSysUsername(profile.username || (profile.role === 'admin' ? 'admin' : 'barra'));
-            setShowSystemLogin(true);
+            toast.success(`Perfil seleccionado: ${profile.nombre}`);
         } else {
             handleSelectProfile(profile);
         }
-    };
-
-    const handleBackFromSystemLogin = () => {
-        setShowSystemLogin(false);
-        setSysUsername("");
-        setSysPassword("");
     };
 
     const handleBackFromPin = () => {
@@ -77,56 +61,56 @@ export default function PedidosDisco() {
         setSysPassword("");
     };
 
-    return (
-        <div className="min-h-screen flex flex-col bg-black text-white selection:bg-white/20 overflow-x-hidden">
-            {/* Ultra Premium Background */}
-            <div className="fixed inset-0 pointer-events-none">
-                {/* Subtle Radial Glows */}
-                <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[120px] animate-pulse"></div>
-                <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-rose-600/5 rounded-full blur-[120px] animate-pulse animation-delay-2000"></div>
+    // Main Master Login Layout
+    if (!userName && !codigoConfirmado) {
+        return (
+            <div className="min-h-screen bg-black text-white flex flex-col items-center justify-start p-6 pt-16 animate-fadeIn relative overflow-hidden">
                 
-                {/* Abstract Lines/Grid */}
-                <div className="absolute inset-0 opacity-[0.05] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]"></div>
-            </div>
-
-            <div className="flex flex-1 items-center justify-center p-6 sm:p-12 relative z-10">
+                {/* Background Shadow Overlay for extra depth */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/80 to-black pointer-events-none z-0"></div>
                 
-                {/* Floating Navigation Label */}
-                <div className="absolute top-10 left-10 flex items-center gap-3 opacity-40 group hover:opacity-100 transition-opacity">
-                    <ShieldCheck size={18} className="text-white" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.4em]">Mandala HQ • Secure Node</span>
-                </div>
+                {/* Very subtle background light at bottom */}
+                <div className="absolute bottom-[-10%] w-full h-[50%] bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none"></div>
 
-                {/* System Login Form */}
-                {showSystemLogin && (
-                    <SystemLoginForm 
-                        username={sysUsername}
-                        password={sysPassword}
-                        onUsernameChange={setSysUsername}
-                        onPasswordChange={setSysPassword}
-                        onSubmit={handleSystemLoginSubmit}
-                        onBack={handleBackFromSystemLogin}
-                    />
-                )}
+                <div className="relative z-10 flex flex-col items-center w-full max-w-lg">
+                    {/* Logo Area */}
+                    <div className="mb-12">
+                        <div className="w-24 h-24 rounded-full bg-black border border-emerald-500/30 flex items-center justify-center shadow-[0_0_60px_rgba(16,185,129,0.1)] group transition-all duration-500">
+                             <div className="w-14 h-14 rounded-full border-2 border-emerald-500/60 bg-zinc-900 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <div className="w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_15px_rgba(52,211,153,0.8)]"></div>
+                             </div>
+                        </div>
+                    </div>
 
-                {/* Profile Selection Step */}
-                {!userName && !codigoConfirmado && !showSystemLogin && (
-                    <div className="w-full max-w-7xl mx-auto animate-fadeIn group">
-                        <div className="text-center mb-20">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-md">
-                                <Zap size={14} className="text-[#A944FF]" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.3em]">Access Protocol Active</span>
-                            </div>
-                            
-                            <h1 className="text-6xl md:text-9xl font-black text-white mb-6 tracking-tighter uppercase leading-none">
-                                IDENTIFY<br/>
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-400 to-zinc-800">YOURSELF.</span>
-                            </h1>
-                            <p className="text-zinc-600 font-medium tracking-[0.5em] uppercase text-xs">Select your operational profile</p>
+                    {/* Header */}
+                    <div className="text-center mb-10">
+                        <h1 className="text-4xl md:text-5xl font-medium text-zinc-100 mb-3 tracking-tighter">Bienvenido de nuevo</h1>
+                        <p className="text-zinc-500 text-sm font-light tracking-wide max-w-xs mx-auto">
+                            Inicia sesión para administrar tu <span className="text-zinc-300">bar o discoteca.</span>
+                        </p>
+                    </div>
+
+                    {/* Login Form Box */}
+                    <div className="w-full mb-12 transform scale-100 hover:scale-[1.01] transition-transform duration-500">
+                        <SystemLoginForm 
+                            username={sysUsername}
+                            password={sysPassword}
+                            onUsernameChange={setSysUsername}
+                            onPasswordChange={setSysPassword}
+                            onSubmit={handleSystemLoginSubmit}
+                        />
+                    </div>
+
+                    {/* Quick Profile Selection */}
+                    <div className="w-full mb-10">
+                        <div className="flex items-center gap-6 mb-10">
+                            <div className="h-[1px] flex-1 bg-zinc-900"></div>
+                            <span className="text-[10px] uppercase tracking-[0.4em] text-zinc-600 font-black">O entra como:</span>
+                            <div className="h-[1px] flex-1 bg-zinc-900"></div>
                         </div>
 
-                        <div className="flex flex-wrap justify-center gap-8 md:gap-12 px-4">
-                            {[adminUser, bartenderUser, pruebaUser, ...profiles].map((profile) => (
+                        <div className="flex flex-wrap justify-center gap-6 sm:gap-10">
+                            {[adminUser, bartenderUser, ...profiles].map((profile) => (
                                 <ProfileCard 
                                     key={profile.id}
                                     profile={profile}
@@ -135,40 +119,31 @@ export default function PedidosDisco() {
                             ))}
                         </div>
                     </div>
-                )}
+                </div>
 
-                {/* Code Input (PIN Pad) */}
-                {userName && !codigoConfirmado && (
-                    <div className="w-full max-w-md animate-fadeIn flex justify-center">
-                        <CodeInputDisco
-                            nombre={userName}
-                            onBack={handleBackFromPin}
-                            onSubmit={async (code) => {
-                                const success = await handleCodigoSubmit(code);
-                                if (!success) {
-                                    toast.error("Security Breach: Invalid PIN", {
-                                        style: {
-                                            background: "#000",
-                                            color: "#fff",
-                                            border: "1px solid #ff4b4b",
-                                            fontWeight: "900",
-                                            textTransform: "uppercase",
-                                            fontSize: "10px",
-                                            letterSpacing: "0.2em",
-                                            padding: "20px"
-                                        }
-                                    });
-                                }
-                            }}
-                        />
-                    </div>
-                )}
-            </div >
-            
-            {/* Version Label */}
-            <div className="fixed bottom-10 right-10 text-[8px] font-black text-zinc-800 uppercase tracking-[0.5em] pointer-events-none">
-                Build: Mand-2026.v4
+                {/* Footer simple versioning as in many high-level logins */}
+                 <div className="mt-auto pb-6 text-zinc-800 text-[9px] uppercase tracking-[0.4em] font-black z-10">
+                    Mandala Ops Core v4.2
+                </div>
             </div>
-        </div >
+        );
+    }
+
+    // PIN Pad Login (for meseras)
+    return (
+        <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 animate-fadeIn">
+            <div className="w-full max-w-md">
+                <CodeInputDisco
+                    nombre={userName}
+                    onBack={handleBackFromPin}
+                    onSubmit={async (code) => {
+                        const success = await handleCodigoSubmit(code);
+                        if (!success) {
+                            toast.error("Error: Acceso denegado");
+                        }
+                    }}
+                />
+            </div>
+        </div>
     );
 }
