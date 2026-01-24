@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Lock, User, Eye } from 'lucide-react';
 
 export default function SystemLoginForm({ 
@@ -6,7 +6,9 @@ export default function SystemLoginForm({
     password, 
     onUsernameChange, 
     onPasswordChange, 
-    onSubmit, 
+    onSubmit,
+    rememberSession,
+    onRememberSessionChange
 }) {
     return (
         <div className="w-full max-w-md bg-zinc-900/40 border border-white/5 p-10 rounded-2xl shadow-[0_40px_100px_rgba(0,0,0,0.9)] animate-fadeIn backdrop-blur-md">
@@ -46,7 +48,12 @@ export default function SystemLoginForm({
 
                 <div className="flex justify-between items-center -mt-2 px-1">
                     <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" className="w-3.5 h-3.5 rounded border-white/10 bg-zinc-950 checked:bg-zinc-500" />
+                        <input 
+                            type="checkbox" 
+                            checked={rememberSession}
+                            onChange={(e) => onRememberSessionChange(e.target.checked)}
+                            className="w-3.5 h-3.5 rounded border-white/10 bg-zinc-950 checked:bg-zinc-500 cursor-pointer" 
+                        />
                         <span className="text-[10px] text-zinc-500">Recordar sesión</span>
                     </label>
                 </div>

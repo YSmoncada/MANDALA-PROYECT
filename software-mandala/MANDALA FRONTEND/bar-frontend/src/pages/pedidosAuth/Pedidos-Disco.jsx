@@ -21,25 +21,43 @@ export default function PedidosDisco() {
 
     const [sysUsername, setSysUsername] = useState("");
     const [sysPassword, setSysPassword] = useState("");
+    const [rememberSession, setRememberSession] = useState(false);
 
     const navigate = useNavigate();
 
-    // Force clear session whenever the login page is accessed for maximum security
+    // Check for remembered session on mount
     useEffect(() => {
-        handleLogout();
-    }, []); // Only on mount
+        const remembered = localStorage.getItem('rememberSession') === 'true';
+        setRememberSession(remembered);
+        
+        // If user has active session and remember is enabled, redirect to home
+        if (isInitialized && codigoConfirmado && remembered) {
+            navigate('/', { replace: true });
+        }
+    }, [isInitialized, codigoConfirmado, navigate]);
 
     const handleSystemLoginSubmit = async (e) => {
         e.preventDefault();
+        
+        // Store remember preference
+        localStorage.setItem('rememberSession', rememberSession.toString());
+        
         const result = await loginSystem(sysUsername, sysPassword);
         if (!result.success) {
             toast.error(result.message);
+        } else {
+            // If login successful and remember is enabled, navigate to home
+            if (rememberSession) {
+                navigate('/', { replace: true });
+            }
         }
     };
 
     const handleBackFromPin = () => {
         handleLogout();
         setSysPassword("");
+        // Clear remember session when logging out
+        localStorage.removeItem('rememberSession');
     };
 
     // Main Security Login Layout (Standard)
@@ -59,6 +77,8 @@ export default function PedidosDisco() {
                         onUsernameChange={setSysUsername}
                         onPasswordChange={setSysPassword}
                         onSubmit={handleSystemLoginSubmit}
+                        rememberSession={rememberSession}
+                        onRememberSessionChange={setRememberSession}
                     />
                 </div>
             </div>
