@@ -41,10 +41,9 @@ export default function PedidosDisco() {
         if (!result.success) {
             toast.error(result.message);
         } else {
-            // If login successful and remember is enabled, navigate to home
-            if (rememberSession) {
-                navigate('/', { replace: true });
-            }
+            // Always navigate to home after successful login
+            toast.success('Acceso concedido');
+            navigate('/', { replace: true });
         }
     };
 
