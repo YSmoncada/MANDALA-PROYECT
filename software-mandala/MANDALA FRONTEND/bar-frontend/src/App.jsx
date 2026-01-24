@@ -31,7 +31,7 @@ function App() {
       <Notificaciones />
       <BrowserRouter>
       <PedidosProvider>
-        <Suspense fallback={<LoadingSpinner />}>
+        <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<Home />} />
 
