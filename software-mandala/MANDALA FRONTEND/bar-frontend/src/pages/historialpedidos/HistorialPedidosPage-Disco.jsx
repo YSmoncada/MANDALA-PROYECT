@@ -66,9 +66,6 @@ const HistorialPedidosPageDisco = () => {
                         <h1 className="text-4xl sm:text-6xl font-black mb-4 text-white tracking-tighter drop-shadow-[0_0_25px_rgba(168,85,247,0.4)] uppercase italic">
                             Historial de Ventas
                         </h1>
-                        <p className="text-purple-300/60 font-bold uppercase tracking-[0.3em] text-[10px]">
-                            Registro Maestro de Operaciones
-                        </p>
                     </header>
 
                     {/* Filters Section */}

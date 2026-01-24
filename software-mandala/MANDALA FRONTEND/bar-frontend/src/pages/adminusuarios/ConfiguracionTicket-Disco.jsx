@@ -100,7 +100,7 @@ const ConfiguracionTicketDisco = () => {
                                 value={config.nombre}
                                 onChange={(e) => setConfig({ ...config, nombre: e.target.value })}
                                 className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white focus:outline-none focus:border-purple-500 transition-all font-bold"
-                                placeholder="Ej: NOXOS CLUB"
+                                placeholder=""
                             />
                         </div>
 

@@ -102,7 +102,7 @@ class Movimiento(models.Model):
         return f"{self.tipo} - {self.producto.nombre} ({self.cantidad})"
 
 class EmpresaConfig(models.Model):
-    nombre = models.CharField(max_length=100, default="MANDALA DISCO CLUB")
+    nombre = models.CharField(max_length=100, default="")
     nit = models.CharField(max_length=50, blank=True, null=True)
     direccion = models.CharField(max_length=200, blank=True, null=True)
     telefono = models.CharField(max_length=20, blank=True, null=True)
