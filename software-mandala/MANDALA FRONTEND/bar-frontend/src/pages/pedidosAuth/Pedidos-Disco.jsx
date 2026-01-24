@@ -48,10 +48,10 @@ export default function PedidosDisco() {
     // Main Security Login Layout (Standard)
     if (!userName && !codigoConfirmado) {
         return (
-            <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6 animate-fadeIn">
-                <div className="w-full max-w-md">
+            <div className="fixed inset-0 bg-black text-white flex flex-col items-center justify-center p-6 animate-fadeIn overflow-y-auto">
+                <div className="w-full max-w-md py-12">
                     {/* Header */}
-                    <div className="text-center mb-8">
+                    <div className="text-center mb-16">
                         <h1 className="text-3xl font-bold text-white tracking-tight">Acceso Administrativo</h1>
                     </div>
 
