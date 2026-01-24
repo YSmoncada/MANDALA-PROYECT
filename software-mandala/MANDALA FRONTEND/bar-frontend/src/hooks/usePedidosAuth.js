@@ -30,11 +30,18 @@ export const usePedidosAuth = () => {
         fetchProfiles();
     }, [fetchProfiles]);
 
-    // Recover session state
+    // Recover session state from both localStorage (remember) and sessionStorage (temporary)
     useEffect(() => {
-        const storedProfile = sessionStorage.getItem('selectedProfile') || sessionStorage.getItem('selectedMesera');
-        const storedCodigoConfirmado = sessionStorage.getItem('codigoConfirmado');
-        const storedRole = sessionStorage.getItem('userRole');
+        const rememberEnabled = localStorage.getItem('rememberSession') === 'true';
+        
+        // Try localStorage first (for remembered sessions), then sessionStorage
+        const storedProfile = (rememberEnabled ? localStorage.getItem('selectedProfile') : null) 
+            || sessionStorage.getItem('selectedProfile') 
+            || sessionStorage.getItem('selectedMesera');
+        const storedCodigoConfirmado = (rememberEnabled ? localStorage.getItem('codigoConfirmado') : null)
+            || sessionStorage.getItem('codigoConfirmado');
+        const storedRole = (rememberEnabled ? localStorage.getItem('userRole') : null)
+            || sessionStorage.getItem('userRole');
 
         if (storedRole) {
             setUserRole(storedRole);
@@ -66,9 +73,18 @@ export const usePedidosAuth = () => {
                 const role = 'mesera'; 
                 setUserRole(role);
 
-                sessionStorage.setItem('selectedProfile', JSON.stringify(selectedProfile));
-                sessionStorage.setItem('codigoConfirmado', 'true');
-                sessionStorage.setItem('userRole', role);
+                const rememberEnabled = localStorage.getItem('rememberSession') === 'true';
+                
+                // Store in appropriate storage based on remember preference
+                if (rememberEnabled) {
+                    localStorage.setItem('selectedProfile', JSON.stringify(selectedProfile));
+                    localStorage.setItem('codigoConfirmado', 'true');
+                    localStorage.setItem('userRole', role);
+                } else {
+                    sessionStorage.setItem('selectedProfile', JSON.stringify(selectedProfile));
+                    sessionStorage.setItem('codigoConfirmado', 'true');
+                    sessionStorage.setItem('userRole', role);
+                }
                 return true;
             }
         } catch (error) {
@@ -104,11 +120,23 @@ export const usePedidosAuth = () => {
             setSelectedProfile(sysUser);
             setCodigoConfirmado(true);
             
-            sessionStorage.setItem('userRole', finalRole);
-            sessionStorage.setItem('selectedProfile', JSON.stringify(sysUser));
-            sessionStorage.setItem('codigoConfirmado', 'true');
-            if (token) {
-                sessionStorage.setItem('authToken', token);
+            const rememberEnabled = localStorage.getItem('rememberSession') === 'true';
+            
+            // Store in appropriate storage based on remember preference
+            if (rememberEnabled) {
+                localStorage.setItem('userRole', finalRole);
+                localStorage.setItem('selectedProfile', JSON.stringify(sysUser));
+                localStorage.setItem('codigoConfirmado', 'true');
+                if (token) {
+                    localStorage.setItem('authToken', token);
+                }
+            } else {
+                sessionStorage.setItem('userRole', finalRole);
+                sessionStorage.setItem('selectedProfile', JSON.stringify(sysUser));
+                sessionStorage.setItem('codigoConfirmado', 'true');
+                if (token) {
+                    sessionStorage.setItem('authToken', token);
+                }
             }
             return { success: true, role: finalRole };
         } catch (error) {
@@ -124,7 +152,14 @@ export const usePedidosAuth = () => {
         setSelectedProfile(null);
         setCodigoConfirmado(false);
         setUserRole(null);
+        
+        // Clear both storages
         sessionStorage.clear();
+        localStorage.removeItem('selectedProfile');
+        localStorage.removeItem('codigoConfirmado');
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('rememberSession');
     }, []);
 
     const addProfile = useCallback(async (nombre, codigo) => {
