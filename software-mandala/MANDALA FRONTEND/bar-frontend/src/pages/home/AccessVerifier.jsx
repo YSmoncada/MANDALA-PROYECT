@@ -20,7 +20,7 @@ const AccessVerifier = ({ auth, children }) => {
     }, [shouldRedirect, navigate]);
 
     if (!isInitialized || shouldRedirect) {
-        return <LoadingSpinner message="Verifying session..." />;
+        return null;
     }
 
     return children;

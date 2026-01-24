@@ -27,7 +27,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     }, [isInitialized, currentRole, navigate, allowedRoles]);
 
     if (!isInitialized) {
-        return <LoadingSpinner message="Verificando permisos..." />;
+        return null;
     }
 
     // Si el rol es válido, renderiza el componente hijo (la página)
@@ -35,7 +35,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
         return children;
     }
 
-    return <LoadingSpinner message="Redirigiendo..." />;
+    return null;
 };
 
 export default ProtectedRoute;
