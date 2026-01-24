@@ -37,8 +37,8 @@ function HeaderPedidosDisco({ user, onLogout, codigoConfirmado }) {
                         <div className="flex items-center gap-3 group">
                             <div className="relative">
                                 <div className="absolute inset-0 bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] blur-lg opacity-40 group-hover:opacity-60 transition-opacity"></div>
-                                <h1 className="relative text-2xl font-bold text-white tracking-widest drop-shadow-[0_0_10px_rgba(169,68,255,0.5)]">
-                                    MANDALA
+                                <h1 className="relative text-2xl font-black text-white tracking-[0.1em] uppercase">
+                                    Nox<span className="text-zinc-500">OS</span>
                                 </h1>
                             </div>
                         </div>

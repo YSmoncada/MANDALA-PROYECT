@@ -1,5 +1,5 @@
 /**
- * Design system tokens for Mandala
+ * Design system tokens for NoxOS
  * Centralizing these styles ensures consistency and easy maintenance.
  */
 
@@ -24,7 +24,7 @@ export const UI_CLASSES = {
     pageContainer: "min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-4 md:p-8 relative selection:bg-purple-500/30",
     glassCard: "bg-gray-900/80 border border-purple-500/30 rounded-2xl shadow-2xl p-4 md:p-8",
     
-    // Inputs (Mandala Style)
+    // Inputs (NoxOS Style)
     input: "w-full p-3 bg-[#2B0D49] border border-[#6C3FA8]/50 rounded-lg text-white focus:ring-2 focus:ring-[#A944FF] outline-none transition-all placeholder:text-gray-500 selection:bg-purple-500/30 autofill:shadow-[0_0_0_30px_#2B0D49_inset] autofill:text-fill-white",
     select: "w-full p-3 bg-[#2B0D49] border border-[#6C3FA8]/50 rounded-lg text-white focus:ring-2 focus:ring-[#A944FF] outline-none transition-all appearance-none [&>option]:bg-[#1A103C]",
     

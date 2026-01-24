@@ -52,7 +52,7 @@ export default function PedidosDisco() {
                 <div className="w-full max-w-md py-12">
                     {/* Header */}
                     <div className="text-center mb-16">
-                        <h1 className="text-3xl font-bold text-white tracking-tight">Acceso Administrativo</h1>
+                        <h1 className="text-4xl font-black text-white tracking-[0.2em] uppercase">Nox<span className="text-zinc-500">OS</span></h1>
                     </div>
 
                     {/* Login Form Box */}

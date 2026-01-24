@@ -27,8 +27,8 @@ const LogoutButton = ({ onLogout }) => (
 const DashboardHeader = () => (
     <div className="text-center mb-12 sm:mb-16">
         <h1 className="text-6xl sm:text-8xl md:text-9xl font-black mb-3 sm:mb-4 relative tracking-tighter">
-            <span className="relative text-white drop-shadow-[0_0_30px_rgba(168,85,247,0.5)]">
-                MANDALA
+            <span className="relative text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] tracking-[0.2em] uppercase">
+                Nox<span className="text-zinc-500">OS</span>
             </span>
         </h1>
         <div className="h-1.5 w-32 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full blur-sm opacity-50"></div>

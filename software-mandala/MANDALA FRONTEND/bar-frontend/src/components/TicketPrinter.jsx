@@ -68,7 +68,7 @@ const TicketPrinter = ({ pedido, empresaConfig }) => {
 
             <div className="text-center mt-8">
                 <p className="text-xs font-bold">{empresaConfig.mensaje_footer}</p>
-                <p className="text-[8px] mt-4 opacity-50">Software Mandala - Facturación Electrónica Digital</p>
+                <p className="text-[8px] mt-4 opacity-50">Software NoxOS - Facturación Electrónica Digital</p>
             </div>
 
             <style dangerouslySetInnerHTML={{
