@@ -1,11 +1,81 @@
 @import "tailwindcss";
 
-html, body {
-  background-color: black !important;
+/* ========================================
+   NOXOS DARK THEME - GLOBAL STYLES
+   ======================================== */
+
+/* Force dark theme on root elements */
+html, body, #root {
+  background-color: #000000 !important;
+  color: #ffffff !important;
   margin: 0;
   padding: 0;
+  min-height: 100vh;
 }
 
+/* Dark theme for all text elements */
+* {
+  color-scheme: dark;
+}
+
+/* Custom Dark Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #27272a #0a0a0a;
+}
+
+/* Dark theme for form inputs */
+input, textarea, select {
+  background-color: #18181b !important;
+  color: #ffffff !important;
+  border-color: #27272a !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #52525b !important;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #3f3f46 !important;
+  outline: none !important;
+}
+
+/* Dark theme for autofill */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #18181b inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+}
+
+/* Selection color */
+::selection {
+  background-color: rgba(63, 63, 70, 0.5);
+  color: #ffffff;
+}
+
+/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -28,6 +98,17 @@ html, body {
   }
 }
 
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out forwards;
 }
@@ -38,4 +119,18 @@ html, body {
 
 .animate-scaleIn {
   animation: scaleIn 0.2s ease-out forwards;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+/* Dark theme for modals and overlays */
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Ensure all backgrounds are dark */
+div, section, main, aside, nav, header, footer {
+  background-color: inherit;
 }
