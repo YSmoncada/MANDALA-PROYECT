@@ -78,11 +78,6 @@ function CodeInputDisco({ nombre, onBack, onSubmit }) {
             >
                 Confirmar Acceso
             </button>
-
-            {/* Footer Status */}
-            <p className="mt-8 text-center text-[10px] text-zinc-700 uppercase tracking-widest font-black">
-                Terminal ID: MD-LOGIN-SECURE
-            </p>
         </div>
     );
 }
