@@ -73,18 +73,11 @@ export const useBartenderOrders = () => {
         }
     });
 
-    const handlePrint = (pedido) => {
-        // We handle printing state locally in the component if needed, 
-        // or just trigger the print window.
-        window.print();
-    };
-
     return {
         pedidos,
         loading,
         empresaConfig,
         refresh,
-        handlePrint,
         updateOrderStatus: (pedidoId, nuevoEstado) => updateStatusMutation.mutate({ pedidoId, nuevoEstado }),
         dispatchProduct: (pedidoId, itemId) => dispatchProductMutation.mutate({ pedidoId, itemId }),
         isUpdating: updateStatusMutation.isPending || dispatchProductMutation.isPending

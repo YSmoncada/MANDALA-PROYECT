@@ -62,7 +62,6 @@ function App() {
             } />
             {/* Rutas de Pedidos (Contexto global ahora disponible) */}
             <Route path="/login" element={<PedidosDisco />} /> {/* Login Principal */}
-            <Route path="/login-mesera-pedidos" element={<PedidosDisco />} /> {/* Modulo Pedidos Mesera */}
 
             <Route path="/pedidos" element={
               <ProtectedRoute allowedRoles={['admin', 'bartender', 'mesera', 'prueba']}>

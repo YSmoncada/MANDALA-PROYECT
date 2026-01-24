@@ -246,16 +246,10 @@ class MovimientoViewSet(viewsets.ModelViewSet):
                 'cantidad': cantidad,
             }
 
-            # Mapear 'descripcion' (o alternativas) al campo real del modelo si existe
+            # El campo en el modelo es 'motivo'
             descripcion_val = data.get('descripcion') or data.get('motivo') or data.get('detalle') or data.get('observacion')
             if descripcion_val:
-                for candidate in ('descripcion', 'motivo', 'detalle', 'observacion'):
-                    try:
-                        Movimiento._meta.get_field(candidate)
-                        mov_kwargs[candidate] = descripcion_val
-                        break
-                    except FieldDoesNotExist:
-                        continue
+                mov_kwargs['motivo'] = descripcion_val
 
             movimiento = Movimiento.objects.create(**mov_kwargs)
 
@@ -626,10 +620,9 @@ class LoginView(APIView):
         if user:
             login(request, user) # Establish session
             
-            # Limpieza: Si existen perfiles de mesera con el mismo nombre que usuarios del sistema,
-            # los eliminamos para evitar confusiones, ya que ahora usamos el campo 'usuario'.
-            from .models import Mesera
-            Mesera.objects.filter(nombre__iexact=user.username).delete()
+            # Limpieza: (Omitido por seguridad de datos)
+            # Anteriormente se eliminaban meseras con el mismo nombre, pero es preferible
+            # manejarlo mediante validaciones en el registro para evitar borrados accidentales.
 
             # Determinar rol basado en grupos
             if user.is_superuser:

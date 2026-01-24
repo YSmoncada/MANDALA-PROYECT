@@ -23,9 +23,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # Documentation
     
-    path('api/debug-storage/', DebugStorageView.as_view(), name='debug-storage'), # URL de debug
-    path('api/debug-users/', views.debug_users_view, name='debug-users'),
-    path('api/fix-users/', views.fix_users_view, name='fix-users'),
+    # path('api/debug-storage/', DebugStorageView.as_view(), name='debug-storage'), # URL de debug
+    # path('api/debug-users/', views.debug_users_view, name='debug-users'),
+    # path('api/fix-users/', views.fix_users_view, name='fix-users'),
 
 
     path('api/meseras/total-pedidos/', MeseraTotalPedidosView.as_view(), name='mesera-total-pedidos'), # URL específica primero

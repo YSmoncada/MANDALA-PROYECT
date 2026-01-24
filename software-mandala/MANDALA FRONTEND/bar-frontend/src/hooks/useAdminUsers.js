@@ -28,7 +28,7 @@ export const useAdminUsers = () => {
             } catch (err) {
                 // If it's a 403, we just don't show system users, but don't break the whole page
                 if (err.response?.status === 403) {
-                    console.log("Acceso restringido a usuarios del sistema.");
+                    // Silently ignore restricted access to system users
                 } else {
                     console.error("Error loading system users:", err);
                 }

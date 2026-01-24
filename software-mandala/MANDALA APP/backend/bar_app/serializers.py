@@ -129,7 +129,7 @@ class MesaSerializer(serializers.ModelSerializer):
     def get_active_order(self, obj):
         # Helper: Busca el primer pedido activo (no finalizado ni cancelado)
         return obj.pedido_set.filter(
-            estado__in=['pendiente', 'despachado', 'en_proceso']
+            estado__in=['pendiente', 'despachado']
         ).first()
 
     def get_ocupada_por(self, obj):

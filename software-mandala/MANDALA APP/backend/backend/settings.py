@@ -238,27 +238,13 @@ STORAGES = {
     },
 }
 
-# Log para verificar configuración en Render
-print("--- CONFIGURACIÓN DE ALMACENAMIENTO (Django 5.x) ---")
-print(f"STORAGES: {STORAGES}")
-print(f"CLOUDINARY_CLOUD_NAME: {os.environ.get('CLOUDINARY_CLOUD_NAME')}")
-print("----------------------------------------------------")
-
-# Axes Configuration
-AXES_FAILURE_LIMIT = 5
-AXES_COOLOFF_TIME = 1  # Hour
-AXES_RESET_ON_SUCCESS = True
-AXES_LOCKOUT_TEMPLATE = None # Can be a custom template
-AXES_HANDLER = 'axes.handlers.database.DatabaseHandler'
+# Log para verificar configuración en Render (Inactivo en producción)
+# print("--- CONFIGURACIÓN DE ALMACENAMIENTO (Django 5.x) ---")
+# print(f"STORAGES: {STORAGES}")
+# print(f"CLOUDINARY_CLOUD_NAME: {os.environ.get('CLOUDINARY_CLOUD_NAME')}")
+# print("----------------------------------------------------")
 
 AUTHENTICATION_BACKENDS = [
-    # 'axes.backends.AxesBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-SPECTACULAR_SETTINGS = {
-    'TITLE': 'Mandala Disco API',
-    'DESCRIPTION': 'API para el sistema de gestión de Mandala Disco',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
-}
