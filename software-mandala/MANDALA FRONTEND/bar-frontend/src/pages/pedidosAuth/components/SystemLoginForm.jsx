@@ -1,5 +1,5 @@
 import React from 'react';
-import { Lock, Mail, Eye } from 'lucide-react';
+import { Lock, User, Eye } from 'lucide-react';
 
 export default function SystemLoginForm({ 
     username, 
@@ -11,14 +11,14 @@ export default function SystemLoginForm({
     return (
         <div className="w-full max-w-md bg-zinc-900/40 border border-white/5 p-10 rounded-2xl shadow-[0_40px_100px_rgba(0,0,0,0.9)] animate-fadeIn backdrop-blur-md">
             <form onSubmit={onSubmit} className="flex flex-col gap-8">
-                <div className="space-y-5">
-                    <div className="space-y-2">
-                        <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold ml-1">Identidad de Usuario</label>
+                <div className="space-y-8">
+                    <div className="space-y-3">
+                        <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold ml-1">Usuario</label>
                         <div className="relative group">
-                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-zinc-100 transition-colors" size={18} />
+                            <User className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-zinc-100 transition-colors" size={18} />
                             <input
                                 type="text"
-                                placeholder="nombre@ejemplo.com"
+                                placeholder="Nombre de usuario"
                                 value={username}
                                 onChange={(e) => onUsernameChange(e.target.value)}
                                 className="w-full pl-12 pr-4 py-4 bg-zinc-950 border border-white/5 rounded-xl text-zinc-200 placeholder-zinc-700 focus:outline-none focus:border-zinc-500 transition-all font-light"
@@ -26,7 +26,7 @@ export default function SystemLoginForm({
                         </div>
                     </div>
                     
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                         <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold ml-1">Clave de Seguridad</label>
                         <div className="relative group">
                             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-zinc-100 transition-colors" size={18} />
@@ -49,9 +49,6 @@ export default function SystemLoginForm({
                         <input type="checkbox" className="w-3.5 h-3.5 rounded border-white/10 bg-zinc-950 checked:bg-zinc-500" />
                         <span className="text-[10px] text-zinc-500">Recordar sesión</span>
                     </label>
-                    <button type="button" className="text-[10px] text-zinc-400 hover:text-white transition-colors">
-                        Restablecer clave
-                    </button>
                 </div>
 
                 <button 
