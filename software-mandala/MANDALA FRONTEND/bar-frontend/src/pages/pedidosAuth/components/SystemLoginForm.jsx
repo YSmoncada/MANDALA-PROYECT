@@ -9,51 +9,57 @@ export default function SystemLoginForm({
     onSubmit, 
 }) {
     return (
-        <div className="w-full max-w-md bg-zinc-950/50 border border-zinc-900 p-8 rounded-xl shadow-2xl animate-fadeIn backdrop-blur-sm">
-            <form onSubmit={onSubmit} className="flex flex-col gap-6">
-                <div className="space-y-4">
-                    <div className="relative group">
-                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-emerald-500 transition-colors" size={18} />
-                        <input
-                            type="text"
-                            placeholder="usuario@correo.com"
-                            value={username}
-                            onChange={(e) => onUsernameChange(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3.5 bg-black/40 border border-zinc-800 rounded-lg text-zinc-300 placeholder-zinc-700 focus:outline-none focus:border-zinc-700 transition-all font-light"
-                        />
+        <div className="w-full max-w-md bg-zinc-900/40 border border-white/5 p-10 rounded-2xl shadow-[0_40px_100px_rgba(0,0,0,0.9)] animate-fadeIn backdrop-blur-md">
+            <form onSubmit={onSubmit} className="flex flex-col gap-8">
+                <div className="space-y-5">
+                    <div className="space-y-2">
+                        <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold ml-1">Identidad de Usuario</label>
+                        <div className="relative group">
+                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-zinc-100 transition-colors" size={18} />
+                            <input
+                                type="text"
+                                placeholder="nombre@ejemplo.com"
+                                value={username}
+                                onChange={(e) => onUsernameChange(e.target.value)}
+                                className="w-full pl-12 pr-4 py-4 bg-zinc-950 border border-white/5 rounded-xl text-zinc-200 placeholder-zinc-700 focus:outline-none focus:border-zinc-500 transition-all font-light"
+                            />
+                        </div>
                     </div>
                     
-                    <div className="relative group">
-                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-emerald-500 transition-colors" size={18} />
-                        <input
-                            type="password"
-                            placeholder="••••••••••"
-                            value={password}
-                            onChange={(e) => onPasswordChange(e.target.value)}
-                            className="w-full pl-12 pr-12 py-3.5 bg-black/40 border border-zinc-800 rounded-lg text-zinc-300 placeholder-zinc-700 focus:outline-none focus:border-zinc-700 transition-all font-light"
-                        />
-                        <Eye className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-zinc-400 cursor-pointer" size={18} />
+                    <div className="space-y-2">
+                        <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold ml-1">Clave de Seguridad</label>
+                        <div className="relative group">
+                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-zinc-100 transition-colors" size={18} />
+                            <input
+                                type="password"
+                                placeholder="••••••••••••"
+                                value={password}
+                                onChange={(e) => onPasswordChange(e.target.value)}
+                                className="w-full pl-12 pr-12 py-4 bg-zinc-950 border border-white/5 rounded-xl text-zinc-200 placeholder-zinc-700 focus:outline-none focus:border-zinc-500 transition-all font-light"
+                            />
+                            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-700 hover:text-zinc-400 cursor-pointer transition-colors p-1">
+                                <Eye size={18} />
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div className="flex justify-end -mt-2">
-                    <button type="button" className="text-[11px] text-emerald-500/60 hover:text-emerald-500 transition-colors">
-                        ¿Olvidaste tu contraseña?
+                <div className="flex justify-between items-center -mt-2 px-1">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" className="w-3.5 h-3.5 rounded border-white/10 bg-zinc-950 checked:bg-zinc-500" />
+                        <span className="text-[10px] text-zinc-500">Recordar sesión</span>
+                    </label>
+                    <button type="button" className="text-[10px] text-zinc-400 hover:text-white transition-colors">
+                        Restablecer clave
                     </button>
                 </div>
 
                 <button 
                     type="submit" 
-                    className="w-full bg-gradient-to-r from-emerald-950/80 via-emerald-900/40 to-emerald-950/80 hover:from-emerald-900 hover:to-emerald-900 text-zinc-300 py-3.5 rounded-lg font-medium transition-all shadow-lg border border-emerald-500/10 active:scale-[0.98]"
+                    className="w-full bg-zinc-100 hover:bg-white text-black py-4 rounded-xl font-bold transition-all shadow-xl active:scale-[0.98] text-[11px] uppercase tracking-widest"
                 >
-                    Iniciar Sesión
+                    Acceder al Sistema
                 </button>
-
-                <div className="text-center">
-                    <p className="text-xs text-zinc-600">
-                        ¿No tienes cuenta? <span className="text-emerald-500/80 hover:text-emerald-500 cursor-pointer font-medium transition-colors">Registrate</span>
-                    </p>
-                </div>
             </form>
         </div>
     );
