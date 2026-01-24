@@ -25,16 +25,11 @@ export default function PedidosDisco() {
 
     const navigate = useNavigate();
 
-    // Check for remembered session on mount
+    // Load remember session preference on mount
     useEffect(() => {
         const remembered = localStorage.getItem('rememberSession') === 'true';
         setRememberSession(remembered);
-        
-        // If user has active session and remember is enabled, redirect to home
-        if (isInitialized && codigoConfirmado && remembered) {
-            navigate('/', { replace: true });
-        }
-    }, [isInitialized, codigoConfirmado, navigate]);
+    }, []);
 
     const handleSystemLoginSubmit = async (e) => {
         e.preventDefault();
