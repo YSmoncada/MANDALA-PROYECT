@@ -24,13 +24,10 @@ export default function PedidosDisco() {
 
     const navigate = useNavigate();
 
+    // Force clear session whenever the login page is accessed for maximum security
     useEffect(() => {
-        if (isInitialized && codigoConfirmado) {
-            navigate('/', { replace: true });
-        }
-    }, [isInitialized, codigoConfirmado, userRole, navigate]);
-
-    if (!isInitialized) return <LoadingSpinner />;
+        handleLogout();
+    }, []); // Only on mount
 
     const handleSystemLoginSubmit = async (e) => {
         e.preventDefault();
