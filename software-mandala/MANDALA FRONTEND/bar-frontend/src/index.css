@@ -6,6 +6,46 @@ html, body {
   padding: 0;
 }
 
+/* ========================================
+   DARK MODE - Only when authenticated
+   ======================================== */
+
+.dark-mode {
+  color-scheme: dark;
+}
+
+/* Dark scrollbars when in dark mode */
+.dark-mode ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark-mode ::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 4px;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* Firefox scrollbar */
+.dark-mode * {
+  scrollbar-width: thin;
+  scrollbar-color: #27272a #0a0a0a;
+}
+
+/* Dark selection color */
+.dark-mode ::selection {
+  background-color: rgba(139, 92, 246, 0.3);
+  color: #ffffff;
+}
+
+/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
