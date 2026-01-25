@@ -56,7 +56,7 @@ function MainDashboard() {
                 <main className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-16 sm:py-12">
                     <DashboardHeader />
                     <LogoutButton onLogout={handleLogout} />
-                    <darkmodebutton darkmode/>
+                    <darkmodebutton/>
 
                     <div className="flex flex-wrap justify-center items-center gap-6 w-full max-w-7xl px-4">
                         {visibleModules.map((item, index) => (
