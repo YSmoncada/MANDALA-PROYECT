@@ -15,51 +15,28 @@ const BackgroundEffects = () => (
     </div>
 );
 
-const DarkModeButton = () => {
-    const [darkMode, setDarkMode] = useState(() => {
-        return localStorage.getItem("theme") === "dark";
-    });
+const DarkmodeButton = () => {
+    const [dark, setDark] = useState(true);
 
     useEffect(() => {
         const root = document.documentElement;
-        if (darkMode) {
-            root.classList.add("dark");
-        } else {
-            root.classList.remove("dark");
-        }
-        localStorage.setItem("theme", darkMode ? "dark" : "light");
-    }, [darkMode]);
+        dark
+            ? root.classList.add("dark")
+            : root.classList.remove("dark");
+    }, [dark]);
 
     return (
         <button
-            onClick={() => setDarkMode(!darkMode)}
-            className="
-                fixed top-6 left-6 z-50
+            onClick={() => setDark(!dark)}
+            className="fixed top-6 left-6 z-50
                 flex items-center gap-2 px-4 py-2 rounded-xl
-                transition-all duration-300 backdrop-blur-xl shadow-lg
-
-                /* LIGHT MODE */
-                bg-white/70 border border-gray-200 text-gray-700
-                hover:bg-white hover:shadow-xl
-
-                /* DARK MODE */
-                dark:bg-black/40 dark:border-white/10 dark:text-gray-300
-                dark:hover:bg-black/60 dark:hover:text-white
-            "
+                bg-white/5 border border-white/10
+                hover:bg-black/20 hover:border-black/50
+                text-gray-300 hover:text-white
+                transition-all backdrop-blur-sm shadow-lg"
         >
-            <span
-                className="
-                    flex items-center justify-center w-8 h-8 rounded-lg
-                    bg-gray-200 text-gray-700
-                    dark:bg-white/10 dark:text-yellow-300
-                    transition-all
-                "
-            >
-                {darkMode ? <Sun size={18} /> : <Moon size={18} />}
-            </span>
-
             <span className="text-sm font-bold uppercase tracking-wider">
-                {darkMode ? "Modo Claro" : "Modo Oscuro"}
+                {dark ? "Modo Claro" : "Modo Oscuro"}
             </span>
         </button>
     );
