@@ -18,7 +18,12 @@ const BackgroundEffects = () => (
 const DarkmodeButton = () => {
     return (
  <button
-    className="justify-start items-start gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-black/20 hover:border-black/50 hover:text-white text-gray-400 transition-all backdrop-blur-sm shadow-lg group z-50"
+    className="fixed top-6 left-6 z-50
+                flex items-center gap-2 px-4 py-2 rounded-xl
+                bg-white/5 border border-white/10
+                hover:bg-black/20 hover:border-black/50
+                text-gray-300 hover:text-white
+                transition-all backdrop-blur-sm shadow-lg"
     >
     <span className="text-sm font-bold uppercase tracking-wider">Modo Oscuro</span>
  </button>
