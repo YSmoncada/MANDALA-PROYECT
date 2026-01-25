@@ -19,9 +19,10 @@ const AdminUsuariosDisco = lazy(() => import("./pages/adminusuarios/AdminUsuario
 const ConfiguracionTicketDisco = lazy(() => import("./pages/adminusuarios/ConfiguracionTicket-Disco"));
 
 
+
+
 import { PedidosProvider } from "./context/PedidosContext";
-import { ThemeProvider } from "./context/ThemeContext";
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tantml:react-query';
 import Notificaciones from "./components/Notificaciones";
 
 const queryClient = new QueryClient();
@@ -32,8 +33,7 @@ function App() {
       <Notificaciones />
       <BrowserRouter>
       <PedidosProvider>
-        <ThemeProvider>
-          <Suspense fallback={null}>
+        <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<Home />} />
 
