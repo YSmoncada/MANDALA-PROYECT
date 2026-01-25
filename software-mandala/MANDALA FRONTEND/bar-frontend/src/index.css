@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 html, body {
-  background-color: black !important;
+  background-color: black ;
   margin: 0;
   padding: 0;
 }
