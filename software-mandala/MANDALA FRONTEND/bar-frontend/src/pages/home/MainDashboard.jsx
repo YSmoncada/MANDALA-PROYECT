@@ -59,9 +59,9 @@ function MainDashboard() {
         <AccessVerifier auth={auth}>
             <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white overflow-hidden relative selection:bg-purple-500/30">
                 <BackgroundEffects />
+                <DarkmodeButton/>
                 <main className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-16 sm:py-12">
                     <DashboardHeader />
-                    <DarkmodeButton/>
                     <LogoutButton onLogout={handleLogout} />
                     
 
