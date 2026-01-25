@@ -1,9 +1,8 @@
 import React from "react";
 import { useUserModules } from "../../hooks/useUserModules";
-import { useTheme } from "../../context/ThemeContext";
 import AccessVerifier from "./AccessVerifier";
 import ModuleCard from "./ModuleCard";
-import { LogOut, Moon, Sun } from "lucide-react";
+import { LogOut } from "lucide-react";
 
 /**
  * Visual background effects for the dashboard.
@@ -13,23 +12,6 @@ const BackgroundEffects = () => (
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[120px]"></div>
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-pink-600/10 rounded-full blur-[120px]"></div>
     </div>
-);
-
-const DarkModeToggle = ({ isDarkMode, onToggle }) => (
-    <button
-        onClick={onToggle}
-        className="sm:absolute sm:top-6 sm:left-6 mb-4 sm:mb-0 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-purple-500/20 hover:border-purple-500/50 hover:text-white text-gray-400 transition-all backdrop-blur-sm shadow-lg group z-50"
-        title={isDarkMode ? "Activar modo claro" : "Activar modo oscuro"}
-    >
-        {isDarkMode ? (
-            <Sun size={18} className="group-hover:rotate-180 transition-transform duration-500" />
-        ) : (
-            <Moon size={18} className="group-hover:-rotate-12 transition-transform" />
-        )}
-        <span className="text-sm font-bold uppercase tracking-wider">
-            {isDarkMode ? "Modo Claro" : "Modo Oscuro"}
-        </span>
-    </button>
 );
 
 const LogoutButton = ({ onLogout }) => (
@@ -56,7 +38,6 @@ const DashboardHeader = () => (
 function MainDashboard() {
     // Using the hook to fetch modules and auth logic
     const { visibleModules, handleLogout, auth } = useUserModules();
-    const { isDarkMode, toggleDarkMode } = useTheme();
 
     return (
         <AccessVerifier auth={auth}>
@@ -64,7 +45,6 @@ function MainDashboard() {
                 <BackgroundEffects />
                 <main className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-16 sm:py-12">
                     <DashboardHeader />
-                    <DarkModeToggle isDarkMode={isDarkMode} onToggle={toggleDarkMode} />
                     <LogoutButton onLogout={handleLogout} />
 
                     <div className="flex flex-wrap justify-center items-center gap-6 w-full max-w-7xl px-4">

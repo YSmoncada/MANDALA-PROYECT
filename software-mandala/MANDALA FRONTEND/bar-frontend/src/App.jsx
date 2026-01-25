@@ -20,7 +20,6 @@ const ConfiguracionTicketDisco = lazy(() => import("./pages/adminusuarios/Config
 
 
 import { PedidosProvider } from "./context/PedidosContext";
-import { ThemeProvider } from "./context/ThemeContext";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Notificaciones from "./components/Notificaciones";
 
@@ -32,8 +31,7 @@ function App() {
       <Notificaciones />
       <BrowserRouter>
       <PedidosProvider>
-        <ThemeProvider>
-          <Suspense fallback={null}>
+        <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<Home />} />
 
@@ -89,7 +87,6 @@ function App() {
             <Route path="*" element={<Navigate to="/login" />} /> {/* Redirect default to login */}
           </Routes>
         </Suspense>
-        </ThemeProvider>
       </PedidosProvider>
     </BrowserRouter>
     </QueryClientProvider>
