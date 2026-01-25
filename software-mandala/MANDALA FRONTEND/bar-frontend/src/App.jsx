@@ -24,7 +24,6 @@ const ConfiguracionTicketDisco = lazy(() => import("./pages/adminusuarios/Config
 import { PedidosProvider } from "./context/PedidosContext";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Notificaciones from "./components/Notificaciones";
-import ThemeToggle from "./components/ThemeToggle";
 
 const queryClient = new QueryClient();
 
@@ -32,7 +31,6 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Notificaciones />
-      <ThemeToggle />
       <BrowserRouter>
         <PedidosProvider>
           <Suspense fallback={null}>
