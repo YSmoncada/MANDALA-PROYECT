@@ -14,6 +14,32 @@ html, body {
   color-scheme: dark;
 }
 
+/* Dark mode backgrounds and text */
+.dark-mode body {
+  background: linear-gradient(to bottom right, #111827, #1f2937, #000000) !important;
+}
+
+.dark-mode .bg-gradient-to-br {
+  background: linear-gradient(to bottom right, #0f172a, #1e1b4b, #000000) !important;
+}
+
+/* Dark mode for cards and panels */
+.dark-mode [class*="bg-gray-900"],
+.dark-mode [class*="bg-white/5"],
+.dark-mode [class*="bg-purple-900"] {
+  background-color: rgba(15, 23, 42, 0.8) !important;
+  border-color: rgba(100, 100, 120, 0.2) !important;
+}
+
+/* Dark mode text */
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode p,
+.dark-mode span {
+  color: #e5e7eb !important;
+}
+
 /* Dark scrollbars when in dark mode */
 .dark-mode ::-webkit-scrollbar {
   width: 8px;
@@ -43,6 +69,34 @@ html, body {
 .dark-mode ::selection {
   background-color: rgba(139, 92, 246, 0.3);
   color: #ffffff;
+}
+
+/* Light mode overrides (when dark mode is OFF) */
+html:not(.dark-mode) body {
+  background: linear-gradient(to bottom right, #f3f4f6, #e5e7eb, #d1d5db) !important;
+}
+
+html:not(.dark-mode) .bg-gradient-to-br {
+  background: linear-gradient(to bottom right, #f9fafb, #f3f4f6, #e5e7eb) !important;
+}
+
+html:not(.dark-mode) h1,
+html:not(.dark-mode) h2,
+html:not(.dark-mode) h3 {
+  color: #111827 !important;
+}
+
+html:not(.dark-mode) p,
+html:not(.dark-mode) span {
+  color: #374151 !important;
+}
+
+html:not(.dark-mode) [class*="text-white"] {
+  color: #111827 !important;
+}
+
+html:not(.dark-mode) [class*="text-gray-400"] {
+  color: #6b7280 !important;
 }
 
 /* Animations */
