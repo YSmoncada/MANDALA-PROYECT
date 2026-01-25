@@ -15,9 +15,8 @@ const BackgroundEffects = () => (
     </div>
 );
 
-const darkmodebutton = ({darkmode}) => {
+const darkmode = () => {
  <button
-    onclick={darkmode}
     className="justify-start items-start gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-black/20 hover:border-black/50 hover:text-white text-gray-400 transition-all backdrop-blur-sm shadow-lg group z-50"
     >
     <span className="text-sm font-bold uppercase tracking-wider">Modo Oscuro</span>
@@ -55,8 +54,9 @@ function MainDashboard() {
                 <BackgroundEffects />
                 <main className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-16 sm:py-12">
                     <DashboardHeader />
+                    <darkmode/>
                     <LogoutButton onLogout={handleLogout} />
-                    <darkmodebutton/>
+                    
 
                     <div className="flex flex-wrap justify-center items-center gap-6 w-full max-w-7xl px-4">
                         {visibleModules.map((item, index) => (
