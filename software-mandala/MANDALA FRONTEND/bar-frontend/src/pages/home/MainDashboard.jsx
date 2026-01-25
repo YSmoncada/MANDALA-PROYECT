@@ -4,6 +4,7 @@ import AccessVerifier from "./AccessVerifier";
 import ModuleCard from "./ModuleCard";
 import { LogOut } from "lucide-react";
 import { button } from "framer-motion/client";
+import { useState, useEffect } from "react";
 
 /**
  * Visual background effects for the dashboard.
