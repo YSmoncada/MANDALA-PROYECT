@@ -3,6 +3,7 @@ import { useUserModules } from "../../hooks/useUserModules";
 import AccessVerifier from "./AccessVerifier";
 import ModuleCard from "./ModuleCard";
 import { LogOut } from "lucide-react";
+import { button } from "framer-motion/client";
 
 /**
  * Visual background effects for the dashboard.
@@ -13,6 +14,14 @@ const BackgroundEffects = () => (
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-pink-600/10 rounded-full blur-[120px]"></div>
     </div>
 );
+
+const darkmode = () => {
+ <button>
+    onclick={darkmode}
+    className="sm:absolute sm:top-6 sm:right-6 mb-8 sm:mb-0 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-black/20 hover:border-black/50 hover:text-white text-gray-400 transition-all backdrop-blur-sm shadow-lg group z-50"
+    <span className="text-sm font-bold uppercase tracking-wider">Modo Oscuro</span>
+ </button>   
+}
 
 const LogoutButton = ({ onLogout }) => (
     <button
