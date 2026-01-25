@@ -15,12 +15,14 @@ const BackgroundEffects = () => (
     </div>
 );
 
-const darkmode = () => {
+const DarkmodeButton = () => {
+    return (
  <button
     className="justify-start items-start gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-black/20 hover:border-black/50 hover:text-white text-gray-400 transition-all backdrop-blur-sm shadow-lg group z-50"
     >
     <span className="text-sm font-bold uppercase tracking-wider">Modo Oscuro</span>
  </button>
+    );
 };
 
 const LogoutButton = ({ onLogout }) => (
@@ -54,7 +56,7 @@ function MainDashboard() {
                 <BackgroundEffects />
                 <main className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-16 sm:py-12">
                     <DashboardHeader />
-                    <darkmode/>
+                    <DarkmodeButton/>
                     <LogoutButton onLogout={handleLogout} />
                     
 
