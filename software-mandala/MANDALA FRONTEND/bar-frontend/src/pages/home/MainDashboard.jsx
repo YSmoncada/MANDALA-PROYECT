@@ -9,12 +9,44 @@ import { useState, useEffect } from "react";
 /**
  * Visual background effects for the dashboard.
  */
-const BackgroundEffects = () => (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[120px]"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-pink-600/10 rounded-full blur-[120px]"></div>
-    </div>
-);
+const BackgroundEffects = () => {
+    const [isDark, setIsDark] = useState(
+        document.documentElement.classList.contains("dark")
+    );
+
+    useEffect(() => {
+        const observer = new MutationObserver(() => {
+            setIsDark(
+                document.documentElement.classList.contains("dark")
+            );
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["class"],
+        });
+
+        return () => observer.disconnect();
+    }, []);
+
+    return (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {isDark ? (
+                <>
+                    {/* DARK MODE */}
+                    <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[120px]" />
+                    <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-pink-600/10 rounded-full blur-[120px]" />
+                </>
+            ) : (
+                <>
+                    {/* LIGHT MODE */}
+                    <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-400/30 rounded-full blur-[140px]" />
+                    <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-pink-400/30 rounded-full blur-[140px]" />
+                </>
+            )}
+        </div>
+    );
+};
 
 const DarkmodeButton = () => {
     const [dark, setDark] = useState(true);
