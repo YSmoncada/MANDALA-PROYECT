@@ -22,7 +22,7 @@ const ConfiguracionTicketDisco = lazy(() => import("./pages/adminusuarios/Config
 
 
 import { PedidosProvider } from "./context/PedidosContext";
-import { QueryClient, QueryClientProvider } from '@tantml:react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Notificaciones from "./components/Notificaciones";
 
 const queryClient = new QueryClient();
@@ -89,7 +89,6 @@ function App() {
             <Route path="*" element={<Navigate to="/login" />} /> {/* Redirect default to login */}
           </Routes>
         </Suspense>
-        </ThemeProvider>
       </PedidosProvider>
     </BrowserRouter>
     </QueryClientProvider>
