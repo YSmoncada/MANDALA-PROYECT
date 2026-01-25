@@ -30,18 +30,22 @@ export const usePedidosAuth = () => {
         fetchProfiles();
     }, [fetchProfiles]);
 
-    // Recover session state from both localStorage (remember) and sessionStorage (temporary)
+    // Recover session state - check sessionStorage first, then localStorage
     useEffect(() => {
-        const rememberEnabled = localStorage.getItem('rememberSession') === 'true';
+        // Try sessionStorage first (current session)
+        let storedProfile = sessionStorage.getItem('selectedProfile') || sessionStorage.getItem('selectedMesera');
+        let storedCodigoConfirmado = sessionStorage.getItem('codigoConfirmado');
+        let storedRole = sessionStorage.getItem('userRole');
         
-        // Try localStorage first (for remembered sessions), then sessionStorage
-        const storedProfile = (rememberEnabled ? localStorage.getItem('selectedProfile') : null) 
-            || sessionStorage.getItem('selectedProfile') 
-            || sessionStorage.getItem('selectedMesera');
-        const storedCodigoConfirmado = (rememberEnabled ? localStorage.getItem('codigoConfirmado') : null)
-            || sessionStorage.getItem('codigoConfirmado');
-        const storedRole = (rememberEnabled ? localStorage.getItem('userRole') : null)
-            || sessionStorage.getItem('userRole');
+        // If not in sessionStorage, try localStorage (remembered session)
+        if (!storedProfile || !storedCodigoConfirmado) {
+            const rememberEnabled = localStorage.getItem('rememberSession') === 'true';
+            if (rememberEnabled) {
+                storedProfile = storedProfile || localStorage.getItem('selectedProfile');
+                storedCodigoConfirmado = storedCodigoConfirmado || localStorage.getItem('codigoConfirmado');
+                storedRole = storedRole || localStorage.getItem('userRole');
+            }
+        }
 
         if (storedRole) {
             setUserRole(storedRole);
