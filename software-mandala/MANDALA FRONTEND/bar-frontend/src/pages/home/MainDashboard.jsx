@@ -110,11 +110,11 @@ function MainDashboard() {
         <AccessVerifier auth={auth}>
             <div
                 className="
-                    min-h-screen relative overflow-hidden
-                    bg-gradient-to-br from-gray-100 via-purple-100 to-white
-                    text-gray-900
+                     min-h-screen relative overflow-hidden
+    text-gray-900 dark:text-white
 
-                    dark:bg-black dark:text-white
+    bg-gradient-to-br from-gray-100 via-purple-100 to-white
+    dark:bg-gradient-to-br dark:from-gray-900 dark:via-purple-900 dark:to-black
                 "
             >
                 <BackgroundEffects />
