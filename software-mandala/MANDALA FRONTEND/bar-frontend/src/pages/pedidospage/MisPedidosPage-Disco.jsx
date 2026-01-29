@@ -29,34 +29,34 @@ const MisPedidosPageDisco = () => {
     }, [setSelectedMesaId, setIsTableLocked, navigate]);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white">
+        <div className="min-h-screen bg-black text-white selection:bg-zinc-800">
             <HeaderPedidosDisco user={userName} onLogout={handleLogout} codigoConfirmado={codigoConfirmado} />
 
             <div className="relative z-10 max-w-7xl mx-auto p-4 sm:p-8 pt-24">
                 <div className="text-center mb-10">
-                    <h1 className="text-4xl md:text-5xl font-black mb-3 text-white uppercase tracking-tight drop-shadow-[0_0_20px_rgba(169,68,255,0.4)]">
+                    <h1 className="text-4xl md:text-5xl font-black mb-3 text-white uppercase tracking-tight drop-shadow-lg">
                         Mis Pedidos de Hoy
                     </h1>
-                    <p className="text-[#C2B6D9] font-light">Gestiona tus pedidos activos</p>
+                    <p className="text-zinc-400 font-light">Gestiona tus pedidos activos</p>
                 </div>
 
                 {loading ? (
                     <div className="text-center py-20">
-                        <div className="inline-block p-4 bg-white/5 rounded-full mb-4">
-                            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#A944FF]"></div>
+                        <div className="inline-block p-4 bg-zinc-900 rounded-full mb-4">
+                            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white"></div>
                         </div>
-                        <p className="text-[#8A7BAF] font-bold tracking-widest text-xs uppercase">Cargando tus pedidos...</p>
+                        <p className="text-zinc-500 font-bold tracking-widest text-xs uppercase animate-pulse">Cargando tus pedidos...</p>
                     </div>
                 ) : pedidos.length === 0 ? (
-                    <div className="text-center py-20 bg-[#441E73]/20 rounded-3xl border border-[#6C3FA8]/30 backdrop-blur-sm max-w-2xl mx-auto">
-                        <div className="inline-block p-6 rounded-full bg-[#441E73]/30 mb-6">
-                            <ShoppingBag size={48} className="text-[#8A7BAF]" />
+                    <div className="text-center py-20 bg-zinc-900/30 rounded-3xl border border-white/5 backdrop-blur-sm max-w-2xl mx-auto">
+                        <div className="inline-block p-6 rounded-full bg-zinc-800/30 mb-6">
+                            <ShoppingBag size={48} className="text-zinc-500" />
                         </div>
                         <p className="text-xl font-bold mb-2 uppercase text-white">No tienes pedidos hoy</p>
-                        <p className="text-[#8A7BAF] mb-8">Comienza a tomar pedidos para verlos aquí</p>
+                        <p className="text-zinc-500 mb-8">Comienza a tomar pedidos para verlos aquí</p>
                         <button
                             onClick={() => navigate('/pedidos-disco')}
-                            className="px-8 py-4 bg-gradient-to-r from-[#A944FF] to-[#FF4BC1] rounded-xl font-bold text-white shadow-lg shadow-[#A944FF]/20 hover:scale-105 transition-transform active:scale-95 uppercase text-sm tracking-widest"
+                            className="px-8 py-4 bg-white text-black hover:bg-zinc-200 rounded-xl font-bold border-none shadow-xl hover:scale-105 transition-all active:scale-95 uppercase text-sm tracking-widest"
                         >
                             Crear Nuevo Pedido
                         </button>

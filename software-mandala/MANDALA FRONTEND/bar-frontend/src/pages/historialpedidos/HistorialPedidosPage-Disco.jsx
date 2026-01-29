@@ -41,11 +41,10 @@ const HistorialPedidosPageDisco = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white selection:bg-purple-500/30 overflow-x-hidden relative" style={{ WebkitOverflowScrolling: 'touch' }}>
+        <div className="min-h-screen flex flex-col bg-black text-white selection:bg-zinc-800 overflow-x-hidden relative" style={{ WebkitOverflowScrolling: 'touch' }}>
             {/* Background Glows */}
             <div className="fixed inset-0 pointer-events-none overflow-hidden">
-                <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] animate-pulse"></div>
-                <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-pink-600/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
+                <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-zinc-900/20 to-transparent pointer-events-none"></div>
             </div>
 
             {/* Hidden Print Section */}
@@ -55,7 +54,7 @@ const HistorialPedidosPageDisco = () => {
                 {/* Back Button */}
                 <button
                     onClick={() => navigate('/')}
-                    className={`fixed top-6 left-6 z-50 ${UI_CLASSES.buttonBack} backdrop-blur-xl no-print shadow-lg`}
+                    className={`fixed top-6 left-6 z-50 ${UI_CLASSES.buttonBack} backdrop-blur-xl no-print shadow-none border-white/5 bg-black/50 hover:bg-zinc-900`}
                 >
                     <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" /> 
                     <span className="font-bold uppercase tracking-wider text-xs">Volver</span>
@@ -63,7 +62,7 @@ const HistorialPedidosPageDisco = () => {
 
                 <div className="max-w-6xl mx-auto no-print">
                     <header className="mb-12 text-center">
-                        <h1 className="text-4xl sm:text-6xl font-black mb-4 text-white tracking-tighter drop-shadow-[0_0_25px_rgba(168,85,247,0.4)] uppercase italic">
+                        <h1 className="text-4xl sm:text-6xl font-black mb-4 text-white tracking-tighter uppercase italic drop-shadow-lg">
                             Historial de Ventas
                         </h1>
                     </header>
@@ -89,9 +88,9 @@ const HistorialPedidosPageDisco = () => {
                     {/* Orders List */}
                     <div className="space-y-6">
                         {loading ? (
-                            <div className="flex flex-col items-center justify-center py-24 bg-[#441E73]/20 rounded-3xl border border-[#6C3FA8]/30">
-                                <Loader2 size={48} className="text-[#A944FF] animate-spin mb-4" />
-                                <p className="text-purple-300 font-bold uppercase tracking-widest text-sm animate-pulse">Cargando Historial...</p>
+                            <div className="flex flex-col items-center justify-center py-24 bg-zinc-900/30 rounded-3xl border border-white/5">
+                                <Loader2 size={48} className="text-white animate-spin mb-4" />
+                                <p className="text-zinc-500 font-bold uppercase tracking-widest text-sm animate-pulse">Cargando Historial...</p>
                             </div>
                         ) : pedidos.length > 0 ? (
                             pedidos.map(pedido => (
@@ -103,12 +102,12 @@ const HistorialPedidosPageDisco = () => {
                                 />
                             ))
                         ) : (
-                            <div className="text-center py-20 bg-[#441E73]/20 rounded-3xl border border-dashed border-[#6C3FA8]/50">
-                                <div className="p-4 bg-[#A944FF]/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                                    <AlertCircle className="text-[#A944FF]" size={32} />
+                            <div className="text-center py-20 bg-zinc-900/30 rounded-3xl border border-dashed border-zinc-800">
+                                <div className="p-4 bg-zinc-800/50 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                                    <AlertCircle className="text-zinc-400" size={32} />
                                 </div>
-                                <p className="text-[#C2B6D9] font-bold uppercase tracking-widest text-sm">No hay resultados</p>
-                                <p className="text-gray-500 text-xs mt-2">Intenta ajustar los filtros o selecciona un vendedor</p>
+                                <p className="text-zinc-500 font-bold uppercase tracking-widest text-sm">No hay resultados</p>
+                                <p className="text-zinc-600 text-xs mt-2">Intenta ajustar los filtros o selecciona un vendedor</p>
                             </div>
                         )}
                     </div>
@@ -128,11 +127,11 @@ const HistorialPedidosPageDisco = () => {
                     background: rgba(255, 255, 255, 0.05);
                 }
                 .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: rgba(169, 68, 255, 0.3);
+                    background: rgba(255, 255, 255, 0.2);
                     border-radius: 10px;
                 }
                 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                    background: rgba(169, 68, 255, 0.5);
+                    background: rgba(255, 255, 255, 0.4);
                 }
             `}} />
         </div>

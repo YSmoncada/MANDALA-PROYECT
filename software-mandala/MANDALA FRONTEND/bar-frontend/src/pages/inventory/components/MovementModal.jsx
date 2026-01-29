@@ -75,28 +75,28 @@ const MovementModal = ({
   };
 
   return (
-    <div className={`fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 md:p-10 ${UI_CLASSES.fadeIn}`} onClick={onClose}>
-      <div className={`${UI_CLASSES.glassCard} bg-[#1A103C] w-full max-w-lg mx-auto relative max-h-[85vh] overflow-y-auto ${UI_CLASSES.scaleIn} shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-white/20`} onClick={(e) => e.stopPropagation()}>
+    <div className={`fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 md:p-10 ${UI_CLASSES.fadeIn}`} onClick={onClose}>
+      <div className={`${UI_CLASSES.glassCard} bg-black w-full max-w-lg mx-auto relative max-h-[85vh] overflow-y-auto ${UI_CLASSES.scaleIn} shadow-2xl border-white/10`} onClick={(e) => e.stopPropagation()}>
 
         {/* Modal Header */}
-        <div className="flex justify-between items-center pb-4 border-b border-[#6C3FA8]/30">
+        <div className="flex justify-between items-center pb-4 border-b border-white/5">
           <div className="flex items-center text-lg text-white font-bold gap-2">
-            {tipo === 'entrada' ? <TrendingUp className="text-emerald-400" /> : <TrendingDown className="text-rose-400" />}
+            {tipo === 'entrada' ? <TrendingUp className="text-emerald-500" /> : <TrendingDown className="text-rose-500" />}
             Registrar Movimiento
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors duration-200">
+          <button onClick={onClose} className="text-zinc-500 hover:text-white transition-colors duration-200">
             <X size={24} />
           </button>
         </div>
 
         <div className="mt-4 grid gap-5">
           {/* Product Info */}
-          <div className="flex items-center justify-between text-base text-white bg-[#2B0D49] rounded-xl p-4 border border-[#6C3FA8]/30 shadow-inner">
+          <div className="flex items-center justify-between text-base text-white bg-zinc-900 rounded-xl p-4 border border-white/5 shadow-inner">
             <div>
-              <div className="font-bold text-lg text-[#A944FF]">{producto?.nombre}</div>
-              <div className="text-gray-400 text-sm">Stock actual: <span className="font-bold text-white">{stockActual}</span></div>
+              <div className="font-bold text-lg text-white">{producto?.nombre}</div>
+              <div className="text-zinc-400 text-sm">Stock actual: <span className="font-bold text-white">{stockActual}</span></div>
             </div>
-            <div className="text-sm text-gray-400">Categoría: <span className="font-medium text-purple-300">{categoria}</span></div>
+            <div className="text-sm text-zinc-500">Categoría: <span className="font-medium text-zinc-300">{categoria}</span></div>
           </div>
 
           {/* Movement Type Selector */}
@@ -104,8 +104,8 @@ const MovementModal = ({
             <button
               onClick={() => setTipo('entrada')}
               className={`flex flex-col items-center justify-center py-4 rounded-xl border-2 text-sm font-bold transition-all duration-300 ${tipo === 'entrada'
-                ? 'border-emerald-500 bg-emerald-500/10 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.1)]'
-                : 'border-[#6C3FA8]/30 text-gray-400 bg-[#2B0D49]/50 hover:bg-[#2B0D49]'
+                ? 'border-emerald-500 bg-emerald-500/10 text-emerald-400 shadow-lg'
+                : 'border-white/5 text-zinc-500 bg-zinc-900/50 hover:bg-zinc-900 hover:text-zinc-300'
                 }`}
             >
               <TrendingUp />
@@ -114,8 +114,8 @@ const MovementModal = ({
             <button
               onClick={() => setTipo('salida')}
               className={`flex flex-col items-center justify-center py-4 rounded-xl border-2 text-sm font-bold transition-all duration-300 ${tipo === 'salida'
-                ? 'border-rose-500 bg-rose-500/10 text-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.1)]'
-                : 'border-[#6C3FA8]/30 text-gray-400 bg-[#2B0D49]/50 hover:bg-[#2B0D49]'
+                ? 'border-rose-500 bg-rose-500/10 text-rose-400 shadow-lg'
+                : 'border-white/5 text-zinc-500 bg-zinc-900/50 hover:bg-zinc-900 hover:text-zinc-300'
                 }`}
             >
               <TrendingDown />
@@ -125,12 +125,12 @@ const MovementModal = ({
 
           {/* Quantity */}
           <div className="grid gap-2">
-            <label className="text-xs font-bold text-gray-300 uppercase mb-1">Cantidad *</label>
+            <label className="text-xs font-bold text-zinc-400 uppercase mb-1">Cantidad *</label>
             <input
               type="number"
               value={cantidad}
               onChange={(e) => setCantidad(e.target.value)}
-              className={UI_CLASSES.input}
+              className={`${UI_CLASSES.input} bg-zinc-900 border-zinc-800 focus:border-white/20`}
               placeholder="Ingrese la cantidad"
               required
             />
@@ -138,12 +138,12 @@ const MovementModal = ({
 
           {/* Reason */}
           <div className="grid gap-2">
-            <label className="text-xs font-bold text-gray-300 uppercase mb-1">Motivo del Movimiento *</label>
+            <label className="text-xs font-bold text-zinc-400 uppercase mb-1">Motivo del Movimiento *</label>
             <div className="relative">
               <select
                 value={motivo}
                 onChange={(e) => setMotivo(e.target.value)}
-                className={UI_CLASSES.select}
+                className={`${UI_CLASSES.select} bg-zinc-900 border-zinc-800 focus:border-white/20`}
                 required
               >
                 <option value="" disabled>Seleccionar motivo</option>
@@ -152,7 +152,7 @@ const MovementModal = ({
                   : motivosSalida.map(m => <option key={m} value={m}>{m}</option>)
                 }
               </select>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-zinc-500">
                 <TrendingDown className="h-4 w-4" />
               </div>
             </div>
@@ -160,12 +160,12 @@ const MovementModal = ({
 
           {/* Responsible User */}
           <div className="grid gap-2">
-            <label className="text-xs font-bold text-gray-300 uppercase mb-1">Usuario Responsable</label>
+            <label className="text-xs font-bold text-zinc-400 uppercase mb-1">Usuario Responsable</label>
             <div className="relative">
               <select
                 value={usuario}
                 onChange={(e) => setUsuario(e.target.value)}
-                className={UI_CLASSES.select}
+                className={`${UI_CLASSES.select} bg-zinc-900 border-zinc-800 focus:border-white/20`}
               >
                 <option value="Administrador">Administrador</option>
                 <option value="Trabajador">Trabajador</option>
@@ -178,10 +178,10 @@ const MovementModal = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-[#6C3FA8]/30">
+        <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-white/5">
           <button
             onClick={onClose}
-            className={UI_CLASSES.buttonSecondary}
+            className={`${UI_CLASSES.buttonSecondary} bg-zinc-800 hover:bg-zinc-700 text-zinc-300`}
           >
             Cancelar
           </button>
@@ -193,7 +193,7 @@ const MovementModal = ({
                 ? (tipo === 'entrada' 
                     ? UI_CLASSES.buttonSuccess 
                     : UI_CLASSES.buttonDanger)
-                : 'bg-gray-600/30 cursor-not-allowed opacity-50'
+                : 'bg-zinc-800 cursor-not-allowed opacity-50'
             }`}
           >
             {loading ? 'Guardando...' : <><ClipboardCheck size={20} /> Registrar {tipo === 'entrada' ? 'Entrada' : 'Salida'}</>}

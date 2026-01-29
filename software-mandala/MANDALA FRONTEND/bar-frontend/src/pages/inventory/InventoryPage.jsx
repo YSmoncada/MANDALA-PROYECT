@@ -73,8 +73,8 @@ function InventoryPage() {
                 {/* Product List (Table/Grid) */}
                 {isLoading && filtered.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-20">
-                        <div className="w-12 h-12 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin mb-4"></div>
-                        <p className="text-purple-400 font-bold text-xs tracking-widest uppercase">Cargando inventario...</p>
+                        <div className="w-12 h-12 border-4 border-zinc-800 border-t-white rounded-full animate-spin mb-4"></div>
+                        <p className="text-zinc-500 font-bold text-xs tracking-widest uppercase animate-pulse">Cargando inventario...</p>
                     </div>
                 ) : (
                     <ProductTable

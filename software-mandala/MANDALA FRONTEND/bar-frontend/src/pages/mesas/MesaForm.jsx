@@ -40,12 +40,12 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
     return (
         <form
             onSubmit={handleSubmit}
-            className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-8 flex flex-wrap items-end gap-6 shadow-xl relative overflow-hidden group"
+            className="bg-black/30 border border-white/10 rounded-2xl p-6 mb-8 flex flex-wrap items-end gap-6 shadow-xl relative overflow-hidden group backdrop-blur-md"
         >
-            <div className="absolute inset-y-0 left-0 w-1 bg-[#A944FF] opacity-50 group-hover:opacity-100 transition-opacity"></div>
+            <div className="absolute inset-y-0 left-0 w-1 bg-white opacity-20 group-hover:opacity-100 transition-opacity"></div>
 
             <div className="flex-1 min-w-[140px] space-y-2.5">
-                <label htmlFor="numero" className="flex items-center gap-2 text-[10px] font-black text-[#A944FF] uppercase tracking-[0.2em] ml-1">
+                <label htmlFor="numero" className="flex items-center gap-2 text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] ml-1">
                     <Table size={12} />
                     Número de Mesa
                 </label>
@@ -66,7 +66,7 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
             </div>
 
             <div className="flex-1 min-w-[140px] space-y-2.5">
-                <label htmlFor="capacidad" className="flex items-center gap-2 text-[10px] font-black text-[#A944FF] uppercase tracking-[0.2em] ml-1">
+                <label htmlFor="capacidad" className="flex items-center gap-2 text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] ml-1">
                     <Users size={12} />
                     Capacidad
                 </label>
@@ -86,7 +86,7 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
 
             <button
                 type="submit"
-                className={`${UI_CLASSES.buttonPrimary} mt-2 sm:mt-0 shadow-lg shadow-purple-900/20`}
+                className={`${UI_CLASSES.buttonPrimary} mt-2 sm:mt-0 shadow-lg shadow-zinc-900/50 bg-white text-black hover:bg-zinc-200 border-none`}
             >
                 <Plus size={18} />
                 <span>Agregar Mesa</span>

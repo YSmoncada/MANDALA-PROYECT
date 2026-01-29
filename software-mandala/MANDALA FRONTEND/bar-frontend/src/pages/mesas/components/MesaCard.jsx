@@ -3,12 +3,12 @@ import { Trash2, Users } from 'lucide-react';
 
 export default function MesaCard({ mesa, onDelete }) {
     return (
-        <div className="relative bg-[#2B0D49]/40 border border-[#6C3FA8]/20 hover:border-[#A944FF]/50 rounded-xl p-4 text-center group transition-all duration-300 hover:bg-[#A944FF]/5 hover:shadow-[0_0_15px_rgba(169,68,255,0.1)]">
-            <p className="text-[9px] font-black text-[#8A7BAF] uppercase tracking-[0.2em] group-hover:text-[#A944FF] transition-colors">Mesas</p>
+        <div className="relative bg-zinc-900/40 border border-white/5 hover:border-white/20 rounded-xl p-4 text-center group transition-all duration-300 hover:bg-black/40 hover:shadow-xl backdrop-blur-sm">
+            <p className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em] group-hover:text-zinc-300 transition-colors">Mesas</p>
             <p className="text-3xl font-black text-white my-1 italic">
                 {mesa.numero}
             </p>
-            <div className="flex items-center justify-center gap-1 text-[#8A7BAF]">
+            <div className="flex items-center justify-center gap-1 text-zinc-500">
                 <Users size={10} />
                 <span className="text-[10px] font-bold">Cap: {mesa.capacidad}</span>
             </div>
