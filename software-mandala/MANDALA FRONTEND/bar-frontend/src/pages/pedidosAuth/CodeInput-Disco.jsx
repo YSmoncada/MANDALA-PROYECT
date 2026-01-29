@@ -54,7 +54,7 @@ function CodeInputDisco({ nombre, onBack, onSubmit }) {
                     onChange={(e) => setPassword(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
                     placeholder="Escribe aquí..."
-                    className="w-full bg-zinc-800 border-2 border-zinc-700 text-white placeholder-zinc-600 text-center text-xl font-bold py-4 px-4 rounded-xl focus:border-purple-600 outline-none transition-all tracking-widest"
+                    className="w-full bg-zinc-800 border-2 border-zinc-700 text-white placeholder-zinc-600 text-center text-xl font-bold py-4 px-4 rounded-xl focus:border-white outline-none transition-all tracking-widest"
                 />
                 <button
                     type="button"
@@ -71,7 +71,7 @@ function CodeInputDisco({ nombre, onBack, onSubmit }) {
                 disabled={password.length === 0}
                 className={`w-full py-4 rounded-xl font-bold transition-all transform active:scale-95
                     ${password.length > 0
-                        ? "bg-purple-600 hover:bg-purple-500 text-white shadow-lg"
+                        ? "bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/10"
                         : "bg-zinc-800 text-zinc-600 cursor-not-allowed"
                     }
                 `}

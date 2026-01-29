@@ -88,16 +88,16 @@ const ProductTable = memo(({ productos, onEdit, onDelete, onMovimiento }) => {
         <div className="space-y-4">
             {/* View Toggle - Hidden on mobile as grid is required */}
             <div className="hidden md:flex justify-end mb-2">
-                <div className="bg-white/5 p-1 rounded-lg border border-white/10 flex gap-1">
+                <div className="bg-zinc-900 p-1 rounded-lg border border-white/10 flex gap-1">
                     <button 
                         onClick={() => setViewMode('table')}
-                        className={`p-2 rounded-md transition-all ${viewMode === 'table' ? 'bg-purple-600 text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+                        className={`p-2 rounded-md transition-all ${viewMode === 'table' ? 'bg-zinc-700 text-white shadow-lg' : 'text-zinc-500 hover:text-white'}`}
                     >
                         <List size={18} />
                     </button>
                     <button 
                         onClick={() => setViewMode('grid')}
-                        className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-purple-600 text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+                        className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-zinc-700 text-white shadow-lg' : 'text-zinc-500 hover:text-white'}`}
                     >
                         <LayoutGrid size={18} />
                     </button>
@@ -107,7 +107,7 @@ const ProductTable = memo(({ productos, onEdit, onDelete, onMovimiento }) => {
             {viewMode === 'table' ? (
                 <div className="overflow-x-auto rounded-xl border border-white/10 shadow-2xl">
                     <table className="w-full text-left text-sm">
-                        <thead className="bg-[#2B0D49] text-gray-300 font-bold uppercase tracking-wider text-[10px]">
+                        <thead className="bg-zinc-950 text-zinc-400 font-bold uppercase tracking-wider text-[10px]">
                             <tr>
                                 <th className="px-3 md:px-6 py-4">Producto</th>
                                 <th className="px-3 md:px-6 py-4">Categoría</th>
@@ -124,11 +124,11 @@ const ProductTable = memo(({ productos, onEdit, onDelete, onMovimiento }) => {
                                             {producto.imagen ? (
                                                 <img src={producto.imagen} alt={producto.nombre} className="w-8 h-8 md:w-10 md:h-10 rounded-lg object-cover border border-white/10" />
                                             ) : (
-                                                <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-purple-900/40 flex items-center justify-center border border-purple-500/20 shrink-0">
-                                                    <span className="text-purple-400 font-bold text-xs md:text-base">{producto.nombre?.charAt(0)}</span>
+                                                <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-zinc-800 flex items-center justify-center border border-white/10 shrink-0">
+                                                    <span className="text-zinc-400 font-bold text-xs md:text-base">{producto.nombre?.charAt(0)}</span>
                                                 </div>
                                             )}
-                                            <span className="font-bold text-white group-hover:text-purple-400 transition-colors uppercase text-xs md:text-sm">{producto.nombre}</span>
+                                            <span className="font-bold text-white group-hover:text-zinc-300 transition-colors uppercase text-xs md:text-sm">{producto.nombre}</span>
                                         </div>
                                     </td>
                                     <td className="px-3 md:px-6 py-3">
@@ -159,18 +159,18 @@ const ProductTable = memo(({ productos, onEdit, onDelete, onMovimiento }) => {
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {productos.map((producto) => (
-                        <div key={producto.id} className="bg-white/5 border border-white/10 rounded-2xl p-4 hover:bg-white/10 transition-all group overflow-hidden relative">
+                        <div key={producto.id} className="bg-zinc-900/30 border border-white/10 rounded-3xl p-4 hover:bg-zinc-900/50 transition-all group overflow-hidden relative backdrop-blur-sm">
                             <div className="flex justify-between items-start mb-4">
                                 <div className="flex items-center gap-3">
                                     {producto.imagen ? (
                                         <img src={producto.imagen} alt={producto.nombre} className="w-12 h-12 rounded-xl object-cover border border-white/10" />
                                     ) : (
-                                        <div className="w-12 h-12 rounded-xl bg-purple-900/40 flex items-center justify-center border border-purple-500/20">
-                                            <span className="text-purple-400 font-bold text-xl">{producto.nombre?.charAt(0)}</span>
+                                        <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center border border-white/10">
+                                            <span className="text-zinc-400 font-bold text-xl">{producto.nombre?.charAt(0)}</span>
                                         </div>
                                     )}
                                     <div>
-                                        <h3 className="font-bold text-white uppercase group-hover:text-purple-400 transition-colors">{producto.nombre}</h3>
+                                        <h3 className="font-bold text-white uppercase group-hover:text-zinc-300 transition-colors">{producto.nombre}</h3>
                                         <span className="text-[10px] text-blue-400 font-bold uppercase">{producto.categoria}</span>
                                     </div>
                                 </div>

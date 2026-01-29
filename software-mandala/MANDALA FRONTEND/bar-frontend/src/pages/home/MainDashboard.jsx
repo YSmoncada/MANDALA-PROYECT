@@ -10,40 +10,12 @@ import { useState, useEffect } from "react";
  * Visual background effects for the dashboard.
  */
 const BackgroundEffects = () => {
-    const [isDark, setIsDark] = useState(
-        document.documentElement.classList.contains("dark")
-    );
-
-    useEffect(() => {
-        const observer = new MutationObserver(() => {
-            setIsDark(
-                document.documentElement.classList.contains("dark")
-            );
-        });
-
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ["class"],
-        });
-
-        return () => observer.disconnect();
-    }, []);
-
     return (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {isDark ? (
-                <>
-                    {/* DARK MODE */}
-                    <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[120px]" />
-                    <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-pink-600/10 rounded-full blur-[120px]" />
-                </>
-            ) : (
-                <>
-                    {/* LIGHT MODE */}
-                    <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-400/30 rounded-full blur-[140px]" />
-                    <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-pink-400/30 rounded-full blur-[140px]" />
-                </>
-            )}
+            {/* Elegant Night Mode Effects */}
+            <div className="absolute top-[-20%] left-[20%] w-[60%] h-[60%] bg-zinc-800/5 rounded-full blur-[150px]" />
+            <div className="absolute bottom-[-10%] right-[10%] w-[40%] h-[40%] bg-zinc-800/5 rounded-full blur-[150px]" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0%,transparent_70%)]" />
         </div>
     );
 };
@@ -53,23 +25,25 @@ const DarkmodeButton = () => {
 
     useEffect(() => {
         const root = document.documentElement;
-        dark
-            ? root.classList.add("dark")
-            : root.classList.remove("dark");
+        if (dark) {
+            root.classList.add("dark");
+        } else {
+            root.classList.remove("dark");
+        }
     }, [dark]);
 
     return (
         <button
             onClick={() => setDark(!dark)}
             className="fixed top-6 left-6 z-50
-                flex items-center gap-2 px-4 py-2 rounded-xl
-                bg-white/5 border border-white/10
-                hover:bg-black/20 hover:border-black/50
-                text-gray-300 hover:text-white
-                transition-all backdrop-blur-sm shadow-lg"
+                flex items-center gap-2 px-4 py-2 rounded-full
+                bg-black/40 border border-white/5
+                hover:bg-zinc-900 hover:border-white/20
+                text-zinc-400 hover:text-white
+                transition-all backdrop-blur-md shadow-2xl"
         >
-            <span className="text-sm font-bold uppercase tracking-wider">
-                {dark ? "Modo Claro" : "Modo Oscuro"}
+            <span className="text-xs font-medium uppercase tracking-widest">
+                {dark ? "Nox" : "Lux"}
             </span>
         </button>
     );
@@ -78,21 +52,21 @@ const DarkmodeButton = () => {
 const LogoutButton = ({ onLogout }) => (
     <button
         onClick={onLogout}
-        className="sm:absolute sm:top-6 sm:right-6 mb-8 sm:mb-0 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-red-500/20 hover:border-red-500/50 hover:text-white text-gray-400 transition-all backdrop-blur-sm shadow-lg group z-50"
+        className="sm:absolute sm:top-6 sm:right-6 mb-8 sm:mb-0 flex items-center gap-2 px-4 py-2 rounded-full bg-black/40 border border-white/5 hover:bg-red-950/30 hover:border-red-500/30 hover:text-red-200 text-zinc-400 transition-all backdrop-blur-md shadow-2xl group z-50"
     >
-        <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
-        <span className="text-sm font-bold uppercase tracking-wider">Cerrar Sesión</span>
+        <LogOut size={16} className="group-hover:-translate-x-1 transition-transform" />
+        <span className="text-xs font-medium uppercase tracking-widest">Cerrar Sesión</span>
     </button>
 );
 
 const DashboardHeader = () => (
-    <div className="text-center mb-12 sm:mb-16">
-        <h1 className="text-6xl sm:text-8xl md:text-9xl font-black mb-3 sm:mb-4 relative tracking-tighter">
-            <span className="relative text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] tracking-[0.2em] uppercase">
-                Nox<span className="text-zinc-500">OS</span>
+    <div className="text-center mb-16 sm:mb-20">
+        <h1 className="text-6xl sm:text-8xl md:text-9xl font-black mb-6 relative tracking-tighter">
+            <span className="relative text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-600 tracking-[0.2em] uppercase drop-shadow-2xl">
+                Nox<span className="text-zinc-700">OS</span>
             </span>
         </h1>
-        <div className="h-1.5 w-32 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full blur-sm opacity-50"></div>
+        <div className="h-px w-40 bg-gradient-to-r from-transparent via-zinc-500 to-transparent mx-auto opacity-30"></div>
     </div>
 );
 
@@ -102,15 +76,14 @@ function MainDashboard() {
 
     return (
         <AccessVerifier auth={auth}>
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white overflow-hidden relative selection:bg-purple-500/30">
+            <div className="min-h-screen bg-black text-white overflow-hidden relative selection:bg-zinc-800 selection:text-white">
                 <BackgroundEffects />
                 <DarkmodeButton/>
                 <main className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-16 sm:py-12">
                     <DashboardHeader />
                     <LogoutButton onLogout={handleLogout} />
                     
-
-                    <div className="flex flex-wrap justify-center items-center gap-6 w-full max-w-7xl px-4">
+                    <div className="flex flex-wrap justify-center items-center gap-8 w-full max-w-7xl px-4">
                         {visibleModules.map((item, index) => (
                             <ModuleCard 
                                 key={item.path} 
