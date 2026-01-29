@@ -5,19 +5,17 @@ import { Lock, ArrowLeft, Eye, EyeOff } from "lucide-react";
  * Clean & Professional Password Input for profile authentication.
  */
 function CodeInputDisco({ nombre, onBack, onSubmit }) {
-    const [password, setPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
-    const inputRef = useRef(null);
+    const [remember, setRemember] = useState(false);
 
+    // Initialize remember state from localStorage
     useEffect(() => {
-        if (inputRef.current) {
-            inputRef.current.focus();
-        }
+        const storedRemember = localStorage.getItem('rememberSession') === 'true';
+        setRemember(storedRemember);
     }, []);
 
     const handleSubmit = () => {
         if (password.length > 0) {
-            onSubmit(password);
+            onSubmit(password, remember);
         }
     };
 
@@ -46,7 +44,7 @@ function CodeInputDisco({ nombre, onBack, onSubmit }) {
             </div>
 
             {/* Input Layer */}
-            <div className="relative mb-8">
+            <div className="relative mb-6">
                 <input
                     ref={inputRef}
                     type={showPassword ? "text" : "password"}
@@ -63,6 +61,22 @@ function CodeInputDisco({ nombre, onBack, onSubmit }) {
                 >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
+            </div>
+
+            {/* Remember Session Checkbox */}
+            <div className="mb-6 flex justify-center">
+                <label className="flex items-center gap-2 cursor-pointer group">
+                    <div className={`w-5 h-5 rounded border border-zinc-600 flex items-center justify-center transition-all ${remember ? 'bg-white border-white' : 'bg-transparent group-hover:border-zinc-400'}`}>
+                        {remember && <div className="w-2.5 h-2.5 bg-black rounded-[1px]" />}
+                    </div>
+                     <input 
+                        type="checkbox" 
+                        checked={remember}
+                        onChange={(e) => setRemember(e.target.checked)}
+                        className="hidden"
+                    />
+                    <span className="text-zinc-400 text-xs font-medium group-hover:text-zinc-300 select-none">Recordar sesión en este dispositivo</span>
+                </label>
             </div>
 
             {/* Action Layer */}
