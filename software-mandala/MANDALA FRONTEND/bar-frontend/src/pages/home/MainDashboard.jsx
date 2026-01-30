@@ -8,13 +8,13 @@ import { button } from "framer-motion/client";
 
 const BackgroundEffects = () => {
     const { isDark } = useTheme();
-    if (!isDark) return null; // No special effects in light mode for now or different ones
+    if (!isDark) return null; 
     return (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {/* Elegant Night Mode Effects */}
-            <div className="absolute top-[-20%] left-[20%] w-[60%] h-[60%] bg-zinc-800/5 rounded-full blur-[150px]" />
-            <div className="absolute bottom-[-10%] right-[10%] w-[40%] h-[40%] bg-zinc-800/5 rounded-full blur-[150px]" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0%,transparent_70%)]" />
+            {/* Elegant Purple/Indigo Disco Effects */}
+            <div className="absolute top-[-20%] left-[20%] w-[70%] h-[70%] bg-violet-900/10 rounded-full blur-[120px] animate-pulse" />
+            <div className="absolute bottom-[-10%] right-[10%] w-[50%] h-[50%] bg-indigo-900/10 rounded-full blur-[120px]" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.03)_0%,transparent_70%)]" />
         </div>
     );
 };

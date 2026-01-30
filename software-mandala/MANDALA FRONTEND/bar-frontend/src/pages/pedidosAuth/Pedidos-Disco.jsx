@@ -78,7 +78,7 @@ export default function PedidosDisco() {
         return (
             <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6 animate-fadeIn relative overflow-hidden transition-all duration-500">
                 {/* Background Effects */}
-                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-900/40 via-black to-black pointer-events-none"></div>
+                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-violet-950/40 via-black to-black pointer-events-none"></div>
 
                 <div className="w-full max-w-5xl relative z-10 flex flex-col items-center">
                     {/* Header */}
@@ -118,7 +118,7 @@ export default function PedidosDisco() {
     // PIN Pad Login (Safe Mode)
     return (
         <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 animate-fadeIn relative">
-             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-900/40 to-black pointer-events-none"></div>
+             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-violet-950/40 to-black pointer-events-none"></div>
              
             <div className="w-full max-w-md relative z-10">
                 <CodeInputDisco
