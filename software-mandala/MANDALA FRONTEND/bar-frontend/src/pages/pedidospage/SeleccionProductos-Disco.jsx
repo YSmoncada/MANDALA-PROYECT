@@ -40,31 +40,32 @@ function SeleccionProductosDisco() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col bg-white dark:bg-black text-zinc-900 dark:text-white selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300">
-            {/* Background Glows */}
+        <div className="min-h-screen flex flex-col bg-transparent text-white dark:text-white selection:bg-[#A944FF]/30 transition-colors duration-500 overflow-x-hidden">
+            {/* Ambient Background Effects */}
             <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-zinc-100 dark:from-zinc-900/20 to-transparent pointer-events-none"></div>
+                <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-[#441E73]/10 dark:bg-zinc-900/10 rounded-full blur-[120px]"></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#A944FF]/5 dark:bg-white/5 rounded-full blur-[100px]"></div>
             </div>
 
             <HeaderPedidosDisco user={userName} onLogout={handleLogout} codigoConfirmado={codigoConfirmado} />
 
-            <main className="flex-1 p-4 sm:p-8 relative z-10 max-w-7xl mx-auto w-full pt-12">
+            <main className="flex-1 p-6 sm:p-10 relative z-10 max-w-7xl mx-auto w-full pt-16 sm:pt-24">
                 {/* Navigation Action */}
-                <div className="mb-6">
+                <div className="mb-10 sm:mb-16">
                     <button
                         onClick={() => navigate('/')}
-                        className={`${UI_CLASSES.backButton || UI_CLASSES.buttonBack} shadow-none border-zinc-200 dark:border-white/5 bg-zinc-100/50 dark:bg-black/50 hover:bg-zinc-200 dark:hover:bg-zinc-900 text-zinc-900 dark:text-white`}
+                        className="group flex items-center gap-3 px-6 py-3 rounded-2xl bg-[#0E0D23] dark:bg-zinc-800 border border-white/5 text-[#8A7BAF] dark:text-zinc-400 hover:text-white dark:hover:text-white transition-all shadow-2xl active:scale-95 no-print"
                     >
                         <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-                        <span className="font-bold uppercase tracking-wider text-xs">Volver</span>
+                        <span className="font-black uppercase tracking-[0.2em] text-[10px]">🏠 Inicio</span>
                     </button>
                 </div>
 
-                <div className="text-center mb-10">
-                    <h1 className="text-4xl md:text-5xl font-black text-zinc-900 dark:text-white mb-3 tracking-tight uppercase drop-shadow-lg">
-                        Menú Principal
+                <div className="text-center mb-16 sm:mb-24">
+                    <h1 className="text-4xl sm:text-7xl font-black text-white dark:text-white mb-4 tracking-tighter uppercase italic drop-shadow-2xl">
+                        Carta Mandala
                     </h1>
-                    <p className="text-lg text-zinc-500 dark:text-zinc-400 font-light italic">Selecciona los productos para tu pedido</p>
+                    <p className="text-[10px] sm:text-[11px] text-[#A944FF] dark:text-zinc-500 font-black tracking-[0.4em] uppercase opacity-80">Selecciona los productos para tu pedido</p>
                 </div>
 
                 <ProductGridDisco

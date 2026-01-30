@@ -80,7 +80,7 @@ function PedidosPageDisco() {
                             <div className={PAGE_STYLES.card}>
                                 <h2 className={PAGE_STYLES.sectionTitle}>
                                     <div className={PAGE_STYLES.badgeIcon}>
-                                        <ShoppingCart className="text-zinc-900 dark:text-white" size={20} />
+                                        <ShoppingCart size={22} className="text-[#A944FF] dark:text-white" />
                                     </div>
                                     <span className="uppercase">Detalle del Pedido</span>
                                     <span className={PAGE_STYLES.badgeText}>
@@ -104,29 +104,29 @@ function PedidosPageDisco() {
                         {/* 2. Checkout Summary Sidebar */}
                         <div className={PAGE_STYLES.checkoutSection}>
                             <div className={PAGE_STYLES.summaryCard}>
-                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-zinc-900 dark:via-white to-transparent opacity-10 dark:opacity-20"></div>
+                                <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-[#A944FF] to-transparent opacity-50 dark:opacity-30"></div>
 
-                                <h2 className="text-lg sm:text-xl font-black text-zinc-900 dark:text-white mb-4 sm:mb-8 flex items-center gap-3 tracking-tight uppercase">
+                                <h2 className="text-2xl sm:text-3xl font-black text-white dark:text-white mb-8 sm:mb-12 flex items-center gap-5 tracking-tighter uppercase italic">
                                     <div className={PAGE_STYLES.badgeIcon}>
-                                        <CreditCard className="text-zinc-900 dark:text-white" size={18} />
+                                        <CreditCard className="text-[#A944FF] dark:text-white" size={20} />
                                     </div>
                                     Resumen
                                 </h2>
 
                                 {/* Mesa Selection */}
-                                <div className="mb-4 sm:mb-8">
+                                <div className="mb-8 sm:mb-12">
                                     <label htmlFor="mesa-select" className={PAGE_STYLES.inputLabel}>
-                                        Seleccionar Mesa
+                                        Ubicación Pedido
                                     </label>
                                     <div className="relative">
                                         <select
                                             id="mesa-select"
                                             value={selectedMesaId}
                                             onChange={handleMesaChange}
-                                            className={`${PAGE_STYLES.select} ${isTableLocked ? 'border-amber-500/50 text-amber-600 dark:text-amber-100 bg-amber-50 dark:bg-amber-500/10' : ''}`}
+                                            className={`${PAGE_STYLES.select} ${isTableLocked ? 'border-amber-500/50 text-amber-400 bg-amber-500/5' : ''}`}
                                             disabled={mesas.length === 0}
                                         >
-                                            <option value="">-- Seleccionar Mesa --</option>
+                                            <option value="" className="bg-[#0E0D23] dark:bg-black">-- Seleccionar Mesa --</option>
                                             {mesas.map((mesa) => {
                                                 const isOccupied = mesa.ocupada_por_id && mesa.ocupada_por_id !== currentFormattedId;
                                                 const isAdminOverride = role === 'admin';
@@ -139,49 +139,49 @@ function PedidosPageDisco() {
                                                         key={mesa.id} 
                                                         value={mesa.id} 
                                                         disabled={isOccupied && !isAdminOverride}
-                                                        className={isOccupied ? 'text-rose-500 bg-rose-50 dark:bg-zinc-800' : 'text-zinc-900 dark:text-white bg-white dark:bg-zinc-900'}
+                                                        className={isOccupied ? 'text-rose-500 bg-[#0E0D23] dark:bg-zinc-800' : 'text-white dark:text-white bg-[#0E0D23] dark:bg-zinc-900'}
                                                     >
                                                         {label} {isOccupied && isAdminOverride ? '(Admin Override)' : ''}
                                                     </option>
                                                 );
                                             })}
                                         </select>
-                                        <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
-                                            <svg className="w-4 h-4 text-zinc-400 dark:text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                                        <div className="absolute inset-y-0 right-6 flex items-center pointer-events-none">
+                                            <svg className="w-5 h-5 text-[#8A7BAF] dark:text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 9l-7 7-7-7"></path>
                                             </svg>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Financial Summary */}
-                                <div className="space-y-3 py-5 border-t border-zinc-100 dark:border-white/5">
-                                    <div className="flex justify-between text-sm sm:text-base text-zinc-500 dark:text-zinc-400 font-bold uppercase tracking-widest">
+                                <div className="space-y-4 py-8 border-t border-white/5">
+                                    <div className="flex justify-between text-[11px] text-[#8A7BAF] dark:text-zinc-500 font-black uppercase tracking-[0.3em]">
                                         <span>Subtotal</span>
-                                        <span className="text-zinc-900 dark:text-white font-black">${totalOrder.toLocaleString("es-CO")}</span>
+                                        <span className="text-white dark:text-white font-black italic tracking-widest">${totalOrder.toLocaleString("es-CO")}</span>
                                     </div>
-                                    <div className="flex justify-between items-end pt-5 border-t border-zinc-100 dark:border-white/5">
-                                        <span className="text-sm sm:text-lg font-black text-zinc-900 dark:text-white uppercase tracking-tighter">Total</span>
+                                    <div className="flex justify-between items-center pt-8 border-t border-white/5">
+                                        <span className="text-xs sm:text-base font-black text-[#8A7BAF] dark:text-zinc-500 uppercase tracking-[0.4em]">Total</span>
                                         <span className={PAGE_STYLES.totalAmount}>
-                                            ${totalOrder.toLocaleString("es-CO")}
+                                            <span className="text-emerald-400 dark:text-white">${totalOrder.toLocaleString("es-CO")}</span>
                                         </span>
                                     </div>
                                 </div>
 
                                 {/* Main Actions */}
-                                <div className="mt-6 sm:mt-8 space-y-3">
+                                <div className="mt-8 sm:mt-12 space-y-4">
                                     <button
                                         onClick={handleFinalizarPedido}
                                         disabled={orderItems.length === 0}
-                                        className="w-full px-4 py-4 bg-emerald-600 dark:bg-emerald-500/20 border border-emerald-600 dark:border-emerald-500/50 text-white dark:text-emerald-400 rounded-2xl hover:bg-emerald-700 dark:hover:bg-emerald-500 hover:text-white transition-all font-black uppercase text-xs tracking-[0.2em] shadow-xl active:scale-95 flex items-center justify-center gap-3"
+                                        className={PAGE_STYLES.confirmBtn}
                                     >
-                                        Confirmar Pedido <ArrowRight size={18} />
+                                        Confirmar Orden <ArrowRight size={20} />
                                     </button>
                                     <button
                                         onClick={onClearOrder}
-                                        className="w-full px-4 py-4 bg-zinc-100 dark:bg-rose-500/10 border border-zinc-200 dark:border-rose-500/30 text-zinc-500 dark:text-rose-400 rounded-2xl hover:bg-zinc-200 dark:hover:bg-rose-500 hover:text-zinc-900 dark:hover:text-white transition-all font-black uppercase text-xs tracking-[0.2em] active:scale-95"
+                                        className={PAGE_STYLES.cancelBtn}
                                     >
-                                        Cancelar
+                                        Vaciar Pedido
                                     </button>
                                 </div>
                             </div>
