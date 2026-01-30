@@ -92,71 +92,24 @@ export default function PedidosDisco() {
                         <p className="text-zinc-500 font-black tracking-[0.4em] text-[10px] sm:text-xs uppercase">Sistema de Gestión Premium</p>
                     </div>
 
-                    {!showSystemLogin ? (
-                        <>
-                            {/* Profiles Grid */}
-                            <div className="w-full mb-16">
-                                <div className="flex items-center gap-4 mb-10 justify-center">
-                                    <div className="h-px w-8 bg-zinc-800"></div>
-                                    <h3 className="text-zinc-500 uppercase tracking-[0.3em] text-[10px] sm:text-xs font-black">Selecciona tu Perfil</h3>
-                                    <div className="h-px w-8 bg-zinc-800"></div>
-                                </div>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 sm:gap-8 justify-center">
-                                    {profiles.map((profile) => (
-                                        <button
-                                            key={profile.id}
-                                            onClick={() => handleProfileClick(profile)}
-                                            className="group flex flex-col items-center gap-5 p-8 rounded-[2.5rem] bg-zinc-900/40 border border-white/5 hover:border-white/20 hover:bg-zinc-900 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(255,255,255,0.05)] active:scale-95"
-                                        >
-                                            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-zinc-800 to-black border border-white/10 flex items-center justify-center group-hover:border-white/30 transition-all duration-500 shadow-inner overflow-hidden relative">
-                                                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-5 transition-opacity"></div>
-                                                <span className="text-3xl font-black text-zinc-500 group-hover:text-white transition-all duration-500 scale-100 group-hover:scale-110">
-                                                    {profile.nombre.charAt(0).toUpperCase()}
-                                                </span>
-                                            </div>
-                                            <span className="text-xs font-black text-zinc-400 group-hover:text-white uppercase tracking-[0.2em] text-center transition-colors">
-                                                {profile.nombre}
-                                            </span>
-                                        </button>
-                                    ))}
-                                    
-                                    {profiles.length === 0 && (
-                                        <div className="col-span-full text-center py-20 bg-white/5 rounded-[3rem] border-2 border-dashed border-white/10">
-                                            <p className="text-zinc-600 font-bold uppercase tracking-widest text-[10px]">No hay perfiles activos en la base de datos</p>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
+                    {/* System Login Form ONLY */}
+                    <div className="w-full max-w-md animate-fadeIn">
+                        <SystemLoginForm 
+                            username={sysUsername}
+                            password={sysPassword}
+                            onUsernameChange={setSysUsername}
+                            onPasswordChange={setSysPassword}
+                            onSubmit={handleSystemLoginSubmit}
+                            rememberSession={rememberSession}
+                            onRememberSessionChange={setRememberSession}
+                        />
 
-                            {/* Switch to System Login */}
-                            <button 
-                                onClick={() => setShowSystemLogin(true)}
-                                className="px-8 py-3 rounded-full bg-zinc-900 text-zinc-500 hover:text-white transition-all text-[10px] uppercase tracking-[0.3em] font-black border border-white/5 hover:border-white/10 hover:shadow-lg active:scale-95"
-                            >
-                                Ingresar como Administrador / Barra
-                            </button>
-                        </>
-                    ) : (
-                        <div className="w-full max-w-md animate-fadeIn">
-                            <div className="mb-8">
-                                <button 
-                                    onClick={() => setShowSystemLogin(false)}
-                                    className="flex items-center gap-3 text-zinc-500 hover:text-white transition-all text-[10px] uppercase tracking-[0.3em] font-black group"
-                                >
-                                    <span className="text-lg group-hover:-translate-x-1 transition-transform">←</span> Volver a perfiles
-                                </button>
-                            </div>
-                            <SystemLoginForm 
-                                username={sysUsername}
-                                password={sysPassword}
-                                onUsernameChange={setSysUsername}
-                                onPasswordChange={setSysPassword}
-                                onSubmit={handleSystemLoginSubmit}
-                                rememberSession={rememberSession}
-                                onRememberSessionChange={setRememberSession}
-                            />
+                        <div className="mt-12 text-center">
+                            <p className="text-zinc-600 text-[9px] uppercase tracking-[0.4em] font-black opacity-40">
+                                Acceso Restringido • Personal Autorizado
+                            </p>
                         </div>
-                    )}
+                    </div>
                 </div>
             </div>
         );
