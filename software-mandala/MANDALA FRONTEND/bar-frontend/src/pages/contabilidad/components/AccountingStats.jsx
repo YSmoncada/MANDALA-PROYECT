@@ -39,15 +39,16 @@ const AccountingStats = ({ stats }) => {
     ];
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fadeIn transition-all duration-500">
             {items.map((stat, index) => (
-                <div key={index} className={`p-6 rounded-2xl backdrop-blur-md border ${stat.border} ${stat.bg} flex items-center gap-4 transition-transform hover:scale-[1.02] shadow-lg`}>
-                    <div className={`p-3 rounded-xl bg-black/20 ${stat.color}`}>
+                <div key={index} className={`p-8 rounded-[2rem] backdrop-blur-md border border-white/10 dark:border-white/5 bg-[#1A103C]/80 dark:bg-zinc-900/40 flex items-center gap-6 transition-all hover:scale-[1.02] shadow-2xl dark:shadow-none group relative overflow-hidden`}>
+                    <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-white/10 to-transparent"></div>
+                    <div className={`p-4 rounded-2xl bg-[#0E0D23] dark:bg-black/40 ${stat.color} shadow-inner border border-white/5`}>
                         {stat.icon}
                     </div>
                     <div>
-                        <p className="text-[#C2B6D9] text-sm font-medium">{stat.title}</p>
-                        <h3 className="text-2xl font-bold text-white tracking-tight">{stat.value}</h3>
+                        <p className="text-[#8A7BAF] dark:text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em] mb-1">{stat.title}</p>
+                        <h3 className="text-3xl font-black text-white dark:text-zinc-200 tracking-tighter">{stat.value}</h3>
                     </div>
                 </div>
             ))}

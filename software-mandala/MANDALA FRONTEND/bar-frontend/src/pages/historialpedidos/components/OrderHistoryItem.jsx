@@ -43,68 +43,68 @@ const StatusSelector = ({ pedido, onUpdateStatus }) => {
 
 const OrderHistoryItem = ({ pedido, onPrint, onUpdateStatus }) => {
     return (
-        <div className="bg-white dark:bg-zinc-900/30 backdrop-blur-xl border border-zinc-200 dark:border-white/5 rounded-2xl p-6 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-all group shadow-sm dark:shadow-lg relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-zinc-400 dark:from-zinc-500 to-transparent opacity-50"></div>
+        <div className="bg-[#1A103C]/80 dark:bg-zinc-900/30 backdrop-blur-xl border border-white/10 dark:border-white/5 rounded-[2rem] p-6 hover:bg-[#2B0D49] dark:hover:bg-zinc-900/50 transition-all group shadow-2xl dark:shadow-none relative overflow-visible">
+            <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-[#A944FF] dark:from-zinc-500 to-transparent rounded-l-full"></div>
 
-            <div className="flex justify-between items-start mb-6">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                    <h2 className="text-2xl font-black tracking-tight text-zinc-900 dark:text-white">PEDIDO #{pedido.id}</h2>
+            <div className="flex justify-between items-start mb-8">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <h2 className="text-3xl font-black tracking-tight text-white dark:text-zinc-200 uppercase italic">PEDIDO #{pedido.id}</h2>
                     <StatusSelector pedido={pedido} onUpdateStatus={onUpdateStatus} />
                 </div>
                 <button
                     onClick={() => onPrint(pedido)}
-                    className="p-3 rounded-xl bg-zinc-100 dark:bg-white/5 hover:bg-zinc-900 dark:hover:bg-white text-zinc-900 dark:text-white hover:text-white dark:hover:text-black transition-all border border-zinc-200 dark:border-white/10 shadow-sm dark:shadow-lg active:scale-95"
+                    className="p-4 rounded-xl bg-white/5 dark:bg-white/5 hover:bg-white dark:hover:bg-white text-white dark:text-white hover:text-[#1A103C] dark:hover:text-black transition-all border border-white/10 dark:border-white/10 shadow-lg active:scale-95"
                     title="Imprimir Ticket"
                 >
-                    <Printer size={18} />
+                    <Printer size={20} />
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                 {/* Table & Seller Info */}
-                <div className="space-y-3">
-                    <div className="flex items-center gap-3 text-zinc-400 dark:text-zinc-500">
-                        <div className="p-1.5 bg-zinc-100 dark:bg-white/5 rounded-md text-zinc-900 dark:text-white border border-zinc-200 dark:border-none">
-                            <Table size={14} />
+                <div className="space-y-4">
+                    <div className="flex items-center gap-3 text-[#8A7BAF] dark:text-zinc-500">
+                        <div className="p-2 bg-[#0E0D23] dark:bg-white/5 rounded-lg text-white border border-[#6C3FA8]/30 dark:border-none">
+                            <Table size={16} />
                         </div>
-                        <span className="text-xs font-bold uppercase tracking-wider">Detalles de Mesa</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest">Detalles de Mesa</span>
                     </div>
-                    <div className="bg-zinc-50 dark:bg-black/30 border border-zinc-200 dark:border-white/5 rounded-xl p-4 space-y-2">
-                        <div className="flex justify-between">
-                            <span className="text-xs text-zinc-500">Ubicación</span>
-                            <span className="text-sm font-bold text-zinc-900 dark:text-white">Mesa #{pedido.mesa_numero}</span>
+                    <div className="bg-[#0E0D23] dark:bg-black/30 border border-[#6C3FA8]/30 dark:border-white/5 rounded-2xl p-5 space-y-3 shadow-inner">
+                        <div className="flex justify-between items-center">
+                            <span className="text-[10px] font-bold text-[#8A7BAF] dark:text-zinc-500 uppercase tracking-widest">Ubicación</span>
+                            <span className="text-lg font-black text-white dark:text-zinc-200">Mesa #{pedido.mesa_numero}</span>
                         </div>
-                        <div className="flex justify-between">
-                            <span className="text-xs text-zinc-500">Vendedor</span>
-                            <span className="text-sm font-medium text-zinc-900 dark:text-white capitalize">{pedido.mesera_nombre}</span>
+                        <div className="flex justify-between items-center pt-2 border-t border-white/5">
+                            <span className="text-[10px] font-bold text-[#8A7BAF] dark:text-zinc-500 uppercase tracking-widest">Vendedor</span>
+                            <span className="text-xs font-black text-white dark:text-zinc-200 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full">{pedido.mesera_nombre}</span>
                         </div>
-                        <div className="flex justify-between">
-                            <span className="text-xs text-zinc-500">Fecha y Hora</span>
-                            <span className="text-sm text-zinc-600 dark:text-zinc-400 font-mono tracking-tighter">
-                                {pedido.fecha_hora ? new Date(pedido.fecha_hora).toLocaleString() : 'N/A'}
+                        <div className="flex justify-between items-center pt-2 border-t border-white/5">
+                            <span className="text-[10px] font-bold text-[#8A7BAF] dark:text-zinc-500 uppercase tracking-widest">Fecha y Hora</span>
+                            <span className="text-[11px] text-[#A944FF] dark:text-zinc-400 font-mono tracking-tighter">
+                                {pedido.fecha_hora ? new Date(pedido.fecha_hora).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'N/A'}
                             </span>
                         </div>
                     </div>
                 </div>
 
                 {/* Products Detail */}
-                <div className="space-y-3">
-                    <div className="flex items-center gap-3 text-zinc-400 dark:text-zinc-500">
-                        <div className="p-1.5 bg-zinc-100 dark:bg-white/5 rounded-md text-zinc-900 dark:text-white border border-zinc-200 dark:border-none">
-                            <ShoppingBag size={14} />
+                <div className="space-y-4">
+                    <div className="flex items-center gap-3 text-[#8A7BAF] dark:text-zinc-500">
+                        <div className="p-2 bg-[#0E0D23] dark:bg-white/5 rounded-lg text-white border border-[#6C3FA8]/30 dark:border-none">
+                            <ShoppingBag size={16} />
                         </div>
-                        <span className="text-xs font-bold uppercase tracking-wider">Productos Consumidos</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest">Productos Consumidos</span>
                     </div>
-                    <div className="bg-zinc-50 dark:bg-black/30 border border-zinc-200 dark:border-white/5 rounded-xl p-4 space-y-2 max-h-48 overflow-y-auto custom-scrollbar">
+                    <div className="bg-[#0E0D23] dark:bg-black/30 border border-[#6C3FA8]/30 dark:border-white/5 rounded-2xl p-5 space-y-3 max-h-48 overflow-y-auto custom-scrollbar shadow-inner">
                         {Array.isArray(pedido.productos_detalle) && pedido.productos_detalle.map((it, i) => (
-                            <div key={i} className="flex justify-between text-sm py-1.5 border-b border-zinc-100 dark:border-white/5 last:border-0 items-center">
-                                <div className="flex items-center gap-3">
-                                    <span className="w-8 h-8 flex items-center justify-center bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-white rounded-lg text-[10px] font-bold">
+                            <div key={i} className="flex justify-between text-sm py-2 border-b border-white/5 last:border-0 items-center">
+                                <div className="flex items-center gap-4">
+                                    <span className="w-10 h-10 flex items-center justify-center bg-[#441E73] dark:bg-zinc-800 text-white rounded-xl text-[11px] font-black border border-[#A944FF]/20">
                                         {it.cantidad}x
                                     </span>
-                                    <span className="text-zinc-700 dark:text-zinc-300 text-xs font-medium">{it.producto_nombre}</span>
+                                    <span className="text-white dark:text-zinc-300 text-xs font-bold uppercase tracking-tight">{it.producto_nombre}</span>
                                 </div>
-                                <span className="text-zinc-900 dark:text-white font-bold text-xs">
+                                <span className="text-white dark:text-zinc-200 font-black text-sm tracking-tighter">
                                     ${(it.cantidad * (it.producto_precio || 0)).toLocaleString()}
                                 </span>
                             </div>
@@ -113,16 +113,16 @@ const OrderHistoryItem = ({ pedido, onPrint, onUpdateStatus }) => {
                 </div>
             </div>
 
-            <div className="flex justify-between items-center pt-6 border-t border-zinc-100 dark:border-white/5">
+            <div className="flex justify-between items-end pt-8 border-t border-[#6C3FA8]/30 dark:border-white/5">
                 <div className="flex flex-col">
-                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Total del Pedido</span>
-                    <span className="text-3xl font-black text-zinc-900 dark:text-white drop-shadow-md">
-                        <span className="text-base text-zinc-400 dark:text-zinc-500 mr-1 font-bold">$</span>
+                    <span className="text-[10px] font-black text-[#8A7BAF] dark:text-zinc-500 uppercase tracking-widest mb-1">Total de Venta</span>
+                    <span className="text-4xl font-black text-green-400 dark:text-white tracking-tighter drop-shadow-[0_0_15px_rgba(74,222,128,0.2)]">
+                        <span className="text-xl mr-1 font-bold italic">$</span>
                         {parseFloat(pedido.total || 0).toLocaleString()}
                     </span>
                 </div>
-                <div className="opacity-50 group-hover:opacity-100 transition-all flex items-center gap-2 text-[10px] font-bold uppercase tracking-tighter text-zinc-400 dark:text-zinc-600">
-                    <TrendingUp size={12} className="text-emerald-500" /> Venta Confirmada
+                <div className="opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest text-[#A944FF] dark:text-zinc-600 border border-white/10">
+                    <TrendingUp size={14} className="text-green-400" /> Venta Finalizada
                 </div>
             </div>
         </div>

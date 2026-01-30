@@ -43,12 +43,8 @@ const HistorialPedidosPageDisco = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-white dark:bg-black text-zinc-900 dark:text-white selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300 overflow-x-hidden relative" style={{ WebkitOverflowScrolling: 'touch' }}>
-            {/* Background Glows */}
-            <div className="fixed inset-0 pointer-events-none overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-zinc-100 dark:from-zinc-900/20 to-transparent pointer-events-none"></div>
-            </div>
-
+        <div className="min-h-screen flex flex-col bg-transparent text-white dark:text-zinc-200 selection:bg-purple-500/30 transition-colors duration-500 overflow-x-hidden relative" style={{ WebkitOverflowScrolling: 'touch' }}>
+            
             {/* Hidden Print Section */}
             <TicketPrinter pedido={pedidoAImprimir} empresaConfig={empresaConfig} />
 
@@ -57,7 +53,7 @@ const HistorialPedidosPageDisco = () => {
                 <div className="fixed top-6 left-6 right-6 z-50 flex justify-between items-center no-print">
                     <button
                         onClick={() => navigate('/')}
-                        className={`${UI_CLASSES.buttonBack} backdrop-blur-xl shadow-none border-zinc-200 dark:border-white/5 bg-white/50 dark:bg-black/50 hover:bg-zinc-200 dark:hover:bg-zinc-900 text-zinc-900 dark:text-white`}
+                        className={`${UI_CLASSES.buttonBack} backdrop-blur-xl shadow-none border-white/10 dark:border-white/5 bg-white/5 dark:bg-black/50 hover:bg-white/10 dark:hover:bg-zinc-900 text-white dark:text-white`}
                     >
                         <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" /> 
                         <span className="font-bold uppercase tracking-wider text-xs">Volver</span>

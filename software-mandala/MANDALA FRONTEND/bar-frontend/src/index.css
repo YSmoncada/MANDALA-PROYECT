@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  /* Lux Theme (Disco Purple/Pink) - From Commit 8f8f4af */
-  --bg-primary: linear-gradient(135deg, #111827 0%, #581c87 50%, #000000 100%); /* Gray-900, Purple-900, Black */
+  /* Lux Theme (Vibrant Purple Disco) - Based on commit 8f8f4af */
+  --bg-primary: linear-gradient(135deg, #09090b 0%, #3b0764 50%, #1e1b4b 100%); /* Zinc-950, Purple-950, Indigo-950 */
   --text-primary: #ffffff;
-  --bg-secondary: rgba(168, 85, 247, 0.1); /* purple-500/10 */
+  --bg-secondary: rgba(168, 85, 247, 0.15); /* Purple-500 tint */
   --border-primary: rgba(255, 255, 255, 0.1);
-  --accent-color: #a855f7; /* purple-500 */
+  --accent-primary: #a855f7; /* Purple-500 */
 }
 
 .dark {
-  /* Nox Theme (Professional Night Mode) */
+  /* Nox Theme (Minimalist Night Mode) */
   --bg-primary: #000000;
-  --text-primary: #e4e4e7; /* zinc-200 */
-  --bg-secondary: #09090b; /* zinc-950 */
+  --text-primary: #e4e4e7; /* Zinc-200 */
+  --bg-secondary: #09090b; /* Zinc-950 */
   --border-primary: rgba(255, 255, 255, 0.05);
-  --accent-color: #ffffff;
+  --accent-primary: #ffffff;
 }
 
 html, body {
@@ -25,7 +25,7 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: 'Inter', system-ui, sans-serif;
-  transition: background 0.5s ease, color 0.3s ease;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   min-height: 100vh;
 }
 

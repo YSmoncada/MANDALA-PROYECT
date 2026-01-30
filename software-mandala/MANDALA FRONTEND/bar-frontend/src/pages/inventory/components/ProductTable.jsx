@@ -130,43 +130,43 @@ const ProductTable = memo(({ productos, onEdit, onDelete, onMovimiento }) => {
             </div>
 
             {viewMode === 'table' ? (
-                <div className="overflow-x-auto rounded-[2rem] border border-zinc-200 dark:border-white/5 shadow-xl dark:shadow-none bg-white dark:bg-transparent transition-all duration-500">
+                <div className="overflow-x-auto rounded-[2rem] border border-white/10 dark:border-white/5 shadow-2xl dark:shadow-none bg-[#1A103C]/80 dark:bg-transparent backdrop-blur-md transition-all duration-500">
                     <table className="w-full text-left text-sm">
-                        <thead className="bg-zinc-50 dark:bg-black/40 text-zinc-400 dark:text-zinc-500 font-black uppercase tracking-[0.2em] text-[10px] border-b border-zinc-100 dark:border-white/5">
+                        <thead className="bg-[#0E0D23] dark:bg-black/40 text-[#8A7BAF] dark:text-zinc-500 font-black uppercase tracking-[0.3em] text-[10px] border-b border-white/5">
                             <tr>
-                                <th className="px-6 py-6">Producto</th>
-                                <th className="px-6 py-6">Categoría</th>
-                                <th className="px-6 py-6 text-center">Gestión Inventario</th>
-                                <th className="px-6 py-6 text-center">Valor Comercial</th>
-                                <th className="px-6 py-6 text-right">Acciones</th>
+                                <th className="px-8 py-7">Producto</th>
+                                <th className="px-8 py-7">Categoría</th>
+                                <th className="px-8 py-7 text-center">Gestión Inventario</th>
+                                <th className="px-8 py-7 text-center">Valor Comercial</th>
+                                <th className="px-8 py-7 text-right">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-zinc-50 dark:divide-white/[0.03] transition-colors duration-300">
+                        <tbody className="divide-y divide-white/[0.03] transition-colors duration-300">
                             {productos.map((producto) => (
-                                <tr key={producto.id} className="hover:bg-zinc-50/50 dark:hover:bg-white/[0.02] transition-colors group">
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-4">
+                                <tr key={producto.id} className="hover:bg-white/[0.03] dark:hover:bg-white/[0.01] transition-colors group">
+                                    <td className="px-8 py-6">
+                                        <div className="flex items-center gap-5">
                                             {producto.imagen ? (
-                                                <div className="p-1.5 bg-zinc-50 dark:bg-white/5 rounded-xl border border-zinc-100 dark:border-white/10 group-hover:border-zinc-300 dark:group-hover:border-white/20 transition-all duration-500">
-                                                    <img src={producto.imagen} alt={producto.nombre} className="w-12 h-12 md:w-14 md:h-14 rounded-lg object-contain" />
+                                                <div className="p-2 bg-white/5 dark:bg-white/5 rounded-2xl border border-white/10 group-hover:border-[#A944FF] dark:group-hover:border-white/20 transition-all duration-500 shadow-xl">
+                                                    <img src={producto.imagen} alt={producto.nombre} className="w-14 h-14 rounded-xl object-contain" />
                                                 </div>
                                             ) : (
-                                                <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-zinc-50 dark:bg-zinc-900 flex items-center justify-center border border-zinc-200 dark:border-white/5 shadow-inner">
-                                                    <span className="text-zinc-300 dark:text-zinc-700 font-black text-xl">{producto.nombre?.charAt(0)}</span>
+                                                <div className="w-16 h-16 rounded-2xl bg-[#0E0D23] dark:bg-zinc-900 flex items-center justify-center border border-white/5 shadow-inner group-hover:bg-[#A944FF]/20 group-hover:text-white transition-all">
+                                                    <span className="text-[#8A7BAF] dark:text-zinc-700 font-black text-2xl uppercase">{producto.nombre?.charAt(0)}</span>
                                                 </div>
                                             )}
                                             <div className="flex flex-col">
-                                                <span className="font-black text-zinc-900 dark:text-white group-hover:text-black dark:group-hover:text-white transition-colors uppercase text-xs md:text-sm tracking-tight">{producto.nombre}</span>
-                                                <span className="text-[10px] text-zinc-400 dark:text-zinc-600 font-bold uppercase tracking-widest">{producto.unidad}</span>
+                                                <span className="font-black text-white dark:text-zinc-200 group-hover:text-[#A944FF] dark:group-hover:text-white transition-colors uppercase text-sm tracking-tighter italic">{producto.nombre}</span>
+                                                <span className="text-[10px] text-[#8A7BAF] dark:text-zinc-600 font-black uppercase tracking-[0.2em] mt-0.5">{producto.unidad}</span>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-5">
-                                        <span className="px-4 py-1.5 rounded-full bg-zinc-100 dark:bg-white/5 text-zinc-500 dark:text-zinc-400 text-[10px] font-black uppercase border border-zinc-200 dark:border-white/10 whitespace-nowrap tracking-widest group-hover:bg-zinc-900 dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-black transition-all duration-500">
+                                    <td className="px-8 py-6">
+                                        <span className="px-4 py-1.5 rounded-xl bg-[#0E0D23] dark:bg-white/5 text-[#8A7BAF] dark:text-zinc-500 text-[9px] font-black uppercase border border-white/10 dark:border-white/10 whitespace-nowrap tracking-[0.2em] group-hover:border-[#A944FF] transition-all">
                                             {producto.categoria}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-5">
+                                    <td className="px-8 py-6">
                                         <div className="flex justify-center">
                                             <StockStatus 
                                                 stock={producto.stock} 
@@ -175,10 +175,10 @@ const ProductTable = memo(({ productos, onEdit, onDelete, onMovimiento }) => {
                                             />
                                         </div>
                                     </td>
-                                    <td className="px-3 md:px-6 py-3 text-center font-bold text-zinc-900 dark:text-white text-sm md:text-lg">
+                                    <td className="px-8 py-6 text-center font-black text-green-400 dark:text-white text-lg tracking-tighter">
                                         ${Number(producto.precio).toLocaleString('es-CO', { maximumFractionDigits: 0 })}
                                     </td>
-                                    <td className="px-3 md:px-6 py-3 text-right">
+                                    <td className="px-8 py-6 text-right">
                                         {renderActionButtons(producto)}
                                     </td>
                                 </tr>
@@ -187,37 +187,39 @@ const ProductTable = memo(({ productos, onEdit, onDelete, onMovimiento }) => {
                     </table>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 animate-fadeIn transition-all duration-500">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-fadeIn transition-all duration-500">
                     {productos.map((producto) => (
-                        <div key={producto.id} className="bg-[#1A103C]/80 dark:bg-zinc-900/30 border border-white/5 dark:border-white/5 rounded-2xl p-4 md:p-6 hover:shadow-2xl dark:hover:shadow-none transition-all duration-500 group flex flex-col justify-between backdrop-blur-md hover:scale-[1.02]">
+                        <div key={producto.id} className="bg-[#1A103C]/80 dark:bg-zinc-900/30 border border-white/10 dark:border-white/5 rounded-[2.5rem] p-6 hover:shadow-[0_40px_80px_-20px_rgba(169,68,255,0.2)] dark:hover:shadow-none transition-all duration-500 group flex flex-col justify-between backdrop-blur-xl hover:scale-[1.03] hover:border-[#A944FF]/50 relative overflow-hidden">
+                             <div className="absolute top-0 right-0 w-32 h-32 bg-[#A944FF]/5 blur-3xl rounded-full -mr-16 -mt-16 pointer-events-none"></div>
+                             
                              <div>
-                                <div className="flex justify-between items-start mb-4">
-                                    <span className="px-3 py-1 rounded-full bg-[#A944FF]/10 dark:bg-zinc-800/50 text-[#A944FF] dark:text-zinc-500 text-[9px] md:text-[10px] font-black uppercase border border-[#A944FF]/30 dark:border-white/10 tracking-widest transition-all">
+                                <div className="flex justify-between items-start mb-6">
+                                    <span className="px-4 py-2 rounded-xl bg-[#0E0D23] dark:bg-zinc-800/50 text-[#8A7BAF] dark:text-zinc-500 text-[9px] font-black uppercase border border-white/5 dark:border-white/10 tracking-widest">
                                         {producto.categoria}
                                     </span>
                                     {renderActionButtons(producto, 16)}
                                 </div>
-                                <div className="flex flex-col items-center mb-4">
-                                    <div className="w-24 h-24 md:w-32 md:h-32 rounded-xl bg-white dark:bg-zinc-800 flex items-center justify-center border border-white/10 dark:border-white/10 shadow-inner mb-3 group-hover:scale-110 transition-transform duration-500">
+                                <div className="flex flex-col items-center mb-8 relative">
+                                    <div className="w-32 h-32 md:w-40 md:h-40 rounded-[2rem] bg-white dark:bg-zinc-800 flex items-center justify-center border border-white/10 dark:border-white/10 shadow-2xl mb-5 group-hover:scale-110 transition-transform duration-700">
                                         {producto.imagen ? (
-                                            <img src={producto.imagen} alt={producto.nombre} className="w-full h-full object-contain p-2" />
+                                            <img src={producto.imagen} alt={producto.nombre} className="w-full h-full object-contain p-4 drop-shadow-lg" />
                                         ) : (
-                                            <span className="text-3xl font-black text-zinc-200 dark:text-zinc-700 uppercase">{producto.nombre?.charAt(0)}</span>
+                                            <span className="text-4xl font-black text-zinc-200 dark:text-zinc-700 uppercase italic tracking-tighter">{producto.nombre?.charAt(0)}</span>
                                         )}
                                     </div>
-                                    <h3 className="font-bold dark:font-black text-base md:text-lg text-white dark:text-zinc-200 uppercase tracking-tight text-center">{producto.nombre}</h3>
-                                    <p className="text-[10px] text-[#8A7BAF] dark:text-zinc-600 font-bold dark:font-black uppercase tracking-widest mt-1">{producto.unidad}</p>
+                                    <h3 className="font-black text-xl text-white dark:text-zinc-200 uppercase tracking-tighter text-center italic leading-tight px-2">{producto.nombre}</h3>
+                                    <p className="text-[10px] text-[#8A7BAF] dark:text-zinc-600 font-black uppercase tracking-[0.3em] mt-2 italic">{producto.unidad}</p>
                                 </div>
                             </div>
-                            <div className="bg-[#0E0D23] dark:bg-zinc-900/50 rounded-xl p-4 flex items-center justify-between border border-[#6C3FA8]/30 dark:border-white/5 shadow-inner">
+                            <div className="bg-[#0E0D23] dark:bg-zinc-950/40 rounded-3xl p-5 flex items-center justify-between border border-white/10 dark:border-white/5 shadow-inner">
                                 <StockStatus 
                                     stock={producto.stock} 
                                     min={producto.stock_minimo} 
                                     max={producto.stock_maximo} 
                                 />
                                 <div className="text-right">
-                                    <p className="text-[9px] text-[#8A7BAF] dark:text-zinc-500 font-bold uppercase tracking-widest mb-1">Precio</p>
-                                    <p className="text-lg md:text-xl font-black text-green-400 dark:text-white tracking-tighter">
+                                    <p className="text-[9px] text-[#A944FF] dark:text-zinc-600 font-black uppercase tracking-widest mb-1 italic">Precio Final</p>
+                                    <p className="text-2xl font-black text-green-400 dark:text-white tracking-tighter">
                                         ${Number(producto.precio).toLocaleString('es-CO', { maximumFractionDigits: 0 })}
                                     </p>
                                 </div>

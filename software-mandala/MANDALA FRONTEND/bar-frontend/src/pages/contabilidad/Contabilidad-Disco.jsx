@@ -80,39 +80,36 @@ export default function ContabilidadDisco() {
     const fetchReporteVentas = fetchDashboardData;
 
     return (
-        <div className="min-h-screen flex flex-col bg-white dark:bg-black text-zinc-900 dark:text-white selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300">
-            {/* Background Glows */}
-            <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-zinc-100/50 dark:from-zinc-900/20 to-transparent pointer-events-none"></div>
-            </div>
-
-            {/* Back Button */}
-            <div className="absolute top-6 left-6 z-50">
+        <div className="min-h-screen flex flex-col bg-transparent text-white dark:text-zinc-200 selection:bg-purple-500/30 transition-colors duration-500 overflow-x-hidden relative">
+            
+            {/* Header Controls */}
+            <div className="fixed top-6 left-6 right-6 z-50 flex justify-between items-center no-print px-4 sm:px-0">
                 <button
                     onClick={() => navigate("/")}
-                    className={`${UI_CLASSES.buttonBack} shadow-sm dark:shadow-none border-zinc-200 dark:border-white/5 bg-white/50 dark:bg-black/50 hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400`}
+                    className={`${UI_CLASSES.buttonBack} backdrop-blur-xl shadow-none border-white/10 dark:border-white/5 bg-white/5 dark:bg-black/50 hover:bg-white/10 dark:hover:bg-zinc-900 text-white dark:text-white`}
                 >
                     <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
                     <span className="font-bold uppercase tracking-wider text-xs">Volver</span>
                 </button>
+                <ThemeToggle />
             </div>
 
-            <div className="flex-1 p-8 pt-20 relative z-10 max-w-7xl mx-auto w-full">
-                <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
-                    <div>
-                        <h1 className="text-4xl font-black text-zinc-900 dark:text-white mb-2 uppercase drop-shadow-sm dark:drop-shadow-lg tracking-tight">Contabilidad</h1>
-                        <p className="text-zinc-500 dark:text-zinc-400 font-medium">Resumen financiero y movimientos</p>
+            <div className="flex-1 p-4 sm:p-8 pt-24 relative z-10 max-w-7xl mx-auto w-full">
+                <div className="flex flex-col md:flex-row items-center justify-between mb-12 gap-6">
+                    <div className="text-center md:text-left">
+                        <h1 className="text-4xl sm:text-6xl font-black text-white dark:text-white mb-2 uppercase drop-shadow-2xl tracking-tighter italic">Contabilidad</h1>
+                        <p className="text-[#8A7BAF] dark:text-zinc-500 font-black uppercase tracking-[0.4em] text-[10px]">Resumen financiero y movimientos</p>
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <div className="flex bg-zinc-100 dark:bg-zinc-900 p-1 rounded-xl border border-zinc-200 dark:border-white/5 backdrop-blur-md">
+                        <div className="flex bg-[#1A103C]/50 dark:bg-zinc-900 p-1.5 rounded-[1.25rem] border border-white/10 dark:border-white/5 backdrop-blur-md transition-all duration-500 shadow-2xl">
                             {tabs.map(tab => (
                                 <button
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm transition-all ${activeTab === tab.id
-                                        ? 'bg-white dark:bg-zinc-800 text-black dark:text-white shadow-md dark:shadow-none border border-zinc-200 dark:border-white/10'
-                                        : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-800'
+                                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all ${activeTab === tab.id
+                                        ? 'bg-[#A944FF] dark:bg-zinc-100 text-white dark:text-black shadow-lg border border-white/20 dark:border-transparent'
+                                        : 'text-[#8A7BAF] dark:text-zinc-500 hover:text-white dark:hover:text-white hover:bg-white/5'
                                         }`}
                                 >
                                     {tab.icon}

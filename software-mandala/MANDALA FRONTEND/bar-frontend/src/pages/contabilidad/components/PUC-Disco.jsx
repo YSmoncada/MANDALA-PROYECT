@@ -147,31 +147,27 @@ const AccountNode = ({ node, level = 0 }) => {
     const hasChildren = node.children && node.children.length > 0;
 
     return (
-        <div className="select-none">
+        <div className="select-none group">
             <div
-                className={`flex items-center gap-2 py-3 px-4 hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors cursor-pointer border-b border-zinc-100 dark:border-white/5 ${level === 0 ? 'bg-zinc-50 dark:bg-white/5 font-black text-zinc-900 dark:text-white uppercase tracking-tight' : 'text-zinc-600 dark:text-zinc-400'}`}
-                style={{ paddingLeft: `${level * 20 + 16}px` }}
+                className={`flex items-center gap-2 py-4 px-6 hover:bg-white/5 dark:hover:bg-white/5 transition-all cursor-pointer border-b border-white/5 dark:border-white/5 ${level === 0 ? 'bg-white/5 dark:bg-zinc-950/40 font-black text-white dark:text-zinc-100 uppercase tracking-widest' : 'text-[#8A7BAF] dark:text-zinc-500'}`}
+                style={{ paddingLeft: `${level * 24 + 24}px` }}
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <div className="w-6 flex justify-center">
+                <div className="w-8 flex justify-center">
                     {hasChildren ? (
-                        isOpen ? <ChevronDown size={16} className="text-zinc-900 dark:text-white" /> : <ChevronRight size={16} className="text-zinc-400 dark:text-zinc-600" />
+                        isOpen ? <ChevronDown size={18} className="text-[#A944FF] dark:text-zinc-400" /> : <ChevronRight size={18} className="text-[#8A7BAF] dark:text-zinc-700" />
                     ) : (
                         <div className="w-4" />
                     )}
                 </div>
 
-                <div className="mr-2 text-zinc-900 dark:text-white">
+                <div className="mr-3 text-[#A944FF] dark:text-zinc-400 group-hover:scale-110 transition-transform">
                     {level === 0 ? <Folder size={18} /> : <FileText size={16} />}
                 </div>
 
-                <div className="flex-1 flex items-center gap-3">
-                    <span className="font-mono text-xs font-black bg-zinc-900 dark:bg-white text-white dark:text-black px-2 py-0.5 rounded tracking-tighter">{node.code}</span>
-                    <span className={level === 0 ? 'text-sm' : 'text-xs font-medium'}>{node.name}</span>
-                </div>
-
-                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    {/* Placeholder actions */}
+                <div className="flex-1 flex items-center gap-4">
+                    <span className="font-mono text-[10px] font-black bg-[#441E73] dark:bg-zinc-800 text-white dark:text-zinc-400 px-3 py-1 rounded-lg tracking-tighter shadow-lg border border-white/10">{node.code}</span>
+                    <span className={`${level === 0 ? 'text-xs' : 'text-[11px] font-bold'} uppercase italic tracking-tight`}>{node.name}</span>
                 </div>
             </div>
 
@@ -190,44 +186,44 @@ export default function PUCDisco() {
     const [searchTerm, setSearchTerm] = useState("");
 
     return (
-        <div className="w-full bg-white dark:bg-zinc-900/30 backdrop-blur-xl border border-zinc-200 dark:border-white/10 rounded-3xl overflow-hidden flex flex-col h-[600px] shadow-sm dark:shadow-2xl">
+        <div className="w-full bg-[#1A103C]/80 dark:bg-zinc-900/30 backdrop-blur-xl border border-white/10 dark:border-white/5 rounded-[2.5rem] overflow-hidden flex flex-col h-[700px] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] transition-all duration-500">
             {/* Header / Toolbar */}
-            <div className="p-6 border-b border-zinc-200 dark:border-white/10 flex flex-col sm:flex-row gap-4 justify-between items-center bg-zinc-50 dark:bg-zinc-950/50">
+            <div className="p-8 border-b border-white/10 dark:border-white/5 flex flex-col lg:flex-row gap-6 justify-between items-center bg-white/5 dark:bg-zinc-950/50">
                 <div>
-                    <h2 className="text-xl font-black text-zinc-900 dark:text-white flex items-center gap-2 uppercase tracking-tight">
-                        <Folder className="text-zinc-900 dark:text-white" />
+                    <h2 className="text-2xl font-black text-white dark:text-white flex items-center gap-4 uppercase tracking-tighter italic">
+                        <Folder className="text-[#A944FF] dark:text-zinc-200" />
                         Plan Único de Cuentas (PUC)
                     </h2>
-                    <p className="text-zinc-500 dark:text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Estructura contable del establecimiento</p>
+                    <p className="text-[#8A7BAF] dark:text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em]">Estructura contable del establecimiento</p>
                 </div>
 
-                <div className="flex items-center gap-3 w-full sm:w-auto">
-                    <div className="relative flex-1 sm:w-64">
-                        <Search className="absolute left-3 top-2.5 text-zinc-400 dark:text-zinc-600" size={18} />
+                <div className="flex items-center gap-4 w-full lg:w-auto">
+                    <div className="relative flex-1 lg:w-80 group">
+                        <Search className="absolute left-4 top-3.5 text-[#8A7BAF] dark:text-zinc-700 group-focus-within:text-[#A944FF] transition-colors" size={18} />
                         <input
                             type="text"
-                            placeholder="Buscar cuenta..."
-                            className="w-full pl-10 pr-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-zinc-400 dark:focus:border-white/20 transition-all text-sm font-medium"
+                            placeholder="Buscar cuenta por nombre o código..."
+                            className="w-full pl-12 pr-6 py-3.5 rounded-2xl bg-[#0E0D23] dark:bg-zinc-900 border border-white/10 dark:border-white/5 text-white dark:text-white placeholder-[#8A7BAF]/30 dark:placeholder-zinc-800 focus:outline-none focus:border-[#A944FF] dark:focus:border-white/20 transition-all text-xs font-black uppercase tracking-widest shadow-inner"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                    <button className="bg-zinc-900 dark:bg-white text-white dark:text-black p-2.5 rounded-xl transition-all hover:scale-105 shadow-lg active:scale-95">
-                        <Plus size={20} weight="bold" />
+                    <button className="bg-[#441E73] dark:bg-white text-white dark:text-black p-4 rounded-2xl transition-all hover:scale-105 shadow-2xl active:scale-95 border border-white/10 dark:border-transparent">
+                        <Plus size={20} className="font-black" />
                     </button>
                 </div>
             </div>
 
             {/* Tree View */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar p-2">
+            <div className="flex-1 overflow-y-auto custom-scrollbar">
                 {initialPUC.map((node) => (
                     <AccountNode key={node.code} node={node} />
                 ))}
             </div>
 
             {/* Footer */}
-            <div className="p-4 bg-zinc-50 dark:bg-zinc-950/50 border-t border-zinc-200 dark:border-white/10 text-center text-zinc-400 dark:text-zinc-600 text-[10px] font-black uppercase tracking-widest">
-                Total Cuentas: {initialPUC.length} Clases principales
+            <div className="p-5 bg-white/5 dark:bg-zinc-950/50 border-t border-white/10 dark:border-white/5 text-center text-[#8A7BAF] dark:text-zinc-600 text-[10px] font-black uppercase tracking-[0.4em]">
+                Total Cuentas: {initialPUC.length} Clases principales registradas
             </div>
         </div>
     );

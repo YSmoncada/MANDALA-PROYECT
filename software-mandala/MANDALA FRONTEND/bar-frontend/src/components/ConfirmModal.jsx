@@ -8,43 +8,43 @@ const ConfirmModal = ({ open, onClose, onConfirm, title, message, confirmText = 
     const isDanger = type === "danger";
 
     return (
-        <div className={`fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10 bg-black/80 backdrop-blur-md ${UI_CLASSES.fadeIn}`}>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-xl animate-fadeIn">
             <div 
-                className={`${UI_CLASSES.glassCard} relative w-full max-w-sm bg-[#1A103C] p-0 overflow-hidden transform transition-all ${UI_CLASSES.scaleIn} shadow-[0_20px_60px_rgba(0,0,0,0.7)] border-white/20`}
+                className="relative w-full max-w-sm bg-[#1A103C]/95 dark:bg-zinc-900 border border-white/20 dark:border-white/5 rounded-[2.5rem] p-0 overflow-hidden transform transition-all animate-scaleIn shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)]"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header/Banner decorative */}
-                <div className={`h-2 w-full ${isDanger ? 'bg-rose-600' : 'bg-blue-500'}`} />
+                <div className={`h-1.5 w-full ${isDanger ? 'bg-gradient-to-r from-transparent via-rose-500 to-transparent' : 'bg-gradient-to-r from-transparent via-[#A944FF] to-transparent'}`} />
                 
                 <button 
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+                    className="absolute top-6 right-6 text-white/50 hover:text-white transition-all bg-white/5 hover:bg-white/10 p-2 rounded-xl"
                 >
-                    <X size={20} />
+                    <X size={18} />
                 </button>
 
-                <div className="p-8 flex flex-col items-center text-center">
-                    <div className={`mb-4 p-4 rounded-full ${isDanger ? 'bg-rose-500/10 text-rose-500' : 'bg-blue-500/10 text-blue-500'}`}>
-                        {isDanger ? <AlertTriangle size={40} /> : <Trash2 size={40} />}
+                <div className="p-10 flex flex-col items-center text-center">
+                    <div className={`mb-6 p-6 rounded-3xl ${isDanger ? 'bg-rose-500/10 text-rose-500' : 'bg-[#A944FF]/10 text-[#A944FF]'} border border-white/5 shadow-inner`}>
+                        {isDanger ? <AlertTriangle size={48} strokeWidth={1.5} /> : <Trash2 size={48} strokeWidth={1.5} />}
                     </div>
 
-                    <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-                    <p className="text-gray-400 mb-8 leading-relaxed">
+                    <h3 className="text-2xl font-black text-white mb-3 uppercase tracking-tighter italic">{title}</h3>
+                    <p className="text-[#8A7BAF] dark:text-zinc-500 mb-10 leading-relaxed text-sm font-medium uppercase tracking-widest">
                         {message}
                     </p>
 
-                    <div className="flex flex-col sm:flex-row gap-3 w-full">
-                        <button
-                            onClick={onClose}
-                            className={UI_CLASSES.buttonSecondary}
-                        >
-                            {cancelText}
-                        </button>
-                        <button
+                    <div className="flex flex-col gap-4 w-full">
+                         <button
                             onClick={onConfirm}
-                            className={`flex-1 ${isDanger ? UI_CLASSES.buttonDanger : UI_CLASSES.buttonPrimary}`}
+                            className={`w-full py-4 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] transition-all transform active:scale-95 shadow-2xl ${isDanger ? 'bg-rose-600 hover:bg-rose-500 text-white' : 'bg-[#441E73] dark:bg-zinc-100 dark:text-black hover:bg-[#A944FF] text-white'}`}
                         >
                             {confirmText}
+                        </button>
+                        <button
+                            onClick={onClose}
+                            className="w-full py-4 rounded-2xl font-bold uppercase tracking-[0.2em] text-[10px] text-white/50 hover:text-white transition-all bg-white/5 hover:bg-white/10 border border-white/5"
+                        >
+                            {cancelText}
                         </button>
                     </div>
                 </div>
