@@ -1,22 +1,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Trash2, Users, Table } from 'lucide-react';
+import { ArrowLeft, Table } from 'lucide-react';
 import MesaForm from './MesaForm';
-import toast from 'react-hot-toast';
 import { usePedidosContext } from '../../context/PedidosContext';
 import { useMesasManagement } from '../../hooks/useMesasManagement';
 import MesaCard from './components/MesaCard';
-import { UI_CLASSES } from '../../constants/ui';
-
-/**
- * Premium Management Page for Mesas and Staff Profiles.
- * Organized with custom hooks and sub-components.
- */
+import { useTheme } from '../../context/ThemeContext';
 import ThemeToggle from '../../components/ThemeToggle';
 
 const MesasPageDisco = () => {
     const navigate = useNavigate();
-    const { auth } = usePedidosContext();
+    const { isDark } = useTheme();
     const { 
         mesas, 
         loading, 
@@ -26,52 +20,49 @@ const MesasPageDisco = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black text-zinc-900 dark:text-white transition-colors duration-300">
-                <div className="relative">
-                    <div className="w-16 h-16 border-4 border-zinc-100 dark:border-zinc-800 border-t-zinc-900 dark:border-t-white rounded-full animate-spin mx-auto mb-4 shadow-xl"></div>
-                </div>
-                <p className="ml-4 font-bold tracking-widest text-zinc-400 dark:text-zinc-500 uppercase text-xs animate-pulse">Cargando...</p>
+            <div className="min-h-screen flex flex-col items-center justify-center bg-transparent text-white selection:bg-[#A944FF]/30 transition-all duration-500">
+                <div className="w-24 h-24 border-4 border-[#6C3FA8]/20 dark:border-zinc-800 border-t-[#A944FF] dark:border-t-white rounded-[2rem] animate-spin mb-8 shadow-2xl"></div>
+                <p className="font-black tracking-[0.4em] text-[#A944FF] dark:text-zinc-500 uppercase text-[11px] animate-pulse">Sincronizando Salón...</p>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen flex flex-col bg-transparent text-white dark:text-zinc-200 selection:bg-purple-500/30 transition-colors duration-500 overflow-x-hidden">
-            {/* Background Aesthetics - Lux only */}
-            {!auth.isDark && (
-                <div className="fixed inset-0 pointer-events-none">
-                    <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-purple-900/20 to-transparent pointer-events-none"></div>
-                </div>
-            )}
+        <div className="min-h-screen flex flex-col bg-transparent text-white dark:text-zinc-200 selection:bg-[#A944FF]/30 transition-colors duration-500 overflow-x-hidden relative">
+            
+            {/* Ambient Background Effects */}
+            <div className="fixed inset-0 pointer-events-none">
+                <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-[#441E73]/10 dark:bg-zinc-900/10 rounded-full blur-[120px]"></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#A944FF]/5 dark:bg-white/5 rounded-full blur-[100px]"></div>
+            </div>
 
-            <main className="flex-1 p-4 pt-24 pb-20 sm:p-8 relative z-10 max-w-7xl mx-auto w-full">
+            <main className="flex-1 p-4 pt-24 pb-20 sm:p-10 relative z-10 max-w-7xl mx-auto w-full">
                 {/* Header Controls */}
-                <div className="fixed top-6 left-6 right-6 z-50 flex justify-between items-center no-print px-4 sm:px-0">
+                <div className="fixed top-8 left-8 right-8 z-50 flex justify-between items-center no-print">
                     <button
                         onClick={() => navigate("/home-disco")}
-                        className={UI_CLASSES.buttonBack}
+                        className="group flex items-center gap-3 px-6 py-3 rounded-2xl bg-[#0E0D23] dark:bg-zinc-800 border border-white/10 dark:border-white/5 text-[#8A7BAF] dark:text-zinc-400 hover:text-white dark:hover:text-white transition-all shadow-2xl active:scale-95 no-print"
                     >
                         <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-                        <span className="font-bold uppercase tracking-wider text-xs">Volver</span>
+                        <span className="font-black uppercase tracking-[0.2em] text-[10px]">🏠 Inicio</span>
                     </button>
                     <ThemeToggle />
                 </div>
 
-                <div className="text-center mb-16 pt-8 animate-fadeIn">
-                    <h1 className="text-4xl sm:text-6xl font-black mb-4 text-zinc-900 dark:text-white tracking-tight uppercase drop-shadow-lg italic">
-                        Mesas
+                <div className="text-center mb-20 pt-12 animate-scaleIn">
+                    <h1 className="text-5xl sm:text-8xl font-black mb-4 text-white dark:text-white tracking-tighter uppercase italic drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
+                        Salón Mandala
                     </h1>
-                    <p className="text-sm font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-[0.4em]">Gestión de Salón</p>
-                    <div className="h-1 w-24 bg-zinc-900 dark:bg-white mx-auto mt-8 opacity-10 dark:opacity-20 rounded-full"></div>
+                    <p className="text-[11px] font-black text-[#A944FF] dark:text-zinc-500 uppercase tracking-[0.5em] opacity-80">Configuración de Mesas y Distribución</p>
                 </div>
 
-                <div className="space-y-6 max-w-5xl mx-auto animate-fadeIn">
-                    <div className="bg-[#1A103C]/80 dark:bg-zinc-900/20 backdrop-blur-xl border border-white/10 dark:border-white/5 rounded-[3rem] p-6 sm:p-10 shadow-2xl dark:shadow-none relative overflow-hidden group">
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#A944FF]/20 dark:via-white/10 to-transparent text-white"></div>
+                <div className="space-y-6 max-w-6xl mx-auto animate-fadeInUp">
+                    <div className="bg-[#1A103C]/90 dark:bg-zinc-900/10 backdrop-blur-3xl border border-white/10 dark:border-white/5 rounded-[3.5rem] p-8 sm:p-12 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] dark:shadow-none relative overflow-hidden group">
+                        <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-[#A944FF]/40 dark:via-white/20 to-transparent"></div>
                         
                         <MesaForm key="form" onSubmit={handleAddMesa} />
 
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6 mt-12">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 sm:gap-8 mt-16 pb-8">
                             {mesas.map((mesa) => (
                                 <MesaCard 
                                     key={mesa.id} 
@@ -82,8 +73,9 @@ const MesasPageDisco = () => {
                         </div>
 
                         {mesas.length === 0 && (
-                            <div className="text-center py-20 border-2 border-dashed border-zinc-100 dark:border-zinc-800/50 rounded-[2.5rem] bg-zinc-50/50 dark:bg-black/20">
-                                <p className="text-zinc-300 dark:text-zinc-700 font-black uppercase tracking-[0.4em] text-[10px]">No hay mesas configuradas</p>
+                            <div className="text-center py-32 border-2 border-dashed border-white/5 dark:border-zinc-800 rounded-[3rem] bg-black/20">
+                                <Table size={48} className="text-[#8A7BAF] dark:text-zinc-800 mx-auto mb-6 opacity-50" />
+                                <p className="text-[#8A7BAF] dark:text-zinc-500 font-black uppercase tracking-[0.4em] text-[10px]">No hay mesas configuradas aún</p>
                             </div>
                         )}
                     </div>
