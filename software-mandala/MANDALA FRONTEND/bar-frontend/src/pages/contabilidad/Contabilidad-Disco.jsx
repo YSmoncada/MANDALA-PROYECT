@@ -85,7 +85,7 @@ export default function ContabilidadDisco() {
         <div className="min-h-screen flex flex-col bg-transparent text-white dark:text-zinc-200 selection:bg-purple-500/30 transition-colors duration-500 overflow-x-hidden relative">
             
             {/* Header Controls */}
-            <div className="fixed top-6 left-6 right-6 z-50 flex justify-between items-center no-print px-4 sm:px-0">
+            <div className="absolute top-6 left-6 right-6 z-40 flex justify-between items-center no-print px-4 sm:px-0">
                 <button
                     onClick={() => navigate("/")}
                     className={`${UI_CLASSES.buttonBack} backdrop-blur-xl shadow-none border-white/10 dark:border-white/5 bg-white/5 dark:bg-black/50 hover:bg-white/10 dark:hover:bg-zinc-900 text-white dark:text-white`}

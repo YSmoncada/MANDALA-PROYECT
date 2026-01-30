@@ -50,7 +50,7 @@ function ProductGridDisco({ onProductAdd }) {
     return (
         <div className="w-full pb-32">
             {/* Search and Filter Section */}
-            <div className="mb-20 space-y-12">
+            <div className="mb-8 space-y-6">
                 <div className="relative max-w-2xl mx-auto group px-4 sm:px-0">
                     <div className="absolute inset-y-0 left-0 pl-7 flex items-center pointer-events-none">
                         <Search className="h-5 w-5 text-[#8A7BAF] group-focus-within:text-[#A944FF] dark:text-zinc-500 dark:group-focus-within:text-white transition-colors" />
@@ -60,7 +60,7 @@ function ProductGridDisco({ onProductAdd }) {
                         placeholder="Buscar en el menú..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="block w-full pl-16 pr-8 py-6 bg-[#0E0D23] dark:bg-zinc-900/50 border-2 border-[#6C3FA8]/30 dark:border-white/5 rounded-[2rem] text-white dark:text-white placeholder-[#8A7BAF]/30 dark:placeholder-zinc-700 focus:outline-none focus:border-[#A944FF] dark:focus:border-white transition-all shadow-2xl backdrop-blur-xl font-black uppercase tracking-widest text-xs"
+                        className="block w-full pl-16 pr-8 py-4 bg-[#0E0D23] dark:bg-zinc-900/50 border-2 border-[#6C3FA8]/30 dark:border-white/5 rounded-2xl text-white dark:text-white placeholder-[#8A7BAF]/30 dark:placeholder-zinc-700 focus:outline-none focus:border-[#A944FF] dark:focus:border-white transition-all shadow-2xl backdrop-blur-xl font-black uppercase tracking-widest text-[10px]"
                     />
                 </div>
 
@@ -92,7 +92,7 @@ function ProductGridDisco({ onProductAdd }) {
                     <p className="text-[#8A7BAF] dark:text-zinc-500 font-black tracking-[0.4em] text-[11px] uppercase animate-pulse">Sincronizando Menú...</p>
                 </div>
             ) : filteredProducts.length > 0 ? (
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 sm:gap-10 px-4 sm:px-0 animate-fadeIn">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6 px-4 sm:px-0 animate-fadeIn">
                     {filteredProducts.map((producto) => (
                         <ProductCardDisco 
                             key={producto.id} 
