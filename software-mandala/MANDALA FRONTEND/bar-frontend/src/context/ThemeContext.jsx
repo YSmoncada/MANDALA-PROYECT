@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { usePedidosContext } from './PedidosContext';
 
 const ThemeContext = createContext();
 
@@ -12,41 +11,31 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider = ({ children }) => {
-    const { auth } = usePedidosContext();
-    const { codigoConfirmado } = auth;
-    
-    // Initialize dark mode from localStorage, default to true (dark)
-    const [isDarkMode, setIsDarkMode] = useState(() => {
-        const saved = localStorage.getItem('noxos-theme');
-        return saved !== null ? saved === 'dark' : true;
+    // Nox = Dark, Lux = Light
+    // Default to 'nox' (dark) as requested
+    const [theme, setTheme] = useState(() => {
+        const saved = localStorage.getItem('app-theme');
+        return saved || 'nox';
     });
 
     useEffect(() => {
-        // Only apply theme if user is authenticated
-        if (codigoConfirmado) {
-            if (isDarkMode) {
-                document.documentElement.classList.add('dark-theme');
-                document.documentElement.classList.remove('light-theme');
-            } else {
-                document.documentElement.classList.add('light-theme');
-                document.documentElement.classList.remove('dark-theme');
-            }
+        const root = document.documentElement;
+        if (theme === 'nox') {
+            root.classList.add('dark');
+            root.classList.remove('lux-theme'); // just in case
         } else {
-            // Remove theme classes when not authenticated
-            document.documentElement.classList.remove('dark-theme', 'light-theme');
+            root.classList.remove('dark');
+            root.classList.add('lux-theme');
         }
-    }, [codigoConfirmado, isDarkMode]);
+        localStorage.setItem('app-theme', theme);
+    }, [theme]);
 
-    const toggleDarkMode = () => {
-        setIsDarkMode(prev => {
-            const newValue = !prev;
-            localStorage.setItem('noxos-theme', newValue ? 'dark' : 'light');
-            return newValue;
-        });
+    const toggleTheme = () => {
+        setTheme(prev => (prev === 'nox' ? 'lux' : 'nox'));
     };
 
     return (
-        <ThemeContext.Provider value={{ isDarkMode, toggleDarkMode }}>
+        <ThemeContext.Provider value={{ theme, setTheme, toggleTheme, isDark: theme === 'nox' }}>
             {children}
         </ThemeContext.Provider>
     );

@@ -149,25 +149,25 @@ const AccountNode = ({ node, level = 0 }) => {
     return (
         <div className="select-none">
             <div
-                className={`flex items-center gap-2 py-2 px-4 hover:bg-[#441E73]/30 transition-colors cursor-pointer border-b border-[#6C3FA8]/10 ${level === 0 ? 'bg-[#441E73]/20 font-bold text-white' : 'text-[#C2B6D9]'}`}
+                className={`flex items-center gap-2 py-3 px-4 hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors cursor-pointer border-b border-zinc-100 dark:border-white/5 ${level === 0 ? 'bg-zinc-50 dark:bg-white/5 font-black text-zinc-900 dark:text-white uppercase tracking-tight' : 'text-zinc-600 dark:text-zinc-400'}`}
                 style={{ paddingLeft: `${level * 20 + 16}px` }}
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <div className="w-6 flex justify-center">
                     {hasChildren ? (
-                        isOpen ? <ChevronDown size={16} className="text-[#A944FF]" /> : <ChevronRight size={16} className="text-[#8A7BAF]" />
+                        isOpen ? <ChevronDown size={16} className="text-zinc-900 dark:text-white" /> : <ChevronRight size={16} className="text-zinc-400 dark:text-zinc-600" />
                     ) : (
                         <div className="w-4" />
                     )}
                 </div>
 
-                <div className="mr-2 text-[#A944FF]">
+                <div className="mr-2 text-zinc-900 dark:text-white">
                     {level === 0 ? <Folder size={18} /> : <FileText size={16} />}
                 </div>
 
                 <div className="flex-1 flex items-center gap-3">
-                    <span className="font-mono text-[#FF4BC1] bg-[#FF4BC1]/10 px-2 py-0.5 rounded text-xs">{node.code}</span>
-                    <span className={level === 0 ? 'text-lg' : 'text-sm'}>{node.name}</span>
+                    <span className="font-mono text-xs font-black bg-zinc-900 dark:bg-white text-white dark:text-black px-2 py-0.5 rounded tracking-tighter">{node.code}</span>
+                    <span className={level === 0 ? 'text-sm' : 'text-xs font-medium'}>{node.name}</span>
                 </div>
 
                 <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -190,30 +190,30 @@ export default function PUCDisco() {
     const [searchTerm, setSearchTerm] = useState("");
 
     return (
-        <div className="w-full bg-[#1A103C]/60 backdrop-blur-xl border border-[#6C3FA8]/30 rounded-2xl overflow-hidden flex flex-col h-[600px]">
+        <div className="w-full bg-white dark:bg-zinc-900/30 backdrop-blur-xl border border-zinc-200 dark:border-white/10 rounded-3xl overflow-hidden flex flex-col h-[600px] shadow-sm dark:shadow-2xl">
             {/* Header / Toolbar */}
-            <div className="p-6 border-b border-[#6C3FA8]/30 flex flex-col sm:flex-row gap-4 justify-between items-center bg-[#0E0D23]/50">
+            <div className="p-6 border-b border-zinc-200 dark:border-white/10 flex flex-col sm:flex-row gap-4 justify-between items-center bg-zinc-50 dark:bg-zinc-950/50">
                 <div>
-                    <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                        <Folder className="text-[#A944FF]" />
+                    <h2 className="text-xl font-black text-zinc-900 dark:text-white flex items-center gap-2 uppercase tracking-tight">
+                        <Folder className="text-zinc-900 dark:text-white" />
                         Plan Único de Cuentas (PUC)
                     </h2>
-                    <p className="text-[#8A7BAF] text-sm">Estructura contable del establecimiento</p>
+                    <p className="text-zinc-500 dark:text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">Estructura contable del establecimiento</p>
                 </div>
 
                 <div className="flex items-center gap-3 w-full sm:w-auto">
                     <div className="relative flex-1 sm:w-64">
-                        <Search className="absolute left-3 top-2.5 text-[#8A7BAF]" size={18} />
+                        <Search className="absolute left-3 top-2.5 text-zinc-400 dark:text-zinc-600" size={18} />
                         <input
                             type="text"
                             placeholder="Buscar cuenta..."
-                            className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#2B0D49] border border-[#6C3FA8]/30 text-white placeholder-[#8A7BAF] focus:outline-none focus:border-[#A944FF] transition-all"
+                            className="w-full pl-10 pr-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-zinc-400 dark:focus:border-white/20 transition-all text-sm font-medium"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                    <button className="bg-[#A944FF] hover:bg-[#902ce0] text-white p-2 rounded-xl transition-colors shadow-lg shadow-[#A944FF]/20">
-                        <Plus size={20} />
+                    <button className="bg-zinc-900 dark:bg-white text-white dark:text-black p-2.5 rounded-xl transition-all hover:scale-105 shadow-lg active:scale-95">
+                        <Plus size={20} weight="bold" />
                     </button>
                 </div>
             </div>
@@ -226,7 +226,7 @@ export default function PUCDisco() {
             </div>
 
             {/* Footer */}
-            <div className="p-4 bg-[#0E0D23]/50 border-t border-[#6C3FA8]/30 text-center text-[#8A7BAF] text-xs">
+            <div className="p-4 bg-zinc-50 dark:bg-zinc-950/50 border-t border-zinc-200 dark:border-white/10 text-center text-zinc-400 dark:text-zinc-600 text-[10px] font-black uppercase tracking-widest">
                 Total Cuentas: {initialPUC.length} Clases principales
             </div>
         </div>

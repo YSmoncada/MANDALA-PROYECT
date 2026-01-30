@@ -103,7 +103,7 @@ const AdminUsuariosDisco = () => {
                 <div className="flex justify-end gap-4 px-4 sm:px-0">
                     <button
                         onClick={refresh}
-                        className="flex items-center gap-2 p-3 rounded-xl bg-zinc-900 border border-white/5 text-zinc-500 hover:bg-zinc-800 hover:text-white transition-all shadow-lg active:scale-95 group"
+                        className="flex items-center gap-2 p-3 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/5 text-zinc-500 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white transition-all shadow-sm dark:shadow-lg active:scale-95 group"
                         title="Refrescar datos"
                     >
                         <RefreshCw size={18} className={`${loading ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} />
@@ -111,14 +111,14 @@ const AdminUsuariosDisco = () => {
                     
                     <button
                         onClick={() => setShowAddForm(true)}
-                        className="flex items-center gap-2 px-4 py-3 rounded-xl bg-zinc-100 border border-white text-black hover:bg-white hover:text-black transition-all font-bold text-xs uppercase tracking-widest shadow-xl active:scale-95"
+                        className="flex items-center gap-2 px-4 py-3 rounded-xl bg-zinc-900 dark:bg-zinc-100 border border-transparent dark:border-white text-white dark:text-black hover:bg-black dark:hover:bg-white transition-all font-bold text-xs uppercase tracking-widest shadow-xl active:scale-95"
                     >
                         <Plus size={18} />
                         Nuevo Personal
                     </button>
                     <button
                         onClick={() => navigate('/configuracion-ticket')}
-                        className="flex items-center gap-2 px-6 py-3 rounded-xl bg-zinc-900 border border-white/10 text-zinc-300 hover:bg-zinc-800 hover:text-white transition-all font-bold text-xs uppercase tracking-widest shadow-xl active:scale-95"
+                        className="flex items-center gap-2 px-6 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white transition-all font-bold text-xs uppercase tracking-widest shadow-sm dark:shadow-xl active:scale-95"
                     >
                         <Settings size={18} />
                         Configurar Ticket
@@ -128,22 +128,21 @@ const AdminUsuariosDisco = () => {
                 {loading && usuarios.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-32 animate-fadeIn">
                         <div className="relative">
-                            <div className="w-16 h-16 border-4 border-zinc-800 border-t-white rounded-full animate-spin mb-6 shadow-2xl"></div>
-                            <div className="absolute inset-0 bg-white/5 blur-2xl rounded-full"></div>
+                            <div className="w-16 h-16 border-4 border-zinc-200 dark:border-zinc-800 border-t-zinc-900 dark:border-t-white rounded-full animate-spin mb-6 shadow-xl"></div>
                         </div>
-                        <p className="text-zinc-500 font-bold tracking-[0.4em] text-[10px] animate-pulse uppercase">Cargando base de datos...</p>
+                        <p className="text-zinc-400 dark:text-zinc-500 font-bold tracking-[0.4em] text-[10px] animate-pulse uppercase">Cargando base de datos...</p>
                     </div>
                 ) : (
                     <div className="space-y-16 animate-fadeIn">
                         {/* System Users Section */}
                         <section className="px-4 sm:px-0">
                             <div className="flex items-center gap-4 mb-8">
-                                <div className="h-px w-8 bg-zinc-500"></div>
-                                <h2 className="text-sm font-black tracking-[0.4em] uppercase text-white">
+                                <div className="h-px w-8 bg-zinc-300 dark:bg-zinc-500"></div>
+                                <h2 className="text-sm font-black tracking-[0.4em] uppercase text-zinc-900 dark:text-white">
                                     Usuarios del Sistema
                                 </h2>
-                                <div className="h-px flex-grow bg-gradient-to-r from-zinc-800 to-transparent"></div>
-                                <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">{usuarios.length} activos</span>
+                                <div className="h-px flex-grow bg-gradient-to-r from-zinc-200 dark:from-zinc-800 to-transparent"></div>
+                                <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-600 uppercase tracking-widest">{usuarios.length} activos</span>
                             </div>
                             
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -158,7 +157,7 @@ const AdminUsuariosDisco = () => {
                                     />
                                 ))}
                                 {usuarios.length === 0 && !loading && (
-                                    <div className="col-span-full py-16 text-center bg-zinc-900/30 rounded-3xl border border-dashed border-white/5">
+                                    <div className="col-span-full py-16 text-center bg-zinc-50 dark:bg-zinc-900/30 rounded-3xl border border-dashed border-zinc-200 dark:border-white/5 shadow-sm dark:shadow-none">
                                         <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">No se encontraron usuarios del sistema.</p>
                                     </div>
                                 )}
@@ -168,12 +167,12 @@ const AdminUsuariosDisco = () => {
                         {/* Staff Profiles Section */}
                         <section className="px-4 sm:px-0">
                             <div className="flex items-center gap-4 mb-8">
-                                <div className="h-px w-8 bg-zinc-500"></div>
-                                <h2 className="text-sm font-black tracking-[0.4em] uppercase text-white">
+                                <div className="h-px w-8 bg-zinc-300 dark:bg-zinc-500"></div>
+                                <h2 className="text-sm font-black tracking-[0.4em] uppercase text-zinc-900 dark:text-white">
                                     Personal de Operación
                                 </h2>
-                                <div className="h-px flex-grow bg-gradient-to-r from-zinc-800 to-transparent"></div>
-                                <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">{meseras.length} perfiles</span>
+                                <div className="h-px flex-grow bg-gradient-to-r from-zinc-200 dark:from-zinc-800 to-transparent"></div>
+                                <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-600 uppercase tracking-widest">{meseras.length} perfiles</span>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -188,7 +187,7 @@ const AdminUsuariosDisco = () => {
                                     />
                                 ))}
                                 {meseras.length === 0 && !loading && (
-                                    <div className="col-span-full py-16 text-center bg-zinc-900/30 rounded-3xl border border-dashed border-white/5">
+                                    <div className="col-span-full py-16 text-center bg-zinc-50 dark:bg-zinc-900/30 rounded-3xl border border-dashed border-zinc-200 dark:border-white/5 shadow-sm dark:shadow-none">
                                         <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">No se encontró personal registrado.</p>
                                     </div>
                                 )}

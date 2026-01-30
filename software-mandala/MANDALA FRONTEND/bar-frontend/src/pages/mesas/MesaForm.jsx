@@ -40,14 +40,14 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
     return (
         <form
             onSubmit={handleSubmit}
-            className="bg-black/30 border border-white/10 rounded-2xl p-6 mb-8 flex flex-wrap items-end gap-6 shadow-xl relative overflow-hidden group backdrop-blur-md"
+            className="bg-zinc-50 dark:bg-black/40 border border-zinc-100 dark:border-white/5 rounded-[2rem] p-8 mb-12 flex flex-wrap items-end gap-x-8 gap-y-6 shadow-inner relative overflow-hidden group backdrop-blur-md"
         >
-            <div className="absolute inset-y-0 left-0 w-1 bg-white opacity-20 group-hover:opacity-100 transition-opacity"></div>
+            <div className="absolute inset-y-0 left-0 w-1.5 bg-zinc-900 dark:bg-white opacity-10 dark:opacity-20 group-hover:opacity-100 transition-opacity"></div>
 
-            <div className="flex-1 min-w-[140px] space-y-2.5">
-                <label htmlFor="numero" className="flex items-center gap-2 text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] ml-1">
-                    <Table size={12} />
-                    Número de Mesa
+            <div className="flex-1 min-w-[200px] space-y-3">
+                <label htmlFor="numero" className="flex items-center gap-2 text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-[0.3em] ml-2">
+                    <Table size={14} />
+                    Identificador
                 </label>
                 <div className="relative">
                     <input
@@ -65,9 +65,9 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
                 </div>
             </div>
 
-            <div className="flex-1 min-w-[140px] space-y-2.5">
-                <label htmlFor="capacidad" className="flex items-center gap-2 text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] ml-1">
-                    <Users size={12} />
+            <div className="flex-1 min-w-[200px] space-y-3">
+                <label htmlFor="capacidad" className="flex items-center gap-2 text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-[0.3em] ml-2">
+                    <Users size={14} />
                     Capacidad
                 </label>
                 <div className="relative">
@@ -86,7 +86,7 @@ const MesaForm = ({ onSubmit, initialData = { numero: '', capacidad: '' } }) => 
 
             <button
                 type="submit"
-                className={`${UI_CLASSES.buttonPrimary} mt-2 sm:mt-0 shadow-lg shadow-zinc-900/50 bg-white text-black hover:bg-zinc-200 border-none`}
+                className="px-8 py-4 bg-zinc-900 dark:bg-white text-white dark:text-black font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl hover:bg-black dark:hover:bg-zinc-100 transition-all flex items-center justify-center gap-3 active:scale-95 shadow-xl shadow-zinc-900/10 dark:shadow-none min-w-[180px]"
             >
                 <Plus size={18} />
                 <span>Agregar Mesa</span>

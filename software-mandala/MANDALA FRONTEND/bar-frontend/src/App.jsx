@@ -22,6 +22,7 @@ const ConfiguracionTicketDisco = lazy(() => import("./pages/adminusuarios/Config
 
 
 import { PedidosProvider } from "./context/PedidosContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Notificaciones from "./components/Notificaciones";
 
@@ -33,62 +34,64 @@ function App() {
       <Notificaciones />
       <BrowserRouter>
         <PedidosProvider>
-          <Suspense fallback={null}>
-            <Routes>
-              <Route path="/" element={<Home />} />
+          <ThemeProvider>
+            <Suspense fallback={null}>
+              <Routes>
+                <Route path="/" element={<Home />} />
 
-              {/* Rutas Protegidas */}
-              <Route path="/inventario" element={
-                <ProtectedRoute allowedRoles={['admin', 'prueba']}>
-                  <Inventario />
-                </ProtectedRoute>
-              } />
-              <Route path="/mesas" element={
-                <ProtectedRoute allowedRoles={['admin', 'prueba']}>
-                  <MesasPageDisco />
-                </ProtectedRoute>
-              } />
-              <Route path="/bartender" element={
-                <ProtectedRoute allowedRoles={['admin', 'bartender', 'prueba']}>
-                  <BartenderPageDisco />
-                </ProtectedRoute>
-              } />
-              <Route path="/contabilidad-disco" element={
-                <ProtectedRoute allowedRoles={['admin', 'prueba']}><ContabilidadDisco /></ProtectedRoute>
-              } />
-              <Route path="/usuarios-disco" element={
-                <ProtectedRoute allowedRoles={['admin', 'prueba']}><AdminUsuariosDisco /></ProtectedRoute>
-              } />
-              <Route path="/configuracion-ticket" element={
-                <ProtectedRoute allowedRoles={['admin', 'prueba']}><ConfiguracionTicketDisco /></ProtectedRoute>
-              } />
-              {/* Rutas de Pedidos (Contexto global ahora disponible) */}
-              <Route path="/login" element={<PedidosDisco />} /> {/* Login Principal */}
+                {/* Rutas Protegidas */}
+                <Route path="/inventario" element={
+                  <ProtectedRoute allowedRoles={['admin', 'prueba']}>
+                    <Inventario />
+                  </ProtectedRoute>
+                } />
+                <Route path="/mesas" element={
+                  <ProtectedRoute allowedRoles={['admin', 'prueba']}>
+                    <MesasPageDisco />
+                  </ProtectedRoute>
+                } />
+                <Route path="/bartender" element={
+                  <ProtectedRoute allowedRoles={['admin', 'bartender', 'prueba']}>
+                    <BartenderPageDisco />
+                  </ProtectedRoute>
+                } />
+                <Route path="/contabilidad-disco" element={
+                  <ProtectedRoute allowedRoles={['admin', 'prueba']}><ContabilidadDisco /></ProtectedRoute>
+                } />
+                <Route path="/usuarios-disco" element={
+                  <ProtectedRoute allowedRoles={['admin', 'prueba']}><AdminUsuariosDisco /></ProtectedRoute>
+                } />
+                <Route path="/configuracion-ticket" element={
+                  <ProtectedRoute allowedRoles={['admin', 'prueba']}><ConfiguracionTicketDisco /></ProtectedRoute>
+                } />
+                {/* Rutas de Pedidos (Contexto global ahora disponible) */}
+                <Route path="/login" element={<PedidosDisco />} /> {/* Login Principal */}
 
-              <Route path="/pedidos" element={
-                <ProtectedRoute allowedRoles={['admin', 'bartender', 'mesera', 'prueba']}>
-                  <PedidosPageDisco />
-                </ProtectedRoute>
-              } />
-              <Route path="/pedidos-disco" element={
-                <ProtectedRoute allowedRoles={['admin', 'bartender', 'mesera', 'prueba']}>
-                  <SeleccionProductosDisco />
-                </ProtectedRoute>
-              } />
-              <Route path="/mis-pedidos-disco" element={
-                <ProtectedRoute allowedRoles={['admin', 'bartender', 'mesera', 'prueba']}>
-                  <MisPedidosPageDisco />
-                </ProtectedRoute>
-              } />
-              <Route path="/historial-pedidos" element={
-                <ProtectedRoute allowedRoles={['admin', 'bartender', 'prueba']}>
-                  <HistorialPedidosPageDisco />
-                </ProtectedRoute>
-              } />
+                <Route path="/pedidos" element={
+                  <ProtectedRoute allowedRoles={['admin', 'bartender', 'mesera', 'prueba']}>
+                    <PedidosPageDisco />
+                  </ProtectedRoute>
+                } />
+                <Route path="/pedidos-disco" element={
+                  <ProtectedRoute allowedRoles={['admin', 'bartender', 'mesera', 'prueba']}>
+                    <SeleccionProductosDisco />
+                  </ProtectedRoute>
+                } />
+                <Route path="/mis-pedidos-disco" element={
+                  <ProtectedRoute allowedRoles={['admin', 'bartender', 'mesera', 'prueba']}>
+                    <MisPedidosPageDisco />
+                  </ProtectedRoute>
+                } />
+                <Route path="/historial-pedidos" element={
+                  <ProtectedRoute allowedRoles={['admin', 'bartender', 'prueba']}>
+                    <HistorialPedidosPageDisco />
+                  </ProtectedRoute>
+                } />
 
-              <Route path="*" element={<Navigate to="/login" />} /> {/* Redirect default to login */}
-            </Routes>
-          </Suspense>
+                <Route path="*" element={<Navigate to="/login" />} /> {/* Redirect default to login */}
+              </Routes>
+            </Suspense>
+          </ThemeProvider>
         </PedidosProvider>
       </BrowserRouter>
     </QueryClientProvider>

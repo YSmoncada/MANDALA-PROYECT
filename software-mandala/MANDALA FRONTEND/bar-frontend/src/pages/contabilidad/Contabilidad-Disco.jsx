@@ -80,17 +80,17 @@ export default function ContabilidadDisco() {
     const fetchReporteVentas = fetchDashboardData;
 
     return (
-        <div className="min-h-screen flex flex-col bg-black text-white selection:bg-zinc-800">
+        <div className="min-h-screen flex flex-col bg-white dark:bg-black text-zinc-900 dark:text-white selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300">
             {/* Background Glows */}
             <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-zinc-900/20 to-transparent pointer-events-none"></div>
+                <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-zinc-100/50 dark:from-zinc-900/20 to-transparent pointer-events-none"></div>
             </div>
 
             {/* Back Button */}
             <div className="absolute top-6 left-6 z-50">
                 <button
                     onClick={() => navigate("/")}
-                    className={`${UI_CLASSES.buttonBack} shadow-none border-white/5 bg-black/50 hover:bg-zinc-900`}
+                    className={`${UI_CLASSES.buttonBack} shadow-sm dark:shadow-none border-zinc-200 dark:border-white/5 bg-white/50 dark:bg-black/50 hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400`}
                 >
                     <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
                     <span className="font-bold uppercase tracking-wider text-xs">Volver</span>
@@ -100,30 +100,30 @@ export default function ContabilidadDisco() {
             <div className="flex-1 p-8 pt-20 relative z-10 max-w-7xl mx-auto w-full">
                 <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
                     <div>
-                        <h1 className="text-4xl font-bold text-white mb-2 uppercase drop-shadow-lg">Contabilidad</h1>
-                        <p className="text-zinc-400">Resumen financiero y movimientos</p>
+                        <h1 className="text-4xl font-black text-zinc-900 dark:text-white mb-2 uppercase drop-shadow-sm dark:drop-shadow-lg tracking-tight">Contabilidad</h1>
+                        <p className="text-zinc-500 dark:text-zinc-400 font-medium">Resumen financiero y movimientos</p>
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <div className="flex bg-zinc-900 p-1 rounded-xl border border-white/5 backdrop-blur-md">
+                        <div className="flex bg-zinc-100 dark:bg-zinc-900 p-1 rounded-xl border border-zinc-200 dark:border-white/5 backdrop-blur-md">
                             {tabs.map(tab => (
                                 <button
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
                                     className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm transition-all ${activeTab === tab.id
-                                        ? 'bg-white text-black shadow-lg'
-                                        : 'text-zinc-500 hover:text-white hover:bg-zinc-800'
+                                        ? 'bg-white dark:bg-zinc-800 text-black dark:text-white shadow-md dark:shadow-none border border-zinc-200 dark:border-white/10'
+                                        : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-800'
                                         }`}
                                 >
                                     {tab.icon}
-                                    {tab.label}
+                                    <span className="hidden sm:inline">{tab.label}</span>
                                 </button>
                             ))}
                         </div>
 
-                        <div className="hidden md:flex items-center gap-2 bg-zinc-900 px-4 py-2 rounded-xl border border-white/5 backdrop-blur-md">
-                            <Calendar size={18} className="text-white" />
-                            <span className="text-sm font-bold text-zinc-300">Hoy, {new Date().toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })}</span>
+                        <div className="hidden lg:flex items-center gap-2 bg-zinc-100 dark:bg-zinc-900 px-4 py-2 rounded-xl border border-zinc-200 dark:border-white/5 backdrop-blur-md">
+                            <Calendar size={18} className="text-zinc-900 dark:text-white" />
+                            <span className="text-sm font-bold text-zinc-500 dark:text-zinc-300">Hoy, {new Date().toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })}</span>
                         </div>
                     </div>
                 </div>
@@ -133,13 +133,13 @@ export default function ContabilidadDisco() {
                         {/* Stats Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {stats.map((stat, index) => (
-                                <div key={index} className={`p-6 rounded-2xl backdrop-blur-md border ${stat.border.replace(/purple|pink|orange|green|#A944FF/g, 'zinc').replace(/\/20/g, '/10')} bg-zinc-900/30 flex items-center gap-4 transition-transform hover:scale-[1.02]`}>
-                                    <div className={`p-3 rounded-xl bg-black/40 ${stat.color === 'text-[#A944FF]' ? 'text-white' : stat.color}`}>
+                                <div key={index} className="p-6 rounded-2xl bg-white dark:bg-zinc-900/30 backdrop-blur-md border border-zinc-200 dark:border-white/5 flex items-center gap-4 transition-all hover:scale-[1.02] shadow-sm dark:shadow-none hover:shadow-lg dark:hover:shadow-2xl">
+                                    <div className={`p-4 rounded-xl ${stat.bg} ${stat.color} border ${stat.border}`}>
                                         {stat.icon}
                                     </div>
                                     <div>
-                                        <p className="text-zinc-500 text-sm font-medium">{stat.title}</p>
-                                        <h3 className="text-2xl font-bold text-white">{stat.value}</h3>
+                                        <p className="text-zinc-500 dark:text-zinc-500 text-xs font-black uppercase tracking-widest">{stat.title}</p>
+                                        <h3 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">{stat.value}</h3>
                                     </div>
                                 </div>
                             ))}
@@ -147,21 +147,21 @@ export default function ContabilidadDisco() {
 
                         <div className="w-full">
                             {/* Enhanced Full Width Chart */}
-                            <div className="bg-zinc-900/30 backdrop-blur-xl border border-white/5 rounded-2xl p-8 relative overflow-hidden shadow-2xl">
+                            <div className="bg-white dark:bg-zinc-900/30 backdrop-blur-xl border border-zinc-200 dark:border-white/5 rounded-3xl p-8 relative overflow-hidden shadow-sm dark:shadow-2xl">
                                 {/* Glow Effect Behind */}
-                                <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 blur-3xl rounded-full -mr-10 -mt-10 pointer-events-none"></div>
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-zinc-100 dark:bg-white/5 blur-3xl rounded-full -mr-10 -mt-10 pointer-events-none"></div>
 
-                                <h3 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
-                                    <TrendingUp size={24} className="text-white" />
-                                    Comportamiento de Ventas (Últimos 7 días)
+                                <h3 className="text-2xl font-black text-zinc-900 dark:text-white mb-8 flex items-center gap-3 uppercase tracking-tight">
+                                    <TrendingUp size={24} className="text-zinc-900 dark:text-white" />
+                                    Ventas (Últimos 7 días)
                                 </h3>
 
                                 {ventasDiarias.length > 0 ? (
                                     <div className="relative h-96 w-full">
                                         {/* Grid Lines */}
-                                        <div className="absolute inset-0 flex flex-col justify-between text-xs text-zinc-600 pointer-events-none z-0 pb-6 pr-4">
+                                        <div className="absolute inset-0 flex flex-col justify-between text-[10px] font-bold text-zinc-400 dark:text-zinc-600 pointer-events-none z-0 pb-6 pr-4 uppercase tracking-[0.2em]">
                                             {[100, 75, 50, 25, 0].map((percent) => (
-                                                <div key={percent} className="w-full border-b border-zinc-800 flex items-center h-0.5">
+                                                <div key={percent} className="w-full border-b border-zinc-100 dark:border-zinc-800 flex items-center h-0.5">
                                                     <span className="mb-2 ml-1 opacity-50">{percent}%</span>
                                                 </div>
                                             ))}
@@ -180,25 +180,25 @@ export default function ContabilidadDisco() {
                                                     <div key={idx} className="flex-1 flex flex-col items-center gap-3 group h-full justify-end">
                                                         {/* Bar */}
                                                         <div
-                                                            className="w-full max-w-[60px] bg-gradient-to-t from-zinc-800 to-white rounded-t-xl relative transition-all duration-500 hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:brightness-110 group-hover:scale-y-105 origin-bottom cursor-pointer"
-                                                            style={{ height: `${heightPerc}%`, minHeight: '4px' }}
+                                                            className="w-full max-w-[60px] bg-zinc-900 dark:bg-gradient-to-t dark:from-zinc-800 dark:to-white rounded-t-xl relative transition-all duration-500 hover:shadow-xl dark:hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:brightness-110 group-hover:scale-y-105 origin-bottom cursor-pointer"
+                                                            style={{ height: `${heightPerc}%`, minHeight: '8px' }}
                                                         >
                                                             {/* Top Cap Highlight */}
                                                             <div className="absolute top-0 left-0 right-0 h-1 bg-white/30 rounded-t-xl"></div>
 
                                                             {/* Tooltip */}
-                                                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black border border-white text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 whitespace-nowrap shadow-xl z-20 pointer-events-none">
+                                                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-zinc-900 dark:bg-black border border-white/10 text-white text-[10px] font-black px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 whitespace-nowrap shadow-xl z-20 pointer-events-none uppercase tracking-widest">
                                                                 {formatCurrency(total)}
-                                                                <div className="absolute bottom-[-5px] left-1/2 -translate-x-1/2 w-2 h-2 bg-black border-b border-r border-white rotate-45"></div>
+                                                                <div className="absolute bottom-[-5px] left-1/2 -translate-x-1/2 w-2 h-2 bg-zinc-900 dark:bg-black border-b border-r border-white/10 rotate-45"></div>
                                                             </div>
                                                         </div>
 
                                                         {/* Label */}
                                                         <div className="text-center">
-                                                            <span className="text-xs font-bold text-zinc-400 block mb-1">
+                                                            <span className="text-[10px] font-black text-zinc-900 dark:text-zinc-400 block mb-1 uppercase tracking-widest">
                                                                 {new Date(dia.fecha).toLocaleDateString('es-CO', { weekday: 'short' })}
                                                             </span>
-                                                            <span className="text-[10px] text-zinc-600">
+                                                            <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-600">
                                                                 {new Date(dia.fecha).toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit' })}
                                                             </span>
                                                         </div>
@@ -208,9 +208,9 @@ export default function ContabilidadDisco() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="h-96 flex flex-col items-center justify-center text-zinc-500 border border-dashed border-zinc-800 rounded-2xl bg-black/20">
-                                        <PieChart size={48} className="text-zinc-700 mb-4" />
-                                        <p>No hay datos de ventas recientes para graficar</p>
+                                    <div className="h-96 flex flex-col items-center justify-center text-zinc-500 border border-dashed border-zinc-200 dark:border-zinc-800 rounded-3xl bg-zinc-50/50 dark:bg-black/20">
+                                        <PieChart size={48} className="text-zinc-300 dark:text-zinc-700 mb-4" />
+                                        <p className="font-bold uppercase tracking-widest text-xs">No hay datos de ventas recientes para graficar</p>
                                     </div>
                                 )}
                             </div>
@@ -220,13 +220,13 @@ export default function ContabilidadDisco() {
 
                 {activeTab === 'reportes' && (
                     <div className="animate-fadeIn space-y-6">
-                        <div className="bg-zinc-900/30 border border-white/5 rounded-xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div className="bg-zinc-50 dark:bg-zinc-900/30 border border-zinc-200 dark:border-white/5 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-sm dark:shadow-none">
                             <div>
-                                <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-                                    <Receipt size={20} className="text-white" />
+                                <h3 className="text-xl font-black text-zinc-900 dark:text-white mb-2 flex items-center gap-2 uppercase tracking-tight">
+                                    <Receipt size={20} className="text-zinc-900 dark:text-white" />
                                     Solución Gratuita DIAN
                                 </h3>
-                                <p className="text-zinc-400 text-sm max-w-2xl">
+                                <p className="text-zinc-500 dark:text-zinc-400 text-sm max-w-2xl">
                                     Utiliza estos valores para realizar tu <strong>Factura Global Diaria</strong> o <strong>Nota Crédito</strong> en el software gratuito.
                                     Al final del día, consolida las ventas POS en un solo documento electrónico si utilizas el modelo de Factura Global.
                                 </p>
@@ -235,25 +235,25 @@ export default function ContabilidadDisco() {
                                 href="https://facturaciongratuitadian.dian.gov.co/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="whitespace-nowrap flex items-center gap-2 bg-[#104a28] hover:bg-[#156035] text-white px-6 py-3 rounded-xl font-bold transition-all hover:scale-105 shadow-lg shadow-green-900/30 border border-green-500/30"
+                                className="whitespace-nowrap flex items-center gap-2 bg-zinc-900 dark:bg-[#104a28] hover:bg-black dark:hover:bg-[#156035] text-white px-6 py-3 rounded-xl font-bold transition-all hover:scale-105 shadow-xl border border-transparent dark:border-green-500/30 uppercase text-xs tracking-widest"
                             >
                                 Ingresar a DIAN
                                 <ExternalLink size={16} />
                             </a>
                         </div>
 
-                        <div className="bg-zinc-900/30 backdrop-blur-xl border border-white/5 rounded-2xl overflow-hidden">
-                            <div className="p-6 border-b border-white/5 flex justify-between items-center">
-                                <h2 className="text-lg font-bold text-white">Datos para Facturación Global</h2>
-                                <button onClick={fetchReporteVentas} className="text-xs bg-white/10 text-white px-3 py-1 rounded hover:bg-white/20 transition">Refrescar Datos</button>
+                        <div className="bg-white dark:bg-zinc-900/30 backdrop-blur-xl border border-zinc-200 dark:border-white/5 rounded-3xl overflow-hidden shadow-sm dark:shadow-2xl">
+                            <div className="p-6 border-b border-zinc-200 dark:border-white/5 flex justify-between items-center">
+                                <h2 className="text-lg font-black text-zinc-900 dark:text-white uppercase tracking-tight">Datos para Facturación Global</h2>
+                                <button onClick={fetchReporteVentas} className="text-[10px] font-black uppercase tracking-widest bg-zinc-100 dark:bg-white/10 text-zinc-600 dark:text-white px-4 py-2 rounded-lg hover:bg-zinc-200 dark:hover:bg-white/20 transition-all border border-zinc-200 dark:border-white/10">Refrescar Datos</button>
                             </div>
 
                             {loadingReporte ? (
-                                <div className="p-12 text-center text-zinc-500 animate-pulse">Cargando reporte...</div>
+                                <div className="p-12 text-center text-zinc-500 dark:text-zinc-600 animate-pulse font-bold uppercase tracking-[0.3em] text-[10px]">Cargando reporte...</div>
                             ) : (
                                 <div className="overflow-x-auto">
                                     <table className="w-full text-left">
-                                        <thead className="bg-zinc-950 text-zinc-400 text-xs uppercase tracking-wider">
+                                        <thead className="bg-zinc-50 dark:bg-zinc-950 text-zinc-500 dark:text-zinc-400 text-[10px] font-black uppercase tracking-[0.2em]">
                                             <tr>
                                                 <th className="p-4">Fecha</th>
                                                 <th className="p-4 text-left">Concepto Sugerido</th>
@@ -263,25 +263,25 @@ export default function ContabilidadDisco() {
                                                 <th className="p-4 text-center">Acciones</th>
                                             </tr>
                                         </thead>
-                                        <tbody className="divide-y divide-white/5 text-sm">
+                                        <tbody className="divide-y divide-zinc-100 dark:divide-white/5 text-sm">
                                             {ventasDiarias.length > 0 ? ventasDiarias.map((dia, idx) => {
                                                 const total = parseFloat(dia.total_ventas);
                                                 const base = total / 1.08;
                                                 const impuesto = total - base;
 
                                                 return (
-                                                    <tr key={idx} className="hover:bg-white/5 transition-colors text-zinc-300">
-                                                        <td className="p-4 font-bold text-white whitespace-nowrap">{dia.fecha}</td>
-                                                        <td className="p-4 text-sm italic text-zinc-500">
+                                                    <tr key={idx} className="hover:bg-zinc-50 dark:hover:bg-white/5 transition-colors text-zinc-600 dark:text-zinc-300">
+                                                        <td className="p-4 font-black text-zinc-900 dark:text-white whitespace-nowrap uppercase tracking-tight">{dia.fecha}</td>
+                                                        <td className="p-4 text-xs italic text-zinc-400 dark:text-zinc-500">
                                                             Ventas generales del día {dia.fecha} (Consumo POS)
                                                         </td>
-                                                        <td className="p-4 text-right font-mono text-white">
+                                                        <td className="p-4 text-right font-mono text-zinc-900 dark:text-white font-bold">
                                                             {formatCurrency(base)}
                                                         </td>
-                                                        <td className="p-4 text-right font-mono text-zinc-400">
+                                                        <td className="p-4 text-right font-mono text-zinc-500 dark:text-zinc-400">
                                                             {formatCurrency(impuesto)}
                                                         </td>
-                                                        <td className="p-4 text-right font-mono font-bold text-white">
+                                                        <td className="p-4 text-right font-mono font-black text-zinc-900 dark:text-white">
                                                             {formatCurrency(total)}
                                                         </td>
                                                         <td className="p-4 text-center">
@@ -290,7 +290,7 @@ export default function ContabilidadDisco() {
                                                                     navigator.clipboard.writeText(`Base: ${Math.round(base)} | Impuesto: ${Math.round(impuesto)} | Total: ${Math.round(total)}`);
                                                                     toast.success("Valores copiados al portapapeles");
                                                                 }}
-                                                                className="text-xs flex items-center gap-1 mx-auto bg-zinc-800 hover:bg-zinc-700 px-2 py-1 rounded text-zinc-300 transition"
+                                                                className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2 mx-auto bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 px-3 py-1.5 rounded-lg text-zinc-600 dark:text-zinc-300 transition-all border border-zinc-200 dark:border-white/10"
                                                                 title="Copiar valores para pegar en DIAN"
                                                             >
                                                                 <Copy size={12} /> Copiar
@@ -300,15 +300,15 @@ export default function ContabilidadDisco() {
                                                 );
                                             }) : (
                                                 <tr>
-                                                    <td colSpan="6" className="p-8 text-center text-zinc-500">
+                                                    <td colSpan="6" className="p-12 text-center text-zinc-400 dark:text-zinc-600 font-bold uppercase tracking-widest text-xs">
                                                         No hay ventas para reportar hoy.
                                                     </td>
                                                 </tr>
                                             )}
                                         </tbody>
-                                        <tfoot className="bg-zinc-950/50 text-xs text-zinc-600">
+                                        <tfoot className="bg-zinc-50/50 dark:bg-zinc-950/50 text-[10px] font-bold text-zinc-400 dark:text-zinc-600">
                                             <tr>
-                                                <td colSpan="6" className="p-4 text-center">
+                                                <td colSpan="6" className="p-4 text-center uppercase tracking-widest">
                                                     * Los valores se calculan asumiendo que los precios de los productos ya tienen el Impuesto al Consumo (8%) incluido.
                                                 </td>
                                             </tr>

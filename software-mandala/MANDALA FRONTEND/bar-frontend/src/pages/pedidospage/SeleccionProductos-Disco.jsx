@@ -40,10 +40,10 @@ function SeleccionProductosDisco() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col bg-black text-white selection:bg-zinc-800">
+        <div className="min-h-screen flex flex-col bg-white dark:bg-black text-zinc-900 dark:text-white selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300">
             {/* Background Glows */}
             <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-zinc-900/20 to-transparent pointer-events-none"></div>
+                <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-zinc-100 dark:from-zinc-900/20 to-transparent pointer-events-none"></div>
             </div>
 
             <HeaderPedidosDisco user={userName} onLogout={handleLogout} codigoConfirmado={codigoConfirmado} />
@@ -53,7 +53,7 @@ function SeleccionProductosDisco() {
                 <div className="mb-6">
                     <button
                         onClick={() => navigate('/')}
-                        className={`${UI_CLASSES.backButton || UI_CLASSES.buttonBack} shadow-none border-white/5 bg-black/50 hover:bg-zinc-900`}
+                        className={`${UI_CLASSES.backButton || UI_CLASSES.buttonBack} shadow-none border-zinc-200 dark:border-white/5 bg-zinc-100/50 dark:bg-black/50 hover:bg-zinc-200 dark:hover:bg-zinc-900 text-zinc-900 dark:text-white`}
                     >
                         <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
                         <span className="font-bold uppercase tracking-wider text-xs">Volver</span>
@@ -61,10 +61,10 @@ function SeleccionProductosDisco() {
                 </div>
 
                 <div className="text-center mb-10">
-                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 tracking-tight uppercase drop-shadow-lg">
+                    <h1 className="text-4xl md:text-5xl font-black text-zinc-900 dark:text-white mb-3 tracking-tight uppercase drop-shadow-lg">
                         Menú Principal
                     </h1>
-                    <p className="text-lg text-zinc-400 font-light italic">Selecciona los productos para tu pedido</p>
+                    <p className="text-lg text-zinc-500 dark:text-zinc-400 font-light italic">Selecciona los productos para tu pedido</p>
                 </div>
 
                 <ProductGridDisco

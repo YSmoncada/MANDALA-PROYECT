@@ -8,7 +8,7 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Nombre */}
             <div className="sm:col-span-2">
-                <label className="text-xs font-bold text-gray-300 uppercase mb-1 block">Nombre del Producto *</label>
+                <label className="text-xs font-bold text-zinc-500 dark:text-gray-300 uppercase mb-1 block">Nombre del Producto *</label>
                 <input
                     type="text"
                     name="nombre"
@@ -29,7 +29,7 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
 
             {/* Categoría */}
             <div>
-                <label className="text-xs font-bold text-gray-300 uppercase mb-1 block">Categoría *</label>
+                <label className="text-xs font-bold text-zinc-500 dark:text-gray-300 uppercase mb-1 block">Categoría *</label>
                 <select
                     name="categoria"
                     value={getValue(form.categoria)}
@@ -48,7 +48,7 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
 
             {/* Unidad de Medida */}
             <div>
-                <label className="text-xs font-bold text-gray-300 uppercase mb-1 block">Unidad de Medida *</label>
+                <label className="text-xs font-bold text-zinc-500 dark:text-gray-300 uppercase mb-1 block">Unidad de Medida *</label>
                 <select
                     name="unidad"
                     value={getValue(form.unidad)}
@@ -68,7 +68,7 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
 
             {/* Precio Unitario */}
             <div>
-                <label className="text-xs font-bold text-gray-300 uppercase mb-1 block">Precio Unitario *</label>
+                <label className="text-xs font-bold text-zinc-500 dark:text-gray-300 uppercase mb-1 block">Precio Unitario *</label>
                 <input
                     type="number"
                     name="precio"
@@ -83,21 +83,21 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
 
             {/* Stock Actual */}
             <div>
-                <label className="text-xs font-bold text-gray-300 uppercase mb-1 block">Stock Actual *</label>
+                <label className="text-xs font-bold text-zinc-500 dark:text-gray-300 uppercase mb-1 block">Stock Actual *</label>
                 <div className="relative group">
                     <input
                         type="number"
                         name="stock"
                         value={form.stock ?? ""}
                         onChange={onChange}
-                        className={`${UI_CLASSES.input} ${isEditing ? 'opacity-50 cursor-not-allowed bg-black/20 text-gray-400' : ''}`}
+                        className={`${UI_CLASSES.input} ${isEditing ? 'opacity-50 cursor-not-allowed bg-zinc-100 dark:bg-black/20 text-zinc-400 dark:text-gray-400' : ''}`}
                         placeholder="0"
                         readOnly={isEditing}
                         title={isEditing ? "El stock se ajusta mediante Movimientos (Botón + en la tabla)" : ""}
                         required={!isEditing}
                     />
                     {isEditing && (
-                        <div className="absolute top-full left-0 mt-1 text-[10px] text-purple-400 font-medium animate-fadeIn">
+                        <div className="absolute top-full left-0 mt-1 text-[10px] text-zinc-400 dark:text-purple-400 font-medium animate-fadeIn">
                              Ajustar mediante "Movimientos" en la tabla
                         </div>
                     )}
@@ -106,10 +106,10 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
 
             {/* Stock Mínimo */}
             <div className="sm:col-span-2">
-                <hr className="border-white/10 my-2" />
+                <hr className="border-zinc-100 dark:border-white/10 my-2" />
             </div>
             <div>
-                <label className="text-xs font-bold text-gray-300 uppercase mb-1 block">Stock Mínimo *</label>
+                <label className="text-xs font-bold text-zinc-500 dark:text-gray-300 uppercase mb-1 block">Stock Mínimo *</label>
                 <input
                     type="number"
                     name="stock_minimo"
@@ -123,7 +123,7 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
 
             {/* Stock Máximo */}
             <div>
-                <label className="text-xs font-bold text-gray-300 uppercase mb-1 block">Stock Máximo *</label>
+                <label className="text-xs font-bold text-zinc-500 dark:text-gray-300 uppercase mb-1 block">Stock Máximo *</label>
                 <input
                     type="number"
                     name="stock_maximo"
@@ -137,10 +137,10 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
 
             {/* Proveedor */}
             <div className="sm:col-span-2">
-                <hr className="border-white/10 my-2" />
+                <hr className="border-zinc-100 dark:border-white/10 my-2" />
             </div>
             <div>
-                <label className="text-xs font-bold text-gray-300 uppercase mb-1 block">Proveedor</label>
+                <label className="text-xs font-bold text-zinc-500 dark:text-gray-300 uppercase mb-1 block">Proveedor</label>
                 <input
                     type="text"
                     name="proveedor"
@@ -153,7 +153,7 @@ export default function ProductFormFields({ form, onChange, isEditing }) {
 
             {/* Ubicación en almacén */}
             <div>
-                <label className="text-xs font-bold text-gray-300 uppercase mb-1 block">Ubicación en Almacén</label>
+                <label className="text-xs font-bold text-zinc-500 dark:text-gray-300 uppercase mb-1 block">Ubicación en Almacén</label>
                 <input
                     type="text"
                     name="ubicacion"

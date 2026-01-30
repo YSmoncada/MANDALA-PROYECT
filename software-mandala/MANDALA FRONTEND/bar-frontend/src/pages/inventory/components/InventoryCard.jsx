@@ -4,10 +4,10 @@ import { UI_CLASSES } from "../../../constants/ui";
 
 const InventoryCard = ({ onAdd }) => {
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4 border-b border-white/10 pb-8">
+    <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4 border-b border-zinc-100 dark:border-white/10 pb-8">
       <div>
-        <h2 className="text-2xl font-bold text-white tracking-tight">Listado de Productos</h2>
-        <p className="text-gray-400 text-sm">Administra tu stock, precios y categorías de productos.</p>
+        <h2 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">Listado de Productos</h2>
+        <p className="text-zinc-500 dark:text-gray-400 text-sm">Administra tu stock, precios y categorías de productos.</p>
       </div>
       <button
         onClick={onAdd}

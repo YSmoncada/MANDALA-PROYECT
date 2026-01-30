@@ -6,21 +6,44 @@ import { UI_CLASSES } from "../../../constants/ui";
 /**
  * Visual indicator for stock levels.
  */
+/**
+ * Visual indicator for stock levels.
+ */
 const StockStatus = memo(({ stock, min, max }) => {
-    let status = { label: 'Óptimo', color: 'text-emerald-500', bg: 'bg-emerald-500/20', border: 'border-emerald-500/40' };
+    let status = { 
+        label: 'Óptimo', 
+        color: 'text-emerald-600 dark:text-emerald-400', 
+        bg: 'bg-emerald-50 dark:bg-emerald-500/20', 
+        border: 'border-emerald-100 dark:border-emerald-500/30' 
+    };
 
     if (stock === 0) {
-        status = { label: 'Agotado', color: 'text-rose-600', bg: 'bg-rose-600/20', border: 'border-rose-600/40' };
+        status = { 
+            label: 'Agotado', 
+            color: 'text-rose-600 dark:text-rose-400', 
+            bg: 'bg-rose-50 dark:bg-rose-500/20', 
+            border: 'border-rose-100 dark:border-rose-500/30' 
+        };
     } else if (stock <= min) {
-        status = { label: 'Bajo Stock', color: 'text-yellow-200/80', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20' };
+        status = { 
+            label: 'Bajo Stock', 
+            color: 'text-amber-600 dark:text-amber-400', 
+            bg: 'bg-amber-50 dark:bg-amber-500/20', 
+            border: 'border-amber-100 dark:border-amber-500/30' 
+        };
     } else if (max > 0 && stock >= max) {
-        status = { label: 'Stock Alto', color: 'text-rose-500', bg: 'bg-rose-500/20', border: 'border-rose-500/40' };
+        status = { 
+            label: 'Stock Alto', 
+            color: 'text-indigo-600 dark:text-indigo-400', 
+            bg: 'bg-indigo-50 dark:bg-indigo-500/20', 
+            border: 'border-indigo-100 dark:border-indigo-500/30' 
+        };
     }
 
     return (
         <div className="flex flex-col items-center gap-1">
             <span className={`text-2xl font-black ${status.color}`}>{stock}</span>
-            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase border ${status.bg} ${status.color} ${status.border} shadow-lg backdrop-blur-sm text-center whitespace-nowrap`}>
+            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase border ${status.bg} ${status.color} ${status.border} shadow-sm backdrop-blur-sm text-center whitespace-nowrap`}>
                 {status.label}
             </span>
         </div>
@@ -62,24 +85,24 @@ const ProductTable = memo(({ productos, onEdit, onDelete, onMovimiento }) => {
         <div className="flex items-center justify-end gap-1 md:gap-2">
             <button
                 onClick={() => openMovimiento(producto)}
-                className="p-1.5 md:p-2 bg-emerald-600/20 text-emerald-400 rounded-lg hover:bg-emerald-600 hover:text-white transition-all shadow-lg border border-emerald-500/20"
+                className="p-2 md:p-2.5 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl hover:bg-emerald-500 dark:hover:bg-emerald-500 hover:text-white transition-all shadow-sm border border-emerald-100 dark:border-emerald-500/20 group/btn"
                 title="Registrar Movimiento"
             >
-                <PlusCircle size={size} className="md:w-[18px] md:h-[18px]" />
+                <PlusCircle size={size} className="md:w-[18px] md:h-[18px] group-active/btn:scale-90 transition-transform" />
             </button>
             <button
                 onClick={() => onEdit(producto)}
-                className="p-1.5 md:p-2 bg-blue-600/20 text-blue-400 rounded-lg hover:bg-blue-600 hover:text-white transition-all shadow-lg border border-blue-500/20"
+                className="p-2 md:p-2.5 bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-xl hover:bg-sky-500 dark:hover:bg-sky-500 hover:text-white transition-all shadow-sm border border-sky-100 dark:border-sky-500/20 group/btn"
                 title="Editar Producto"
             >
-                <Edit2 size={size} className="md:w-[18px] md:h-[18px]" />
+                <Edit2 size={size} className="md:w-[18px] md:h-[18px] group-active/btn:scale-90 transition-transform" />
             </button>
             <button
                 onClick={() => onDelete(producto)}
-                className="p-1.5 md:p-2 bg-rose-600/20 text-rose-400 rounded-lg hover:bg-rose-600 hover:text-white transition-all shadow-lg border border-rose-500/20"
+                className="p-2 md:p-2.5 bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 rounded-xl hover:bg-rose-500 dark:hover:bg-rose-500 hover:text-white transition-all shadow-sm border border-rose-100 dark:border-rose-500/20 group/btn"
                 title="Eliminar Producto"
             >
-                <Trash2 size={size} className="md:w-[18px] md:h-[18px]" />
+                <Trash2 size={size} className="md:w-[18px] md:h-[18px] group-active/btn:scale-90 transition-transform" />
             </button>
         </div>
     ), [onEdit, onDelete, openMovimiento]);
@@ -87,56 +110,63 @@ const ProductTable = memo(({ productos, onEdit, onDelete, onMovimiento }) => {
     return (
         <div className="space-y-4">
             {/* View Toggle - Hidden on mobile as grid is required */}
-            <div className="hidden md:flex justify-end mb-2">
-                <div className="bg-zinc-900 p-1 rounded-lg border border-white/10 flex gap-1">
+            <div className="hidden md:flex justify-end mb-4">
+                <div className="bg-zinc-50 dark:bg-zinc-950 p-1.5 rounded-2xl border border-zinc-100 dark:border-white/5 flex gap-1 shadow-inner">
                     <button 
                         onClick={() => setViewMode('table')}
-                        className={`p-2 rounded-md transition-all ${viewMode === 'table' ? 'bg-zinc-700 text-white shadow-lg' : 'text-zinc-500 hover:text-white'}`}
+                        className={`px-4 py-2 rounded-xl transition-all flex items-center gap-2 text-[10px] font-black uppercase tracking-widest ${viewMode === 'table' ? 'bg-zinc-900 dark:bg-white text-white dark:text-black shadow-lg shadow-black/5 dark:shadow-none' : 'text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-white'}`}
                     >
-                        <List size={18} />
+                        <List size={16} />
+                        Tabla
                     </button>
                     <button 
                         onClick={() => setViewMode('grid')}
-                        className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-zinc-700 text-white shadow-lg' : 'text-zinc-500 hover:text-white'}`}
+                        className={`px-4 py-2 rounded-xl transition-all flex items-center gap-2 text-[10px] font-black uppercase tracking-widest ${viewMode === 'grid' ? 'bg-zinc-900 dark:bg-white text-white dark:text-black shadow-lg shadow-black/5 dark:shadow-none' : 'text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-white'}`}
                     >
-                        <LayoutGrid size={18} />
+                        <LayoutGrid size={16} />
+                        Cuadrícula
                     </button>
                 </div>
             </div>
 
             {viewMode === 'table' ? (
-                <div className="overflow-x-auto rounded-xl border border-white/10 shadow-2xl">
+                <div className="overflow-x-auto rounded-[2rem] border border-zinc-200 dark:border-white/5 shadow-xl dark:shadow-none bg-white dark:bg-transparent transition-all duration-500">
                     <table className="w-full text-left text-sm">
-                        <thead className="bg-zinc-950 text-zinc-400 font-bold uppercase tracking-wider text-[10px]">
+                        <thead className="bg-zinc-50 dark:bg-black/40 text-zinc-400 dark:text-zinc-500 font-black uppercase tracking-[0.2em] text-[10px] border-b border-zinc-100 dark:border-white/5">
                             <tr>
-                                <th className="px-3 md:px-6 py-4">Producto</th>
-                                <th className="px-3 md:px-6 py-4">Categoría</th>
-                                <th className="px-3 md:px-6 py-4 text-center">Stock / Estado</th>
-                                <th className="px-3 md:px-6 py-4 text-center">Precio</th>
-                                <th className="px-3 md:px-6 py-4 text-right">Acciones</th>
+                                <th className="px-6 py-6">Producto</th>
+                                <th className="px-6 py-6">Categoría</th>
+                                <th className="px-6 py-6 text-center">Gestión Inventario</th>
+                                <th className="px-6 py-6 text-center">Valor Comercial</th>
+                                <th className="px-6 py-6 text-right">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/5">
+                        <tbody className="divide-y divide-zinc-50 dark:divide-white/[0.03] transition-colors duration-300">
                             {productos.map((producto) => (
-                                <tr key={producto.id} className="hover:bg-white/5 transition-colors group">
-                                    <td className="px-3 md:px-6 py-3">
-                                        <div className="flex items-center gap-2 md:gap-3">
+                                <tr key={producto.id} className="hover:bg-zinc-50/50 dark:hover:bg-white/[0.02] transition-colors group">
+                                    <td className="px-6 py-5">
+                                        <div className="flex items-center gap-4">
                                             {producto.imagen ? (
-                                                <img src={producto.imagen} alt={producto.nombre} className="w-8 h-8 md:w-10 md:h-10 rounded-lg object-cover border border-white/10" />
+                                                <div className="p-1.5 bg-zinc-50 dark:bg-white/5 rounded-xl border border-zinc-100 dark:border-white/10 group-hover:border-zinc-300 dark:group-hover:border-white/20 transition-all duration-500">
+                                                    <img src={producto.imagen} alt={producto.nombre} className="w-12 h-12 md:w-14 md:h-14 rounded-lg object-contain" />
+                                                </div>
                                             ) : (
-                                                <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-zinc-800 flex items-center justify-center border border-white/10 shrink-0">
-                                                    <span className="text-zinc-400 font-bold text-xs md:text-base">{producto.nombre?.charAt(0)}</span>
+                                                <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-zinc-50 dark:bg-zinc-900 flex items-center justify-center border border-zinc-200 dark:border-white/5 shadow-inner">
+                                                    <span className="text-zinc-300 dark:text-zinc-700 font-black text-xl">{producto.nombre?.charAt(0)}</span>
                                                 </div>
                                             )}
-                                            <span className="font-bold text-white group-hover:text-zinc-300 transition-colors uppercase text-xs md:text-sm">{producto.nombre}</span>
+                                            <div className="flex flex-col">
+                                                <span className="font-black text-zinc-900 dark:text-white group-hover:text-black dark:group-hover:text-white transition-colors uppercase text-xs md:text-sm tracking-tight">{producto.nombre}</span>
+                                                <span className="text-[10px] text-zinc-400 dark:text-zinc-600 font-bold uppercase tracking-widest">{producto.unidad}</span>
+                                            </div>
                                         </div>
                                     </td>
-                                    <td className="px-3 md:px-6 py-3">
-                                        <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-[9px] md:text-[10px] font-bold uppercase border border-blue-500/20 whitespace-nowrap">
+                                    <td className="px-6 py-5">
+                                        <span className="px-4 py-1.5 rounded-full bg-zinc-100 dark:bg-white/5 text-zinc-500 dark:text-zinc-400 text-[10px] font-black uppercase border border-zinc-200 dark:border-white/10 whitespace-nowrap tracking-widest group-hover:bg-zinc-900 dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-black transition-all duration-500">
                                             {producto.categoria}
                                         </span>
                                     </td>
-                                    <td className="px-3 md:px-6 py-3">
+                                    <td className="px-6 py-5">
                                         <div className="flex justify-center">
                                             <StockStatus 
                                                 stock={producto.stock} 
@@ -145,10 +175,12 @@ const ProductTable = memo(({ productos, onEdit, onDelete, onMovimiento }) => {
                                             />
                                         </div>
                                     </td>
-                                    <td className="px-3 md:px-6 py-3 text-center font-bold text-white text-sm md:text-lg">
-                                        ${Number(producto.precio).toLocaleString('es-CO', { maximumFractionDigits: 0 })}
+                                    <td className="px-6 py-5 text-center">
+                                        <span className="font-black text-zinc-900 dark:text-white text-base md:text-xl tracking-tighter tabular-nums drop-shadow-sm">
+                                            ${Number(producto.precio).toLocaleString('es-CO', { maximumFractionDigits: 0 })}
+                                        </span>
                                     </td>
-                                    <td className="px-3 md:px-6 py-3">
+                                    <td className="px-6 py-5 text-right">
                                         {renderActionButtons(producto)}
                                     </td>
                                 </tr>
@@ -157,35 +189,41 @@ const ProductTable = memo(({ productos, onEdit, onDelete, onMovimiento }) => {
                     </table>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                /* Grid view stays largely the same as it was already partially updated, but ensure premium feel */
+                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-fadeIn transition-all duration-500">
                     {productos.map((producto) => (
-                        <div key={producto.id} className="bg-zinc-900/30 border border-white/10 rounded-3xl p-4 hover:bg-zinc-900/50 transition-all group overflow-hidden relative backdrop-blur-sm">
-                            <div className="flex justify-between items-start mb-4">
-                                <div className="flex items-center gap-3">
-                                    {producto.imagen ? (
-                                        <img src={producto.imagen} alt={producto.nombre} className="w-12 h-12 rounded-xl object-cover border border-white/10" />
-                                    ) : (
-                                        <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center border border-white/10">
-                                            <span className="text-zinc-400 font-bold text-xl">{producto.nombre?.charAt(0)}</span>
-                                        </div>
-                                    )}
-                                    <div>
-                                        <h3 className="font-bold text-white uppercase group-hover:text-zinc-300 transition-colors">{producto.nombre}</h3>
-                                        <span className="text-[10px] text-blue-400 font-bold uppercase">{producto.categoria}</span>
-                                    </div>
+                        <div key={producto.id} className="bg-white dark:bg-zinc-900/40 backdrop-blur-md border border-zinc-200 dark:border-white/5 rounded-[2.5rem] p-6 hover:shadow-2xl dark:hover:shadow-none transition-all duration-500 group flex flex-col justify-between hover:-translate-y-2">
+                             <div>
+                                <div className="flex justify-between items-start mb-6">
+                                    <span className="px-3 py-1 rounded-full bg-zinc-50 dark:bg-white/5 text-zinc-400 dark:text-zinc-500 text-[9px] font-black uppercase tracking-widest border border-zinc-100 dark:border-white/10 group-hover:bg-zinc-900 dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-black transition-all">
+                                        {producto.categoria}
+                                    </span>
+                                    {renderActionButtons(producto, 16)}
                                 </div>
-                                <div className="flex flex-col items-center min-w-[80px]">
-                                    <StockStatus 
-                                        stock={producto.stock} 
-                                        min={producto.stock_minimo} 
-                                        max={producto.stock_maximo} 
-                                    />
+                                <div className="flex flex-col items-center mb-6">
+                                    <div className="w-32 h-32 rounded-3xl bg-zinc-50 dark:bg-black/30 flex items-center justify-center border border-zinc-100 dark:border-white/5 shadow-inner mb-4 group-hover:scale-105 transition-transform duration-500 overflow-hidden relative">
+                                        {producto.imagen ? (
+                                            <img src={producto.imagen} alt={producto.nombre} className="w-full h-full object-contain p-4" />
+                                        ) : (
+                                            <span className="text-4xl font-black text-zinc-200 dark:text-zinc-800 uppercase">{producto.nombre?.charAt(0)}</span>
+                                        )}
+                                    </div>
+                                    <h3 className="font-black text-lg text-zinc-900 dark:text-white uppercase tracking-tight text-center">{producto.nombre}</h3>
+                                    <p className="text-[10px] text-zinc-400 dark:text-zinc-600 font-black uppercase tracking-widest mt-1">{producto.unidad}</p>
                                 </div>
                             </div>
-                            
-                            <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/5">
-                                <span className="text-xl font-bold text-white">${Number(producto.precio).toLocaleString('es-CO', { maximumFractionDigits: 0 })}</span>
-                                {renderActionButtons(producto, 18)}
+                            <div className="bg-zinc-50/50 dark:bg-black/20 rounded-[1.5rem] p-5 flex items-center justify-between border border-zinc-100 dark:border-white/5 shadow-inner">
+                                <StockStatus 
+                                    stock={producto.stock} 
+                                    min={producto.stock_minimo} 
+                                    max={producto.stock_maximo} 
+                                />
+                                <div className="text-right">
+                                    <p className="text-[9px] text-zinc-400 dark:text-zinc-500 font-black uppercase tracking-widest mb-1">Precio Unitario</p>
+                                    <p className="text-xl font-black text-zinc-900 dark:text-white tracking-tighter tabular-nums drop-shadow-sm">
+                                        ${Number(producto.precio).toLocaleString('es-CO', { maximumFractionDigits: 0 })}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     ))}

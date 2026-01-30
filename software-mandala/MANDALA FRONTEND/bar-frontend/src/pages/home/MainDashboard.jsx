@@ -3,13 +3,12 @@ import { useUserModules } from "../../hooks/useUserModules";
 import AccessVerifier from "./AccessVerifier";
 import ModuleCard from "./ModuleCard";
 import { LogOut } from "lucide-react";
-import { button } from "framer-motion/client";
-import { useState, useEffect } from "react";
+import { useTheme } from "../../context/ThemeContext";
+import ThemeToggle from "../../components/ThemeToggle";
 
-/**
- * Visual background effects for the dashboard.
- */
 const BackgroundEffects = () => {
+    const { isDark } = useTheme();
+    if (!isDark) return null; // No special effects in light mode for now or different ones
     return (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
             {/* Elegant Night Mode Effects */}
@@ -20,54 +19,27 @@ const BackgroundEffects = () => {
     );
 };
 
-const DarkmodeButton = () => {
-    const [dark, setDark] = useState(true);
+// Redundant DarkmodeButton removed in favor of ThemeToggle
 
-    useEffect(() => {
-        const root = document.documentElement;
-        if (dark) {
-            root.classList.add("dark");
-        } else {
-            root.classList.remove("dark");
-        }
-    }, [dark]);
-
-    return (
-        <button
-            onClick={() => setDark(!dark)}
-            className="fixed top-6 left-6 z-50
-                flex items-center gap-2 px-4 py-2 rounded-full
-                bg-black/40 border border-white/5
-                hover:bg-zinc-900 hover:border-white/20
-                text-zinc-400 hover:text-white
-                transition-all backdrop-blur-md shadow-2xl"
-        >
-            <span className="text-xs font-medium uppercase tracking-widest">
-                {dark ? "Nox" : "Lux"}
+const DashboardHeader = () => (
+    <div className="text-center mb-16 sm:mb-24">
+        <h1 className="text-7xl sm:text-9xl font-black mb-6 relative tracking-tighter">
+            <span className="relative text-transparent bg-clip-text bg-gradient-to-b from-zinc-900 via-zinc-800 to-zinc-400 dark:from-white dark:via-zinc-100 dark:to-zinc-600 tracking-[0.2em] uppercase drop-shadow-2xl italic">
+                Nox<span className="text-zinc-200 dark:text-zinc-800">OS</span>
             </span>
-        </button>
-    );
-};
+        </h1>
+        <div className="h-1 w-32 bg-zinc-900 dark:bg-white mx-auto opacity-10 dark:opacity-20 rounded-full"></div>
+    </div>
+);
 
 const LogoutButton = ({ onLogout }) => (
     <button
         onClick={onLogout}
-        className="sm:absolute sm:top-6 sm:right-6 mb-8 sm:mb-0 flex items-center gap-2 px-4 py-2 rounded-full bg-black/40 border border-white/5 hover:bg-red-950/30 hover:border-red-500/30 hover:text-red-200 text-zinc-400 transition-all backdrop-blur-md shadow-2xl group z-50"
+        className="sm:absolute sm:top-6 sm:right-6 mb-8 sm:mb-0 flex items-center gap-3 px-6 py-3 rounded-full bg-white dark:bg-zinc-900/40 border border-zinc-200 dark:border-white/10 hover:bg-rose-50 dark:hover:bg-rose-500/10 hover:border-rose-200 dark:hover:border-rose-500/30 text-zinc-500 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 font-black text-[10px] uppercase tracking-[0.2em] transition-all backdrop-blur-md shadow-xl dark:shadow-none group z-50 active:scale-95"
     >
         <LogOut size={16} className="group-hover:-translate-x-1 transition-transform" />
-        <span className="text-xs font-medium uppercase tracking-widest">Cerrar Sesión</span>
+        <span>Cerrar Sesión</span>
     </button>
-);
-
-const DashboardHeader = () => (
-    <div className="text-center mb-16 sm:mb-20">
-        <h1 className="text-6xl sm:text-8xl md:text-9xl font-black mb-6 relative tracking-tighter">
-            <span className="relative text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-600 tracking-[0.2em] uppercase drop-shadow-2xl">
-                Nox<span className="text-zinc-700">OS</span>
-            </span>
-        </h1>
-        <div className="h-px w-40 bg-gradient-to-r from-transparent via-zinc-500 to-transparent mx-auto opacity-30"></div>
-    </div>
 );
 
 function MainDashboard() {
@@ -76,9 +48,11 @@ function MainDashboard() {
 
     return (
         <AccessVerifier auth={auth}>
-            <div className="min-h-screen bg-black text-white overflow-hidden relative selection:bg-zinc-800 selection:text-white">
+            <div className="min-h-screen bg-white dark:bg-black text-zinc-900 dark:text-white overflow-hidden relative selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300">
                 <BackgroundEffects />
-                <DarkmodeButton/>
+                <div className="fixed top-6 left-6 z-50">
+                    <ThemeToggle />
+                </div>
                 <main className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-16 sm:py-12">
                     <DashboardHeader />
                     <LogoutButton onLogout={handleLogout} />
