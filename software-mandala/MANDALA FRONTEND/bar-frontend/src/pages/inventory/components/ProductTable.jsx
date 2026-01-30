@@ -175,12 +175,10 @@ const ProductTable = memo(({ productos, onEdit, onDelete, onMovimiento }) => {
                                             />
                                         </div>
                                     </td>
-                                    <td className="px-6 py-5 text-center">
-                                        <span className="font-black text-zinc-900 dark:text-white text-base md:text-xl tracking-tighter tabular-nums drop-shadow-sm">
-                                            ${Number(producto.precio).toLocaleString('es-CO', { maximumFractionDigits: 0 })}
-                                        </span>
+                                    <td className="px-3 md:px-6 py-3 text-center font-bold text-zinc-900 dark:text-white text-sm md:text-lg">
+                                        ${Number(producto.precio).toLocaleString('es-CO', { maximumFractionDigits: 0 })}
                                     </td>
-                                    <td className="px-6 py-5 text-right">
+                                    <td className="px-3 md:px-6 py-3 text-right">
                                         {renderActionButtons(producto)}
                                     </td>
                                 </tr>
@@ -189,38 +187,37 @@ const ProductTable = memo(({ productos, onEdit, onDelete, onMovimiento }) => {
                     </table>
                 </div>
             ) : (
-                /* Grid view stays largely the same as it was already partially updated, but ensure premium feel */
-                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-fadeIn transition-all duration-500">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 animate-fadeIn">
                     {productos.map((producto) => (
-                        <div key={producto.id} className="bg-white dark:bg-zinc-900/40 backdrop-blur-md border border-zinc-200 dark:border-white/5 rounded-[2.5rem] p-6 hover:shadow-2xl dark:hover:shadow-none transition-all duration-500 group flex flex-col justify-between hover:-translate-y-2">
+                        <div key={producto.id} className="bg-white dark:bg-zinc-900/30 border border-zinc-200 dark:border-white/5 rounded-2xl p-4 md:p-6 hover:shadow-xl dark:hover:shadow-none transition-all duration-300 group flex flex-col justify-between backdrop-blur-md">
                              <div>
-                                <div className="flex justify-between items-start mb-6">
-                                    <span className="px-3 py-1 rounded-full bg-zinc-50 dark:bg-white/5 text-zinc-400 dark:text-zinc-500 text-[9px] font-black uppercase tracking-widest border border-zinc-100 dark:border-white/10 group-hover:bg-zinc-900 dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-black transition-all">
+                                <div className="flex justify-between items-start mb-4">
+                                    <span className="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[9px] md:text-[10px] font-bold uppercase border border-blue-200 dark:border-blue-500/20">
                                         {producto.categoria}
                                     </span>
                                     {renderActionButtons(producto, 16)}
                                 </div>
-                                <div className="flex flex-col items-center mb-6">
-                                    <div className="w-32 h-32 rounded-3xl bg-zinc-50 dark:bg-black/30 flex items-center justify-center border border-zinc-100 dark:border-white/5 shadow-inner mb-4 group-hover:scale-105 transition-transform duration-500 overflow-hidden relative">
+                                <div className="flex flex-col items-center mb-4">
+                                    <div className="w-24 h-24 md:w-32 md:h-32 rounded-xl bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center border border-zinc-200 dark:border-white/10 shadow-inner mb-3">
                                         {producto.imagen ? (
-                                            <img src={producto.imagen} alt={producto.nombre} className="w-full h-full object-contain p-4" />
+                                            <img src={producto.imagen} alt={producto.nombre} className="w-full h-full object-contain p-2" />
                                         ) : (
-                                            <span className="text-4xl font-black text-zinc-200 dark:text-zinc-800 uppercase">{producto.nombre?.charAt(0)}</span>
+                                            <span className="text-3xl font-black text-zinc-200 dark:text-zinc-700 uppercase">{producto.nombre?.charAt(0)}</span>
                                         )}
                                     </div>
-                                    <h3 className="font-black text-lg text-zinc-900 dark:text-white uppercase tracking-tight text-center">{producto.nombre}</h3>
-                                    <p className="text-[10px] text-zinc-400 dark:text-zinc-600 font-black uppercase tracking-widest mt-1">{producto.unidad}</p>
+                                    <h3 className="font-bold text-base md:text-lg text-zinc-900 dark:text-white uppercase tracking-tight text-center">{producto.nombre}</h3>
+                                    <p className="text-[10px] text-zinc-400 dark:text-zinc-600 font-bold uppercase tracking-widest mt-1">{producto.unidad}</p>
                                 </div>
                             </div>
-                            <div className="bg-zinc-50/50 dark:bg-black/20 rounded-[1.5rem] p-5 flex items-center justify-between border border-zinc-100 dark:border-white/5 shadow-inner">
+                            <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-xl p-4 flex items-center justify-between border border-zinc-200 dark:border-white/10 shadow-inner">
                                 <StockStatus 
                                     stock={producto.stock} 
                                     min={producto.stock_minimo} 
                                     max={producto.stock_maximo} 
                                 />
                                 <div className="text-right">
-                                    <p className="text-[9px] text-zinc-400 dark:text-zinc-500 font-black uppercase tracking-widest mb-1">Precio Unitario</p>
-                                    <p className="text-xl font-black text-zinc-900 dark:text-white tracking-tighter tabular-nums drop-shadow-sm">
+                                    <p className="text-[9px] text-zinc-400 dark:text-zinc-500 font-bold uppercase tracking-widest mb-1">Precio</p>
+                                    <p className="text-lg md:text-xl font-black text-zinc-900 dark:text-white tracking-tighter">
                                         ${Number(producto.precio).toLocaleString('es-CO', { maximumFractionDigits: 0 })}
                                     </p>
                                 </div>
