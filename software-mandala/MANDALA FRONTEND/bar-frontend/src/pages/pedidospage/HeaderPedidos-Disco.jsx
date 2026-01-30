@@ -31,72 +31,70 @@ function HeaderPedidosDisco({ user, onLogout, codigoConfirmado }) {
         <>
             <div className="h-20 w-full"></div>
 
-            <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-black/90 backdrop-blur-md border-b border-zinc-200 dark:border-white/5 shadow-2xl transition-colors duration-300">
-                <div className="w-full px-6 sm:px-8">
+            <header className="fixed top-0 left-0 right-0 z-50 bg-[#0E0D23]/90 dark:bg-black/95 backdrop-blur-xl border-b border-white/10 dark:border-white/5 transition-all duration-500">
+                <div className="w-full px-8">
                     <div className="flex items-center justify-between h-20">
-                        {/* LEFT CORNER: Logo */}
-                        <div className="flex items-center gap-3 group">
-                            <div className="relative">
-                                <div className="absolute inset-0 bg-zinc-900/5 dark:bg-white/10 blur-xl opacity-40 group-hover:opacity-60 transition-opacity"></div>
-                                <h1 className="relative text-2xl font-black text-zinc-900 dark:text-white tracking-[0.1em] uppercase">
-                                    Nox<span className="text-zinc-400 dark:text-zinc-500">OS</span>
-                                </h1>
-                            </div>
+                        {/* LEFT: App Identity */}
+                        <div className="flex items-center gap-4">
+                            <div className="h-8 w-1.5 bg-gradient-to-b from-[#A944FF] to-transparent rounded-full"></div>
+                            <h1 className="text-2xl font-black text-white dark:text-white tracking-widest uppercase italic">
+                                Nox<span className="text-[#A944FF] dark:text-zinc-500">OS</span>
+                            </h1>
                         </div>
 
-                        {/* RIGHT CORNER: Navigation & User Profile */}
-                        <div className="flex items-center gap-6">
-
-                            {/* Desktop Nav */}
-                            <nav className="hidden md:flex items-center gap-2">
+                        {/* CENTER/RIGHT: Nav & Profile */}
+                        <div className="flex items-center gap-10">
+                            {/* Desktop Navigation */}
+                            <nav className="hidden md:flex items-center gap-4 bg-black/40 dark:bg-zinc-900/50 p-1.5 rounded-2xl border border-white/5">
                                 {navLinks.map(link => {
                                     const isEnabled = user && (link.href === '/' || codigoConfirmado);
+                                    const isActive = location.pathname === link.href;
+                                    
                                     return isEnabled ? (
                                         <Link
                                             key={link.href}
                                             to={link.href}
-                                            className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 font-bold text-sm tracking-wide ${location.pathname === link.href ? activeClasses : inactiveClasses}`}
+                                            className={`flex items-center gap-3 px-6 py-2.5 rounded-xl transition-all duration-500 font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl ${isActive 
+                                                ? "bg-[#A944FF] dark:bg-white text-white dark:text-black border border-white/20 shadow-[#A944FF]/20" 
+                                                : "text-[#8A7BAF] dark:text-zinc-500 hover:text-white hover:bg-white/5"}`}
                                         >
-                                            {link.icon}
+                                            <span className={isActive ? "animate-pulse" : ""}>{link.icon}</span>
                                             <span>{link.label}</span>
                                         </Link>
                                     ) : null;
                                 })}
                             </nav>
 
-                            {/* User Profile */}
-                            <div className="hidden md:flex items-center gap-4">
+                            {/* Actions Area */}
+                            <div className="flex items-center gap-6">
                                 <ThemeToggle />
+                                
                                 {user && (
-                                    <>
-                                        <div className="flex items-center gap-3 mr-2 border-r border-zinc-200 dark:border-white/10 pr-6">
-                                            <div className="flex flex-col items-end">
-                                                <span className="text-zinc-900 dark:text-white font-bold text-sm leading-tight capitalize">{user}</span>
-                                                <div className="flex items-center gap-1.5">
-                                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                                    <span className="text-[10px] text-emerald-500 font-bold tracking-wider uppercase">En turno</span>
-                                                </div>
-                                            </div>
-                                            <div className="w-9 h-9 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-white/10 flex items-center justify-center text-zinc-900 dark:text-white font-bold shadow-lg">
-                                                {user.charAt(0).toUpperCase()}
+                                    <div className="flex items-center gap-6 border-l border-white/10 dark:border-white/5 pl-6">
+                                        <div className="flex flex-col items-end">
+                                            <span className="text-white dark:text-zinc-200 font-black text-xs uppercase tracking-widest italic">{user}</span>
+                                            <div className="flex items-center gap-2 mt-0.5">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                                                <span className="text-[9px] text-emerald-400 font-black tracking-[0.2em] uppercase">Online</span>
                                             </div>
                                         </div>
+                                        
                                         <button
-                                            onClick={onLogout}
-                                            className="bg-red-500/10 hover:bg-red-500/20 text-red-500 p-2 rounded-lg transition-all duration-300 border border-red-500/20 hover:border-red-500/40"
-                                            title="Cerrar sesión"
+                                            onClick={handleLogoutClick}
+                                            className="group flex items-center justify-center w-10 h-10 rounded-xl bg-rose-500/10 hover:bg-rose-500 dark:hover:bg-rose-600 text-rose-500 hover:text-white transition-all duration-500 border border-rose-500/20 shadow-lg shadow-rose-500/5 active:scale-90"
+                                            title="Logout"
                                         >
                                             <LogOut size={18} />
                                         </button>
-                                    </>
+                                    </div>
                                 )}
                             </div>
 
-                            {/* Mobile Toggle */}
+                            {/* Mobile Burger */}
                             <div className="md:hidden">
                                 <button
                                     onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                    className="text-white p-2 hover:bg-zinc-800 rounded-lg transition-colors"
+                                    className="text-white p-3 hover:bg-white/5 rounded-2xl transition-all"
                                 >
                                     {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                                 </button>
@@ -105,37 +103,37 @@ function HeaderPedidosDisco({ user, onLogout, codigoConfirmado }) {
                     </div>
                 </div>
 
-                {/* Mobile Menu */}
+                {/* Mobile Menu Panel */}
                 {isMenuOpen && (
-                    <div className="md:hidden bg-white dark:bg-black border-b border-zinc-200 dark:border-white/10 absolute w-full shadow-2xl backdrop-blur-xl">
-                        <div className="px-4 pt-4 pb-6 space-y-2">
-                            {user && (
-                                <div className="mb-6 pb-6 border-b border-white/10 flex items-center justify-end">
-                                    <button
-                                        onClick={handleLogoutClick}
-                                        className="flex items-center gap-2 text-red-400 bg-red-500/10 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide border border-red-500/20"
-                                    >
-                                        <LogOut size={16} /> Salir
-                                    </button>
-                                </div>
-                            )}
-
+                    <div className="md:hidden bg-[#0E0D23]/95 dark:bg-black/95 border-b border-white/10 absolute w-full shadow-2xl backdrop-blur-3xl animate-fadeIn">
+                        <div className="px-6 pt-6 pb-10 space-y-4">
                             {navLinks.map(link => {
                                 const isEnabled = user && (link.href === '/' || codigoConfirmado);
+                                const isActive = location.pathname === link.href;
+                                
                                 return isEnabled ? (
                                     <Link
                                         key={link.href}
                                         to={link.href}
                                         onClick={() => setIsMenuOpen(false)}
-                                        className={`flex items-center gap-4 px-4 py-4 rounded-xl text-lg font-bold transition-all ${location.pathname === link.href
-                                            ? "bg-white text-black border border-white"
-                                            : "text-zinc-500 hover:bg-zinc-900 hover:text-white"
+                                        className={`flex items-center gap-5 px-6 py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-xs transition-all ${isActive
+                                            ? "bg-[#A944FF] text-white border border-white/20"
+                                            : "text-[#8A7BAF] hover:bg-white/5 hover:text-white"
                                             }`}
                                     >
                                         {link.icon} {link.label}
                                     </Link>
                                 ) : null;
                             })}
+                            
+                            {user && (
+                                <button
+                                    onClick={handleLogoutClick}
+                                    className="w-full flex items-center justify-center gap-3 text-rose-500 bg-rose-500/10 px-6 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] border border-rose-500/20 mt-6"
+                                >
+                                    <LogOut size={18} /> Finalizar Turno
+                                </button>
+                            )}
                         </div>
                     </div>
                 )}

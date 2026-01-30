@@ -97,55 +97,58 @@ const AdminUsuariosDisco = () => {
 
     return (
         <PageLayout title="Gestión de Personal">
-            <div className="max-w-7xl mx-auto space-y-12 pb-20">
+            <div className="max-w-7xl mx-auto space-y-16 pb-24">
                 
                 {/* Global Actions */}
-                <div className="flex justify-end gap-4 px-4 sm:px-0">
-                    <button
-                        onClick={refresh}
-                        className="flex items-center gap-2 p-3 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/5 text-zinc-500 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white transition-all shadow-sm dark:shadow-lg active:scale-95 group"
-                        title="Refrescar datos"
-                    >
-                        <RefreshCw size={18} className={`${loading ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} />
-                    </button>
+                <div className="flex justify-between items-center gap-6 px-4 sm:px-0">
+                    <div className="flex gap-4">
+                        <button
+                            onClick={refresh}
+                            className="flex items-center justify-center p-4 rounded-2xl bg-[#0E0D23] dark:bg-zinc-900 border border-white/5 text-[#8A7BAF] hover:bg-[#1A103C] dark:hover:bg-zinc-800 hover:text-white transition-all shadow-2xl active:scale-90 group"
+                            title="Refrescar"
+                        >
+                            <RefreshCw size={18} className={`${loading ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} />
+                        </button>
+                    </div>
                     
-                    <button
-                        onClick={() => setShowAddForm(true)}
-                        className="flex items-center gap-2 px-4 py-3 rounded-xl bg-zinc-900 dark:bg-zinc-100 border border-transparent dark:border-white text-white dark:text-black hover:bg-black dark:hover:bg-white transition-all font-bold text-xs uppercase tracking-widest shadow-xl active:scale-95"
-                    >
-                        <Plus size={18} />
-                        Nuevo Personal
-                    </button>
-                    <button
-                        onClick={() => navigate('/configuracion-ticket')}
-                        className="flex items-center gap-2 px-6 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white transition-all font-bold text-xs uppercase tracking-widest shadow-sm dark:shadow-xl active:scale-95"
-                    >
-                        <Settings size={18} />
-                        Configurar Ticket
-                    </button>
+                    <div className="flex gap-4">
+                        <button
+                            onClick={() => navigate('/configuracion-ticket')}
+                            className="hidden sm:flex items-center gap-3 px-8 py-4 rounded-2xl bg-[#0E0D23] dark:bg-zinc-900 border border-white/5 text-[#8A7BAF] dark:text-zinc-400 hover:text-white transition-all font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl active:scale-95"
+                        >
+                            <Settings size={18} />
+                            Configurar Ticket
+                        </button>
+
+                        <button
+                            onClick={() => setShowAddForm(true)}
+                            className="flex items-center gap-3 px-10 py-4 rounded-2xl bg-[#A944FF] dark:bg-white text-white dark:text-black hover:brightness-110 transition-all font-black text-[10px] uppercase tracking-[0.2em] shadow-[0_20px_40px_-10px_rgba(169,68,255,0.4)] dark:shadow-none active:scale-95"
+                        >
+                            <Plus size={18} />
+                            Nuevo Personal
+                        </button>
+                    </div>
                 </div>
 
                 {loading && usuarios.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-32 animate-fadeIn">
-                        <div className="relative">
-                            <div className="w-16 h-16 border-4 border-zinc-200 dark:border-zinc-800 border-t-zinc-900 dark:border-t-white rounded-full animate-spin mb-6 shadow-xl"></div>
-                        </div>
-                        <p className="text-zinc-400 dark:text-zinc-500 font-bold tracking-[0.4em] text-[10px] animate-pulse uppercase">Cargando base de datos...</p>
+                    <div className="flex flex-col items-center justify-center py-40 animate-fadeIn">
+                        <div className="w-20 h-20 border-4 border-[#6C3FA8]/20 dark:border-zinc-800 border-t-[#A944FF] dark:border-t-white rounded-[2rem] animate-spin mb-8 shadow-2xl"></div>
+                        <p className="text-[#8A7BAF] dark:text-zinc-500 font-black tracking-[0.4em] text-[11px] animate-pulse uppercase">Conectando con la base de datos...</p>
                     </div>
                 ) : (
-                    <div className="space-y-16 animate-fadeIn">
+                    <div className="space-y-24 animate-fadeIn">
                         {/* System Users Section */}
                         <section className="px-4 sm:px-0">
-                            <div className="flex items-center gap-4 mb-8">
-                                <div className="h-px w-8 bg-zinc-300 dark:bg-zinc-500"></div>
-                                <h2 className="text-sm font-black tracking-[0.4em] uppercase text-zinc-900 dark:text-white">
+                            <div className="flex items-center gap-6 mb-12">
+                                <div className="h-0.5 w-10 bg-[#A944FF] dark:bg-zinc-500 rounded-full shadow-[0_0_10px_#A944FF]"></div>
+                                <h2 className="text-sm font-black tracking-[0.4em] uppercase text-white dark:text-white italic">
                                     Usuarios del Sistema
                                 </h2>
-                                <div className="h-px flex-grow bg-gradient-to-r from-zinc-200 dark:from-zinc-800 to-transparent"></div>
-                                <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-600 uppercase tracking-widest">{usuarios.length} activos</span>
+                                <div className="h-0.5 flex-grow bg-gradient-to-r from-[#A944FF]/30 dark:from-zinc-800 to-transparent"></div>
+                                <span className="text-[10px] font-black text-[#8A7BAF] dark:text-zinc-600 uppercase tracking-[0.2em] bg-[#1A103C] px-4 py-1.5 rounded-full border border-white/5">{usuarios.length} activos</span>
                             </div>
                             
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                                 {usuarios.map(user => (
                                     <UserCard
                                         key={`u-${user.id}`}
@@ -157,8 +160,8 @@ const AdminUsuariosDisco = () => {
                                     />
                                 ))}
                                 {usuarios.length === 0 && !loading && (
-                                    <div className="col-span-full py-16 text-center bg-zinc-50 dark:bg-zinc-900/30 rounded-3xl border border-dashed border-zinc-200 dark:border-white/5 shadow-sm dark:shadow-none">
-                                        <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">No se encontraron usuarios del sistema.</p>
+                                    <div className="col-span-full py-24 text-center bg-[#1A103C]/30 dark:bg-zinc-900/30 rounded-[3rem] border-2 border-dashed border-white/5 shadow-inner">
+                                        <p className="text-[#8A7BAF] font-black uppercase tracking-[0.25em] text-[10px]">No se encontraron usuarios activos.</p>
                                     </div>
                                 )}
                             </div>
@@ -166,16 +169,16 @@ const AdminUsuariosDisco = () => {
 
                         {/* Staff Profiles Section */}
                         <section className="px-4 sm:px-0">
-                            <div className="flex items-center gap-4 mb-8">
-                                <div className="h-px w-8 bg-zinc-300 dark:bg-zinc-500"></div>
-                                <h2 className="text-sm font-black tracking-[0.4em] uppercase text-zinc-900 dark:text-white">
+                            <div className="flex items-center gap-6 mb-12">
+                                <div className="h-0.5 w-10 bg-[#8A44FF] dark:bg-zinc-500 rounded-full shadow-[0_0_10px_#8A44FF]"></div>
+                                <h2 className="text-sm font-black tracking-[0.4em] uppercase text-white dark:text-white italic">
                                     Personal de Operación
                                 </h2>
-                                <div className="h-px flex-grow bg-gradient-to-r from-zinc-200 dark:from-zinc-800 to-transparent"></div>
-                                <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-600 uppercase tracking-widest">{meseras.length} perfiles</span>
+                                <div className="h-0.5 flex-grow bg-gradient-to-r from-[#8A44FF]/30 dark:from-zinc-800 to-transparent"></div>
+                                <span className="text-[10px] font-black text-[#8A7BAF] dark:text-zinc-600 uppercase tracking-[0.2em] bg-[#1A103C] px-4 py-1.5 rounded-full border border-white/5">{meseras.length} perfiles</span>
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                                 {meseras.map(mesera => (
                                     <UserCard
                                         key={`m-${mesera.id}`}
@@ -187,8 +190,8 @@ const AdminUsuariosDisco = () => {
                                     />
                                 ))}
                                 {meseras.length === 0 && !loading && (
-                                    <div className="col-span-full py-16 text-center bg-zinc-50 dark:bg-zinc-900/30 rounded-3xl border border-dashed border-zinc-200 dark:border-white/5 shadow-sm dark:shadow-none">
-                                        <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">No se encontró personal registrado.</p>
+                                    <div className="col-span-full py-24 text-center bg-[#1A103C]/30 dark:bg-zinc-900/30 rounded-[3rem] border-2 border-dashed border-white/5 shadow-inner">
+                                        <p className="text-[#8A7BAF] font-black uppercase tracking-[0.25em] text-[10px]">No se encontró personal registrado.</p>
                                     </div>
                                 )}
                             </div>
@@ -199,64 +202,61 @@ const AdminUsuariosDisco = () => {
 
             {/* Credential Reset Modal */}
             {showModal && (
-                <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/90 animate-fadeIn" onClick={() => setShowModal(false)}>
-                    <div className={`${UI_CLASSES.glassCard} bg-zinc-950 w-full max-w-md relative shadow-2xl border-white/10 transform animate-scaleIn`} onClick={e => e.stopPropagation()}>
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                <div className="fixed inset-0 z-[150] flex items-center justify-center p-6 bg-black/95 backdrop-blur-md animate-fadeIn" onClick={() => setShowModal(false)}>
+                    <div className="bg-[#1A103C]/95 dark:bg-zinc-900 w-full max-w-sm relative rounded-[2.5rem] p-10 shadow-2xl border border-white/10 transform animate-scaleIn" onClick={e => e.stopPropagation()}>
+                        <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-[#A944FF] to-transparent"></div>
                         
                         <button
                             onClick={() => setShowModal(false)}
-                            className="absolute top-6 right-6 p-2 text-zinc-500 hover:text-white transition-colors bg-white/5 rounded-xl hover:bg-white/10"
+                            className="absolute top-8 right-8 p-3 text-[#8A7BAF] hover:text-white transition-colors bg-white/5 rounded-2xl hover:bg-white/10 border border-white/5"
                         >
                             <X size={20} />
                         </button>
 
-                        <div className="text-center mb-10 pt-4">
-                            <div className="w-20 h-20 bg-zinc-900 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-white/5 shadow-inner">
-                                <ShieldCheck className="text-white" size={40} />
+                        <div className="text-center mb-12">
+                            <div className="w-24 h-24 bg-[#0E0D23] dark:bg-zinc-800 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 border border-white/10 shadow-2xl">
+                                <ShieldCheck className="text-[#A944FF] dark:text-white" size={48} />
                             </div>
-                            <h2 className="text-2xl font-black uppercase tracking-tight text-white">
-                                Actualizar Acceso
+                            <h2 className="text-3xl font-black uppercase tracking-tighter text-white italic">
+                                Reset Access
                             </h2>
-                            <p className="text-zinc-500 text-[10px] mt-3 uppercase tracking-[0.2em] font-bold">
-                                Perfil: <span className="text-white">{selectedItem?.username || selectedItem?.nombre}</span>
+                            <p className="text-[#8A7BAF] text-[10px] mt-4 uppercase tracking-[0.3em] font-black">
+                                Perfil: <span className="text-white bg-[#A944FF] px-2 py-0.5 rounded ml-1">{selectedItem?.username || selectedItem?.nombre}</span>
                             </p>
                         </div>
 
-                        <div className="space-y-6">
+                        <div className="space-y-8">
                             <div className="group relative">
-                                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-white transition-colors z-10">
-                                    <Lock size={18} />
+                                <div className="absolute left-5 top-1/2 -translate-y-1/2 text-[#8A7BAF] group-focus-within:text-white transition-colors z-10">
+                                    <Lock size={20} />
                                 </div>
                                 <input
-                                    type={selectedItem?._type === 'usuario' ? "text" : "text"}
-                                    inputMode="text"
-                                    placeholder={selectedItem?._type === 'usuario' ? "Nueva contraseña" : "Nueva contraseña"}
+                                    type="text"
+                                    autoComplete="new-password"
+                                    placeholder="Nueva contraseña"
                                     value={newValue}
                                     autoFocus
-                                    onChange={(e) => {
-                                        setNewValue(e.target.value);
-                                    }}
+                                    onChange={(e) => setNewValue(e.target.value)}
                                     onKeyPress={(e) => e.key === 'Enter' && handleUpdateCredentials()}
-                                    className={`${UI_CLASSES.input} pl-12 font-mono text-center text-xl tracking-[0.4em] py-5 border-white/10 focus:border-white bg-black`}
+                                    className="w-full pl-14 pr-6 py-5 bg-[#0E0D23] dark:bg-black/50 border-2 border-[#6C3FA8]/30 dark:border-white/5 text-white placeholder-[#8A7BAF]/20 rounded-2xl font-black text-center text-xl tracking-[0.5em] focus:border-[#A944FF] dark:focus:border-white outline-none transition-all shadow-inner"
                                 />
                             </div>
 
-                            <p className="text-[9px] text-zinc-500 text-center uppercase tracking-widest leading-relaxed">
-                                Los cambios se aplicarán de forma inmediata y el usuario deberá usar sus nuevas credenciales en el siguiente inicio de sesión.
+                            <p className="text-[9px] text-[#8A7BAF] text-center uppercase tracking-[0.2em] font-bold leading-relaxed px-4 opacity-60">
+                                Los cambios serán permanentes e irreversibles tras confirmar.
                             </p>
-
-                            <div className="flex gap-4 pt-6">
+                            <div className="flex gap-4 pt-4">
                                 <button
                                     onClick={() => setShowModal(false)}
-                                    className="flex-1 px-4 py-3 bg-zinc-900 border border-white/5 text-zinc-400 rounded-xl hover:bg-zinc-800 hover:text-white transition-all font-bold uppercase text-[11px] tracking-[0.2em] active:scale-95"
+                                    className="flex-1 py-4 bg-white/5 text-white/50 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] border border-white/5 hover:bg-white/10 transition-all font-bold"
                                 >
-                                    Cancelar
+                                    Cerrar
                                 </button>
                                 <button
                                     onClick={handleUpdateCredentials}
-                                    className="flex-1 px-4 py-3 bg-white text-black border border-white rounded-xl hover:bg-zinc-200 transition-all font-bold uppercase text-[11px] tracking-[0.2em] shadow-xl active:scale-95"
+                                    className="flex-2 px-8 py-4 bg-[#A944FF] dark:bg-white text-white dark:text-black rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl hover:brightness-110 transition-all active:scale-95"
                                 >
-                                    Confirmar
+                                    Actualizar
                                 </button>
                             </div>
                         </div>

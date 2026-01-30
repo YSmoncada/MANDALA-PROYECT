@@ -1,11 +1,13 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import HeaderPedidosDisco from '../pedidospage/HeaderPedidos-Disco';
 import { usePedidosContext } from '../../context/PedidosContext';
 import { DollarSign, TrendingUp, TrendingDown, Calendar, FileText, PieChart, ArrowLeft, Receipt, ExternalLink, Copy } from 'lucide-react';
 import toast from 'react-hot-toast';
 import PUCDisco from './components/PUC-Disco';
+import AccountingStats from './components/AccountingStats';
+import SalesChart from './components/SalesChart';
+import ThemeToggle from '../../components/ThemeToggle';
 import { API_URL } from '../../apiConfig';
 import { UI_CLASSES } from '../../constants/ui';
 
@@ -126,92 +128,12 @@ export default function ContabilidadDisco() {
                 </div>
 
                 {activeTab === 'dashboard' && (
-                    <div className="animate-fadeIn space-y-8">
-                        {/* Stats Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {stats.map((stat, index) => (
-                                <div key={index} className="p-6 rounded-2xl bg-white dark:bg-zinc-900/30 backdrop-blur-md border border-zinc-200 dark:border-white/5 flex items-center gap-4 transition-all hover:scale-[1.02] shadow-sm dark:shadow-none hover:shadow-lg dark:hover:shadow-2xl">
-                                    <div className={`p-4 rounded-xl ${stat.bg} ${stat.color} border ${stat.border}`}>
-                                        {stat.icon}
-                                    </div>
-                                    <div>
-                                        <p className="text-zinc-500 dark:text-zinc-500 text-xs font-black uppercase tracking-widest">{stat.title}</p>
-                                        <h3 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">{stat.value}</h3>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                    <div className="animate-fadeIn space-y-12">
+                        {/* Stats Summary */}
+                        <AccountingStats stats={{ totalVentas, totalImpuestos, gananciaEstimada }} />
 
-                        <div className="w-full">
-                            {/* Enhanced Full Width Chart */}
-                            <div className="bg-white dark:bg-zinc-900/30 backdrop-blur-xl border border-zinc-200 dark:border-white/5 rounded-3xl p-8 relative overflow-hidden shadow-sm dark:shadow-2xl">
-                                {/* Glow Effect Behind */}
-                                <div className="absolute top-0 right-0 w-64 h-64 bg-zinc-100 dark:bg-white/5 blur-3xl rounded-full -mr-10 -mt-10 pointer-events-none"></div>
-
-                                <h3 className="text-2xl font-black text-zinc-900 dark:text-white mb-8 flex items-center gap-3 uppercase tracking-tight">
-                                    <TrendingUp size={24} className="text-zinc-900 dark:text-white" />
-                                    Ventas (Últimos 7 días)
-                                </h3>
-
-                                {ventasDiarias.length > 0 ? (
-                                    <div className="relative h-96 w-full">
-                                        {/* Grid Lines */}
-                                        <div className="absolute inset-0 flex flex-col justify-between text-[10px] font-bold text-zinc-400 dark:text-zinc-600 pointer-events-none z-0 pb-6 pr-4 uppercase tracking-[0.2em]">
-                                            {[100, 75, 50, 25, 0].map((percent) => (
-                                                <div key={percent} className="w-full border-b border-zinc-100 dark:border-zinc-800 flex items-center h-0.5">
-                                                    <span className="mb-2 ml-1 opacity-50">{percent}%</span>
-                                                </div>
-                                            ))}
-                                        </div>
-
-                                        {/* Bars Container */}
-                                        <div className="absolute inset-x-0 bottom-0 top-0 flex items-end justify-around gap-4 pb-6 px-4 z-10 pl-8">
-                                            {ventasDiarias.slice(0, 7).reverse().map((dia, idx) => {
-                                                const total = parseFloat(dia.total_ventas || 0);
-                                                const maxVal = Math.max(...ventasDiarias.map(d => parseFloat(d.total_ventas || 0)), 1);
-
-                                                let heightPerc = (total / maxVal) * 100;
-                                                if (isNaN(heightPerc) || heightPerc < 0) heightPerc = 0;
-
-                                                return (
-                                                    <div key={idx} className="flex-1 flex flex-col items-center gap-3 group h-full justify-end">
-                                                        {/* Bar */}
-                                                        <div
-                                                            className="w-full max-w-[60px] bg-zinc-900 dark:bg-gradient-to-t dark:from-zinc-800 dark:to-white rounded-t-xl relative transition-all duration-500 hover:shadow-xl dark:hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:brightness-110 group-hover:scale-y-105 origin-bottom cursor-pointer"
-                                                            style={{ height: `${heightPerc}%`, minHeight: '8px' }}
-                                                        >
-                                                            {/* Top Cap Highlight */}
-                                                            <div className="absolute top-0 left-0 right-0 h-1 bg-white/30 rounded-t-xl"></div>
-
-                                                            {/* Tooltip */}
-                                                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-zinc-900 dark:bg-black border border-white/10 text-white text-[10px] font-black px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 whitespace-nowrap shadow-xl z-20 pointer-events-none uppercase tracking-widest">
-                                                                {formatCurrency(total)}
-                                                                <div className="absolute bottom-[-5px] left-1/2 -translate-x-1/2 w-2 h-2 bg-zinc-900 dark:bg-black border-b border-r border-white/10 rotate-45"></div>
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Label */}
-                                                        <div className="text-center">
-                                                            <span className="text-[10px] font-black text-zinc-900 dark:text-zinc-400 block mb-1 uppercase tracking-widest">
-                                                                {new Date(dia.fecha).toLocaleDateString('es-CO', { weekday: 'short' })}
-                                                            </span>
-                                                            <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-600">
-                                                                {new Date(dia.fecha).toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit' })}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                )
-                                            })}
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="h-96 flex flex-col items-center justify-center text-zinc-500 border border-dashed border-zinc-200 dark:border-zinc-800 rounded-3xl bg-zinc-50/50 dark:bg-black/20">
-                                        <PieChart size={48} className="text-zinc-300 dark:text-zinc-700 mb-4" />
-                                        <p className="font-bold uppercase tracking-widest text-xs">No hay datos de ventas recientes para graficar</p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
+                        {/* Visual Charts */}
+                        <SalesChart ventasDiarias={ventasDiarias} />
                     </div>
                 )}
 

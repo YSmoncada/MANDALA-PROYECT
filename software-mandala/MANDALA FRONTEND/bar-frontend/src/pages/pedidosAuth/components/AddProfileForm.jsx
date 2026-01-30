@@ -10,50 +10,52 @@ export default function AddProfileForm({
     onBack 
 }) {
     return (
-        <div className="bg-zinc-950 backdrop-blur-xl border border-white/10 p-8 rounded-2xl shadow-2xl w-full max-w-md text-center animate-fadeIn relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+        <div className="bg-[#1A103C]/95 dark:bg-zinc-900 backdrop-blur-2xl border border-white/20 dark:border-white/5 p-10 rounded-[2.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] dark:shadow-none w-full max-w-md text-center animate-scaleIn relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-[#A944FF] to-transparent"></div>
 
-            <div className="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl border border-white/5">
-                <Sparkles size={24} className="text-white" />
+            <div className="w-20 h-20 bg-[#0E0D23] dark:bg-zinc-800 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-2xl border border-white/10 group-hover:scale-110 transition-transform">
+                <Sparkles size={32} className="text-[#A944FF] dark:text-white" />
             </div>
 
-            <h2 className="text-2xl font-bold text-white mb-2 uppercase tracking-wide">Nuevo Perfil</h2>
-            <p className="text-zinc-500 text-sm mb-8">Crea un perfil para acceder al sistema</p>
+            <h2 className="text-3xl font-black text-white dark:text-white mb-3 uppercase tracking-tighter italic">Nuevo Perfil</h2>
+            <p className="text-[#8A7BAF] dark:text-zinc-500 text-[10px] font-black uppercase tracking-[0.3em] mb-10">Crea un perfil para acceder al sistema</p>
 
-            <form onSubmit={onSubmit} className="flex flex-col gap-4">
+            <form onSubmit={onSubmit} className="flex flex-col gap-5">
                 <div className="group relative">
-                    <User className="absolute left-4 top-3.5 text-zinc-500 group-focus-within:text-white transition-colors" size={18} />
+                    <User className="absolute left-5 top-1/2 -translate-y-1/2 text-[#8A7BAF] dark:text-zinc-600 group-focus-within:text-[#A944FF] dark:group-focus-within:text-white transition-colors" size={20} />
                     <input
                         type="text"
                         placeholder="Nombre completo"
+                        autoComplete="new-password"
                         value={name}
                         onChange={(e) => onNameChange(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 rounded-xl bg-black border border-white/10 text-white placeholder-zinc-600 focus:outline-none focus:bg-zinc-900 focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all font-medium"
+                        className="w-full pl-14 pr-6 py-4 rounded-2xl bg-[#0E0D23] dark:bg-black/50 border-2 border-[#6C3FA8]/30 dark:border-white/5 text-white placeholder-[#8A7BAF]/30 dark:placeholder-zinc-800 focus:outline-none focus:border-[#A944FF] dark:focus:border-white transition-all font-black uppercase tracking-widest text-xs"
                     />
                 </div>
                 <div className="group relative">
-                    <Lock className="absolute left-4 top-3.5 text-zinc-500 group-focus-within:text-white transition-colors" size={18} />
+                    <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-[#8A7BAF] dark:text-zinc-600 group-focus-within:text-[#A944FF] dark:group-focus-within:text-white transition-colors" size={20} />
                     <input
                         type="password"
                         placeholder="Contraseña de acceso"
+                        autoComplete="new-password"
                         value={code}
                         onChange={(e) => onCodeChange(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 rounded-xl bg-black border border-white/10 text-white placeholder-zinc-600 focus:outline-none focus:bg-zinc-900 focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all tracking-widest font-bold"
+                        className="w-full pl-14 pr-6 py-4 rounded-2xl bg-[#0E0D23] dark:bg-black/50 border-2 border-[#6C3FA8]/30 dark:border-white/5 text-white placeholder-[#8A7BAF]/30 dark:placeholder-zinc-800 focus:outline-none focus:border-[#A944FF] dark:focus:border-white transition-all font-black uppercase tracking-[0.4em] text-xs"
                     />
                 </div>
-                <div className="flex gap-3 mt-6">
+                <div className="flex gap-4 mt-8">
                     <button 
                         type="button" 
                         onClick={onBack} 
-                        className="flex-1 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white py-3 rounded-xl font-bold transition-all text-xs uppercase tracking-widest border border-white/5"
+                        className="flex-1 bg-white/5 hover:bg-white/10 text-white/50 hover:text-white py-4 rounded-2xl font-black transition-all text-[10px] uppercase tracking-[0.2em] border border-white/5"
                     >
                         Cancelar
                     </button>
                     <button 
                         type="submit" 
-                        className="flex-1 bg-white hover:bg-zinc-200 text-black py-3 rounded-xl font-bold shadow-lg transition-all transform hover:scale-[1.02] active:scale-95 text-xs uppercase tracking-widest border border-white"
+                        className="flex-1 bg-[#441E73] dark:bg-white hover:bg-[#A944FF] dark:hover:bg-zinc-200 text-white dark:text-black py-4 rounded-2xl font-black shadow-2xl transition-all transform active:scale-95 text-[10px] uppercase tracking-[0.2em] border border-white/20 dark:border-transparent"
                     >
-                        Guardar
+                        Guardar Perfil
                     </button>
                 </div>
             </form>

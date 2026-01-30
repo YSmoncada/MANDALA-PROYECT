@@ -20,41 +20,43 @@ const OrderItem = memo(({ item, onUpdateCantidad, onRemoveItem }) => {
 
     return (
         <div
-            className="group flex flex-col sm:flex-row items-center gap-3 sm:gap-4 bg-white dark:bg-zinc-900/40 backdrop-blur-md hover:bg-zinc-50 dark:hover:bg-zinc-900/60 p-3 sm:p-4 rounded-xl sm:rounded-[1.5rem] border border-zinc-200 dark:border-white/5 hover:border-zinc-300 dark:hover:border-white/10 transition-all duration-300 shadow-sm dark:shadow-none"
+            className="group flex flex-col sm:flex-row items-center gap-4 sm:gap-6 bg-[#1A103C]/80 dark:bg-zinc-900/10 backdrop-blur-xl hover:bg-[#1A103C] dark:hover:bg-zinc-900/30 p-4 sm:p-6 rounded-[2rem] border border-white/10 dark:border-white/5 hover:border-[#A944FF]/40 dark:hover:border-white/10 transition-all duration-500 shadow-2xl"
         >
-            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-2xl flex-shrink-0 border border-zinc-100 dark:border-white/5 flex items-center justify-center overflow-hidden shadow-inner">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-[#0E0D23] dark:bg-zinc-800 rounded-2xl flex-shrink-0 border border-white/10 dark:border-white/5 flex items-center justify-center overflow-hidden shadow-inner group-hover:scale-105 transition-transform duration-500">
                 <img
                     src={item.producto.imagen}
                     alt={item.producto.nombre}
-                    className="w-full h-full object-contain p-2"
+                    className="w-full h-full object-contain p-3"
                 />
             </div>
             <div className="flex-1 text-center sm:text-left min-w-0">
-                <h3 className="font-black text-zinc-900 dark:text-white text-base sm:text-xl mb-1 truncate uppercase tracking-tight">{item.producto.nombre}</h3>
-                <p className="text-zinc-500 dark:text-zinc-400 font-black tracking-widest text-[10px] sm:text-xs">
-                    ${parseFloat(item.producto.precio).toLocaleString("es-CO")}
+                <h3 className="font-black text-white dark:text-white text-lg sm:text-2xl mb-1 truncate uppercase tracking-tighter italic">{item.producto.nombre}</h3>
+                <p className="text-[#8A7BAF] dark:text-zinc-500 font-black tracking-[0.2em] text-[10px] sm:text-xs">
+                    VALOR UNIDAD: ${parseFloat(item.producto.precio).toLocaleString("es-CO")}
                 </p>
             </div>
-            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 w-full sm:w-auto">
-                <div className="relative flex items-center justify-center w-full sm:w-auto">
-                    <div className="flex items-center bg-zinc-100 dark:bg-black/40 rounded-xl p-1 border border-zinc-200 dark:border-white/5">
-                        <button onClick={handleDecrease} className="w-8 h-8 flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-800 rounded-lg transition-all active:scale-90">
-                            <Minus size={16} />
-                        </button>
-                        <span className="w-10 text-center font-black text-zinc-900 dark:text-white">{item.cantidad}</span>
-                        <button onClick={handleIncrease} className="w-8 h-8 flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-white dark:hover:bg-zinc-800 rounded-lg transition-all active:scale-90">
-                            <Plus size={16} />
-                        </button>
-                    </div>
-                    <button onClick={handleRemove} className="absolute right-0 sm:static p-2 text-zinc-400 dark:text-zinc-500 hover:text-rose-500 rounded-xl transition-colors sm:hidden">
-                        <Trash2 size={20} />
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-10 w-full sm:w-auto">
+                <div className="flex items-center bg-black/40 dark:bg-black/20 rounded-2xl p-1.5 border border-white/10 dark:border-white/5">
+                    <button onClick={handleDecrease} className="w-10 h-10 flex items-center justify-center text-[#8A7BAF] dark:text-zinc-400 hover:text-white dark:hover:text-white hover:bg-white/5 dark:hover:bg-zinc-800 rounded-xl transition-all active:scale-90">
+                        <Minus size={18} />
+                    </button>
+                    <span className="w-12 text-center font-black text-lg text-white dark:text-white">{item.cantidad}</span>
+                    <button onClick={handleIncrease} className="w-10 h-10 flex items-center justify-center text-[#8A7BAF] dark:text-zinc-400 hover:text-white dark:hover:text-white hover:bg-white/5 dark:hover:bg-zinc-800 rounded-xl transition-all active:scale-90">
+                        <Plus size={18} />
                     </button>
                 </div>
-                <div className="flex flex-col items-center sm:items-end">
-                    <span className="text-[10px] text-zinc-400 dark:text-zinc-600 font-bold uppercase tracking-widest sm:hidden">Subtotal</span>
-                    <p className="font-black text-lg sm:text-2xl text-zinc-900 dark:text-white text-center sm:text-right w-full sm:w-auto sm:min-w-[120px] tracking-tighter">
-                        ${(parseFloat(item.producto.precio) * item.cantidad).toLocaleString("es-CO")}
-                    </p>
+
+                <div className="flex items-center gap-6">
+                    <div className="flex flex-col items-center sm:items-end">
+                        <span className="text-[10px] text-[#8A7BAF] dark:text-zinc-600 font-black uppercase tracking-[0.2em] sm:hidden">Total</span>
+                        <p className="font-black text-2xl sm:text-3xl text-emerald-400 dark:text-white text-center sm:text-right w-full sm:w-auto sm:min-w-[140px] tracking-tighter drop-shadow-lg italic">
+                            ${(parseFloat(item.producto.precio) * item.cantidad).toLocaleString("es-CO")}
+                        </p>
+                    </div>
+                    
+                    <button onClick={handleRemove} className="p-3 text-rose-500/50 hover:text-rose-500 bg-rose-500/5 hover:bg-rose-500/10 rounded-2xl transition-all border border-rose-500/10 active:scale-90 shadow-2xl">
+                        <Trash2 size={20} />
+                    </button>
                 </div>
             </div>
         </div>
