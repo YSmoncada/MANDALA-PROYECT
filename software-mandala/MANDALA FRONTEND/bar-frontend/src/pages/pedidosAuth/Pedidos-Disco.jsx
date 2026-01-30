@@ -5,6 +5,7 @@ import CodeInputDisco from "./CodeInput-Disco";
 import SystemLoginForm from "./components/SystemLoginForm";
 import { usePedidosContext } from "../../context/PedidosContext";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import ThemeToggle from "../../components/ThemeToggle";
 
 export default function PedidosDisco() {
     const { auth } = usePedidosContext();
