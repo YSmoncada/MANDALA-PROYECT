@@ -36,11 +36,13 @@ const MesasPageDisco = () => {
     }
 
     return (
-        <div className="min-h-screen flex flex-col bg-white dark:bg-black text-zinc-900 dark:text-white selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300 overflow-x-hidden">
-            {/* Background Aesthetics */}
-            <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-zinc-50 dark:from-zinc-900/40 to-transparent pointer-events-none"></div>
-            </div>
+        <div className="min-h-screen flex flex-col bg-transparent text-white dark:text-zinc-200 selection:bg-purple-500/30 transition-colors duration-500 overflow-x-hidden">
+            {/* Background Aesthetics - Lux only */}
+            {!auth.isDark && (
+                <div className="fixed inset-0 pointer-events-none">
+                    <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-purple-900/20 to-transparent pointer-events-none"></div>
+                </div>
+            )}
 
             <main className="flex-1 p-4 pt-24 pb-20 sm:p-8 relative z-10 max-w-7xl mx-auto w-full">
                 {/* Header Controls */}
@@ -64,8 +66,8 @@ const MesasPageDisco = () => {
                 </div>
 
                 <div className="space-y-6 max-w-5xl mx-auto animate-fadeIn">
-                    <div className="bg-white/50 dark:bg-zinc-900/20 backdrop-blur-xl border border-zinc-200 dark:border-white/5 rounded-[3rem] p-6 sm:p-10 shadow-xl dark:shadow-none relative overflow-hidden group">
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-zinc-900/10 dark:via-white/10 to-transparent"></div>
+                    <div className="bg-[#1A103C]/80 dark:bg-zinc-900/20 backdrop-blur-xl border border-white/10 dark:border-white/5 rounded-[3rem] p-6 sm:p-10 shadow-2xl dark:shadow-none relative overflow-hidden group">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#A944FF]/20 dark:via-white/10 to-transparent text-white"></div>
                         
                         <MesaForm key="form" onSubmit={handleAddMesa} />
 

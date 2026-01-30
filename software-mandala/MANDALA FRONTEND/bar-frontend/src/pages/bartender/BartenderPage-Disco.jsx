@@ -61,11 +61,11 @@ const BartenderPageDisco = () => {
                         <p className="text-zinc-400 dark:text-zinc-500 font-black tracking-[0.4em] text-[10px] uppercase animate-pulse">Monitor de pedidos activo...</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 sm:px-0 animate-fadeIn text-zinc-900 dark:text-white">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 sm:px-0 animate-fadeIn text-white dark:text-zinc-200">
                         {pedidos.length > 0 ? pedidos.map(pedido => (
                             <div
-                                key={pedido.id}
-                                className="bg-white dark:bg-zinc-900/40 backdrop-blur-md border border-zinc-200 dark:border-white/5 p-8 rounded-[2.5rem] flex flex-col justify-between transition-all duration-500 transform hover:-translate-y-2 shadow-xl dark:shadow-none overflow-visible group"
+                                 key={pedido.id}
+                                 className="bg-[#1A103C]/80 dark:bg-zinc-900/40 backdrop-blur-md border border-white/10 dark:border-white/5 p-8 rounded-[2.5rem] flex flex-col justify-between transition-all duration-500 transform hover:-translate-y-2 shadow-2xl dark:shadow-none overflow-visible group"
                             >
                                 <div>
                                     <div className="flex justify-between items-start mb-8">
