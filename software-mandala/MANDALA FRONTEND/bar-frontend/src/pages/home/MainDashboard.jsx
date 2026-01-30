@@ -8,13 +8,19 @@ import { button } from "framer-motion/client";
 
 const BackgroundEffects = () => {
     const { isDark } = useTheme();
-    if (!isDark) return null; 
     return (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {/* Elegant Purple/Indigo Disco Effects */}
-            <div className="absolute top-[-20%] left-[20%] w-[70%] h-[70%] bg-violet-900/10 rounded-full blur-[120px] animate-pulse" />
-            <div className="absolute bottom-[-10%] right-[10%] w-[50%] h-[50%] bg-indigo-900/10 rounded-full blur-[120px]" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.03)_0%,transparent_70%)]" />
+            {isDark ? (
+                <>
+                    <div className="absolute top-[-20%] left-[20%] w-[60%] h-[60%] bg-zinc-800/5 rounded-full blur-[150px]" />
+                    <div className="absolute bottom-[-10%] right-[10%] w-[40%] h-[40%] bg-zinc-800/5 rounded-full blur-[150px]" />
+                </>
+            ) : (
+                <>
+                    <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[120px]" />
+                    <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-pink-600/10 rounded-full blur-[120px]" />
+                </>
+            )}
         </div>
     );
 };
@@ -42,21 +48,22 @@ const DarkmodeButton = () => {
 const DashboardHeader = () => (
     <div className="text-center mb-16 sm:mb-20">
         <h1 className="text-6xl sm:text-8xl md:text-9xl font-black mb-6 relative tracking-tighter">
-            <span className="relative text-transparent bg-clip-text bg-gradient-to-b from-zinc-900 to-zinc-400 dark:from-white dark:to-zinc-600 tracking-[0.2em] uppercase drop-shadow-2xl">
-                Nox<span className="text-zinc-300 dark:text-zinc-700">OS</span>
+            <span className="relative text-white tracking-[0.2em] uppercase drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">
+                Nox<span className="text-zinc-500">OS</span>
             </span>
         </h1>
-        <div className="h-px w-40 bg-gradient-to-r from-transparent via-zinc-400 dark:via-zinc-500 to-transparent mx-auto opacity-30"></div>
+        {/* Colorful Lux line or Subtle Nox line */}
+        <div className="h-1.5 w-32 bg-gradient-to-r from-purple-500 to-pink-500 dark:from-zinc-500 dark:to-zinc-800 mx-auto rounded-full blur-[2px] opacity-50 transition-all duration-500"></div>
     </div>
 );
 
 const LogoutButton = ({ onLogout }) => (
     <button
         onClick={onLogout}
-        className="sm:absolute sm:top-6 sm:right-6 mb-8 sm:mb-0 flex items-center gap-2 px-4 py-2 rounded-full bg-black/40 border border-white/5 hover:bg-red-950/30 hover:border-red-500/30 hover:text-red-200 text-zinc-400 transition-all backdrop-blur-md shadow-2xl group z-50"
+        className="sm:absolute sm:top-6 sm:right-6 mb-8 sm:mb-0 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-red-500/20 hover:border-red-500/50 hover:text-white text-gray-300 transition-all backdrop-blur-md shadow-lg group z-50"
     >
         <LogOut size={16} className="group-hover:-translate-x-1 transition-transform" />
-        <span className="text-xs font-medium uppercase tracking-widest">Cerrar Sesión</span>
+        <span className="text-xs font-bold uppercase tracking-widest leading-none">Cerrar Sesión</span>
     </button>
 );
 
@@ -66,7 +73,7 @@ function MainDashboard() {
 
     return (
         <AccessVerifier auth={auth}>
-            <div className="min-h-screen bg-white dark:bg-black text-zinc-900 dark:text-white overflow-hidden relative selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300">
+            <div className="min-h-screen bg-transparent text-white overflow-hidden relative selection:bg-purple-500/30 transition-colors duration-500">
                 <BackgroundEffects />
                 <DarkmodeButton/>
                 <main className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-16 sm:py-12">

@@ -187,37 +187,37 @@ const ProductTable = memo(({ productos, onEdit, onDelete, onMovimiento }) => {
                     </table>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 animate-fadeIn">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 animate-fadeIn transition-all duration-500">
                     {productos.map((producto) => (
-                        <div key={producto.id} className="bg-white dark:bg-zinc-900/30 border border-zinc-200 dark:border-white/5 rounded-2xl p-4 md:p-6 hover:shadow-xl dark:hover:shadow-none transition-all duration-300 group flex flex-col justify-between backdrop-blur-md">
+                        <div key={producto.id} className="bg-[#1A103C]/80 dark:bg-zinc-900/30 border border-white/5 dark:border-white/5 rounded-2xl p-4 md:p-6 hover:shadow-2xl dark:hover:shadow-none transition-all duration-500 group flex flex-col justify-between backdrop-blur-md hover:scale-[1.02]">
                              <div>
                                 <div className="flex justify-between items-start mb-4">
-                                    <span className="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[9px] md:text-[10px] font-bold uppercase border border-blue-200 dark:border-blue-500/20">
+                                    <span className="px-3 py-1 rounded-full bg-[#A944FF]/10 dark:bg-zinc-800/50 text-[#A944FF] dark:text-zinc-500 text-[9px] md:text-[10px] font-black uppercase border border-[#A944FF]/30 dark:border-white/10 tracking-widest transition-all">
                                         {producto.categoria}
                                     </span>
                                     {renderActionButtons(producto, 16)}
                                 </div>
                                 <div className="flex flex-col items-center mb-4">
-                                    <div className="w-24 h-24 md:w-32 md:h-32 rounded-xl bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center border border-zinc-200 dark:border-white/10 shadow-inner mb-3">
+                                    <div className="w-24 h-24 md:w-32 md:h-32 rounded-xl bg-white dark:bg-zinc-800 flex items-center justify-center border border-white/10 dark:border-white/10 shadow-inner mb-3 group-hover:scale-110 transition-transform duration-500">
                                         {producto.imagen ? (
                                             <img src={producto.imagen} alt={producto.nombre} className="w-full h-full object-contain p-2" />
                                         ) : (
                                             <span className="text-3xl font-black text-zinc-200 dark:text-zinc-700 uppercase">{producto.nombre?.charAt(0)}</span>
                                         )}
                                     </div>
-                                    <h3 className="font-bold text-base md:text-lg text-zinc-900 dark:text-white uppercase tracking-tight text-center">{producto.nombre}</h3>
-                                    <p className="text-[10px] text-zinc-400 dark:text-zinc-600 font-bold uppercase tracking-widest mt-1">{producto.unidad}</p>
+                                    <h3 className="font-bold dark:font-black text-base md:text-lg text-white dark:text-zinc-200 uppercase tracking-tight text-center">{producto.nombre}</h3>
+                                    <p className="text-[10px] text-[#8A7BAF] dark:text-zinc-600 font-bold dark:font-black uppercase tracking-widest mt-1">{producto.unidad}</p>
                                 </div>
                             </div>
-                            <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-xl p-4 flex items-center justify-between border border-zinc-200 dark:border-white/10 shadow-inner">
+                            <div className="bg-[#0E0D23] dark:bg-zinc-900/50 rounded-xl p-4 flex items-center justify-between border border-[#6C3FA8]/30 dark:border-white/5 shadow-inner">
                                 <StockStatus 
                                     stock={producto.stock} 
                                     min={producto.stock_minimo} 
                                     max={producto.stock_maximo} 
                                 />
                                 <div className="text-right">
-                                    <p className="text-[9px] text-zinc-400 dark:text-zinc-500 font-bold uppercase tracking-widest mb-1">Precio</p>
-                                    <p className="text-lg md:text-xl font-black text-zinc-900 dark:text-white tracking-tighter">
+                                    <p className="text-[9px] text-[#8A7BAF] dark:text-zinc-500 font-bold uppercase tracking-widest mb-1">Precio</p>
+                                    <p className="text-lg md:text-xl font-black text-green-400 dark:text-white tracking-tighter">
                                         ${Number(producto.precio).toLocaleString('es-CO', { maximumFractionDigits: 0 })}
                                     </p>
                                 </div>
