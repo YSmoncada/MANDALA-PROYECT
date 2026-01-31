@@ -54,11 +54,11 @@ const MisPedidosPageDisco = () => {
                         <p className="text-[#8A7BAF] dark:text-zinc-500 font-black tracking-[0.4em] text-[11px] uppercase animate-pulse">Sincronizando Ordenes...</p>
                     </div>
                 ) : pedidos.length === 0 ? (
-                    <div className="text-center py-20 bg-[#1A103C]/80 dark:bg-zinc-900/30 rounded-[3rem] border border-white/10 dark:border-white/5 backdrop-blur-2xl max-w-2xl mx-auto shadow-2xl dark:shadow-none animate-scaleIn">
+                    <div className="text-center py-20 px-10 bg-[#1A103C]/80 dark:bg-zinc-900/30 rounded-[3rem] border border-white/10 dark:border-white/5 backdrop-blur-2xl max-w-2xl mx-auto shadow-2xl dark:shadow-none animate-scaleIn">
                         <div className="inline-block p-8 rounded-[2rem] bg-[#0E0D23] dark:bg-zinc-800/30 mb-8 border border-white/5 shadow-inner">
                             <ShoppingBag size={56} className="text-[#A944FF] dark:text-white opacity-80" />
                         </div>
-                        <p className="text-2xl font-black mb-3 uppercase tracking-tighter text-white italic">No tienes pedidos activos</p>
+                        <p className="text-xl font-black mb-3 uppercase tracking-tighter text-white italic">No tienes pedidos activos</p>
                         <p className="text-[#8A7BAF] dark:text-zinc-500 mb-10 font-black uppercase tracking-[0.2em] text-[10px]">Comienza a tomar pedidos para verlos aquí</p>
                         <button
                             onClick={() => navigate('/pedidos-disco')}
