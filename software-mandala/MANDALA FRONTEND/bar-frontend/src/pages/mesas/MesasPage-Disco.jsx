@@ -7,6 +7,7 @@ import { useMesasManagement } from '../../hooks/useMesasManagement';
 import MesaCard from './components/MesaCard';
 import { useTheme } from '../../context/ThemeContext';
 import ThemeToggle from '../../components/ThemeToggle';
+import { UI_CLASSES } from '../../constants/ui';
 
 const MesasPageDisco = () => {
     const navigate = useNavigate();
