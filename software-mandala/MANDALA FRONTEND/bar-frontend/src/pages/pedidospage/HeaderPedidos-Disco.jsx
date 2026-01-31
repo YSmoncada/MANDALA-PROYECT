@@ -29,7 +29,7 @@ function HeaderPedidosDisco({ user, onLogout, codigoConfirmado }) {
 
     return (
         <>
-            <div className="h-20 w-full"></div>
+            <div className="h-16 w-full"></div>
 
             <header className="fixed top-0 left-0 right-0 z-50 bg-[#0E0D23]/90 dark:bg-black/95 backdrop-blur-xl border-b border-white/10 dark:border-white/5 transition-all duration-500">
                 <div className="w-full px-8">

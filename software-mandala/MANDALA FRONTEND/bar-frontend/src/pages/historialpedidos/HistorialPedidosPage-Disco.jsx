@@ -54,7 +54,7 @@ const HistorialPedidosPageDisco = () => {
             {/* Hidden Print Section */}
             <TicketPrinter pedido={pedidoAImprimir} empresaConfig={empresaConfig} />
 
-            <main className="flex-1 p-4 pt-24 pb-20 sm:p-10 relative z-10">
+            <main className="flex-1 p-4 pt-6 pb-20 sm:p-10 relative z-10">
                 {/* Header Controls */}
                 <div className="fixed top-8 left-8 right-8 z-50 flex justify-between items-center no-print">
                     <button
@@ -68,9 +68,9 @@ const HistorialPedidosPageDisco = () => {
                 </div>
 
                 <div className="max-w-7xl mx-auto no-print">
-                    <header className="mb-12 text-center pt-8">
+                    <header className="mb-10 text-center pt-8">
                         <h1 className="text-3xl sm:text-5xl font-black mb-4 text-white dark:text-white tracking-tighter uppercase italic drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)]">
-                            Ventas Mandala
+                            Ventas
                         </h1>
                         <p className="text-[11px] font-black text-[#A944FF] dark:text-zinc-500 uppercase tracking-[0.4em] opacity-80">Registro histórico de transacciones</p>
                     </header>

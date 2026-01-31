@@ -49,9 +49,9 @@ function SeleccionProductosDisco() {
 
             <HeaderPedidosDisco user={userName} onLogout={handleLogout} codigoConfirmado={codigoConfirmado} />
 
-            <main className="flex-1 p-6 sm:p-10 relative z-10 max-w-7xl mx-auto w-full pt-28 sm:pt-36">
+            <main className="flex-1 p-6 relative z-10 max-w-7xl mx-auto w-full pt-4">
                 {/* Navigation Action */}
-                <div className="mb-10 sm:mb-16">
+                <div className="mb-6">
                     <button
                         onClick={() => navigate('/')}
                         className={UI_CLASSES.buttonBack}
@@ -61,9 +61,9 @@ function SeleccionProductosDisco() {
                     </button>
                 </div>
 
-                <div className="text-center mb-12 sm:mb-16">
+                <div className="text-center mb-8 sm:mb-10">
                     <h1 className="text-3xl sm:text-5xl font-black text-white dark:text-white mb-4 tracking-tighter uppercase italic drop-shadow-2xl">
-                        Carta Mandala
+                        Carta
                     </h1>
                     <p className="text-[10px] sm:text-[11px] text-[#A944FF] dark:text-zinc-500 font-black tracking-[0.4em] uppercase opacity-80">Selecciona los productos para tu pedido</p>
                 </div>

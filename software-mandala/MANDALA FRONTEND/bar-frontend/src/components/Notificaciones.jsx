@@ -3,7 +3,7 @@ import { Toaster } from 'react-hot-toast';
 
 /**
  * Global component for toast notifications.
- * Configured with a dark theme and styles consistent with the Mandala aesthetic.
+ * Configured with a dark theme and styles consistent with the Nox aesthetic.
  */
 const Notificaciones = () => {
     return (
