@@ -61,8 +61,8 @@ function SeleccionProductosDisco() {
                     </button>
                 </div>
 
-                <div className="text-center mb-16 sm:mb-24">
-                    <h1 className="text-4xl sm:text-7xl font-black text-white dark:text-white mb-4 tracking-tighter uppercase italic drop-shadow-2xl">
+                <div className="text-center mb-12 sm:mb-16">
+                    <h1 className="text-3xl sm:text-5xl font-black text-white dark:text-white mb-4 tracking-tighter uppercase italic drop-shadow-2xl">
                         Carta Mandala
                     </h1>
                     <p className="text-[10px] sm:text-[11px] text-[#A944FF] dark:text-zinc-500 font-black tracking-[0.4em] uppercase opacity-80">Selecciona los productos para tu pedido</p>

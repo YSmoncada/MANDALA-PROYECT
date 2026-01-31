@@ -35,7 +35,7 @@ const PageLayout = ({ children, title, showBackButton = true }) => {
                 
                 {title && (
                     <div className="text-center w-full max-w-4xl px-4">
-                        <h1 className="text-5xl md:text-8xl font-black mb-4 text-white dark:text-white drop-shadow-2xl tracking-tighter uppercase italic">
+                        <h1 className="text-3xl md:text-5xl font-black mb-4 text-white dark:text-white drop-shadow-2xl tracking-tighter uppercase italic">
                             {title}
                         </h1>
                         <div className="h-1.5 w-32 bg-gradient-to-r from-transparent via-[#A944FF] dark:via-white/10 to-transparent rounded-full mx-auto blur-[1px]"></div>

@@ -99,7 +99,7 @@ export default function ContabilidadDisco() {
             <div className="flex-1 p-4 sm:p-8 pt-12 relative z-10 max-w-7xl mx-auto w-full">
                 <div className="flex flex-col md:flex-row items-center justify-between mb-12 gap-6">
                     <div className="text-center md:text-left">
-                        <h1 className="text-4xl sm:text-6xl font-black text-white dark:text-white mb-2 uppercase drop-shadow-2xl tracking-tighter italic">Contabilidad</h1>
+                        <h1 className="text-3xl sm:text-5xl font-black text-white dark:text-white mb-2 uppercase drop-shadow-2xl tracking-tighter italic">Contabilidad</h1>
                         <p className="text-[#8A7BAF] dark:text-zinc-500 font-black uppercase tracking-[0.4em] text-[10px]">Resumen financiero y movimientos</p>
                     </div>
 

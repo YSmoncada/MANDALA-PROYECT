@@ -50,8 +50,8 @@ const MesasPageDisco = () => {
                     <ThemeToggle />
                 </div>
 
-                <div className="text-center mb-20 pt-12 animate-scaleIn">
-                    <h1 className="text-5xl sm:text-8xl font-black mb-4 text-white dark:text-white tracking-tighter uppercase italic drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
+                <div className="text-center mb-12 pt-8 animate-scaleIn">
+                    <h1 className="text-3xl sm:text-5xl font-black mb-4 text-white dark:text-white tracking-tighter uppercase italic drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
                         Salón Mandala
                     </h1>
                     <p className="text-[11px] font-black text-[#A944FF] dark:text-zinc-500 uppercase tracking-[0.5em] opacity-80">Configuración de Mesas y Distribución</p>

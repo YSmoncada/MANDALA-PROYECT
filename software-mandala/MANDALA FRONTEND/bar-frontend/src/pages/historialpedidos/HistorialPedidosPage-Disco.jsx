@@ -68,8 +68,8 @@ const HistorialPedidosPageDisco = () => {
                 </div>
 
                 <div className="max-w-7xl mx-auto no-print">
-                    <header className="mb-20 text-center pt-12">
-                        <h1 className="text-5xl sm:text-8xl font-black mb-4 text-white dark:text-white tracking-tighter uppercase italic drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)]">
+                    <header className="mb-12 text-center pt-8">
+                        <h1 className="text-3xl sm:text-5xl font-black mb-4 text-white dark:text-white tracking-tighter uppercase italic drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)]">
                             Ventas Mandala
                         </h1>
                         <p className="text-[11px] font-black text-[#A944FF] dark:text-zinc-500 uppercase tracking-[0.4em] opacity-80">Registro histórico de transacciones</p>
