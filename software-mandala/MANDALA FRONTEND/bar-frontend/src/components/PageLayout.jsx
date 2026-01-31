@@ -23,7 +23,7 @@ const PageLayout = ({ children, title, showBackButton = true }) => {
                     {showBackButton ? (
                         <button
                             onClick={() => navigate("/")}
-                            className={`${UI_CLASSES.buttonBack} backdrop-blur-xl border border-white/10 dark:border-white/5 bg-white/5 dark:bg-black/50 hover:bg-white/10 dark:hover:bg-zinc-900 text-white shadow-2xl`}
+                            className={UI_CLASSES.buttonBack}
                         >
                             <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
                             <span className="font-bold uppercase tracking-[0.2em] text-[10px]">Inicio</span>

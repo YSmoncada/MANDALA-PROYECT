@@ -54,7 +54,7 @@ function SeleccionProductosDisco() {
                 <div className="mb-10 sm:mb-16">
                     <button
                         onClick={() => navigate('/')}
-                        className="group flex items-center gap-3 px-6 py-3 rounded-2xl bg-[#0E0D23] dark:bg-zinc-800 border border-white/5 text-[#8A7BAF] dark:text-zinc-400 hover:text-white dark:hover:text-white transition-all shadow-2xl active:scale-95 no-print"
+                        className={UI_CLASSES.buttonBack}
                     >
                         <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
                         <span className="font-black uppercase tracking-[0.2em] text-[10px]">Inicio</span>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trash2, ChevronDown } from 'lucide-react';
 import { useTheme } from '../../../context/ThemeContext';
+import { UI_CLASSES } from '../../../constants/ui';
 
 const HistoryFilter = ({ 
     vendedores, 
@@ -53,7 +54,7 @@ const HistoryFilter = ({
             <div className="flex items-end">
                 <button
                     onClick={onClear}
-                    className="w-full h-[46px] bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl text-xs transition-all font-bold uppercase tracking-widest active:scale-95 text-white"
+                    className={UI_CLASSES.buttonSecondary + " w-full h-[46px]"}
                 >
                     Limpiar
                 </button>
@@ -64,7 +65,7 @@ const HistoryFilter = ({
                 <div className="flex items-end">
                     <button
                         onClick={onDeleteHistory}
-                        className="w-full h-[46px] bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 rounded-xl text-xs transition-all flex items-center justify-center gap-2 font-bold uppercase tracking-widest active:scale-95 group"
+                        className={UI_CLASSES.buttonDanger + " w-full h-[46px]"}
                     >
                         <Trash2 size={16} className="group-hover:animate-pulse" /> Borrar Todo
                     </button>

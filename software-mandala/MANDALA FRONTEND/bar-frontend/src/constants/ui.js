@@ -30,10 +30,10 @@ export const UI_CLASSES = {
     
     // Buttons
     buttonPrimary: "px-6 py-4 bg-[#441E73] dark:bg-zinc-100 text-white dark:text-black font-black uppercase tracking-widest text-[10px] rounded-xl hover:bg-[#A944FF] dark:hover:bg-white transition-all flex items-center justify-center gap-2 active:scale-95 shadow-xl",
-    buttonSecondary: "px-6 py-4 bg-white/5 dark:bg-zinc-900 text-gray-300 dark:text-zinc-400 rounded-xl hover:bg-white/10 dark:hover:bg-zinc-800 hover:text-white dark:hover:text-white transition-all font-bold uppercase tracking-widest text-[10px] border border-white/10 dark:border-white/5",
-    buttonDanger: "px-6 py-4 bg-red-500/10 dark:bg-rose-950/50 text-red-500 dark:text-rose-200 font-black uppercase tracking-widest text-[10px] rounded-xl hover:bg-red-500 dark:hover:bg-rose-900 transition-all shadow-lg border border-red-500/20 dark:border-rose-900/30",
-    buttonSuccess: "px-6 py-4 bg-green-500/10 dark:bg-emerald-950/50 text-green-500 dark:text-emerald-200 font-black uppercase tracking-widest text-[10px] rounded-xl hover:bg-green-500 dark:hover:bg-emerald-900 transition-all shadow-lg border border-green-500/20 dark:border-emerald-900/30",
-    buttonBack: "flex items-center gap-2 rounded-xl bg-white/5 dark:bg-zinc-900/50 border border-white/10 dark:border-white/5 px-4 py-2 text-gray-400 dark:text-zinc-500 hover:bg-white/10 dark:hover:bg-zinc-800 hover:text-white dark:hover:text-white transition-all backdrop-blur-md shadow-none hover:scale-105 active:scale-95 group",
+    buttonSecondary: "px-6 py-3 bg-white/5 dark:bg-black/40 border border-white/10 dark:border-white/5 text-gray-400 dark:text-zinc-500 hover:bg-white/10 dark:hover:bg-zinc-900 hover:text-white dark:hover:text-white transition-all font-bold uppercase tracking-widest text-[10px] rounded-xl backdrop-blur-md shadow-xl active:scale-95 flex items-center justify-center gap-2",
+    buttonDanger: "px-6 py-3 bg-red-500/10 dark:bg-rose-950/20 text-red-500 dark:text-rose-400 font-black uppercase tracking-widest text-[10px] rounded-xl hover:bg-red-500 dark:hover:bg-rose-900 hover:text-white transition-all shadow-lg border border-red-500/20 dark:border-rose-900/30 active:scale-95 flex items-center justify-center gap-2",
+    buttonSuccess: "px-6 py-3 bg-green-500/10 dark:bg-emerald-950/20 text-green-500 dark:text-emerald-400 font-black uppercase tracking-widest text-[10px] rounded-xl hover:bg-green-500 dark:hover:bg-emerald-900 hover:text-white transition-all shadow-lg border border-green-500/20 dark:border-emerald-900/30 active:scale-95 flex items-center justify-center gap-2",
+    buttonBack: "group flex items-center gap-3 px-6 py-3 rounded-2xl bg-[#0E0D23]/60 dark:bg-black/40 border border-white/10 dark:border-white/5 text-[#8A7BAF] dark:text-zinc-400 hover:text-white dark:hover:text-white transition-all backdrop-blur-xl shadow-2xl active:scale-95 no-print",
     
     // Animations
     fadeIn: "animate-fadeIn",

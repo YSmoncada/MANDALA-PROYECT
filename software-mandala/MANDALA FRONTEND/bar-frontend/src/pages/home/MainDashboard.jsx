@@ -4,7 +4,7 @@ import AccessVerifier from "./AccessVerifier";
 import ModuleCard from "./ModuleCard";
 import { LogOut } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
-import { button } from "framer-motion/client";
+import { UI_CLASSES } from "../../constants/ui";
 
 const BackgroundEffects = () => {
     const { isDark } = useTheme();
@@ -60,10 +60,10 @@ const DashboardHeader = () => (
 const LogoutButton = ({ onLogout }) => (
     <button
         onClick={onLogout}
-        className="sm:absolute sm:top-6 sm:right-6 mb-8 sm:mb-0 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-red-500/20 hover:border-red-500/50 hover:text-white text-gray-300 transition-all backdrop-blur-md shadow-lg group z-50"
+        className={UI_CLASSES.buttonDanger + " sm:absolute sm:top-6 sm:right-6 mb-8 sm:mb-0 z-50"}
     >
-        <LogOut size={16} className="group-hover:-translate-x-1 transition-transform" />
-        <span className="text-xs font-bold uppercase tracking-widest leading-none">Cerrar Sesión</span>
+        <LogOut size={16} />
+        <span className="text-[10px] font-black uppercase tracking-widest leading-none">Cerrar Sesión</span>
     </button>
 );
 

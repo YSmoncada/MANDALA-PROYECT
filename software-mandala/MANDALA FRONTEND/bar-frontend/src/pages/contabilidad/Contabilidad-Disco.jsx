@@ -85,10 +85,10 @@ export default function ContabilidadDisco() {
         <div className="min-h-screen flex flex-col bg-transparent text-white dark:text-zinc-200 selection:bg-purple-500/30 transition-colors duration-500 overflow-x-hidden relative">
             
             {/* Header Controls */}
-            <div className="absolute top-6 left-6 right-6 z-40 flex justify-between items-center no-print px-4 sm:px-0">
+            <div className="w-full flex justify-between items-center no-print px-8 pt-8 relative z-50">
                 <button
                     onClick={() => navigate("/")}
-                    className={`${UI_CLASSES.buttonBack} backdrop-blur-xl shadow-none border-white/10 dark:border-white/5 bg-white/5 dark:bg-black/50 hover:bg-white/10 dark:hover:bg-zinc-900 text-white dark:text-white`}
+                    className={UI_CLASSES.buttonBack}
                 >
                     <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
                     <span className="font-bold uppercase tracking-wider text-xs">Volver</span>
@@ -96,7 +96,7 @@ export default function ContabilidadDisco() {
                 <ThemeToggle />
             </div>
 
-            <div className="flex-1 p-4 sm:p-8 pt-24 relative z-10 max-w-7xl mx-auto w-full">
+            <div className="flex-1 p-4 sm:p-8 pt-12 relative z-10 max-w-7xl mx-auto w-full">
                 <div className="flex flex-col md:flex-row items-center justify-between mb-12 gap-6">
                     <div className="text-center md:text-left">
                         <h1 className="text-4xl sm:text-6xl font-black text-white dark:text-white mb-2 uppercase drop-shadow-2xl tracking-tighter italic">Contabilidad</h1>
@@ -164,7 +164,7 @@ export default function ContabilidadDisco() {
                         <div className="bg-white dark:bg-zinc-900/30 backdrop-blur-xl border border-zinc-200 dark:border-white/5 rounded-3xl overflow-hidden shadow-sm dark:shadow-2xl">
                             <div className="p-6 border-b border-zinc-200 dark:border-white/5 flex justify-between items-center">
                                 <h2 className="text-lg font-black text-zinc-900 dark:text-white uppercase tracking-tight">Datos para Facturación Global</h2>
-                                <button onClick={fetchReporteVentas} className="text-[10px] font-black uppercase tracking-widest bg-zinc-100 dark:bg-white/10 text-zinc-600 dark:text-white px-4 py-2 rounded-lg hover:bg-zinc-200 dark:hover:bg-white/20 transition-all border border-zinc-200 dark:border-white/10">Refrescar Datos</button>
+                                <button onClick={fetchReporteVentas} className={UI_CLASSES.buttonSecondary + " scale-75 origin-right"}>Refrescar Datos</button>
                             </div>
 
                             {loadingReporte ? (
@@ -209,7 +209,7 @@ export default function ContabilidadDisco() {
                                                                     navigator.clipboard.writeText(`Base: ${Math.round(base)} | Impuesto: ${Math.round(impuesto)} | Total: ${Math.round(total)}`);
                                                                     toast.success("Valores copiados al portapapeles");
                                                                 }}
-                                                                className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2 mx-auto bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 px-3 py-1.5 rounded-lg text-zinc-600 dark:text-zinc-300 transition-all border border-zinc-200 dark:border-white/10"
+                                                                className={UI_CLASSES.buttonSecondary + " scale-75"}
                                                                 title="Copiar valores para pegar en DIAN"
                                                             >
                                                                 <Copy size={12} /> Copiar
