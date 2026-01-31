@@ -49,7 +49,7 @@ function SeleccionProductosDisco() {
 
             <HeaderPedidosDisco user={userName} onLogout={handleLogout} codigoConfirmado={codigoConfirmado} />
 
-            <main className="flex-1 p-6 relative z-10 max-w-7xl mx-auto w-full pt-4">
+            <main className="flex-1 p-4 pt-12 pb-20 sm:p-10 relative z-10 max-w-7xl mx-auto w-full">
                 {/* Navigation Action */}
                 <div className="mb-6">
                     <button

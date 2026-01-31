@@ -37,7 +37,7 @@ const MesasPageDisco = () => {
                 <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#A944FF]/5 dark:bg-white/5 rounded-full blur-[100px]"></div>
             </div>
 
-            <main className="flex-1 p-4 pt-6 pb-20 sm:p-10 relative z-10 max-w-7xl mx-auto w-full">
+            <main className="flex-1 p-4 pt-12 pb-20 sm:p-10 relative z-10 max-w-7xl mx-auto w-full">
                 {/* Header Controls */}
                 <div className="fixed top-8 left-8 right-8 z-50 flex justify-between items-center no-print">
                     <button

@@ -54,7 +54,7 @@ const HistorialPedidosPageDisco = () => {
             {/* Hidden Print Section */}
             <TicketPrinter pedido={pedidoAImprimir} empresaConfig={empresaConfig} />
 
-            <main className="flex-1 p-4 pt-6 pb-20 sm:p-10 relative z-10">
+            <main className="flex-1 p-4 pt-12 pb-20 sm:p-10 relative z-10">
                 {/* Header Controls */}
                 <div className="fixed top-8 left-8 right-8 z-50 flex justify-between items-center no-print">
                     <button
