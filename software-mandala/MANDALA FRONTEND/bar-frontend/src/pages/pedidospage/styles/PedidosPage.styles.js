@@ -19,7 +19,7 @@ export const PAGE_STYLES = {
     scrollContainer: `space-y-6 max-h-[50vh] sm:max-h-[65vh] overflow-y-auto pr-3 custom-scrollbar`,
     inputLabel: `block mb-3 text-[10px] font-black text-[#8A7BAF] dark:text-zinc-500 uppercase tracking-[0.3em] ml-1`,
     select: `w-full bg-[#0E0D23] dark:bg-black/50 border-2 border-[#6C3FA8]/30 dark:border-white/5 text-white dark:text-white text-[11px] font-black uppercase tracking-widest rounded-2xl focus:border-[#A944FF] dark:focus:border-white block p-4.5 transition-all appearance-none cursor-pointer hover:bg-[#1A103C]`,
-    totalAmount: `text-4xl sm:text-6xl font-black text-white dark:text-white tracking-tighter italic drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]`,
+    totalAmount: `text-3xl sm:text-4xl font-black text-white dark:text-white tracking-tighter italic drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]`,
     confirmBtn: `w-full py-5 rounded-2xl bg-gradient-to-r from-[#8A44FF] to-[#A944FF] dark:from-white dark:to-zinc-200 text-white dark:text-black font-black uppercase tracking-[0.2em] text-[11px] shadow-[0_20px_40px_-10px_rgba(169,68,255,0.5)] dark:shadow-none hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-4`,
     cancelBtn: `w-full py-5 rounded-2xl bg-transparent text-[#8A7BAF] dark:text-zinc-500 font-bold uppercase tracking-[0.2em] text-[11px] hover:text-rose-500 transition-all border border-white/5 dark:border-zinc-800 hover:border-rose-500/30 backdrop-blur-md`
 };

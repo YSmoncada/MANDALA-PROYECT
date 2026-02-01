@@ -20,7 +20,7 @@ const OrderItem = memo(({ item, onUpdateCantidad, onRemoveItem }) => {
 
     return (
         <div
-            className="group flex flex-col sm:flex-row items-center gap-4 sm:gap-6 bg-[#1A103C]/80 dark:bg-zinc-900/10 backdrop-blur-xl hover:bg-[#1A103C] dark:hover:bg-zinc-900/30 p-4 sm:p-6 rounded-[2rem] border border-white/10 dark:border-white/5 hover:border-[#A944FF]/40 dark:hover:border-white/10 transition-all duration-500 shadow-2xl"
+            className="group flex flex-col sm:flex-row items-center gap-4 sm:gap-6 bg-[#1A103C]/80 dark:bg-zinc-900/10 backdrop-blur-xl hover:bg-[#1A103C] dark:hover:bg-zinc-900/30 p-4 sm:p-6 rounded-[2rem] border border-white/10 dark:border-transparent hover:border-[#A944FF]/40 dark:hover:border-zinc-800/50 transition-all duration-500 shadow-2xl"
         >
             <div className="w-20 h-20 sm:w-24 sm:h-24 bg-[#0E0D23] dark:bg-zinc-800 rounded-2xl flex-shrink-0 border border-white/10 dark:border-white/5 flex items-center justify-center overflow-hidden shadow-inner group-hover:scale-105 transition-transform duration-500">
                 <img
