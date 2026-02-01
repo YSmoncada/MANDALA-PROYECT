@@ -15,7 +15,7 @@ export const PAGE_STYLES = {
     summaryCard: `bg-[#1A103C]/90 dark:bg-zinc-900/50 backdrop-blur-2xl border border-white/20 dark:border-white/10 rounded-[2.5rem] p-8 sm:p-10 shadow-[0_50px_100px_-20px_rgba(169,68,255,0.15)] dark:shadow-none lg:sticky top-28 relative overflow-hidden`,
     sectionTitle: `text-xl sm:text-3xl font-black text-white dark:text-white mb-6 sm:mb-8 flex flex-wrap items-center gap-4 tracking-tighter uppercase italic`,
     badgeIcon: `p-3 bg-[#0E0D23] dark:bg-zinc-800 rounded-2xl text-[#A944FF] dark:text-white border border-white/5 shadow-inner`,
-    badgeText: `text-[10px] font-black text-[#8A7BAF] dark:text-zinc-400 ml-auto bg-black/40 dark:bg-zinc-800/50 px-4 py-2 rounded-xl border border-white/5 dark:border-white/10 uppercase tracking-[0.2em]`,
+    badgeText: `text-[10px] font-black text-[#8A7BAF] dark:text-zinc-400 ml-auto bg-[#0E0D23]/40 dark:bg-zinc-800/50 px-4 py-2 rounded-xl border border-white/5 dark:border-white/10 uppercase tracking-[0.2em]`,
     scrollContainer: `space-y-6 max-h-[50vh] sm:max-h-[65vh] overflow-y-auto pr-3 custom-scrollbar`,
     inputLabel: `block mb-3 text-[10px] font-black text-[#8A7BAF] dark:text-zinc-500 uppercase tracking-[0.3em] ml-1`,
     select: `w-full bg-[#0E0D23] dark:bg-black/50 border-2 border-[#6C3FA8]/30 dark:border-white/5 text-white dark:text-white text-[11px] font-black uppercase tracking-widest rounded-2xl focus:border-[#A944FF] dark:focus:border-white block p-4.5 transition-all appearance-none cursor-pointer hover:bg-[#1A103C]`,

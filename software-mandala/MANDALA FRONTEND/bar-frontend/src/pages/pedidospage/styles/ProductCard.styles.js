@@ -20,7 +20,7 @@ export const CARD_STYLES = {
     infoRow: `flex items-center justify-between gap-2 px-1`,
     label: `text-[8px] font-black text-[#8A7BAF] dark:text-zinc-600 uppercase tracking-[0.2em]`,
     price: `text-lg sm:text-xl font-black text-emerald-400 dark:text-white tracking-tighter italic`,
-    counter: `flex items-center bg-black/40 dark:bg-black/20 rounded-xl p-1`,
+    counter: `flex items-center bg-[#0E0D23]/40 dark:bg-black/20 rounded-xl p-1`,
     counterBtn: `w-7 h-7 flex items-center justify-center text-[#8A7BAF] dark:text-zinc-400 
                   hover:text-white hover:bg-white/5 dark:hover:bg-zinc-800 rounded-lg transition-all active:scale-95`,
     counterValue: `w-6 text-center font-black text-white dark:text-white text-xs sm:text-sm`,

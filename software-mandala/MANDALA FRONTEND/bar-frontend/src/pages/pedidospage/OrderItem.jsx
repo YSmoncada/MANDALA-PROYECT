@@ -36,7 +36,7 @@ const OrderItem = memo(({ item, onUpdateCantidad, onRemoveItem }) => {
                 </p>
             </div>
             <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-10 w-full sm:w-auto">
-                <div className="flex items-center bg-black/40 dark:bg-black/20 rounded-2xl p-1.5 border border-white/10 dark:border-white/5">
+                <div className="flex items-center bg-[#0E0D23]/40 dark:bg-black/20 rounded-2xl p-1.5 border border-white/10 dark:border-white/5">
                     <button onClick={handleDecrease} className="w-10 h-10 flex items-center justify-center text-[#8A7BAF] dark:text-zinc-400 hover:text-white dark:hover:text-white hover:bg-white/5 dark:hover:bg-zinc-800 rounded-xl transition-all active:scale-90">
                         <Minus size={18} />
                     </button>

@@ -45,7 +45,7 @@ function HeaderPedidosDisco({ user, onLogout, codigoConfirmado }) {
                         {/* CENTER/RIGHT: Nav & Profile */}
                         <div className="flex items-center gap-10">
                             {/* Desktop Navigation */}
-                            <nav className="hidden md:flex items-center gap-4 bg-black/40 dark:bg-zinc-900/50 p-1.5 rounded-2xl border border-white/5">
+                            <nav className="hidden md:flex items-center gap-4 bg-[#0E0D23]/40 dark:bg-zinc-900/50 p-1.5 rounded-2xl border border-white/5">
                                 {navLinks.map(link => {
                                     const isEnabled = user && (link.href === '/' || codigoConfirmado);
                                     const isActive = location.pathname === link.href;

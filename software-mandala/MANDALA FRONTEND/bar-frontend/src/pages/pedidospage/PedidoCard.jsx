@@ -25,7 +25,7 @@ const PedidoCard = memo(({ pedido, onAgregarProductos }) => {
 
             <div className="space-y-3 mb-8 max-h-48 overflow-y-auto pr-3 flex-grow custom-scrollbar">
                 {pedido.productos_detalle.map((item, idx) => (
-                    <div key={idx} className="flex justify-between items-center bg-black/40 dark:bg-black/20 p-3 rounded-2xl text-xs border border-white/5 group/item hover:bg-black/60 transition-colors">
+                    <div key={idx} className="flex justify-between items-center bg-[#0E0D23]/40 dark:bg-black/20 p-3 rounded-2xl text-xs border border-white/5 group/item hover:bg-[#0E0D23]/60 dark:hover:bg-black/40 transition-colors">
                         <div className="flex items-center gap-3">
                             <span className="bg-[#A944FF] dark:bg-white text-white dark:text-black font-black px-2 py-1 rounded-lg text-[10px] shadow-lg">{item.cantidad}×</span>
                             <span className="text-white/80 dark:text-zinc-300 uppercase font-bold tracking-tight">{item.producto_nombre}</span>
