@@ -35,14 +35,19 @@ export const usePedido = () => {
         } catch (error) {
             console.error("Error finalizing order:", error.response?.data || error.message);
             let errorMessage = "Hubo un error al guardar el pedido. Por favor, inténtalo de nuevo.";
-            if (error.response?.data && typeof error.response.data === 'object') {
+            
+            // Priorizar el campo 'detail' que viene del backend
+            if (error.response?.data?.detail) {
+                errorMessage = error.response.data.detail;
+            } else if (error.response?.data && typeof error.response.data === 'object') {
                 errorMessage = Object.entries(error.response.data)
                     .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`)
                     .join('\n');
             } else if (error.response?.data) {
                 errorMessage = error.response.data;
             }
-            return { success: false, message: `Error al guardar pedido:\n${errorMessage}` };
+            
+            return { success: false, message: errorMessage };
         }
     }, []);
 

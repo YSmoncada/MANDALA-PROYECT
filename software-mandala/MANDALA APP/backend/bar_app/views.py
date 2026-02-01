@@ -426,6 +426,32 @@ class PedidoViewSet(viewsets.ModelViewSet):
                 # El frontend asume que si manda force_append es porque sabe que existe, 
                 # pero si se cerró justo antes, mejor crear uno nuevo.
                 logger.warning(f"No se encontró pedido activo para mesa {mesa_id} con force_append=True. Creando nuevo.")
+        else:
+            # VALIDACIÓN: Verificar que no exista un pedido activo para esta mesa
+            # antes de crear uno nuevo
+            if mesa_id:
+                pedido_existente = Pedido.objects.filter(
+                    mesa_id=mesa_id
+                ).exclude(
+                    estado__in=['cancelado', 'finalizada']
+                ).first()
+                
+                if pedido_existente:
+                    # Obtener información de la mesa para el mensaje de error
+                    try:
+                        mesa = Mesa.objects.get(pk=mesa_id)
+                        mesa_numero = mesa.numero
+                    except Mesa.DoesNotExist:
+                        mesa_numero = mesa_id
+                    
+                    return Response(
+                        {
+                            "detail": f"Ya existe un pedido activo para la Mesa #{mesa_numero}. Por favor, agrega productos al pedido existente desde 'Mis Pedidos' o espera a que se finalice.",
+                            "pedido_id": pedido_existente.id,
+                            "mesa": mesa_numero
+                        }, 
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
         
         # Comportamiento normal (crear nuevo)
         return super().create(request, *args, **kwargs)
