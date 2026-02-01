@@ -29,7 +29,7 @@ const MisPedidosPageDisco = () => {
     }, [setSelectedMesaId, setIsTableLocked, navigate]);
 
     return (
-        <div className="min-h-screen bg-transparent text-white dark:text-white transition-colors duration-500 selection:bg-[#A944FF]/30">
+        <div className="min-h-screen bg-transparent dark:bg-black text-white dark:text-white transition-colors duration-500 selection:bg-[#A944FF]/30 dark:selection:bg-white/10">
             <HeaderPedidosDisco user={userName} onLogout={handleLogout} codigoConfirmado={codigoConfirmado} />
 
             {/* Background effects */}

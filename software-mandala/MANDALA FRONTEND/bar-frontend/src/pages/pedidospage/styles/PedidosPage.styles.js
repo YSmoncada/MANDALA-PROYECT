@@ -3,7 +3,7 @@
  * Separated to keep the view file focused on structure.
  */
 export const PAGE_STYLES = {
-    layout: `min-h-screen flex flex-col bg-transparent text-white dark:text-zinc-100 selection:bg-[#A944FF]/30 dark:selection:bg-white/10 overflow-x-hidden transition-colors duration-500`,
+    layout: `min-h-screen flex flex-col bg-transparent dark:bg-black text-white dark:text-zinc-100 selection:bg-[#A944FF]/30 dark:selection:bg-white/10 overflow-x-hidden transition-colors duration-500`,
     glowOverlay: `fixed inset-0 pointer-events-none overflow-hidden`,
     glow1: `absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-[#441E73]/20 dark:bg-zinc-900/10 rounded-full blur-[120px] animate-pulse`,
     glow2: `absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#A944FF]/10 dark:bg-white/5 rounded-full blur-[100px]`, 

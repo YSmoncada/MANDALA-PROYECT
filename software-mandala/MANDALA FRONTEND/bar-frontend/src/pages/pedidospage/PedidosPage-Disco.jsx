@@ -124,14 +124,15 @@ function PedidosPageDisco() {
                     htmlFor="mesa-select"
                     className={PAGE_STYLES.inputLabel}
                   >
-                    Ubicación Pedido
+                    {isTableLocked ? '🔒 Mesa Bloqueada (Agregando a pedido existente)' : 'Ubicación Pedido'}
                   </label>
                   <div className="relative">
                     <select
                       id="mesa-select"
                       value={selectedMesaId}
                       onChange={handleMesaChange}
-                      className={`${PAGE_STYLES.select} ${isTableLocked ? "border-amber-500/50 text-amber-400 bg-amber-500/5" : ""}`}
+                      className={`${PAGE_STYLES.select} ${isTableLocked ? "border-amber-500/50 text-amber-400 bg-amber-500/5 cursor-not-allowed opacity-75" : ""}`}
+                      disabled={isTableLocked}
                     >
                       <option value="" className="bg-[#0E0D23] dark:bg-black">
                         -- Seleccionar Mesa --
@@ -180,6 +181,12 @@ function PedidosPageDisco() {
                       </svg>
                     </div>
                   </div>
+                  {isTableLocked && (
+                    <p className="mt-3 text-[10px] text-amber-400 dark:text-amber-500 font-black uppercase tracking-[0.2em] flex items-center gap-2">
+                      <span>⚠️</span>
+                      <span>Agregando productos a pedido existente en esta mesa</span>
+                    </p>
+                  )}
                 </div>
 
                 {/* Financial Summary */}

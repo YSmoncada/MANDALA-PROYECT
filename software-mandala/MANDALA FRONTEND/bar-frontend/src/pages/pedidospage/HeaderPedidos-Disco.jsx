@@ -31,7 +31,7 @@ function HeaderPedidosDisco({ user, onLogout, codigoConfirmado }) {
         <>
             <div className="h-16 w-full"></div>
 
-            <header className="fixed top-0 left-0 right-0 z-50 bg-[#0E0D23]/90 dark:bg-black/95 backdrop-blur-xl border-b border-white/10 dark:border-white/5 transition-all duration-500">
+            <header className="fixed top-0 left-0 right-0 z-50 bg-[#1A103C]/90 dark:bg-black/95 backdrop-blur-xl border-b border-white/10 dark:border-white/5 transition-all duration-500">
                 <div className="w-full px-8">
                     <div className="flex items-center justify-between h-20">
                         {/* LEFT: App Identity */}
@@ -105,7 +105,7 @@ function HeaderPedidosDisco({ user, onLogout, codigoConfirmado }) {
 
                 {/* Mobile Menu Panel */}
                 {isMenuOpen && (
-                    <div className="md:hidden bg-[#0E0D23]/95 dark:bg-black/95 border-b border-white/10 absolute w-full shadow-2xl backdrop-blur-3xl animate-fadeIn">
+                    <div className="md:hidden bg-[#1A103C]/95 dark:bg-black/95 border-b border-white/10 absolute w-full shadow-2xl backdrop-blur-3xl animate-fadeIn">
                         <div className="px-6 pt-6 pb-10 space-y-4">
                             {navLinks.map(link => {
                                 const isEnabled = user && (link.href === '/' || codigoConfirmado);
