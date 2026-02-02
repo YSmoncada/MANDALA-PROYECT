@@ -46,14 +46,14 @@ function HeaderPedidosDisco({ user, onLogout, codigoConfirmado }) {
 
       <header
         className="
-  fixed top-0 left-0 right-0 z-50
-  bg-[#F4F1FA]
-  dark:bg-black/95
-  backdrop-blur-xl
-  border-b border-[rgba(52,7,88,0.12)]
-  shadow-[0_10px_40px_-15px_rgba(52,7,88,0.35)]
-  transition-all duration-500
-"
+        fixed top-0 left-0 right-0 z-50
+        bg-[#F4F1FA]
+        dark:bg-black/95
+        backdrop-blur-xl
+        border-b border-[rgba(52,7,88,0.12)]
+        shadow-[0_10px_40px_-15px_rgba(52,7,88,0.35)]
+        transition-all duration-500
+        "
       >
         <div className="w-full px-8">
           <div className="flex items-center justify-between h-20">
