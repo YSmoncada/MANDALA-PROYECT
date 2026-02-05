@@ -47,11 +47,12 @@ function HeaderPedidosDisco({ user, onLogout, codigoConfirmado }) {
       <header
         className="
         fixed top-0 left-0 right-0 z-50
-        bg-[#F4F1FA]
+        bg-[#1A103C]/90
         dark:bg-black/95
         backdrop-blur-xl
-        border-b border-[rgba(52,7,88,0.12)]
-        shadow-[0_10px_40px_-15px_rgba(52,7,88,0.35)]
+        border-b border-white/10 dark:border-white/5
+        shadow-[0_10px_40px_-15px_rgba(169,68,255,0.2)]
+        dark:shadow-none
         transition-all duration-500
         "
       >
