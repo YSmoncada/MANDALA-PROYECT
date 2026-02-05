@@ -8,7 +8,6 @@ import {
   Clock,
   Home as HomeIcon,
 } from "lucide-react";
-import ThemeToggle from "../../components/ThemeToggle";
 
 /**
  * Header component for the pedidos section.
@@ -96,8 +95,6 @@ function HeaderPedidosDisco({ user, onLogout, codigoConfirmado }) {
 
               {/* Actions Area */}
               <div className="flex items-center gap-6">
-                <ThemeToggle />
-
                 {user && (
                   <div className="flex items-center gap-6 border-l border-white/10 dark:border-white/5 pl-6">
                     <div className="flex flex-col items-end">
@@ -138,8 +135,8 @@ function HeaderPedidosDisco({ user, onLogout, codigoConfirmado }) {
 
         {/* Mobile Menu Panel */}
         {isMenuOpen && (
-          <div className="md:hidden bg-[#1A103C]/95 dark:bg-black/95 border-b border-white/10 absolute w-full shadow-2xl backdrop-blur-3xl animate-fadeIn">
-            <div className="px-6 pt-6 pb-10 space-y-4">
+          <div className="md:hidden fixed inset-x-0 top-20 bg-[#4A148C]/95 dark:bg-black/95 border-b border-white/10 shadow-2xl backdrop-blur-3xl animate-fadeIn z-40">
+            <div className="px-6 pt-6 pb-10 space-y-4 max-h-[calc(100vh-5rem)] overflow-y-auto">
               {navLinks.map((link) => {
                 const isEnabled =
                   user && (link.href === "/" || codigoConfirmado);
