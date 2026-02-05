@@ -50,11 +50,11 @@ class OrderService:
     def add_products_to_existing_order(mesa_id, products_data, serializer_context):
         # Buscar un pedido activo para esta mesa (pendiente, despachado o en_proceso)
         # Excluimos cancelado y finalizada
-        # Y filtramos por HORARIO RECIENTE (24h) para no tomar pedidos viejos olvidados
-        cutoff = timezone.now() - timedelta(hours=24)
+        # Y filtramos por FECHA ACTUAL para no tomar pedidos viejos olvidados
+        today = timezone.localdate()
         pedido_activo = Pedido.objects.filter(
             mesa_id=mesa_id,
-            fecha_hora__gte=cutoff
+            fecha_hora__date=today
         ).exclude(
             estado__in=['cancelado', 'finalizada']
         ).order_by('-fecha_hora').first()

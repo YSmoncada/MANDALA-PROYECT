@@ -130,11 +130,11 @@ class MesaSerializer(serializers.ModelSerializer):
 
     def get_active_order(self, obj):
         # Helper: Busca el primer pedido activo (no finalizado ni cancelado)
-        # Limitamos a pedidos recientes (últimas 24h) para evitar bloqueos por pedidos viejos
-        cutoff = timezone.now() - timedelta(hours=24)
+        # Limitamos a pedidos DE LA FECHA ACTUAL para evitar bloqueos por pedidos de dias anteriores
+        today = timezone.localdate()
         return obj.pedido_set.filter(
             estado__in=['pendiente', 'despachado'],
-            fecha_hora__gte=cutoff
+            fecha_hora__date=today
         ).first()
 
     def get_ocupada_por(self, obj):

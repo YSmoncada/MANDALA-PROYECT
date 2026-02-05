@@ -3,6 +3,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet, DateFilter
 from django_filters import rest_framework as filters
+from django.utils import timezone
+from datetime import timedelta
 from ..models import Pedido, Mesa
 from ..serializers import PedidoSerializer
 from ..authentication import GlobalAuthentication, IsSuperUser
@@ -63,8 +65,10 @@ class PedidoViewSet(viewsets.ModelViewSet):
         
         # Validación normal para no duplicar si no es force_append
         if mesa_id and not force_append:
+             today = timezone.localdate()
              pedido_existente = Pedido.objects.filter(
-                mesa_id=mesa_id
+                mesa_id=mesa_id,
+                fecha_hora__date=today
              ).exclude(
                 estado__in=['cancelado', 'finalizada']
              ).first()
