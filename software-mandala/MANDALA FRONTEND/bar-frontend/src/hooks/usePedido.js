@@ -15,14 +15,20 @@ export const usePedido = () => {
             setIsLoadingMesas(true);
             const response = await apiClient.get('/mesas/');
             setMesas(response.data);
-            // Don't auto-select any mesa - let user choose explicitly
-            // or let it be set from MisPedidosPage when adding to existing order
+            
+            // Auto-select first available table if none selected
+            if (!selectedMesaId && response.data.length > 0) {
+                 const firstFree = response.data.find(m => !m.ocupada_por_id);
+                 if (firstFree) {
+                     setSelectedMesaId(firstFree.id);
+                 }
+            }
         } catch (error) {
             console.error("Error loading mesas:", error);
         } finally {
             setIsLoadingMesas(false);
         }
-    }, []);
+    }, [selectedMesaId]);
 
     useEffect(() => {
         fetchMesas();

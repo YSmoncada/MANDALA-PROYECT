@@ -124,7 +124,9 @@ function PedidosPageDisco() {
                     htmlFor="mesa-select"
                     className={PAGE_STYLES.inputLabel}
                   >
-                    {isTableLocked ? '🔒 Mesa Bloqueada (Agregando a pedido existente)' : 'Ubicación Pedido'}
+                    {isTableLocked
+                      ? "🔒 Mesa Bloqueada (Agregando a pedido existente)"
+                      : "Ubicación Pedido"}
                   </label>
                   <div className="relative">
                     <select
@@ -138,27 +140,37 @@ function PedidosPageDisco() {
                         -- Seleccionar Mesa --
                       </option>
                       {mesas.map((mesa) => {
-                        const isOccupied =
-                          mesa.ocupada_por_id &&
-                          mesa.ocupada_por_id !== currentFormattedId;
+                        const isMyOrder =
+                          mesa.ocupada_por_id === currentFormattedId;
+                        const isOccupiedByOther =
+                          mesa.ocupada_por_id && !isMyOrder;
                         const isAdminOverride = role === "admin";
-                        const label = isOccupied
-                          ? `Mesa #${mesa.numero} (Ocupada - ${mesa.ocupada_por})`
-                          : `Mesa #${mesa.numero} (${mesa.capacidad} pers.)`;
+
+                        let label = `Mesa #${mesa.numero}`;
+
+                        if (isMyOrder) {
+                          label += " (TU PEDIDO ACTIVO) 🟣";
+                        } else if (isOccupiedByOther) {
+                          label += ` (Ocupada - ${mesa.ocupada_por}) 🔴`;
+                        } else {
+                          label += ` (${mesa.capacidad} pers.) 🟢`;
+                        }
 
                         return (
                           <option
                             key={mesa.id}
                             value={mesa.id}
-                            disabled={isOccupied && !isAdminOverride}
+                            disabled={isOccupiedByOther && !isAdminOverride}
                             className={
-                              isOccupied
-                                ? "text-rose-500 bg-[#0E0D23] dark:bg-zinc-800"
-                                : "text-white dark:text-white bg-[#0E0D23] dark:bg-zinc-900"
+                              isMyOrder
+                                ? "text-[#A944FF] font-black bg-[#1A103C]"
+                                : isOccupiedByOther
+                                  ? "text-rose-500 bg-[#0E0D23] dark:bg-zinc-800 opacity-50"
+                                  : "text-white dark:text-white bg-[#0E0D23] dark:bg-zinc-900"
                             }
                           >
                             {label}{" "}
-                            {isOccupied && isAdminOverride
+                            {isOccupiedByOther && isAdminOverride
                               ? "(Admin Override)"
                               : ""}
                           </option>
@@ -184,7 +196,9 @@ function PedidosPageDisco() {
                   {isTableLocked && (
                     <p className="mt-3 text-[10px] text-amber-400 dark:text-amber-500 font-black uppercase tracking-[0.2em] flex items-center gap-2">
                       <span>⚠️</span>
-                      <span>Agregando productos a pedido existente en esta mesa</span>
+                      <span>
+                        Agregando productos a pedido existente en esta mesa
+                      </span>
                     </p>
                   )}
                 </div>
