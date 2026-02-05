@@ -1,5 +1,7 @@
 from django.db import transaction, models
 from django.db.models import F
+from django.utils import timezone
+from datetime import timedelta
 from ..models import Pedido, PedidoProducto, Producto, Mesa
 from ..serializers import PedidoSerializer
 from rest_framework.response import Response
@@ -48,8 +50,11 @@ class OrderService:
     def add_products_to_existing_order(mesa_id, products_data, serializer_context):
         # Buscar un pedido activo para esta mesa (pendiente, despachado o en_proceso)
         # Excluimos cancelado y finalizada
+        # Y filtramos por HORARIO RECIENTE (24h) para no tomar pedidos viejos olvidados
+        cutoff = timezone.now() - timedelta(hours=24)
         pedido_activo = Pedido.objects.filter(
-            mesa_id=mesa_id
+            mesa_id=mesa_id,
+            fecha_hora__gte=cutoff
         ).exclude(
             estado__in=['cancelado', 'finalizada']
         ).order_by('-fecha_hora').first()

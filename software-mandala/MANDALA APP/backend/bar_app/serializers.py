@@ -117,6 +117,8 @@ class PedidoSerializer(serializers.ModelSerializer):
             )
         return pedido
 
+from datetime import timedelta
+
 class MesaSerializer(serializers.ModelSerializer):
     ocupada_por = serializers.SerializerMethodField()
     ocupada_por_id = serializers.SerializerMethodField()
@@ -128,8 +130,11 @@ class MesaSerializer(serializers.ModelSerializer):
 
     def get_active_order(self, obj):
         # Helper: Busca el primer pedido activo (no finalizado ni cancelado)
+        # Limitamos a pedidos recientes (últimas 24h) para evitar bloqueos por pedidos viejos
+        cutoff = timezone.now() - timedelta(hours=24)
         return obj.pedido_set.filter(
-            estado__in=['pendiente', 'despachado']
+            estado__in=['pendiente', 'despachado'],
+            fecha_hora__gte=cutoff
         ).first()
 
     def get_ocupada_por(self, obj):
