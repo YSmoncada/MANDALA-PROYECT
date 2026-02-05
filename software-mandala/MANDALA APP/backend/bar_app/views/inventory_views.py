@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from ..models import Producto, Movimiento
 from ..serializers import ProductoSerializer, MovimientoSerializer
-from .core_views import GlobalAuthentication
+from ..authentication import GlobalAuthentication
 from ..services.inventory_service import InventoryService
 
 class ProductoViewSet(viewsets.ModelViewSet):

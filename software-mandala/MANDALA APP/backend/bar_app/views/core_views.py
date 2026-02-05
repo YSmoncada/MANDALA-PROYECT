@@ -1,26 +1,15 @@
 from rest_framework import viewsets, permissions, generics, status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from django.conf import settings
 from django.core.files.storage import default_storage
 import os
 import logging
 from ..models import Mesa, EmpresaConfig, Pedido
 from ..serializers import MesaSerializer, EmpresaConfigSerializer
+from ..authentication import GlobalAuthentication, IsSuperUser
 
 logger = logging.getLogger(__name__)
-
-class IsSuperUser(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return bool(request.user and (request.user.is_superuser or request.user.is_staff))
-
-class GlobalAuthentication(TokenAuthentication, SessionAuthentication, BasicAuthentication):
-    """
-    Combina Token, Session y Basic Auth con bypass de CSRF.
-    """
-    def enforce_csrf(self, request):
-        return
 
 @api_view(['GET'])
 def api_root_view(request):

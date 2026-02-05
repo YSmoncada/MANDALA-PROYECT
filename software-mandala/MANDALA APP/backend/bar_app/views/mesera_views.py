@@ -1,11 +1,11 @@
 from rest_framework import viewsets
 from ..models import Mesera
 from ..serializers import MeseraSerializer
-from .core_views import GlobalAuthentication
+from ..authentication import GlobalAuthentication, IsSuperUser
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth.hashers import make_password
+from ..services.auth_service import AuthService
 
 class MeseraViewSet(viewsets.ModelViewSet):
     queryset = Mesera.objects.all().order_by('-id')
@@ -36,8 +36,7 @@ class MeseraViewSet(viewsets.ModelViewSet):
         if len(nuevo_codigo_str) < 4:
             return Response({'detail': 'El código debe tener al menos 4 caracteres.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Hash the password before saving for security
-        mesera.codigo = make_password(nuevo_codigo_str)
-        mesera.save()
+        # Hash the password using service
+        AuthService.change_mesera_code(mesera, nuevo_codigo_str)
 
         return Response({'detail': f'Código de {mesera.nombre} actualizado y encriptado correctamente.'})

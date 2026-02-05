@@ -1,17 +1,13 @@
 from rest_framework import viewsets, status
-from rest_framework.decorators import action, api_view
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet, DateFilter
 from django_filters import rest_framework as filters
-from django.db import models, transaction
-from django.utils import timezone
-from django.db.models import Q, Sum, F, DecimalField, Value
-from django.db.models.functions import Coalesce
-from ..models import Pedido, PedidoProducto, Mesa, Mesera
+from ..models import Pedido, Mesa
 from ..serializers import PedidoSerializer
-from .core_views import GlobalAuthentication
+from ..authentication import GlobalAuthentication, IsSuperUser
 from ..services.order_service import OrderService
-from django.contrib.auth.models import User
+
 
 # --- Crear un FilterSet para Pedido ---
 class PedidoFilter(FilterSet):
@@ -110,66 +106,10 @@ class PedidoViewSet(viewsets.ModelViewSet):
         if not item_id:
             return Response({"detail": "Se requiere item_id"}, status=status.HTTP_400_BAD_REQUEST)
             
-        try:
-            item = PedidoProducto.objects.get(id=item_id, pedido=pedido)
-        except PedidoProducto.DoesNotExist:
-            return Response({"detail": "Producto no encontrado en este pedido"}, status=status.HTTP_404_NOT_FOUND)
-            
-        # Descontar stock del item si aún falta por despachar
-        pendiente = item.cantidad - item.cantidad_despachada
-        if pendiente > 0:
-            item.producto.stock -= pendiente
-            item.producto.save()
-
-        # Actualizar cantidad despachada
-        item.cantidad_despachada = item.cantidad
-        item.save()
+        result = OrderService.despachar_producto(pedido, item_id)
         
-        # Verificar si todos los productos del pedido han sido despachados completely
-        # (usamos item.cantidad <= item.cantidad_despachada para ser seguros)
-        all_dispatched = not pedido.pedidoproducto_set.filter(cantidad__gt=models.F('cantidad_despachada')).exists()
-        
-        if all_dispatched:
-            pedido.estado = 'despachado'
-            pedido.save()
-            msg = "Producto despachado. Pedido completado."
-        else:
-            msg = "Producto despachado."
+        if result.get("error"):
+            return Response({"detail": result["error"]}, status=result["status"])
             
-        return Response({"detail": msg, "pedido_estado": pedido.estado}, status=status.HTTP_200_OK)
+        return Response({"detail": result["detail"], "pedido_estado": result["pedido_estado"]}, status=result["status"])
 
-@api_view(['GET'])
-def total_pedidos_mesera_hoy(request):
-    """
-    Calcula el total de pedidos para cada mesera (y sistema) en el día actual.
-    """
-    hoy = timezone.now().date()
-    
-    # 1. Ventas Meseras
-    ventas_por_mesera = Mesera.objects.annotate(
-        total_vendido=Coalesce(
-            Sum('pedido__total', filter=Q(pedido__fecha_hora__date=hoy)),
-            Value(0),
-            output_field=DecimalField()
-        )
-    ).values('id', 'nombre', 'total_vendido')
-
-    # 2. Ventas Usuarios Sistema
-    ventas_por_usuario = User.objects.filter(pedido__isnull=False).annotate(
-        total_vendido=Coalesce(
-            Sum('pedido__total', filter=Q(pedido__fecha_hora__date=hoy)),
-            Value(0),
-            output_field=DecimalField()
-        )
-    ).values('id', 'username', 'total_vendido')
-
-    # Ajustar nombres de usuario
-    resultado = list(ventas_por_mesera)
-    for u in ventas_por_usuario:
-        resultado.append({
-            'id': f"u{u['id']}",
-            'nombre': u['username'].upper(),
-            'total_vendido': u['total_vendido']
-        })
-
-    return Response(resultado)

@@ -146,3 +146,39 @@ class OrderService:
         except Exception as e:
             logger.error(f"Error al intentar borrar el historial de pedidos: {e}")
             return Response({"detail": "Ocurrió un error al intentar eliminar el historial. No se realizaron cambios."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @staticmethod
+    def despachar_producto(pedido, item_id):
+        try:
+            item = PedidoProducto.objects.get(id=item_id, pedido=pedido)
+        except PedidoProducto.DoesNotExist:
+             return {"error": "Producto no encontrado en este pedido", "status": status.HTTP_404_NOT_FOUND}
+
+        try:
+            with transaction.atomic():
+                # Descontar stock del item si aún falta por despachar
+                pendiente = item.cantidad - item.cantidad_despachada
+                if pendiente > 0:
+                    item.producto.stock -= pendiente
+                    item.producto.save()
+
+                # Actualizar cantidad despachada
+                item.cantidad_despachada = item.cantidad
+                item.save()
+                
+                # Verificar si todos los productos del pedido han sido despachados completely
+                # (usamos item.cantidad <= item.cantidad_despachada para ser seguros)
+                all_dispatched = not pedido.pedidoproducto_set.filter(cantidad__gt=models.F('cantidad_despachada')).exists()
+                
+                if all_dispatched:
+                    pedido.estado = 'despachado'
+                    pedido.save()
+                    msg = "Producto despachado. Pedido completado."
+                else:
+                    msg = "Producto despachado."
+                    
+            return {"detail": msg, "pedido_estado": pedido.estado, "status": status.HTTP_200_OK}
+            
+        except Exception as e:
+            logger.error(f"Error al despachar producto: {e}")
+            return {"error": "Error interno al despachar producto", "status": status.HTTP_500_INTERNAL_SERVER_ERROR}

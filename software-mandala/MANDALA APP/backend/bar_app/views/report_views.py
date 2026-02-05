@@ -1,4 +1,6 @@
 from rest_framework import generics
+from rest_framework.decorators import api_view
+from django.utils import timezone
 from rest_framework.response import Response
 from django.db import models
 from django.db.models import Sum, Value, F, Q
@@ -90,3 +92,40 @@ class ReporteVentasDiariasView(generics.ListAPIView):
         ).order_by('-fecha')
 
         return Response(ventas_diarias)
+
+@api_view(['GET'])
+def total_pedidos_mesera_hoy(request):
+    """
+    Calcula el total de pedidos para cada mesera (y sistema) en el día actual.
+    """
+    hoy = timezone.now().date()
+    
+    # 1. Ventas Meseras
+    ventas_por_mesera = Mesera.objects.annotate(
+        total_vendido=Coalesce(
+            Sum('pedido__total', filter=Q(pedido__fecha_hora__date=hoy)),
+            Value(0),
+            output_field=models.DecimalField()
+        )
+    ).values('id', 'nombre', 'total_vendido')
+
+    # 2. Ventas Usuarios Sistema
+    ventas_por_usuario = User.objects.filter(pedido__isnull=False).annotate(
+        total_vendido=Coalesce(
+            Sum('pedido__total', filter=Q(pedido__fecha_hora__date=hoy)),
+            Value(0),
+            output_field=models.DecimalField()
+        )
+    ).values('id', 'username', 'total_vendido')
+
+    # Ajustar nombres de usuario
+    resultado = list(ventas_por_mesera)
+    for u in ventas_por_usuario:
+        resultado.append({
+            'id': f"u{u['id']}",
+            'nombre': u['username'].upper(),
+            'total_vendido': u['total_vendido']
+        })
+
+    return Response(resultado)
+
