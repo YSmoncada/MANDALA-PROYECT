@@ -16,23 +16,33 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
+
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginView(APIView):
-    authentication_classes = [GlobalAuthentication]
     """
     Vista personalizada para login de Administrativos y Bartenders.
-    Las Meseras siguen usando su código PIN (validado en frontend por ahora).
+    Las Meseras usan verificar_codigo_mesera.
     """
+    authentication_classes = [GlobalAuthentication]
+    
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
         
+        if not username or not password:
+            logger.warning("Login attempt without username or password")
+            return Response(
+                {'detail': 'Usuario y contraseña son requeridos'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
         result = AuthService.login_user(request, username, password)
         
         if result['success']:
-            return Response(result)
+            return Response(result, status=status.HTTP_200_OK)
             
         return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+
 
 @api_view(['POST'])
 @authentication_classes([GlobalAuthentication])
@@ -47,60 +57,140 @@ def verificar_codigo_mesera(request):
     codigo = request.data.get('codigo')
 
     if not mesera_id or not codigo:
-        return Response({'detail': 'Faltan datos'}, status=status.HTTP_400_BAD_REQUEST)
+        logger.warning("Verificación de mesera sin mesera_id o código")
+        return Response(
+            {'detail': 'Se requiere mesera_id y código'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
-    mesera = get_object_or_404(Mesera, pk=mesera_id)
+    try:
+        mesera = get_object_or_404(Mesera, pk=mesera_id)
+    except Exception as e:
+        logger.error(f"Mesera no encontrada: {mesera_id}")
+        return Response(
+            {'detail': 'Mesera no encontrada'},
+            status=status.HTTP_404_NOT_FOUND
+        )
     
     if AuthService.verify_mesera_code(mesera, codigo):
-        return Response({'success': True})
+        return Response({'success': True}, status=status.HTTP_200_OK)
         
-    return Response({'success': False, 'detail': 'Código incorrecto'}, status=status.HTTP_401_UNAUTHORIZED)
+    return Response(
+        {'success': False, 'detail': 'Código incorrecto'},
+        status=status.HTTP_401_UNAUTHORIZED
+    )
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class UserViewSet(viewsets.ModelViewSet):
     """
     ViewSet para la gestión de usuarios por parte del administrador.
+    Solo superusuarios pueden gestionar usuarios.
     """
     queryset = User.objects.all().order_by('username')
     serializer_class = UserSerializer
     permission_classes = [IsSuperUser]
     authentication_classes = [GlobalAuthentication]
 
+    def perform_create(self, serializer):
+        """Log al crear usuario"""
+        user = serializer.save()
+        logger.info(f"Usuario creado: {user.username} (ID: {user.id})")
+    
+    def perform_update(self, serializer):
+        """Log al actualizar usuario"""
+        user = serializer.save()
+        logger.info(f"Usuario actualizado: {user.username} (ID: {user.id})")
+    
+    def perform_destroy(self, instance):
+        """Log al eliminar usuario"""
+        logger.warning(f"Usuario eliminado: {instance.username} (ID: {instance.id})")
+        instance.delete()
+
     @action(detail=True, methods=['post'], url_path='cambiar-password')
     def cambiar_password(self, request, pk=None):
+        """
+        Permite al administrador cambiar la contraseña de un usuario.
+        """
         user = self.get_object()
         new_password = request.data.get('password')
 
         if not new_password:
-            return Response({'detail': 'Se requiere una nueva contraseña.'}, status=status.HTTP_400_BAD_REQUEST)
+            logger.warning(f"Intento de cambiar password sin proporcionar password para {user.username}")
+            return Response(
+                {'detail': 'Se requiere una nueva contraseña.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
-        AuthService.change_user_password(user, new_password)
+        try:
+            AuthService.change_user_password(user, new_password)
+            return Response({
+                'detail': f'Contraseña de {user.username} actualizada correctamente.'
+            })
+        except ValueError as e:
+            logger.error(f"Error de validación al cambiar password de {user.username}: {e}")
+            return Response(
+                {'detail': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            logger.error(f"Error inesperado al cambiar password de {user.username}: {e}")
+            return Response(
+                {'detail': 'Error interno al cambiar la contraseña'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
-        return Response({'detail': f'Contraseña de {user.username} actualizada correctamente.'})
 
 @api_view(['GET'])
 @permission_classes([IsSuperUser])
 def debug_users_view(request):
+    """
+    Vista de debug para ver información de usuarios en la base de datos.
+    Solo accesible por superusuarios.
+    """
     try:
-        users = User.objects.all().values('id', 'username', 'email', 'is_active', 'is_staff', 'is_superuser')
+        users = User.objects.all().values(
+            'id', 'username', 'email', 'is_active', 'is_staff', 'is_superuser'
+        )
         db_name = settings.DATABASES['default']['NAME']
+        
+        logger.info(f"Debug users view accessed by {request.user.username}")
+        
         return Response({
             "database_used": str(db_name),
             "user_count": len(users),
             "users": list(users)
         })
     except Exception as e:
-        logger.error(f"Error in debug_users_view: {e}")
-        return Response({"error": "Error interno del servidor"}, status=500)
+        logger.error(f"Error in debug_users_view: {e}", exc_info=True)
+        return Response(
+            {"error": "Error interno del servidor"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
 
 @api_view(['GET'])
 @permission_classes([IsSuperUser])
 def fix_users_view(request):
+    """
+    Ejecuta la configuración inicial del sistema:
+    - Crea/actualiza usuarios por defecto
+    - Crea mesas si no existen
+    - Crea categorías si no existen
+    Solo accesible por superusuarios.
+    """
     try:
+        logger.info(f"Fix users view accessed by {request.user.username}")
         created_users = SetupService.fix_users_and_data()
+        
         return Response({
             "status": "success",
             "actions_performed": created_users
         })
     except Exception as e:
-        return Response({"error": str(e)}, status=500)
+        logger.error(f"Error in fix_users_view: {e}", exc_info=True)
+        return Response(
+            {"error": str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
