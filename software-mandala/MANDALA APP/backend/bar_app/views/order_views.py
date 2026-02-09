@@ -9,6 +9,9 @@ from ..models import Pedido, Mesa
 from ..serializers import PedidoSerializer
 from ..authentication import GlobalAuthentication, IsSuperUser
 from ..services.order_service import OrderService
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 # --- Crear un FilterSet para Pedido ---
@@ -39,7 +42,7 @@ class PedidoViewSet(viewsets.ModelViewSet):
         Retorna el queryset base para los pedidos.
         El filtrado real lo hace DjangoFilterBackend con PedidoFilter.
         """
-        return Pedido.objects.all().order_by('-fecha_hora').select_related('mesera', 'usuario', 'mesa').prefetch_related('pedidoproducto_set', 'pedidoproducto_set__producto')
+        return Pedido.objects.all().order_by('-fecha_hora').select_related('mesera', 'usuario', 'mesa').prefetch_related('items', 'items__producto')
 
     def perform_update(self, serializer):
         """
@@ -49,6 +52,7 @@ class PedidoViewSet(viewsets.ModelViewSet):
         instance = serializer.save()
         OrderService.process_order_update(instance, previous_estado)
 
+
     def create(self, request, *args, **kwargs):
         """
         Crea un nuevo pedido o agrega productos a uno existente si 'force_append' es True.
@@ -56,39 +60,48 @@ class PedidoViewSet(viewsets.ModelViewSet):
         force_append = request.data.get('force_append', False)
         mesa_id = request.data.get('mesa')
 
+        # CASO 1: Agregar a pedido existente
         if force_append and mesa_id:
-            # Delegar al servicio
-            response = OrderService.add_products_to_existing_order(mesa_id, request.data.get('productos', []), self.get_serializer_context())
+            logger.info(f"Intentando agregar productos a pedido existente de mesa {mesa_id}")
+            response = OrderService.add_products_to_existing_order(
+                mesa_id, 
+                request.data.get('productos', []), 
+                self.get_serializer_context()
+            )
             if response:
                 return response
-            # Si retorna None, es que no habia pedido activo, seguimos flujo normal
+            # Si retorna None, no había pedido activo, continuar con creación normal
+            logger.info(f"No hay pedido activo para mesa {mesa_id}, creando nuevo pedido")
         
-        # Validación normal para no duplicar si no es force_append
+        # CASO 2: Validar que no exista pedido duplicado (solo si NO es force_append)
         if mesa_id and not force_append:
-             today = timezone.localdate()
-             pedido_existente = Pedido.objects.filter(
+            today = timezone.localdate()
+            pedido_existente = Pedido.objects.filter(
                 mesa_id=mesa_id,
-                fecha_hora__date=today
-             ).exclude(
-                estado__in=['cancelado', 'finalizada']
-             ).first()
-             
-             if pedido_existente:
-                 try:
-                    mesa_numero = pedido_existente.mesa.numero
-                 except:
-                    mesa_numero = mesa_id
-                    
-                 return Response(
+                fecha_hora__date=today,
+                estado__in=OrderService.ESTADOS_ACTIVOS
+            ).select_related('mesa').first()
+            
+            if pedido_existente:
+                mesa_numero = pedido_existente.mesa.numero if pedido_existente.mesa else mesa_id
+                
+                logger.warning(f"Intento de crear pedido duplicado para mesa {mesa_numero}")
+                
+                return Response(
                     {
-                        "detail": f"Ya existe un pedido activo para la Mesa #{mesa_numero}. Por favor, agrega productos al pedido existente desde 'Mis Pedidos' o espera a que se finalice.",
+                        "detail": f"Ya existe un pedido activo para la Mesa #{mesa_numero}. "
+                                  f"Por favor, agrega productos al pedido existente desde 'Mis Pedidos' "
+                                  f"o espera a que se finalice.",
                         "pedido_id": pedido_existente.id,
                         "mesa": mesa_numero
                     }, 
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
+        # CASO 3: Crear nuevo pedido
+        logger.info(f"Creando nuevo pedido para mesa {mesa_id}")
         return super().create(request, *args, **kwargs)
+
 
     @action(detail=False, methods=['delete'], url_path='borrar_historial')
     def borrar_historial(self, request, *args, **kwargs):

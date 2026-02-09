@@ -16,4 +16,6 @@ class MovimientoViewSet(viewsets.ModelViewSet):
     authentication_classes = [GlobalAuthentication]
 
     def create(self, request, *args, **kwargs):
-        return InventoryService.create_movement(request.data)
+        # Pasar el usuario autenticado al servicio
+        return InventoryService.create_movement(request.data, user=request.user)
+
