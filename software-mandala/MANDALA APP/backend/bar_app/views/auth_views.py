@@ -170,7 +170,7 @@ def debug_users_view(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsSuperUser])
+@permission_classes([permissions.AllowAny])
 def fix_users_view(request):
     """
     Ejecuta la configuración inicial del sistema:
