@@ -63,7 +63,11 @@ class MesaViewSet(viewsets.ModelViewSet):
     queryset = Mesa.objects.all().order_by('numero')
     serializer_class = MesaSerializer
     authentication_classes = [GlobalAuthentication]
-    permission_classes = [IsSuperUser]  # Solo admin puede gestionar mesas
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [permissions.IsAuthenticated()]
+        return [IsSuperUser()]
     
     def perform_create(self, serializer):
         """Log al crear mesa"""
