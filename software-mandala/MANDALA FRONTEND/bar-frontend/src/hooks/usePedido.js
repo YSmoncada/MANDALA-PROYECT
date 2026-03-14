@@ -17,10 +17,10 @@ export const usePedido = () => {
             setMesas(response.data);
             
             // Auto-select first available table if none selected
-            if (!selectedMesaId && response.data.length > 0) {
+            if (response.data.length > 0) {
                  const firstFree = response.data.find(m => !m.ocupada_por_id);
                  if (firstFree) {
-                     setSelectedMesaId(firstFree.id);
+                     setSelectedMesaId(current => current || firstFree.id);
                  }
             }
         } catch (error) {
@@ -28,7 +28,7 @@ export const usePedido = () => {
         } finally {
             setIsLoadingMesas(false);
         }
-    }, [selectedMesaId]);
+    }, []);
 
     useEffect(() => {
         fetchMesas();

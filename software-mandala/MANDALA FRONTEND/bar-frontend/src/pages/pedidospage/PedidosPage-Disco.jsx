@@ -133,8 +133,7 @@ function PedidosPageDisco() {
                       id="mesa-select"
                       value={selectedMesaId}
                       onChange={handleMesaChange}
-                      className={`${PAGE_STYLES.select} ${isTableLocked ? "border-amber-500/50 text-amber-400 bg-amber-500/5 cursor-not-allowed opacity-75" : ""}`}
-                      disabled={isTableLocked}
+                      className={`${PAGE_STYLES.select} ${isTableLocked ? "border-amber-500/50 text-amber-400 bg-amber-500/5 opacity-75" : ""}`}
                     >
                       <option value="" className="bg-[#0E0D23] dark:bg-black">
                         -- Seleccionar Mesa --
