@@ -5,10 +5,30 @@ from django.contrib.auth.models import User
 
 class ProductoSerializer(serializers.ModelSerializer):
     imagen = serializers.ImageField(required=False, allow_null=True)
+    categoria = serializers.SerializerMethodField()
     
     class Meta:
         model = Producto
         fields = '__all__'
+
+    def get_categoria(self, obj):
+        if obj.categoria_rel and obj.categoria_rel.nombre:
+            # Normalize to match frontend filters (e.g. "Cerveza" -> "cerveza")
+            import unicodedata
+            normalized = unicodedata.normalize('NFD', obj.categoria_rel.nombre)
+            normalized = u"".join([c for c in normalized if not unicodedata.combining(c)])
+            # If the category is plural or singular, we try to match what frontend wants
+            # Frontend has: 'cerveza', 'vinos', 'destilados', 'cocteles', 'bebidas'
+            normalized = normalized.lower().strip()
+            # Handle some potential mismatches
+            if normalized == "cervezas":
+                normalized = "cerveza"
+            elif normalized == "vino":
+                normalized = "vinos"
+            elif normalized == "coctel":
+                normalized = "cocteles"
+            return normalized
+        return ""
 
 class MovimientoSerializer(serializers.ModelSerializer):
     class Meta:
